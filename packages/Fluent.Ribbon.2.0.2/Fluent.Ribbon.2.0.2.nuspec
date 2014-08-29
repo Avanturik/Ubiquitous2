@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
+  <metadata>
+    <id>Fluent.Ribbon</id>
+    <version>2.0.2</version>
+    <title>Fluent.Ribbon</title>
+    <authors>daVinci SableRaven batzen LastElb</authors>
+    <owners>daVinci SableRaven batzen LastElb</owners>
+    <projectUrl>http://fluent.codeplex.com/</projectUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>Fluent Ribbon Control Suite is a library that implements an Office-like (Microsoft Office Fluent user interface) for the Windows Presentation Foundation (WPF). It provides well-customized controls such as RibbonTabControl, Backstage, Gallery, QuickAccessToolbar, ScreenTip and so on. It is bundled with the most up-to-date Office 2010 styles.</description>
+    <summary>Fluent Ribbon Control Suite is a library that implements an Office-like (Microsoft Office Fluent user interface) for the Windows Presentation Foundation (WPF).</summary>
+    <releaseNotes>This packages has been compiled from the sources downloaded the 18. Dez. 2012</releaseNotes>
+    <copyright />
+    <language />
+    <tags>ribbon fluent ribbonwindow</tags>
+  </metadata>
+</package>
