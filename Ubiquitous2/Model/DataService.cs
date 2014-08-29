@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using UB.Model.IRC;
 
@@ -27,7 +28,7 @@ namespace UB.Model
             var wordsCount = rnd.Next(5, words.Length);            
             var text = String.Join(" ", Enumerable.Range(0,wordsCount).Select((i,str) => words[i]));
 
-            var message = new ChatMessage(text) { FromUserName = "xedoc", ImageSource = @"c:\favicon.ico" };
+            var message = new ChatMessage(text) { FromUserName = "xedoc", ImageSource = @"/favicon.ico" };
             callback(message, null);
         }
 

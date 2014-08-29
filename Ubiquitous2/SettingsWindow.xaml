@@ -34,7 +34,7 @@
 
 									<CheckBox Margin="0,-3"/>
 								</InlineUIContainer><Run Text=" "/><InlineUIContainer>
-									<Image Margin="0,-5" Width="16" Source="c:\favicon.ico"/>
+									<Image Margin="0,-5" Width="16" Source="/favicon.ico"/>
 								</InlineUIContainer><Run Text=" "/><InlineUIContainer>
 									<TextBlock><Run Text="Twitch.tv"/></TextBlock>
 								</InlineUIContainer><Run Text=" "/><InlineUIContainer>

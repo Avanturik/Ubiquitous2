@@ -31,7 +31,25 @@ namespace UB.ViewModel
         public ChatBoxViewModel(IDataService dataService)
         {
             _dataService = dataService;
+            //Test data
+            for (var i = 0; i < 3; i++)
+            {
+                _dataService.GetMessage(
+                    (item, error) =>
+                    {
+                        if (error != null)
+                        {
+                            // Report error here
+                            return;
+                        }
 
+                        Messages.Add(new ChatMessageViewModel(item));
+
+                    });
+            }
+
+            if (IsInDesignMode)
+                return;
             MessengerInstance.Register<ChatMessage>(this, msg =>
             {
                 AddMessage(msg);
@@ -47,24 +65,8 @@ namespace UB.ViewModel
                 HostName = "irc.twitch.tv",
             });
             irc.MessageReceived += irc_MessageReceived;
-            irc.Start();            
+            irc.Start();
 
-            //Test data
-            for (var i = 0; i < 3; i++)
-            {
-                _dataService.GetMessage(
-                    (item, error) =>
-                    {
-                        if (error != null)
-                        {
-                            // Report error here
-                            return;
-                        }
-
-                        Messages.Add(new ChatMessageViewModel(item));
-                        
-                    });
-            }
         }
 
         void irc_MessageReceived(object sender, ChatServiceEventArgs e)
@@ -78,11 +80,13 @@ namespace UB.ViewModel
         
         private void AddMessage(ChatMessage msg)
         {
-            DispatcherHelper.CheckBeginInvokeOnUI(() => {
-                Messages.Add(new ChatMessageViewModel(msg));
-                if (MessageAdded != null)
-                    MessageAdded(this, EventArgs.Empty);            
-            });
+            DispatcherHelper.Initialize();
+                DispatcherHelper.CheckBeginInvokeOnUI(() =>
+                {
+                    Messages.Add(new ChatMessageViewModel(msg));
+                    if (MessageAdded != null)
+                        MessageAdded(this, EventArgs.Empty);
+                });
         }
 
         /// <summary>

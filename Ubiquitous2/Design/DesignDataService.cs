@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Linq;
+using System.Reflection;
 using UB.Model;
+using System.IO;
 
 namespace UB.Design
 {
@@ -21,13 +23,14 @@ namespace UB.Design
 
         public void GetMessage(Action<ChatMessage, Exception> callback)
         {
-            var lorem = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.";
+            var lorem = Properties.Settings.Default.LoremIpsum;
 
             var words = lorem.Split(' ');
             var wordsCount = rnd.Next(5, words.Length);
             var text = String.Join(" ", Enumerable.Range(0, wordsCount).Select((i, str) => words[i]));
 
             var message = new ChatMessage(text) { FromUserName = "xedoc", ImageSource = @"c:\favicon.ico" };
+
             callback(message, null);
         }
     }
