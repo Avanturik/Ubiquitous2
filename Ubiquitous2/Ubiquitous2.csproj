@@ -83,9 +83,15 @@
     <Compile Include="Interactivity\BindingListener.cs" />
     <Compile Include="Interactivity\DataEventTrigger.cs" />
     <Compile Include="Model\ChatMessage.cs" />
+    <Compile Include="Model\CustomEventArgs.cs" />
     <Compile Include="Model\DataItem.cs" />
     <Compile Include="Model\DataService.cs" />
+    <Compile Include="Model\IChatService.cs" />
     <Compile Include="Model\IDataService.cs" />
+    <Compile Include="Model\IRC\IRCChatBase.cs" />
+    <Compile Include="Model\IRC\IRCLoginInfo.cs" />
+    <Compile Include="Model\LoginInfoBase.cs" />
+    <Compile Include="Utils\Net.cs" />
     <Compile Include="SettingsWindow.xaml.cs">
       <DependentUpon>SettingsWindow.xaml</DependentUpon>
     </Compile>
@@ -114,10 +120,6 @@
       <SubType>Code</SubType>
     </Compile>
     <Page Include="SettingsWindow.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Skins\MainSkin.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -178,6 +180,17 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="ubiquitous smile.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\dotIRC\dotIRC.csproj">
+      <Project>{47d551da-96ed-4ef6-96bf-4832059d4700}</Project>
+      <Name>dotIRC</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="favicon.ico">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -3,7 +3,9 @@ using System.Collections.ObjectModel;
 using System.Windows.Threading;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Ioc;
+using GalaSoft.MvvmLight.Threading;
 using UB.Model;
+using UB.Model.IRC;
 
 namespace UB.ViewModel
 {
@@ -22,6 +24,7 @@ namespace UB.ViewModel
         /// </summary>
         public ChatBoxViewModel()
         {
+
         }
 
         [PreferredConstructor]
@@ -33,6 +36,18 @@ namespace UB.ViewModel
             {
                 AddMessage(msg);
             });
+
+            var userchannel = "goodguygarry";
+
+            var irc = new IRCChatBase(new IRCLoginInfo()
+            {
+                Channel = userchannel,
+                Port = 6667,
+                UserName = "justinfan123412893",
+                HostName = "irc.twitch.tv",
+            });
+            irc.MessageReceived += irc_MessageReceived;
+            irc.Start();            
 
             //Test data
             for (var i = 0; i < 3; i++)
@@ -51,12 +66,23 @@ namespace UB.ViewModel
                     });
             }
         }
+
+        void irc_MessageReceived(object sender, ChatServiceEventArgs e)
+        {
+            AddMessage(new ChatMessage() { 
+                ImageSource = @"/favicon.ico",
+                FromUserName = e.Messages[0].FromUserName,
+                Text = e.Messages[0].Text
+            });
+        }
         
         private void AddMessage(ChatMessage msg)
         {
-            Messages.Add(new ChatMessageViewModel(msg));
-            if (MessageAdded != null)
-                MessageAdded(this, EventArgs.Empty);
+            DispatcherHelper.CheckBeginInvokeOnUI(() => {
+                Messages.Add(new ChatMessageViewModel(msg));
+                if (MessageAdded != null)
+                    MessageAdded(this, EventArgs.Empty);            
+            });
         }
 
         /// <summary>

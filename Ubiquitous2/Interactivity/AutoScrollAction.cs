@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Interactivity;
+using System.Windows.Media;
 using System.Windows.Media.Animation;
 using System.Windows.Threading;
 
@@ -25,6 +26,9 @@ namespace UB.Interactivity
         {
             Dispatcher.Invoke(new Action(() => { }), DispatcherPriority.Render, null);
             storyBoard = new Storyboard();
+            //if (RenderCapability.Tier == 0)
+                Timeline.SetDesiredFrameRate(storyBoard, 30);
+
             scrollViewer = this.Target;
 
             DoubleAnimation mainAnimation = new DoubleAnimation()
@@ -32,10 +36,11 @@ namespace UB.Interactivity
                 From = scrollViewer.VerticalOffset,
                 To = scrollViewer.ScrollableHeight,
                 DecelerationRatio = 0,
-                Duration = new Duration(TimeSpan.FromMilliseconds(Duration)),
+                Duration = new Duration(TimeSpan.FromMilliseconds(Duration)),                
             };
+
             storyBoard.Children.Add(mainAnimation);
-            Storyboard.SetTarget(mainAnimation, AssociatedObject);
+            Storyboard.SetTarget(mainAnimation, AssociatedObject);            
             Storyboard.SetTargetProperty(mainAnimation, new PropertyPath(VerticalPositionProperty));
             storyBoard.Begin(scrollViewer);
         }
@@ -116,8 +121,7 @@ namespace UB.Interactivity
                     return;
 
                 double newOffset = (double)e.NewValue;
-                if (Math.Abs(newOffset - scrollViewer.VerticalOffset) >= 1)
-                    scrollViewer.ScrollToVerticalOffset(newOffset);
+                scrollViewer.ScrollToVerticalOffset(newOffset);
             }));
 
     }

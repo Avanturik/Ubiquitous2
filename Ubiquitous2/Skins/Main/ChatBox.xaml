@@ -21,7 +21,7 @@
                                     <ScrollViewer Template="{DynamicResource ScrollStyle}" CanContentScroll="True">
                                         <i:Interaction.Triggers>
                                             <Interactivity:DataEventTrigger EventName="MessageAdded">
-                                                <Interactivity:AutoScrollAction Duration="500"/>
+                                                <Interactivity:AutoScrollAction Duration="200"/>
                                             </Interactivity:DataEventTrigger>
                                         </i:Interaction.Triggers>
                                         <ItemsPresenter />
