@@ -1,0 +1,86 @@
+﻿<Window
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:fluent="clr-namespace:Fluent;assembly=Fluent"
+        xmlns:local="clr-namespace:UB" x:Class="UB.SettingsWindow"
+        Title="SettingsWindow" Height="205" Width="445" Icon="ubiquitous smile.ico">
+
+    <Window.DataContext>
+        <Binding Path="Settings" Source="{StaticResource Locator}"/>
+    </Window.DataContext>
+
+    <Window.Resources>
+        <Style TargetType="{x:Type VirtualizingStackPanel}">
+            <Setter Property="Margin" Value="10,10,0,0"/>
+        </Style>
+        <Style TargetType="{x:Type TextBlock}">
+            <Setter Property="Margin" Value="2,2,2,2"/>
+        </Style>
+    </Window.Resources>
+
+    <Grid>
+        <fluent:BackstageTabControl SelectedIndex="0" Style="{DynamicResource SettingsStyle}" Background="#FF323232">            
+            <fluent:BackstageTabItem Header="Chat" Background="#FF646464">
+                <ScrollViewer VerticalScrollBarVisibility="Auto" Margin="0" Template="{DynamicResource ScrollStyle}">
+                    <VirtualizingStackPanel Orientation="Vertical" Background="White" Margin="0">
+                        <Border BorderThickness="0,1,0,0">
+                            <Border.BorderBrush>
+                                <LinearGradientBrush EndPoint="1,1" StartPoint="0.5,0">
+                                    <GradientStop Color="#FFC5C5C5" Offset="0"/>
+                                    <GradientStop Color="White" Offset="1"/>
+                                </LinearGradientBrush>
+                            </Border.BorderBrush>
+                            <TextBlock Padding="5" Margin="0"><InlineUIContainer>
+
+									<CheckBox Margin="0,-3"/>
+								</InlineUIContainer><Run Text=" "/><InlineUIContainer>
+									<Image Margin="0,-5" Width="16" Source="c:\favicon.ico"/>
+								</InlineUIContainer><Run Text=" "/><InlineUIContainer>
+									<TextBlock><Run Text="Twitch.tv"/></TextBlock>
+								</InlineUIContainer><Run Text=" "/><InlineUIContainer>
+									<TextBlock><Hyperlink><Run Text="edit"/></Hyperlink></TextBlock>
+								</InlineUIContainer><Run Text=" "/><InlineUIContainer>
+									<TextBlock><Hyperlink><Run Text="restart"/></Hyperlink></TextBlock>
+								</InlineUIContainer></TextBlock>
+                        </Border>
+                        <Border BorderThickness="0,1,0,0">
+                            <Border.BorderBrush>
+                                <LinearGradientBrush EndPoint="1,1" StartPoint="0.5,0">
+                                    <GradientStop Color="#FFC5C5C5" Offset="0"/>
+                                    <GradientStop Color="White" Offset="1"/>
+                                </LinearGradientBrush>
+                            </Border.BorderBrush>
+                            <TextBlock Padding="5" Margin="0"><InlineUIContainer>
+
+									<CheckBox Margin="0,-3"/>
+								</InlineUIContainer><Run Text=" "/><InlineUIContainer>
+									<Image Margin="0,-5" Width="16" Source="c:\favicon2.ico"/>
+								</InlineUIContainer><Run Text=" "/><InlineUIContainer>
+									<TextBlock><Run Text="HitBox.tv"/></TextBlock>
+								</InlineUIContainer><Run Text=" "/><InlineUIContainer>
+									<TextBlock><Hyperlink><Run Text="edit"/></Hyperlink></TextBlock>
+								</InlineUIContainer><Run Text=" "/><InlineUIContainer>
+									<TextBlock><Hyperlink><Run Text="restart"/></Hyperlink></TextBlock>
+								</InlineUIContainer></TextBlock>
+                        </Border>
+                    </VirtualizingStackPanel>
+                </ScrollViewer>
+            </fluent:BackstageTabItem>
+            <fluent:BackstageTabItem Header="Scrobbling">
+                <DockPanel>
+                    <TextBlock><Run Text="Test 2"/></TextBlock>
+                </DockPanel>
+            </fluent:BackstageTabItem>
+            <fluent:BackstageTabItem Header="Theme">
+                <DockPanel>
+                    <TextBlock><Run Text="Test 2"/></TextBlock>
+                </DockPanel>
+            </fluent:BackstageTabItem>
+            <fluent:BackstageTabItem Header="Other">
+                <DockPanel>
+                    <TextBlock><Run Text="Test 3"/></TextBlock>
+                </DockPanel>
+            </fluent:BackstageTabItem>
+        </fluent:BackstageTabControl>
+    </Grid>
+</Window>
