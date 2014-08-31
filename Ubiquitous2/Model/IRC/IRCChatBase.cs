@@ -1,18 +1,17 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Net;
-using System.Text;
-using System.Threading.Tasks;
+using System.Threading;
 using dotIRC;
 using UB.Model.IRC;
 
 namespace UB.Model
 {
-    public class IRCChatBase : IrcClient, IChatService
+    public class IRCChatBase : IrcClient, IChat
     {
         public event EventHandler<ChatServiceEventArgs> MessageReceived;
+
         private const String dummyPass = "!@$#@";
         private IRCLoginInfo loginInfo { get; set; }
         private Random random { get; set; }
@@ -27,6 +26,7 @@ namespace UB.Model
                 throw new Exception("Username must be specified!");
 
             random = new Random();
+
         }
 
         public bool Start()
@@ -38,7 +38,7 @@ namespace UB.Model
 
         public bool Stop()
         {
-            Quit();
+            Disconnect();
             return true;
         }
 
@@ -52,8 +52,8 @@ namespace UB.Model
                 
                 Connect(hostList.AddressList[random.Next(0,hostCount)], loginInfo.Port, false, new IrcUserRegistrationInfo()
                 { 
-                    NickName = loginInfo.UserName,
                     UserName = loginInfo.UserName,
+                    NickName = loginInfo.UserName,
                     RealName = loginInfo.RealName,
                     Password = String.IsNullOrEmpty(loginInfo.Password) ? dummyPass : loginInfo.Password
                 });
@@ -72,6 +72,7 @@ namespace UB.Model
         protected override void OnConnected(EventArgs e)
         {
             base.OnConnected(e);
+            Thread.Sleep(500);
             if (String.IsNullOrEmpty(loginInfo.Password) || loginInfo.Equals(dummyPass))
                 JoinChannel();
 
@@ -80,8 +81,10 @@ namespace UB.Model
         {
             var channel = (String.IsNullOrEmpty(loginInfo.Channel) ? "#" + loginInfo.UserName : loginInfo.Channel.Contains('#') ? loginInfo.Channel : "#" + loginInfo.Channel).ToLower();
             Channels.Join(channel);
-
-
+            //test multiple channels
+            Channels.Join("#nightblue3");
+            Channels.Join("#herdyn");
+            Channels.Join("#starladder1");
         }
         protected override void OnRegistered(EventArgs e)
         {
@@ -98,16 +101,37 @@ namespace UB.Model
         protected override void OnRawMessageReceived(IrcRawMessageEventArgs e)
         {
             base.OnRawMessageReceived(e);
-            if( e.Message.Command == "PRIVMSG" )
-                if (MessageReceived != null)
-                    MessageReceived(this, new ChatServiceEventArgs()
+            switch( e.Message.Command)
+            {
+                case "PRIVMSG":
+                    if(e.Message.Parameters.Count >= 2)
                     {
-                        Messages = new List<ChatMessage>() { new ChatMessage() { Text = e.Message.Parameters[1], FromUserName = e.Message.Source.Name } }
-                    });
+                        if (MessageReceived != null)
+                        {
+                            MessageReceived(this, new ChatServiceEventArgs()
+                            {
+                                Message = new ChatMessage()
+                                {
+                                    Text = e.Message.Parameters[1],
+                                    Channel = e.Message.Parameters[0],
+                                    FromUserName = e.Message.Source.Name,
+                                    TimeStamp = DateTime.Now.ToShortTimeString()
+                                }
+                            });
+                        }
+                    }
+                    break;
+                default:
+
+                    break;
+
+            }
 
         }
         protected override void OnDisconnected(EventArgs e)
         {
+            Stop();
+            Start();
             base.OnDisconnected(e);
         }
         protected override void OnError(IrcErrorEventArgs e)
@@ -119,7 +143,7 @@ namespace UB.Model
             Debug.Print("Message:{0}",e.Text);
             if (MessageReceived != null)
                 MessageReceived(this, new ChatServiceEventArgs() {
-                    Messages = new List<ChatMessage>() { new ChatMessage() { Text = e.Text, FromUserName = e.Source.Name } }
+                    Message = new ChatMessage() { Text = e.Text, FromUserName = e.Source.Name }
                 });
         }
 

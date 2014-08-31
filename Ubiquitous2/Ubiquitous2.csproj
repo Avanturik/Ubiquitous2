@@ -87,7 +87,7 @@
     <Compile Include="Model\CustomEventArgs.cs" />
     <Compile Include="Model\DataItem.cs" />
     <Compile Include="Model\DataService.cs" />
-    <Compile Include="Model\IChatService.cs" />
+    <Compile Include="Model\IChat.cs" />
     <Compile Include="Model\IDataService.cs" />
     <Compile Include="Model\IRC\IRCChatBase.cs" />
     <Compile Include="Model\IRC\IRCLoginInfo.cs" />

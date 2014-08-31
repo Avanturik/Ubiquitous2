@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace UB.Model
 {
@@ -24,6 +20,7 @@ namespace UB.Model
         public String TimeStamp { get; set; }
         public String ImageSource { get; set; }
         public String FromUserName { get; set; }
+        public String Channel { get; set; }
 
     }
 }

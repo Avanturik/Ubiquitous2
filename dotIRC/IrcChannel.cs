@@ -387,7 +387,7 @@ namespace dotIRC
         internal void HandleUserLeft(IrcUser user, string comment)
         {
             lock (((ICollection)this.modesReadOnly).SyncRoot)
-                HandleUserLeft(this.users.SingleOrDefault(u => u.User == user), comment);
+                HandleUserLeft(this.users.FirstOrDefault(u => u.User == user), comment);
         }
 
         internal void HandleUserLeft(IrcChannelUser channelUser, string comment)

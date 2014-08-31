@@ -1,14 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace UB.Model
 {
     public class ChatServiceEventArgs : EventArgs
     {
-        public List<ChatMessage> Messages { get; set; }
+        public ChatMessage Message { get; set; }
     }
     public class StringEventArgs : EventArgs
     {

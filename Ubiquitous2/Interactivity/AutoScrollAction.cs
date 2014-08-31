@@ -1,12 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Interactivity;
-using System.Windows.Media;
 using System.Windows.Media.Animation;
 using System.Windows.Threading;
 
@@ -26,8 +21,7 @@ namespace UB.Interactivity
         {
             Dispatcher.Invoke(new Action(() => { }), DispatcherPriority.Render, null);
             storyBoard = new Storyboard();
-            //if (RenderCapability.Tier == 0)
-                Timeline.SetDesiredFrameRate(storyBoard, 30);
+
 
             scrollViewer = this.Target;
 

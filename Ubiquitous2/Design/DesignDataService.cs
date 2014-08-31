@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Linq;
-using System.Reflection;
 using UB.Model;
-using System.IO;
 
 namespace UB.Design
 {
@@ -13,13 +11,6 @@ namespace UB.Design
         {
             rnd = new Random();
         }
-        public void GetData(Action<DataItem, Exception> callback)
-        {
-            // Use this to create design time data
-
-            var item = new DataItem("Welcome to MVVM Light [design]");
-            callback(item, null);
-        }
 
         public void GetMessage(Action<ChatMessage, Exception> callback)
         {
@@ -29,9 +20,18 @@ namespace UB.Design
             var wordsCount = rnd.Next(5, words.Length);
             var text = String.Join(" ", Enumerable.Range(0, wordsCount).Select((i, str) => words[i]));
 
-            var message = new ChatMessage(text) { FromUserName = "xedoc", ImageSource = @"c:\favicon.ico" };
+            var message = new ChatMessage(text) {
+                FromUserName = "xedoc",
+                ImageSource = @"c:\favicon.ico",
+                Channel = "#loremipsum"
+            };
 
             callback(message, null);
+        }
+
+        public void ReadMessages(Action<ChatMessage[],Exception> callback)
+        {
+
         }
     }
 }

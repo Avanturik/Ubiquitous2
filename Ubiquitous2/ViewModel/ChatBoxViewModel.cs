@@ -1,11 +1,9 @@
 ﻿using System;
 using System.Collections.ObjectModel;
-using System.Windows.Threading;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Ioc;
 using GalaSoft.MvvmLight.Threading;
 using UB.Model;
-using UB.Model.IRC;
 
 namespace UB.ViewModel
 {
@@ -50,40 +48,28 @@ namespace UB.ViewModel
 
             if (IsInDesignMode)
                 return;
+
             MessengerInstance.Register<ChatMessage>(this, msg =>
             {
-                AddMessage(msg);
+                AddMessages(new ChatMessage[] { msg });
             });
 
-            var userchannel = "goodguygarry";
-
-            var irc = new IRCChatBase(new IRCLoginInfo()
-            {
-                Channel = userchannel,
-                Port = 6667,
-                UserName = "justinfan123412893",
-                HostName = "irc.twitch.tv",
-            });
-            irc.MessageReceived += irc_MessageReceived;
-            irc.Start();
-
-        }
-
-        void irc_MessageReceived(object sender, ChatServiceEventArgs e)
-        {
-            AddMessage(new ChatMessage() { 
-                ImageSource = @"/favicon.ico",
-                FromUserName = e.Messages[0].FromUserName,
-                Text = e.Messages[0].Text
+            _dataService.ReadMessages((messages,error) => {
+                AddMessages(messages);
             });
         }
-        
-        private void AddMessage(ChatMessage msg)
+
+
+        private void AddMessages(ChatMessage[] messages)
         {
-            DispatcherHelper.Initialize();
                 DispatcherHelper.CheckBeginInvokeOnUI(() =>
-                {
-                    Messages.Add(new ChatMessageViewModel(msg));
+                {               
+                    foreach( var msg in messages)
+                    {
+                        Messages.Add(
+                            new ChatMessageViewModel(msg)
+                        );
+                    }
                     if (MessageAdded != null)
                         MessageAdded(this, EventArgs.Empty);
                 });

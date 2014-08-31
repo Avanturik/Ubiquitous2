@@ -38,20 +38,21 @@
                                     <RowDefinition MinHeight="18"/>
                                 </Grid.RowDefinitions>
                                 <TextBlock Grid.Row="0" Grid.Column="0" FontWeight="Bold" HorizontalAlignment="Stretch" Width="Auto">
-				    <Image Stretch="Fill" Margin ="0,0,0,2" Width="12" Height="12" Source="{Binding Message.ImageSource}" VerticalAlignment="Top" HorizontalAlignment="Left">
-					    <Image.Effect>
-						    <DropShadowEffect BlurRadius="2" Opacity="0.2" ShadowDepth="2"/>
-					    </Image.Effect>
-				    </Image>
-				    <TextBox FontSize="11" Text="{Binding Message.FromUserName}" Margin="0,0,0,2" Foreground="#FFFFC042" HorizontalAlignment="Left"/>
+				                    <Image Stretch="Fill" Margin ="0,0,0,2" Width="12" Height="12" Source="{Binding Message.ImageSource, Mode=OneTime}" VerticalAlignment="Top" HorizontalAlignment="Left">
+					                    <Image.Effect>
+						                    <DropShadowEffect BlurRadius="2" Opacity="0.2" ShadowDepth="2"/>
+					                    </Image.Effect>
+				                    </Image>
+                                    <TextBox FontSize="11" Text="{Binding Message.Channel,Mode=OneTime}" Margin="0,0,0,2" Foreground="#FFFFC042" HorizontalAlignment="Left"/>
+				                    <TextBox FontSize="11" Text="{Binding Message.FromUserName,Mode=OneTime}" Margin="0,0,0,2" Foreground="#FFFFC042" HorizontalAlignment="Left"/>
                                 </TextBlock>
                                 <Border Grid.ColumnSpan="2" Grid.Row="1" CornerRadius="10" Background="#FF303030" BorderThickness="0" Padding="3,5,3,3" Margin="0,0,0,-8">
                                     <TextBox TextAlignment="Justify" 
-                             Text="{Binding Message.Text}" 
+                             Text="{Binding Message.Text,Mode=OneTime}" 
                              FontSize="14" 
                              Foreground="#FFCDCDCD"/>
                                 </Border>
-                                <TextBox Text="{Binding Message.TimeStamp}" 
+                                <TextBox Text="{Binding Message.TimeStamp,Mode=OneTime}" 
                          Grid.Row="0" 
                          Grid.Column="1" 
                          FontSize="11" 

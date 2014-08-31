@@ -1,14 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Devart.Controls;
-using System.Windows.Media;
+﻿using Devart.Controls;
 using GalaSoft.MvvmLight;
 using UB.Utils;
-using System.Collections.ObjectModel;
 using UB.Model;
 using GalaSoft.MvvmLight.Ioc;
 
