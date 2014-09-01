@@ -3,10 +3,11 @@
                     >
     
     <ResourceDictionary.MergedDictionaries>
-        <ResourceDictionary Source="/Skins/Main/ScrollViewer.xaml"></ResourceDictionary>
-        <ResourceDictionary Source="/Skins/Main/Settings.xaml"></ResourceDictionary>
-        <ResourceDictionary Source="/Skins/Main/ChatMessage.xaml"></ResourceDictionary>
-        <ResourceDictionary Source="/Skins/Main/ChatBox.xaml"></ResourceDictionary>
+        <ResourceDictionary Source="/Skins/Main/ScrollViewerSkin.xaml"></ResourceDictionary>
+        <ResourceDictionary Source="/Skins/Main/SettingsWindowSkin.xaml"></ResourceDictionary>
+        <ResourceDictionary Source="/Skins/Main/ChatMessageSkin.xaml"></ResourceDictionary>
+        <ResourceDictionary Source="/Skins/Main/ChatBoxSkin.xaml"></ResourceDictionary>
+        <ResourceDictionary Source="/Skins/Main/MainWindowSkin.xaml"></ResourceDictionary>
     </ResourceDictionary.MergedDictionaries>
 
 

@@ -16,7 +16,7 @@ namespace UB.ViewModel
     public class ChatBoxViewModel : ViewModelBase
     {
         public event EventHandler<EventArgs> MessageAdded;
-        IDataService _dataService;
+        IChatDataService _dataService;
         /// <summary>
         /// Initializes a new instance of the ChatBoxViewModel class.
         /// </summary>
@@ -26,13 +26,13 @@ namespace UB.ViewModel
         }
 
         [PreferredConstructor]
-        public ChatBoxViewModel(IDataService dataService)
+        public ChatBoxViewModel(IChatDataService dataService)
         {
             _dataService = dataService;
             //Test data
             for (var i = 0; i < 3; i++)
             {
-                _dataService.GetMessage(
+                _dataService.GetRandomMessage(
                     (item, error) =>
                     {
                         if (error != null)
@@ -46,13 +46,10 @@ namespace UB.ViewModel
                     });
             }
 
-            if (IsInDesignMode)
-                return;
-
-            MessengerInstance.Register<ChatMessage>(this, msg =>
-            {
-                AddMessages(new ChatMessage[] { msg });
-            });
+            //MessengerInstance.Register<ChatMessage>(this, msg =>
+            //{
+            //    AddMessages(new ChatMessage[] { msg });
+            //});
 
             _dataService.ReadMessages((messages,error) => {
                 AddMessages(messages);

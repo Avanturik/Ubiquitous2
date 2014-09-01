@@ -6,7 +6,7 @@ using UB.Model.IRC;
 
 namespace UB.Model
 {
-    public class DataService : IDataService
+    public class ChatDataService : IChatDataService
     {
         private List<ChatMessage> messageQueue = new List<ChatMessage>();
         private object messageQueueLock = new object();
@@ -14,13 +14,13 @@ namespace UB.Model
 
         private Random rnd;
         private Action<ChatMessage[], Exception> readChatCallback;
-        public DataService()
+        public ChatDataService()
         {
             rnd = new Random();
             InitializeChats();
         }
 
-        public void GetMessage(Action<ChatMessage, Exception> callback)
+        public void GetRandomMessage(Action<ChatMessage, Exception> callback)
         {
             var lorem = Properties.Settings.Default.LoremIpsum;
             var words = lorem.Split(' ');
@@ -42,10 +42,10 @@ namespace UB.Model
 
         public void InitializeChats()
         {
-            //Accumulate messages and update UI periodically
+            //Accumulate messages and update ViewModel periodically
             receiveTimer = new Timer((obj) =>
             {
-                if ( messageQueue.Count > 0)
+                if ( messageQueue.Count > 0 && readChatCallback != null)
                 {
                     lock (messageQueueLock)
                     {
@@ -56,26 +56,23 @@ namespace UB.Model
             }, null, 0, 1000);
 
             //Twitch
-            var userchannel = "goodguygarry";
-            
-            var irc = new IRCChatBase(new IRCLoginInfo()
-            {
-                Channel = userchannel,
-                Port = 6667,
-                UserName = "justinfan" + rnd.Next(10000000).ToString(),
-                HostName = "irc.twitch.tv",
-            });
-            irc.MessageReceived += irc_MessageReceived;
-            irc.Start();
+            var channels = new String[] { "goodguygarry", "nightblue3", "herdyn", "#starladder1", "mushisgosu"};
+            var twitch = new TwitchChat( "justinfan" + rnd.Next(10000000).ToString(), null, channels);
+            twitch.MessageReceived += twitch_MessageReceived;
+            twitch.Start();
         }
-
-        void irc_MessageReceived(object sender, ChatServiceEventArgs e)
+        void twitch_MessageReceived(object sender, ChatServiceEventArgs e)
         {
-            lock(messageQueueLock)
-            {
                 var m = e.Message;
                 m.ImageSource = @"/favicon.ico";
-                messageQueue.Add(m);
+                AddMessageToQueue(m);
+        }
+        void AddMessageToQueue( ChatMessage message )
+        {
+            lock (messageQueueLock)
+            {
+                message.ImageSource = @"/favicon.ico";
+                messageQueue.Add(message);
             }
         }
 

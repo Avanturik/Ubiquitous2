@@ -9,7 +9,7 @@ namespace UB.ViewModel
 {
     public class ChatMessageViewModel : ViewModelBase, IHeightMeasurer
     {
-        private readonly IDataService _dataService;
+        private readonly IChatDataService _dataService;
 
         private double estimatedHeight;
         private double estimatedWidth;
@@ -19,10 +19,10 @@ namespace UB.ViewModel
         }
 
         [PreferredConstructor]
-        public ChatMessageViewModel(IDataService dataService)
+        public ChatMessageViewModel(IChatDataService dataService)
         {
             _dataService = dataService;
-            _dataService.GetMessage(
+            _dataService.GetRandomMessage(
                     (item, error) =>
                     {
                         if (error != null)

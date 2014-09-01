@@ -2,9 +2,9 @@
 
 namespace UB.Model
 {
-    public interface IDataService
+    public interface IChatDataService
     {
-        void GetMessage(Action<ChatMessage, Exception> callback);
+        void GetRandomMessage(Action<ChatMessage, Exception> callback);
         void ReadMessages(Action<ChatMessage[], Exception> callback);
     }
 }

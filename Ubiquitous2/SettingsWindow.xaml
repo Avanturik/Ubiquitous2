@@ -3,6 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:fluent="clr-namespace:Fluent;assembly=Fluent"
         xmlns:local="clr-namespace:UB" x:Class="UB.SettingsWindow"
+        xmlns:devart="clr-namespace:Devart.Controls"
         Title="SettingsWindow" Height="205" Width="445" Icon="ubiquitous smile.ico">
 
     <Window.DataContext>
@@ -21,28 +22,8 @@
     <Grid>
         <fluent:BackstageTabControl SelectedIndex="0" Style="{DynamicResource SettingsStyle}" Background="#FF323232">            
             <fluent:BackstageTabItem Header="Chat" Background="#FF646464">
-                <ScrollViewer VerticalScrollBarVisibility="Auto" Margin="0" Template="{DynamicResource ScrollStyle}">
-                    <VirtualizingStackPanel Orientation="Vertical" Background="White" Margin="0">
-                        <Border BorderThickness="0,1,0,0">
-                            <Border.BorderBrush>
-                                <LinearGradientBrush EndPoint="1,1" StartPoint="0.5,0">
-                                    <GradientStop Color="#FFC5C5C5" Offset="0"/>
-                                    <GradientStop Color="White" Offset="1"/>
-                                </LinearGradientBrush>
-                            </Border.BorderBrush>
-                            <TextBlock Padding="5" Margin="0"><InlineUIContainer>
-
-									<CheckBox Margin="0,-3"/>
-								</InlineUIContainer><Run Text=" "/><InlineUIContainer>
-									<Image Margin="0,-5" Width="16" Source="/favicon.ico"/>
-								</InlineUIContainer><Run Text=" "/><InlineUIContainer>
-									<TextBlock><Run Text="Twitch.tv"/></TextBlock>
-								</InlineUIContainer><Run Text=" "/><InlineUIContainer>
-									<TextBlock><Hyperlink><Run Text="edit"/></Hyperlink></TextBlock>
-								</InlineUIContainer><Run Text=" "/><InlineUIContainer>
-									<TextBlock><Hyperlink><Run Text="restart"/></Hyperlink></TextBlock>
-								</InlineUIContainer></TextBlock>
-                        </Border>
+                <ScrollViewer VerticalScrollBarVisibility="Auto" Margin="0" Template="{DynamicResource ScrollStyle}">   
+                    <VirtualizingStackPanel Orientation="Vertical">
                         <Border BorderThickness="0,1,0,0">
                             <Border.BorderBrush>
                                 <LinearGradientBrush EndPoint="1,1" StartPoint="0.5,0">

@@ -4,7 +4,7 @@ using UB.Model;
 
 namespace UB.Design
 {
-    public class DesignDataService : IDataService
+    public class DesignDataService : IChatDataService
     {
         private Random rnd;
         public DesignDataService()
@@ -12,7 +12,7 @@ namespace UB.Design
             rnd = new Random();
         }
 
-        public void GetMessage(Action<ChatMessage, Exception> callback)
+        public void GetRandomMessage(Action<ChatMessage, Exception> callback)
         {
             var lorem = Properties.Settings.Default.LoremIpsum;
 

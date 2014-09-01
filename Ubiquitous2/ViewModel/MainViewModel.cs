@@ -1,4 +1,5 @@
-﻿using GalaSoft.MvvmLight;
+﻿using System.Diagnostics;
+using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
 using UB.Model;
 
@@ -12,14 +13,17 @@ namespace UB.ViewModel
     /// </summary>
     public class MainViewModel : ViewModelBase
     {
-        private readonly IDataService _dataService;
+        private readonly IChatDataService _dataService;
 
         /// <summary>
         /// Initializes a new instance of the MainViewModel class.
         /// </summary>
-        public MainViewModel(IDataService dataService)
+        public MainViewModel(IChatDataService dataService)
         {
             _dataService = dataService;
+            var test = Properties.Ubiqiutous.Default.LoremIpsum;
+            Properties.Ubiqiutous.Default.Save();
+
         }
 
 
@@ -36,7 +40,7 @@ namespace UB.ViewModel
                     ?? (_addMessage = new RelayCommand(
                                           () =>
                                           {
-                                              _dataService.GetMessage((item, error) => {
+                                              _dataService.GetRandomMessage((item, error) => {
                                                   MessengerInstance.Send<ChatMessage>(item);
                                               });
                                           }));
@@ -62,6 +66,23 @@ namespace UB.ViewModel
             }
         }
 
+        private RelayCommand _exitApplication;
+
+        /// <summary>
+        /// Gets the ExitApplication.
+        /// </summary>
+        public RelayCommand ExitApplication
+        {
+            get
+            {
+                return _exitApplication
+                    ?? (_exitApplication = new RelayCommand(
+                                          () =>
+                                          {
+                                              Properties.Ubiqiutous.Default.Save();
+                                          }));
+            }
+        }
         ////public override void Cleanup()
         ////{
         ////    // Clean up if needed
