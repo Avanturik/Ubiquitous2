@@ -26,27 +26,6 @@ namespace UB.ViewModel
 
         }
 
-
-        private RelayCommand _addMessage;
-
-        /// <summary>
-        /// Gets the MyCommand.
-        /// </summary>
-        public RelayCommand AddMessage
-        {
-            get
-            {
-                return _addMessage
-                    ?? (_addMessage = new RelayCommand(
-                                          () =>
-                                          {
-                                              _dataService.GetRandomMessage((item, error) => {
-                                                  MessengerInstance.Send<ChatMessage>(item);
-                                              });
-                                          }));
-            }
-        }
-
         private RelayCommand _showSettings;
 
         /// <summary>

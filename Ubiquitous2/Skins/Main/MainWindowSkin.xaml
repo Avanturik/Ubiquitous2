@@ -38,13 +38,6 @@
                             <RowDefinition Height="31*"/>
                         </Grid.RowDefinitions>
                         <View:ChatBoxView Margin="3,0" RenderTransformOrigin="1,0" OverridesDefaultStyle="True" Padding="0"/>
-                        <Button Content="Add test message" HorizontalAlignment="Left" Margin="10,0,0,10" Grid.Row="1" VerticalAlignment="Bottom" Width="111">
-                            <i:Interaction.Triggers>
-                                <i:EventTrigger EventName="Click">
-                                    <Custom:EventToCommand Command="{Binding AddMessage}"/>
-                                </i:EventTrigger>
-                            </i:Interaction.Triggers>
-                        </Button>
 
                         <Button Content="Open settings" HorizontalAlignment="Left" Margin="138,0,0,10" Grid.Row="1" VerticalAlignment="Bottom" Width="127">
                             <i:Interaction.Triggers>
