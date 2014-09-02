@@ -8,6 +8,7 @@
         <ResourceDictionary Source="/Skins/Main/ChatMessageSkin.xaml"></ResourceDictionary>
         <ResourceDictionary Source="/Skins/Main/ChatBoxSkin.xaml"></ResourceDictionary>
         <ResourceDictionary Source="/Skins/Main/MainWindowSkin.xaml"></ResourceDictionary>
+        <ResourceDictionary Source="/Skins/Main/Expander.xaml"></ResourceDictionary>
     </ResourceDictionary.MergedDictionaries>
 
 

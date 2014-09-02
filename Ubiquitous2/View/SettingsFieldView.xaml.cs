@@ -16,11 +16,11 @@ using System.Windows.Shapes;
 namespace UB.View
 {
     /// <summary>
-    /// Interaction logic for SettingsHeader.xaml
+    /// Interaction logic for LabeledEditBox.xaml
     /// </summary>
-    public partial class SettingsHeader : UserControl
+    public partial class SettingsFieldView : UserControl
     {
-        public SettingsHeader()
+        public SettingsFieldView()
         {
             InitializeComponent();
         }

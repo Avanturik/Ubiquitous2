@@ -22,7 +22,7 @@ namespace UB.Design
 
             var message = new ChatMessage(text) {
                 FromUserName = "xedoc",
-                ImageSource = @"c:\favicon.ico",
+                ChatIconURL = @"c:\favicon.ico",
                 Channel = "#loremipsum"
             };
 

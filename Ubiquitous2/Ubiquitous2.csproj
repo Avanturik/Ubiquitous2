@@ -35,7 +35,7 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
+    <Optimize>true</Optimize>
     <OutputPath>bin\Debug\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
@@ -97,6 +97,7 @@
     <Reference Include="System.Configuration" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Windows.Interactivity, Version=4.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
@@ -123,13 +124,16 @@
     <Compile Include="Controls\SmoothPanel\SmoothPanelTemplate.cs" />
     <Compile Include="Controls\SmoothPanel\SmoothPanelViewCache.cs" />
     <Compile Include="Design\DesignDataService.cs" />
+    <Compile Include="Design\DesignSettingsDataService.cs" />
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="Interactivity\AutoScrollAction.cs" />
     <Compile Include="Interactivity\BindingListener.cs" />
     <Compile Include="Interactivity\DataEventTrigger.cs" />
+    <Compile Include="Interactivity\PasswordBoxAssistant.cs" />
     <Compile Include="Interactivity\ScrollViewerAttached.cs" />
+    <Compile Include="Model\ChatManager.cs" />
     <Compile Include="Model\ChatMessage.cs" />
-    <Compile Include="Model\ChatSettingsBase.cs" />
+    <Compile Include="Model\SettingsDataService.cs" />
     <Compile Include="Model\CustomEventArgs.cs" />
     <Compile Include="Model\ChatDataService.cs" />
     <Compile Include="Model\IChat.cs" />
@@ -153,8 +157,9 @@
     <Compile Include="Utils\TextMeasurer.cs" />
     <Compile Include="ViewModel\ChatBoxViewModel.cs" />
     <Compile Include="ViewModel\ChatMessageViewModel.cs" />
+    <Compile Include="ViewModel\SettingsFieldViewModel.cs" />
     <Compile Include="ViewModel\MainViewModel.cs" />
-    <Compile Include="ViewModel\SettingsChatHeaderViewModel.cs" />
+    <Compile Include="ViewModel\SettingsChatItemViewModel.cs" />
     <Compile Include="ViewModel\SettingsViewModel.cs" />
     <Compile Include="ViewModel\ViewModelLocator.cs" />
     <Compile Include="View\ChatBoxView.xaml.cs">
@@ -163,8 +168,11 @@
     <Compile Include="View\ChatMessageView.xaml.cs">
       <DependentUpon>ChatMessageView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="View\SettingsChatHeader.xaml.cs">
-      <DependentUpon>SettingsChatHeader.xaml</DependentUpon>
+    <Compile Include="View\SettingsFieldView.xaml.cs">
+      <DependentUpon>SettingsFieldView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\SettingsChatItemView.xaml.cs">
+      <DependentUpon>SettingsChatItemView.xaml</DependentUpon>
     </Compile>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -190,6 +198,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Page Include="Skins\Main\Expander.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Skins\Main\MainWindowSkin.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -214,7 +226,11 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="View\SettingsChatHeader.xaml">
+    <Page Include="View\SettingsFieldView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\SettingsChatItemView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

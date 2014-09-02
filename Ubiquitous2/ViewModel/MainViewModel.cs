@@ -1,6 +1,7 @@
 ﻿using System.Diagnostics;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
+using Microsoft.Practices.ServiceLocation;
 using UB.Model;
 
 namespace UB.ViewModel
@@ -39,7 +40,7 @@ namespace UB.ViewModel
                     ?? (_showSettings = new RelayCommand(
                                           () =>
                                           {
-                                              var settings = new SettingsViewModel();
+                                              var settings = ServiceLocator.Current.GetInstance<SettingsViewModel>();
                                               settings.Show();
                                           }));
             }

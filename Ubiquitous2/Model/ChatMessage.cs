@@ -18,7 +18,7 @@ namespace UB.Model
         public String Text{ get; set; }
         public Guid Id { get; set; }
         public String TimeStamp { get; set; }
-        public String ImageSource { get; set; }
+        public String ChatIconURL { get; set; }
         public String FromUserName { get; set; }
         public String Channel { get; set; }
 

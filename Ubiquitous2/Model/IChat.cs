@@ -6,8 +6,11 @@ using System.Threading.Tasks;
 
 namespace UB.Model
 {
-    interface IChat
+    public interface IChat
     {
+        String ChatName { get; }
+        String IconURL { get;  }
+        bool Enabled { get; set; }
         bool IsStopping { get; set; }
         event EventHandler<ChatServiceEventArgs> MessageReceived;
         bool Start();

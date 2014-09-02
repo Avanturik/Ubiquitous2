@@ -32,12 +32,15 @@ namespace UB.ViewModel
             if (ViewModelBase.IsInDesignModeStatic)
             {
                 SimpleIoc.Default.Register<IChatDataService, Design.DesignDataService>();
+                SimpleIoc.Default.Register<ISettingsDataService, Design.DesignSettingsDataService>();
             }
             else
             {
                 SimpleIoc.Default.Register<IChatDataService, ChatDataService>();
+                SimpleIoc.Default.Register<ISettingsDataService, SettingsDataService>();
             }
 
+            SimpleIoc.Default.Register<SettingsChatItemViewModel>();
             SimpleIoc.Default.Register<MainViewModel>();
             SimpleIoc.Default.Register<SettingsViewModel>();
             SimpleIoc.Default.Register<ChatMessageViewModel>();
@@ -102,7 +105,19 @@ namespace UB.ViewModel
             }
         }
 
-
+        /// <summary>
+        /// Gets the Main property.
+        /// </summary>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance",
+            "CA1822:MarkMembersAsStatic",
+            Justification = "This non-static member is needed for data binding purposes.")]
+        public SettingsChatItemViewModel SettingsChatItem
+        {
+            get
+            {
+                return ServiceLocator.Current.GetInstance<SettingsChatItemViewModel>();
+            }
+        }
         /// <summary>
         /// Cleans up all the resources.
         /// </summary>

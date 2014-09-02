@@ -6,8 +6,8 @@ using System.Threading.Tasks;
 
 namespace UB.Model
 {
-    interface ISettingsDataService
+    public interface ISettingsDataService
     {
-        //void GetChatServiceSettings( Action<ChatSettings> )
+        void GetSettings(String section, Action<List<object>> callback);
     }
 }

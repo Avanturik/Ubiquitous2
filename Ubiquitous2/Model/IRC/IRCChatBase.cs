@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Net;
@@ -17,11 +18,15 @@ namespace UB.Model
         private Timer pingTimer;
         private Timer noPongTimer;
         private const int pingInterval = 30000;
-        
+        private bool isConnecting = true;
+        private Dictionary<String, Action<IrcRawMessageEventArgs>> rawMessageHandlers;
+
         private Random random { get; set; }
         public IRCChatBase( IRCLoginInfo info )
         {
             loginInfo = info;
+            for (int i = 0; i < loginInfo.Channels.Length; i++)
+                loginInfo.Channels[i] = "#" + loginInfo.Channels[i].Replace("#", "");
 
             if (String.IsNullOrEmpty(LoginInfo.HostName))
                 throw new Exception("Hostname must be specified!");
@@ -31,6 +36,10 @@ namespace UB.Model
 
             random = new Random();
 
+            rawMessageHandlers = new Dictionary<string, Action<IrcRawMessageEventArgs>>()
+            {
+                {"PRIVMSG", ReadPrivateMessage}
+            };
 
         }
         public bool IsStopping { get; set; }
@@ -67,6 +76,7 @@ namespace UB.Model
             }, null, Timeout.Infinite, Timeout.Infinite);
             
             IsStopping = false;
+            isConnecting = true;
             Connect();
             return true;
         }
@@ -105,7 +115,28 @@ namespace UB.Model
                 });
             });
         }
-
+        private void ReadPrivateMessage(IrcRawMessageEventArgs e)
+        {
+            if (e.Message.Parameters.Count >= 2)
+            {
+                if (MessageReceived != null)
+                {
+                    var message = new ChatMessage()
+                        {
+                            Text = e.Message.Parameters[1],
+                            Channel = e.Message.Parameters[0],
+                            FromUserName = e.Message.Source.Name,
+                            TimeStamp = DateTime.Now.ToShortTimeString()
+                        };
+                    
+                    if( loginInfo.Channels.Contains(message.Channel) )
+                        MessageReceived(this, new ChatServiceEventArgs()
+                        {
+                            Message = message
+                        });
+                }
+            }
+        }
         private void GetServerList(Action<IPHostEntry> callback)
         {
             Utils.Net.TestTCPPort(LoginInfo.HostName, LoginInfo.Port, (hosts, error) =>
@@ -115,21 +146,12 @@ namespace UB.Model
                 callback(hosts);
             });
         }
-        protected override void OnConnected(EventArgs e)
-        {
-            base.OnConnected(e);
-            Thread.Sleep(16);
-            if (String.IsNullOrEmpty(LoginInfo.Password) || LoginInfo.Password.Equals(dummyPass))
-                JoinChannels();
 
-            pingTimer.Change(0, pingInterval);
-        }
         void JoinChannels()
         {
+            pingTimer.Change(0, pingInterval);
             foreach (String channel in LoginInfo.Channels)
-                Channels.Join(
-                    "#" + channel.Replace("#","").ToLower()
-                );
+                Channels.Join( channel );
         }
         protected override void OnPongReceived(IrcPingOrPongReceivedEventArgs e)
         {
@@ -142,41 +164,19 @@ namespace UB.Model
 
             LocalUser.JoinedChannel += LocalUser_JoinedChannel;
             LocalUser.LeftChannel += LocalUser_LeftChannel;
-            LocalUser.NoticeReceived += LocalUser_NoticeReceived;
-            LocalUser.MessageReceived += LocalUser_MessageReceived;
-
-            JoinChannels();
-
         }
         protected override void OnRawMessageReceived(IrcRawMessageEventArgs e)
         {
             base.OnRawMessageReceived(e);
-            switch( e.Message.Command)
+            
+            if (rawMessageHandlers.ContainsKey(e.Message.Command))
+                rawMessageHandlers[e.Message.Command](e);
+
+            if (isConnecting)
             {
-                case "PRIVMSG":
-                    if(e.Message.Parameters.Count >= 2)
-                    {
-                        if (MessageReceived != null)
-                        {
-                            MessageReceived(this, new ChatServiceEventArgs()
-                            {
-                                Message = new ChatMessage()
-                                {
-                                    Text = e.Message.Parameters[1],
-                                    Channel = e.Message.Parameters[0],
-                                    FromUserName = e.Message.Source.Name,
-                                    TimeStamp = DateTime.Now.ToShortTimeString()
-                                }
-                            });
-                        }
-                    }
-                    break;
-                default:
-
-                    break;
-
+                isConnecting = false;
+                JoinChannels();
             }
-
         }
         protected override void OnDisconnected(EventArgs e)
         {
@@ -192,27 +192,15 @@ namespace UB.Model
             Restart();
             base.OnError(e);
         }
-        void LocalUser_MessageReceived(object sender, IrcMessageEventArgs e)
-        {
-            Debug.Print("Message:{0}",e.Text);
-            if (MessageReceived != null)
-                MessageReceived(this, new ChatServiceEventArgs() {
-                    Message = new ChatMessage() { Text = e.Text, FromUserName = e.Source.Name }
-                });
-        }
-
-        void LocalUser_NoticeReceived(object sender, IrcMessageEventArgs e)
-        {
-            Debug.Print("Notice:{0}", e.Text);
-        }
 
         void LocalUser_LeftChannel(object sender, IrcChannelEventArgs e)
         {
-            
+            // TODO: IRC leave message handler
         }
 
         void LocalUser_JoinedChannel(object sender, IrcChannelEventArgs e)
         {
+            // TODO: IRC join message handler
             
         }
 
@@ -228,5 +216,9 @@ namespace UB.Model
             return false;
         }
 
+
+        public virtual String ChatName { get { return String.Empty; } }
+        public virtual String IconURL { get { return String.Empty; } }
+        public bool Enabled { get; set; }
     }
 }

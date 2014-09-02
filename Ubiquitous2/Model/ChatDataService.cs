@@ -29,7 +29,7 @@ namespace UB.Model
 
             var message = new ChatMessage(text) {
                 FromUserName = "xedoc",
-                ImageSource = @"/favicon.ico",
+                ChatIconURL = @"/favicon.ico",
                 Channel = "#loremipsum"
             };
             callback(message, null);
@@ -55,23 +55,26 @@ namespace UB.Model
                 }
             }, null, 0, 1000);
 
-            //Twitch
-            var channels = new String[] { "goodguygarry", "nightblue3", "herdyn", "#starladder1", "mushisgosu"};
-            var twitch = new TwitchChat( "justinfan" + rnd.Next(10000000).ToString(), null, channels);
-            twitch.MessageReceived += twitch_MessageReceived;
-            twitch.Start();
+            var chatManager = new ChatManager();
+
+            chatManager.Chats.ForEach(chat => {
+                chat.MessageReceived += chat_MessageReceived;
+                chat.Start();
+            });
         }
-        void twitch_MessageReceived(object sender, ChatServiceEventArgs e)
+
+        void chat_MessageReceived(object sender, ChatServiceEventArgs e)
         {
-                var m = e.Message;
-                m.ImageSource = @"/favicon.ico";
-                AddMessageToQueue(m);
+            var message = e.Message;
+            var chat = sender as IChat;
+            message.ChatIconURL = chat.IconURL;
+            AddMessageToQueue(message);
         }
         void AddMessageToQueue( ChatMessage message )
         {
             lock (messageQueueLock)
             {
-                message.ImageSource = @"/favicon.ico";
+                message.ChatIconURL = @"/favicon.ico";
                 messageQueue.Add(message);
             }
         }
