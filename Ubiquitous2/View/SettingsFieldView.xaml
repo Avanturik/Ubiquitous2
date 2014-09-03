@@ -6,36 +6,53 @@
              xmlns:Interactivity="clr-namespace:UB.Interactivity"
              xmlns:viewModel="clr-namespace:UB.ViewModel"
              mc:Ignorable="d"                          
-             d:DesignHeight="34" d:DesignWidth="300" Style="{DynamicResource SettingsFieldStyle}"
+             d:DesignHeight="30" d:DesignWidth="229" Style="{DynamicResource SettingsFieldStyle}" 
+             Height="30"
+             Name="userControl"
+             Background="{DynamicResource {x:Static SystemColors.ControlBrushKey}}"
+             DataContext="{Binding Source={StaticResource Locator}, Path=SettingsField}"
              >
 
     <UserControl.Resources>
-        <viewModel:SettingsFieldViewModel x:Key="ViewModel"/>
-
+        <Style TargetType="{x:Type Border}">
+            <Setter Property="Padding" Value="5,5,5,5"/>
+            <Setter Property="Background" Value="{Binding ElementName=userControl, Path=Background}"/>
+            <Setter Property="MaxWidth" Value="300"/>
+        </Style>
+        <Style TargetType="{x:Type Label}">
+            <Setter Property="Margin" Value="0,-3,0,0"/>
+            <Setter Property="MinWidth" Value="100"/>
+            <Setter Property="HorizontalAlignment" Value="Right"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+            <Setter Property="HorizontalContentAlignment" Value="Right"/>
+            <Setter Property="VerticalAlignment" Value="Stretch"/>
+        </Style>
         <Style x:Key="SettingsFieldStyle" TargetType="{x:Type UserControl}">
-            <Setter Property="DataContext" Value="{Binding}"/>
-
             <Style.Triggers>
-                <DataTrigger Binding="{Binding DataType}" Value="Text">
+                <DataTrigger Binding="{Binding DataType, Mode=OneWay}" Value="Text">
                     <Setter Property="Template">
                         <Setter.Value>
                             <ControlTemplate>
-                                <DockPanel  Margin="5,5,0,5" HorizontalAlignment="Stretch" >
-                                    <Label Content="{Binding LabelText}" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" VerticalAlignment="Stretch"/>
-                                    <PasswordBox Interactivity:PasswordBoxAssistant.BindPassword="true"  Interactivity:PasswordBoxAssistant.BoundPassword="{Binding Path=Text, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" VerticalContentAlignment="Center" VerticalAlignment="Stretch" Margin="0,2,0,0" Width="248" BorderBrush="#FFA8C0FF"/>
-                                </DockPanel>
+                                <Border>
+                                    <DockPanel>
+                                        <Label Content="{Binding LabelText, Mode=OneWay}" />
+                                        <PasswordBox Interactivity:PasswordBoxAssistant.BindPassword="true"  Interactivity:PasswordBoxAssistant.BoundPassword="{Binding Path=Text, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                                    </DockPanel>
+                                </Border>
                             </ControlTemplate>
                         </Setter.Value>
                     </Setter>
                 </DataTrigger>
-                <DataTrigger Binding="{Binding DataType}" Value="Password">
+                <DataTrigger Binding="{Binding DataType, Mode=OneWay}" Value="Password">
                     <Setter Property="Template">
                         <Setter.Value>
                             <ControlTemplate>
-                                <DockPanel Margin="5,5,0,5" HorizontalAlignment="Stretch" >
-                                    <Label Content="{Binding LabelText}" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" VerticalAlignment="Stretch"/>
-                                    <TextBox Text="{Binding Text}" VerticalContentAlignment="Center" VerticalAlignment="Stretch" Margin="0,2,0,0" Width="248" BorderBrush="#FFA8C0FF"/>
-                                </DockPanel>
+                                <Border>
+                                    <DockPanel>
+                                        <Label Content="{Binding LabelText, Mode=OneWay}"/>
+                                        <TextBox Text="{Binding Text}"/>
+                                    </DockPanel>
+                                </Border>
                             </ControlTemplate>
                         </Setter.Value>
                     </Setter>

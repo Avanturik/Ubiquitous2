@@ -16,26 +16,16 @@ namespace UB.ViewModel
     public class SettingsViewModel : ViewModelBase
     {
         private ISettingsDataService settingsDataService;
-        /// <summary>
-        /// Initializes a new instance of the SettingsViewModel class.
-        /// </summary>
-        public SettingsViewModel()
-        {
-            
-        }
 
         [PreferredConstructor]
-        public SettingsViewModel( ISettingsDataService dataService )
+        public SettingsViewModel( SettingsDataService dataService )
         {
             settingsDataService = dataService;
 
-            settingsDataService.GetSettings("chats", (list) => {
-                foreach( dynamic chat in list )
+            settingsDataService.GetChatSettings((list) => {
+                foreach( ChatConfig chatConfig in list )
                 {
-                    Chats.Add(new SettingsChatItemViewModel() { 
-                        ChatName = chat.ChatName,
-                        Enabled = chat.Enabled,                    
-                    });
+                    Chats.Add(new SettingsChatItemViewModel(chatConfig));
                 }
             });
                  

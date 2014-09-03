@@ -1,4 +1,5 @@
 ﻿using System.Configuration;
+using System.Diagnostics;
 using System.Windows;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
@@ -23,6 +24,21 @@ namespace UB
                     typeof(Timeline),
                     new FrameworkPropertyMetadata { DefaultValue = 10 });
 
+            //ConfigSections test = Ubiqiutous.Default.Config;
+            //Debug.Print("{0}",test.ChatConfigs.Count);
+            //Ubiqiutous.Default.Config = new ConfigSections();
+            //Ubiqiutous.Default.Config.ChatConfigs = new System.Collections.Generic.List<ChatConfig>();
+            //Ubiqiutous.Default.Config.ChatConfigs.Add(new ChatConfig()
+            //{
+            //    ChatName = "Twitch.tv",
+            //    Enabled = true,
+            //    IconURL = @"/favicon.ico",
+            //    Parameters = new System.Collections.Generic.List<ConfigField>()
+            //{
+            //    new ConfigField() { DataType = "Text", IsVisible = true, Label = "User name:", Name = "Username", Value = "default"}
+            //}
+            //});
+            //Ubiqiutous.Default.Save();
             //MakePortable(Settings.Default);
             
         }

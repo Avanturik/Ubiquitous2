@@ -4,24 +4,24 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:UB.View" x:Class="UB.View.SettingsChatItemView" 
+             xmlns:Devart="clr-namespace:Devart.Controls"
+             xmlns:ViewModel="clr-namespace:UB.ViewModel"
+             xmlns:View="clr-namespace:UB.View"
+             DataContext="{Binding Source={StaticResource Locator},Path=SettingsChatItem}"
              mc:Ignorable="d"
-             d:DesignHeight="232.851" d:DesignWidth="298">
+             d:DesignHeight="31.433" d:DesignWidth="184.566">
 
     <UserControl.Resources>
         <Style TargetType="{x:Type TextBox}">
             <Setter Property="Foreground" Value="Black"/>
         </Style>
-        <Style TargetType="{x:Type Label}">
-            <Setter Property="MinWidth" Value="60"/>
-            <Setter Property="HorizontalAlignment" Value="Right"/>
+        <Style TargetType="{x:Type TextBlock}">
+            <Setter Property="Margin" Value="0"/>
         </Style>
+
     </UserControl.Resources>
 
-    <UserControl.DataContext>
-        <Binding Path="SettingsChatItem" Source="{StaticResource Locator}"/>
-    </UserControl.DataContext>
-
-    <Border BorderThickness="0,1,0,0" Background="#FFE0E0E0">
+    <Border BorderThickness="0,1,0,0" Background="{DynamicResource {x:Static SystemColors.ControlBrushKey}}" HorizontalAlignment="Left">
         <Border.BorderBrush>
             <LinearGradientBrush EndPoint="1,1" StartPoint="0.5,0">
                 <GradientStop Color="#FFC5C5C5" Offset="0"/>
@@ -29,37 +29,38 @@
             </LinearGradientBrush>
         </Border.BorderBrush>
 
-        <StackPanel Orientation="Vertical">
-            <TextBlock Padding="5" Margin="0"><InlineUIContainer>
+        <StackPanel Orientation="Vertical" HorizontalAlignment="Left">
+            <TextBlock Padding="5" Margin="1">
 					<CheckBox Margin="0,-3"/>
-				</InlineUIContainer><Run Text=" "/><InlineUIContainer>
 					<Image Margin="0,-5" Width="16" Source="/favicon.ico"/>
-				</InlineUIContainer><Run Text=" "/><InlineUIContainer>
 					<TextBlock Text="{Binding ChatName}"></TextBlock>
-				</InlineUIContainer><Run Text=" "/><InlineUIContainer>
-					<TextBlock><Hyperlink Command="{Binding ToggleEdit}"><Run Text="edit"/></Hyperlink></TextBlock>
-				</InlineUIContainer><Run Text=" "/><InlineUIContainer>
-					<TextBlock><Hyperlink><Run Text="restart"/></Hyperlink></TextBlock>
-				</InlineUIContainer></TextBlock>
-            <Expander Padding="10"  IsExpanded="{Binding Expanded}" Style="{DynamicResource ExpanderStyle}">
-                <StackPanel Orientation="Vertical" Margin="0,0,0,0" Height="177">
-                    <DockPanel Margin="0,0,0,10" HorizontalAlignment="Stretch">
-                        <Label Content="User" HorizontalContentAlignment="Right"/>
-                        <TextBox Margin="0,0,0,0" Text="tst"/>
-                    </DockPanel>
-                    <DockPanel Margin="0,0,0,10" HorizontalAlignment="Stretch">
-                        <Label Content="Password" HorizontalContentAlignment="Right"/>
-                        <PasswordBox Margin="0,0,0,0"/>
-                    </DockPanel>
-                    <DockPanel Margin="0,0,0,10" HorizontalAlignment="Stretch">
-                        <Label Content="Channels" HorizontalContentAlignment="Right"/>
-                        <TextBox Margin="0,0,0,0" Text="tst"/>
-                    </DockPanel>
-                    <local:SettingsFieldView Height="32"/>
-
-                </StackPanel>
+					<TextBlock><Hyperlink Command="{Binding ToggleEdit}"><TextBlock Text="{Binding EditLinkTitle}"/></Hyperlink></TextBlock>
+                    <TextBlock><Hyperlink><TextBlock>restart</TextBlock></Hyperlink></TextBlock>
+            </TextBlock>
+            <Expander HorizontalAlignment="Left" HorizontalContentAlignment="Left" Padding="10"  IsExpanded="{Binding Expanded}" Style="{DynamicResource ExpanderStyle}" VerticalAlignment="Top">
+                <ItemsControl ItemsSource="{Binding SettingsFields}"
+                      Padding="0"
+                      Margin="0,0,39,0"
+                      HorizontalContentAlignment="Left"
+                      VirtualizingStackPanel.IsVirtualizing="True"
+                      VirtualizingStackPanel.VirtualizationMode="Recycling"
+                      ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                      ScrollViewer.VerticalScrollBarVisibility="Auto" Background="#FF494949">
+                    <ItemsControl.CacheMode>
+                        <BitmapCache EnableClearType="False" RenderAtScale="1" SnapsToDevicePixels="True"/>
+                    </ItemsControl.CacheMode>
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <Devart:SmoothPanel Width="300" HorizontalAlignment="Left" Height="{Binding CalculatedHeight}" Background="{DynamicResource {x:Static SystemColors.ControlBrushKey}}">
+                                <Devart:SmoothPanel.Templates>
+                                    <Devart:SmoothPanelTemplate ViewModel="{x:Type ViewModel:SettingsFieldViewModel}" View="{x:Type View:SettingsFieldView}" />
+                                </Devart:SmoothPanel.Templates>
+                            </Devart:SmoothPanel>
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                </ItemsControl>
             </Expander>
-
+                
         </StackPanel>
     </Border>
 </UserControl>

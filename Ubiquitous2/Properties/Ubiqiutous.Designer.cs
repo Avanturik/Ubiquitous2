@@ -61,5 +61,17 @@ namespace UB.Properties {
                 this["MainWindowWidth"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Configuration.SettingsProviderAttribute(typeof(PortableSettingsProvider))]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        public global::UB.Model.ConfigSections Config {
+            get {
+                return ((global::UB.Model.ConfigSections)(this["Config"]));
+            }
+            set {
+                this["Config"] = value;
+            }
+        }
     }
 }

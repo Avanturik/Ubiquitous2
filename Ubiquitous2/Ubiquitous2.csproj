@@ -97,6 +97,7 @@
     <Reference Include="System.Configuration" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Windows.Interactivity, Version=4.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
     <Reference Include="System.Xml" />
@@ -131,8 +132,11 @@
     <Compile Include="Interactivity\DataEventTrigger.cs" />
     <Compile Include="Interactivity\PasswordBoxAssistant.cs" />
     <Compile Include="Interactivity\ScrollViewerAttached.cs" />
+    <Compile Include="Model\ChatConfig.cs" />
     <Compile Include="Model\ChatManager.cs" />
     <Compile Include="Model\ChatMessage.cs" />
+    <Compile Include="Model\ConfigField.cs" />
+    <Compile Include="Model\ConfigSections.cs" />
     <Compile Include="Model\SettingsDataService.cs" />
     <Compile Include="Model\CustomEventArgs.cs" />
     <Compile Include="Model\ChatDataService.cs" />
@@ -150,6 +154,7 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <DependentUpon>Ubiqiutous.settings</DependentUpon>
     </Compile>
+    <Compile Include="Utils\Config.cs" />
     <Compile Include="Utils\Net.cs" />
     <Compile Include="SettingsWindow.xaml.cs">
       <DependentUpon>SettingsWindow.xaml</DependentUpon>

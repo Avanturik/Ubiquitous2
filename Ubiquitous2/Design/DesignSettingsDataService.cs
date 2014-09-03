@@ -9,16 +9,36 @@ namespace UB.Design
 {
     public class DesignSettingsDataService :ISettingsDataService
     {
-        public void GetSettings(String section, Action<List<dynamic>> callback)
+        public void GetChatSettings(Action<ChatConfig[]> callback)
         {
-            switch (section.ToLower())
-            {
-                case "chats":
-                    callback(new List<dynamic>() { 
-                        new { ChatName = "Twitch.tv", Enabled = true, UserName = "justinfan12341234", Password = "123"}
+            callback(new ChatConfig[] {                 
+                       new ChatConfig() { ChatName = "LoremIpsum.tv", Enabled = true, Parameters = new List<ConfigField>() {
+                        new ConfigField() { DataType = "Text", IsVisible = true, Label = "User name:", Name = "Username", Value = "loremuser" }
+                       }},
                     });
-                    break;
-            }
+        }
+
+
+        public void GetRandomChatSetting(Action<ChatConfig> callback)
+        {
+            callback(
+                new ChatConfig()
+                {
+                    ChatName = "LoremIpsum.tv",
+                    Enabled = true,
+                    Parameters = new List<ConfigField>() {
+                        new ConfigField() { DataType = "Text", IsVisible = true, Label = "User name:", Name = "Username", Value = "loremuser" }
+                       }
+                });
+
+        }
+
+
+        public void GetRandomTextField(Action<ConfigField> callback)
+        {
+            callback(
+                 new ConfigField() { DataType = "Text", IsVisible = true, Label = "User name:", Name = "Username", Value = "loremuser" }
+            );
         }
     }
 }

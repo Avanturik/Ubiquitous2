@@ -23,7 +23,6 @@ namespace UB.ViewModel
         {
             _dataService = dataService;
             var test = Properties.Ubiqiutous.Default.LoremIpsum;
-            Properties.Ubiqiutous.Default.Save();
 
         }
 

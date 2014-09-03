@@ -17,5 +17,6 @@ namespace UB.Model
         bool Stop();
         bool Restart();
         bool SendMessage(String channel, ChatMessage message);
+        ChatConfig GetDefaultSettings();
     }
 }

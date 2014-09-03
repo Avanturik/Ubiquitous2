@@ -3,7 +3,6 @@ using System.Collections;
 using System.Collections.Specialized;
 using System.Configuration;
 using System.Diagnostics;
-using System.Diagnostics.Contracts;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -105,9 +104,18 @@ namespace UB
                : string.Concat("./", LocalSettingsRootName, "/", Environment.MachineName, "/", setting.Name);
 
             var propertyElement = SettingsRoot.XPathSelectElement(propertyPath);
-            return propertyElement == null ? setting.DefaultValue : propertyElement.Value;
-        }
 
+            if (setting.PropertyType.FullName.Contains("UB.Model"))
+            {
+                
+                return propertyElement == null ? null : propertyElement.Nodes().Aggregate("", (b, node) => b += node.ToString());
+            }
+            else
+            {
+                return propertyElement == null ? setting.DefaultValue : propertyElement.Value;
+            }
+
+        }
         void SetValue(SettingsPropertyValue setting)
         {
             var parentElement = IsRoaming(setting.Property)
@@ -115,7 +123,12 @@ namespace UB
               : SettingsRoot.GetOrAddElement(LocalSettingsRootName)
                       .GetOrAddElement(Environment.MachineName);
 
-            parentElement.GetOrAddElement(setting.Name).Value = setting.SerializedValue.ToString();
+            if (setting.Property.PropertyType.FullName.Contains("UB.Model") && setting.SerializedValue != null )
+            {                
+                parentElement.GetOrAddElement(setting.Name).ReplaceWith(new XElement(setting.Name, XElement.Parse(setting.SerializedValue.ToString())));
+            }
+            else
+                parentElement.GetOrAddElement(setting.Name).Value = setting.SerializedValue == null ? String.Empty : setting.SerializedValue.ToString();
         }
 
         static XDocument LoadOrCreateSettings(string filePath)

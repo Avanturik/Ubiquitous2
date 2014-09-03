@@ -4,11 +4,14 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using Devart.Controls;
 using GalaSoft.MvvmLight;
+using GalaSoft.MvvmLight.Ioc;
+using UB.Model;
 
 namespace UB.ViewModel
 {
-    public class SettingsFieldViewModel : ViewModelBase
+    public class SettingsFieldViewModel : ViewModelBase, IHeightMeasurer
     {
 
         /// <summary>
@@ -17,7 +20,34 @@ namespace UB.ViewModel
         public const string DataTypePropertyName = "DataType";
 
         private String _dataType = "Text";
+        private ISettingsDataService _settingsDataService;
 
+        [PreferredConstructor]
+        public SettingsFieldViewModel(ISettingsDataService settingsDataService )
+        {
+            _settingsDataService = settingsDataService;
+            _settingsDataService.GetRandomTextField((field) => {
+                DataType = field.DataType;
+                LabelText = field.Label;
+                Text = (String)field.Value;
+            });
+        }
+
+        public SettingsFieldViewModel(String dataType, String labelText, object value)
+        {
+            LabelText = labelText;
+            switch( dataType.ToLower())
+            {
+                case "text":
+                    Text = (String)value;
+                    DataType = "Text";
+                    break;
+                case "password":
+                    Text = (String)value;
+                    DataType = "Password";
+                    break;
+            }
+        }
         /// <summary>
         /// Sets and gets the DataType property.
         /// Changes to that property's value raise the PropertyChanged event. 
@@ -102,6 +132,11 @@ namespace UB.ViewModel
                 _labelText  = value;
                 RaisePropertyChanged(LabelTextPropertyName);
             }
+        }
+
+        public double GetEstimatedHeight(double availableWidth)
+        {
+            return 30;
         }
     }
 }

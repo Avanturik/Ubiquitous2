@@ -40,8 +40,7 @@
                                 <ItemsPanelTemplate>
                                     <dc:SmoothPanel Margin="0,0,-2,0">
                                         <dc:SmoothPanel.Templates>
-                                            <dc:SmoothPanelTemplate ViewModel="{x:Type ubviewmodel:ChatMessageViewModel}"
-                                      View="{x:Type ubview:ChatMessageView}" />
+                                            <dc:SmoothPanelTemplate ViewModel="{x:Type ubviewmodel:ChatMessageViewModel}" View="{x:Type ubview:ChatMessageView}" />
                                         </dc:SmoothPanel.Templates>
                                     </dc:SmoothPanel>
                                 </ItemsPanelTemplate>

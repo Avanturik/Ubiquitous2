@@ -25,8 +25,13 @@ namespace UB.Model
         public IRCChatBase( IRCLoginInfo info )
         {
             loginInfo = info;
+            if (!info.Channels.Any(ch => ch.Equals(loginInfo.UserName, StringComparison.InvariantCultureIgnoreCase)))
+                info.Channels = info.Channels.Union(new String[] { loginInfo.UserName.ToLower() }).ToArray();
+
             for (int i = 0; i < loginInfo.Channels.Length; i++)
+            {
                 loginInfo.Channels[i] = "#" + loginInfo.Channels[i].Replace("#", "");
+            }
 
             if (String.IsNullOrEmpty(LoginInfo.HostName))
                 throw new Exception("Hostname must be specified!");
@@ -220,5 +225,7 @@ namespace UB.Model
         public virtual String ChatName { get { return String.Empty; } }
         public virtual String IconURL { get { return String.Empty; } }
         public bool Enabled { get; set; }
+        public virtual ChatConfig GetDefaultSettings() { return null;  }
+
     }
 }

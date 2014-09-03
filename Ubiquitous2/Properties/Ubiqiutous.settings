@@ -11,5 +11,8 @@
     <Setting Name="MainWindowWidth" Provider="PortableSettingsProvider" Type="System.Double" Scope="User">
       <Value Profile="(Default)">400</Value>
     </Setting>
+    <Setting Name="Config" Provider="PortableSettingsProvider" Type="UB.Model.ConfigSections" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
   </Settings>
 </SettingsFile>

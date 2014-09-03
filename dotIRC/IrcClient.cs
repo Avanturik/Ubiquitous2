@@ -1488,6 +1488,9 @@ namespace dotIRC
 
                     // Send next message in queue.
                     var message = this.messageSendQueue.Dequeue();
+                    if (message == null)
+                        return;
+
                     var line = message.Item1;
                     var token = message.Item2;
                     var lineBuffer = this.textEncoding.GetBytes(line);
