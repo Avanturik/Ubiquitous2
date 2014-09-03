@@ -32,13 +32,6 @@ namespace UB.Model
                         chats.Add(chatFactory[config.ChatName](config));
                     }
                 });
-                //return new List<IChat>()
-                //    {
-                //        new TwitchChat( 
-                //            userName: "justinfan" + rnd.Next(10000000).ToString(), 
-                //            password: null, 
-                //            channels: new String[]{ "goodguygarry", "nightblue3", "herdyn", "#starladder1", "mushisgosu"})
-                //    };
                 return chats;
             }
 

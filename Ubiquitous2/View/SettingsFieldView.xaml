@@ -10,9 +10,8 @@
              Height="30"
              Name="userControl"
              Background="{DynamicResource {x:Static SystemColors.ControlBrushKey}}"
-             DataContext="{Binding Source={StaticResource Locator}, Path=SettingsField}"
              >
-
+    <!--DataContext="{Binding Source={StaticResource Locator}, Path=SettingsField}"-->
     <UserControl.Resources>
         <Style TargetType="{x:Type Border}">
             <Setter Property="Padding" Value="5,5,5,5"/>
@@ -29,21 +28,21 @@
         </Style>
         <Style x:Key="SettingsFieldStyle" TargetType="{x:Type UserControl}">
             <Style.Triggers>
-                <DataTrigger Binding="{Binding DataType, Mode=OneWay}" Value="Text">
+                <DataTrigger Binding="{Binding DataType, Mode=OneWay}" Value="Password">
                     <Setter Property="Template">
                         <Setter.Value>
                             <ControlTemplate>
                                 <Border>
                                     <DockPanel>
                                         <Label Content="{Binding LabelText, Mode=OneWay}" />
-                                        <PasswordBox Interactivity:PasswordBoxAssistant.BindPassword="true"  Interactivity:PasswordBoxAssistant.BoundPassword="{Binding Path=Text, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                                        <PasswordBox Interactivity:PasswordBoxAssistant.BoundPassword="{Binding Path=Text, Mode=TwoWay}"/>
                                     </DockPanel>
                                 </Border>
                             </ControlTemplate>
                         </Setter.Value>
                     </Setter>
                 </DataTrigger>
-                <DataTrigger Binding="{Binding DataType, Mode=OneWay}" Value="Password">
+                <DataTrigger Binding="{Binding DataType, Mode=OneWay}" Value="Text">
                     <Setter Property="Template">
                         <Setter.Value>
                             <ControlTemplate>

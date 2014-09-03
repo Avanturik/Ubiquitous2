@@ -16,10 +16,10 @@ namespace UB.ViewModel
     {
         public bool Enabled { get; set; }
         public String ChatName { get; set; }
-        private ISettingsDataService _dataService;
+        private SettingsDataService _dataService;
         
         [PreferredConstructor]
-        public SettingsChatItemViewModel(ISettingsDataService dataService)
+        public SettingsChatItemViewModel(SettingsDataService dataService)
         {
                     _dataService = dataService;
                     _dataService.GetRandomChatSetting(
@@ -27,11 +27,15 @@ namespace UB.ViewModel
                     {
                         Enabled = item.Enabled;
                         ChatName = item.ChatName;
+                        foreach( var field in item.Parameters )
+                        {
+                            if( field.IsVisible )
+                                SettingsFields.Add(
+                                    new SettingsFieldViewModel(field)
+                                );
+                        }
                     });
 
-                    SettingsFields.Add(
-                        new SettingsFieldViewModel("Text", "User name:", "loremIpsumUser")
-                        );
         }
 
         public SettingsChatItemViewModel(ChatConfig config)
@@ -40,8 +44,9 @@ namespace UB.ViewModel
             ChatName = config.ChatName;
             foreach( var param in config.Parameters )
             {
-                SettingsFields.Add(
-                        new SettingsFieldViewModel(param.DataType, param.Label, param.Value)
+                if( param.IsVisible)
+                    SettingsFields.Add(
+                        new SettingsFieldViewModel(param)
                     );
             }
 

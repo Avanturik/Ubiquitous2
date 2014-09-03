@@ -225,7 +225,6 @@ namespace UB.Model
         public virtual String ChatName { get { return String.Empty; } }
         public virtual String IconURL { get { return String.Empty; } }
         public bool Enabled { get; set; }
-        public virtual ChatConfig GetDefaultSettings() { return null;  }
 
     }
 }

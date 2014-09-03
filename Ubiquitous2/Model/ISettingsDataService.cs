@@ -8,7 +8,7 @@ namespace UB.Model
 {
     public interface ISettingsDataService
     {
-        void GetChatSettings(Action<ChatConfig[]> callback);
+        void GetChatSettings(Action<List<ChatConfig>> callback);
         void GetRandomChatSetting(Action<ChatConfig> callback);
         void GetRandomTextField(Action<ConfigField> callback);
     }

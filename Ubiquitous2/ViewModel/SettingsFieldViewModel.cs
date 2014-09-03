@@ -18,36 +18,39 @@ namespace UB.ViewModel
         /// The <see cref="DataType" /> property's name.
         /// </summary>
         public const string DataTypePropertyName = "DataType";
-
+        private ConfigField _configField;
         private String _dataType = "Text";
-        private ISettingsDataService _settingsDataService;
+        private SettingsDataService _settingsDataService;
 
-        [PreferredConstructor]
-        public SettingsFieldViewModel(ISettingsDataService settingsDataService )
-        {
-            _settingsDataService = settingsDataService;
-            _settingsDataService.GetRandomTextField((field) => {
-                DataType = field.DataType;
-                LabelText = field.Label;
-                Text = (String)field.Value;
-            });
-        }
+        
+        //public SettingsFieldViewModel(SettingsDataService settingsDataService )
+        //{
+        //    _settingsDataService = settingsDataService;
+        //    _settingsDataService.GetRandomTextField((field) => {
+        //        DataType = field.DataType;
+        //        LabelText = field.Label;
+        //        Text = (String)field.Value;
+        //    });
+        //}
 
-        public SettingsFieldViewModel(String dataType, String labelText, object value)
+        public SettingsFieldViewModel(ConfigField configField)
         {
-            LabelText = labelText;
-            switch( dataType.ToLower())
+            _configField = configField;
+            LabelText = configField.Label;
+            switch (configField.DataType.ToLower())
             {
                 case "text":
-                    Text = (String)value;
+                    Text = (String)configField.Value;
                     DataType = "Text";
                     break;
                 case "password":
-                    Text = (String)value;
+                    Text = (String)configField.Value;
                     DataType = "Password";
                     break;
             }
+
         }
+
         /// <summary>
         /// Sets and gets the DataType property.
         /// Changes to that property's value raise the PropertyChanged event. 
@@ -96,7 +99,7 @@ namespace UB.ViewModel
                 {
                     return;
                 }
-
+                _configField.Value = value;
                 RaisePropertyChanging(TextPropertyName);
                 _text = value;
                 RaisePropertyChanged(TextPropertyName);
@@ -109,6 +112,8 @@ namespace UB.ViewModel
         public const string LabelTextPropertyName = "LabelText";
 
         private String _labelText = "Label";
+        private ConfigField param;
+
 
         /// <summary>
         /// Sets and gets the LabelText property.

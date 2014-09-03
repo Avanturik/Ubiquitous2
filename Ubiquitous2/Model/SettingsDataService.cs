@@ -1,11 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Dynamic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using UB.Properties;
-using UB.Utils;
 
 namespace UB.Model
 {
@@ -13,27 +9,27 @@ namespace UB.Model
     {
         public SettingsDataService()
         {
-            RegisterDefaultChatSettings();
+            InitializeChatSettings();
         }
-        public void GetChatSettings(Action<ChatConfig[]> callback)
+        public void GetChatSettings(Action<List<ChatConfig>> callback)
         {
-            callback(Ubiqiutous.Default.Config.ChatConfigs.ToArray());
+            callback(Ubiqiutous.Default.Config.ChatConfigs);
         }
-        private void RegisterDefaultChatSettings()
+        private void InitializeChatSettings()
         {
             var random = new Random();
 
-            //Twitch.tv
-            var twitchConfig = new ChatConfig() { ChatName = "Twitch.tv", IconURL = @"/favicon.ico", Enabled = false, 
+            //Twitch.tv default settings
+            var twitchDefaultConfig = new ChatConfig() { ChatName = "Twitch.tv", IconURL = @"/favicon.ico", Enabled = false, 
                 Parameters = new List<ConfigField>() {
-                new ConfigField() {  Name = "Username", Label = "Username", DataType = "Text", IsVisible = true, Value = "justinfan" + random.Next(1,1000000) },
+                new ConfigField() {  Name = "Username", Label = "Username", DataType = "Text", IsVisible = true, Value = "justinfan" + random.Next(1,123456) },
                 new ConfigField() {  Name = "Password", Label = "Password", DataType = "Password", IsVisible = true, Value = "123" },
                 new ConfigField() {  Name = "Channels", Label = "Channels", DataType = "Text", IsVisible = true, Value = "goodguygarry,nightblue3,herdyn,#starladder1, mushisgosu" }
                 }
             };
             
 
-            List<ChatConfig> chatConfigs = new List<ChatConfig>() { twitchConfig };
+            List<ChatConfig> chatConfigs = new List<ChatConfig>() { twitchDefaultConfig };
 
             //First launch ?
             if (Ubiqiutous.Default.Config == null)

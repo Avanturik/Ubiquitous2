@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using UB.Model.IRC;
 using UB.Utils;
 
@@ -36,20 +32,7 @@ namespace UB.Model
                 return "Twitch.tv"; 
             } 
         }
-        public override ChatConfig GetDefaultSettings()
-        {
-            return new ChatConfig()
-            {
-                ChatName = this.ChatName,
-                Enabled = false,
-                IconURL = this.IconURL,
-                Parameters = new List<ConfigField>() {
-                    new ConfigField() { DataType = "Text", IsVisible = true, Label = "User name:", Name = "Username" },
-                    new ConfigField() { DataType = "Password", IsVisible = true, Label = "Password:", Name = "Password" },
-                    new ConfigField() { DataType = "Text", IsVisible = true, Label = "Channels:", Name = "Channels" }
-                }
-            };
-        }
+
     }
 
 }
