@@ -107,9 +107,7 @@
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Web" />
     <Reference Include="System.Windows.Forms" />
-    <Reference Include="System.Windows.Interactivity, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Fluent.Ribbon.2.0.2\lib\net45\System.Windows.Interactivity.dll</HintPath>
-    </Reference>
+    <Reference Include="System.Windows.Interactivity, Version=4.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Core" />
@@ -318,7 +316,7 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>cmd /c cd "$(OutDir)" &amp; for /d %25%25d in (??,??-????) do rmdir /s /q %25%25d &amp; set errorlevel=0
+    <PostBuildEvent>cmd /c cd "$(TargetDir)"&gt;nul &amp; for /d %25%25d in (??,??-????) do if exist %25%25d rmdir /s /q %25%25d&gt;nul &amp; echo 0
 
 </PostBuildEvent>
   </PropertyGroup>
