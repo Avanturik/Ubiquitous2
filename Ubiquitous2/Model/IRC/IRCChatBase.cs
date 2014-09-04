@@ -43,7 +43,9 @@ namespace UB.Model
 
             rawMessageHandlers = new Dictionary<string, Action<IrcRawMessageEventArgs>>()
             {
-                {"PRIVMSG", ReadPrivateMessage}
+                {"PRIVMSG", ReadPrivateMessage},
+                {"JOIN", UserJoin},
+                {"PART", UserLeft},
             };
 
         }
@@ -66,6 +68,13 @@ namespace UB.Model
 
         public bool Start()
         {
+            var tries = 0;
+            while (IsStopping && tries < 60)
+            {
+                Thread.Sleep(1000);
+                tries++;
+            }
+
             noPongTimer = new Timer((obj) => {
                 if (!IsStopping)
                 {
@@ -120,6 +129,25 @@ namespace UB.Model
                 });
             });
         }
+        private void UserJoin(IrcRawMessageEventArgs e)
+        {
+            var user = e.Message.Source;
+            if (e.Message.Parameters.Count < 1)
+                return;
+
+            var channel = e.Message.Parameters[0];
+            Debug.Print("User {0} joined to {1}", user, channel);
+        }
+        private void UserLeft(IrcRawMessageEventArgs e)
+        {
+            var user = e.Message.Source;
+            if (e.Message.Parameters.Count < 1)
+                return;
+
+            var channel = e.Message.Parameters[0];
+            Debug.Print("User {0} left from {1}", user, channel);
+
+        }
         private void ReadPrivateMessage(IrcRawMessageEventArgs e)
         {
             if (e.Message.Parameters.Count >= 2)
@@ -135,10 +163,15 @@ namespace UB.Model
                         };
                     
                     if( loginInfo.Channels.Contains(message.Channel) )
+                    {
+                        if (ContentParser != null)
+                            ContentParser(message);
+
                         MessageReceived(this, new ChatServiceEventArgs()
                         {
                             Message = message
                         });
+                    }
                 }
             }
         }
@@ -163,13 +196,6 @@ namespace UB.Model
             base.OnPongReceived(e);
             noPongTimer.Change(pingInterval, Timeout.Infinite);
         }
-        protected override void OnRegistered(EventArgs e)
-        {
-            base.OnRegistered(e);
-
-            LocalUser.JoinedChannel += LocalUser_JoinedChannel;
-            LocalUser.LeftChannel += LocalUser_LeftChannel;
-        }
         protected override void OnRawMessageReceived(IrcRawMessageEventArgs e)
         {
             base.OnRawMessageReceived(e);
@@ -188,25 +214,16 @@ namespace UB.Model
             Debug.Print("Disconnect event from IRC");
             if (!IsStopping)
                 Restart();
+            
+            base.OnDisconnected(e);
 
-            base.OnDisconnected(e);            
+            IsStopping = false;
         }
         protected override void OnError(IrcErrorEventArgs e)
         {
             Debug.Print("Error: {0}", e.Error);
             Restart();
             base.OnError(e);
-        }
-
-        void LocalUser_LeftChannel(object sender, IrcChannelEventArgs e)
-        {
-            // TODO: IRC leave message handler
-        }
-
-        void LocalUser_JoinedChannel(object sender, IrcChannelEventArgs e)
-        {
-            // TODO: IRC join message handler
-            
         }
 
         public bool SendMessage(String channel, ChatMessage message)
@@ -226,5 +243,7 @@ namespace UB.Model
         public virtual String IconURL { get { return String.Empty; } }
         public bool Enabled { get; set; }
 
+
+        public Action<ChatMessage> ContentParser { get; set; }
     }
 }

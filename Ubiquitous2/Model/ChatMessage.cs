@@ -14,7 +14,7 @@ namespace UB.Model
             TimeStamp = DateTime.Now.ToShortTimeString();
             Text = text;
         }
-
+        public String ChatName { get; set; }
         public String Text{ get; set; }
         public Guid Id { get; set; }
         public String TimeStamp { get; set; }

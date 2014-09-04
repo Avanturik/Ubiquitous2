@@ -4,6 +4,7 @@ using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Ioc;
 using GalaSoft.MvvmLight.Threading;
 using UB.Model;
+using UB.Utils;
 
 namespace UB.ViewModel
 {
@@ -40,7 +41,9 @@ namespace UB.ViewModel
                             // Report error here
                             return;
                         }
-
+                        item.Text += " http://asdf.com ";
+                        item.Text = Html.ConvertUrlsToLinks(item.Text);
+                        item.Text += @" " + Html.CreateImageTag(@"http://static-cdn.jtvnw.net/jtv_user_pictures/chansub-global-emoticon-ebf60cd72f7aa600-24x18.png",24,18);
                         Messages.Add(new ChatMessageViewModel(item));
 
                     });

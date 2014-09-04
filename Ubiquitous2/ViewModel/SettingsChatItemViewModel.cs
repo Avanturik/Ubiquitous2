@@ -8,38 +8,42 @@ using Devart.Controls;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
 using GalaSoft.MvvmLight.Ioc;
+using Microsoft.Practices.ServiceLocation;
 using UB.Model;
 
 namespace UB.ViewModel
 {
     public class SettingsChatItemViewModel : ViewModelBase, IHeightMeasurer
     {
-        public bool Enabled { get; set; }
-        public String ChatName { get; set; }
+        private ChatConfig chatConfig;
         private SettingsDataService _dataService;
-        
+        private IChatDataService chatDataService;
+        public String ChatName { get; set; }
+
         [PreferredConstructor]
         public SettingsChatItemViewModel(SettingsDataService dataService)
         {
-                    _dataService = dataService;
-                    _dataService.GetRandomChatSetting(
-                    (item) =>
-                    {
-                        Enabled = item.Enabled;
-                        ChatName = item.ChatName;
-                        foreach( var field in item.Parameters )
-                        {
-                            if( field.IsVisible )
-                                SettingsFields.Add(
-                                    new SettingsFieldViewModel(field)
-                                );
-                        }
-                    });
+            _dataService = dataService;
+            _dataService.GetRandomChatSetting(
+            (item) =>
+            {
+                Enabled = item.Enabled;
+                ChatName = item.ChatName;
+                foreach (var field in item.Parameters)
+                {
+                    if (field.IsVisible)
+                        SettingsFields.Add(
+                            new SettingsFieldViewModel(field)
+                        );
+                }
+            });
 
         }
 
         public SettingsChatItemViewModel(ChatConfig config)
         {
+            chatDataService = ServiceLocator.Current.GetInstance<IChatDataService>();
+            chatConfig = config;
             Enabled = config.Enabled;
             ChatName = config.ChatName;
             foreach( var param in config.Parameters )
@@ -49,8 +53,6 @@ namespace UB.ViewModel
                         new SettingsFieldViewModel(param)
                     );
             }
-
-
         }
         public double GetEstimatedHeight(double availableWidth)
         {
@@ -197,6 +199,44 @@ namespace UB.ViewModel
                 _expanded = value;
                 EditLinkTitle = _expanded == true ? "done" : "edit";
                 RaisePropertyChanged(ExpandedPropertyName);
+            }
+        }
+
+        /// <summary>
+        /// The <see cref="Enabled" /> property's name.
+        /// </summary>
+        public const string EnabledPropertyName = "Enabled";
+
+        private bool _enabled = false;
+
+        /// <summary>
+        /// Sets and gets the Enabled property.
+        /// Changes to that property's value raise the PropertyChanged event. 
+        /// </summary>
+        public bool Enabled
+        {
+            get
+            {
+                return _enabled;
+            }
+
+            set
+            {
+                if (_enabled == value)
+                {
+                    return;
+                }
+
+                RaisePropertyChanging(EnabledPropertyName);
+                _enabled = value;
+                if( chatConfig != null )
+                    chatConfig.Enabled = _enabled;
+
+                if( chatDataService != null && ChatName != null )
+                {
+                    chatDataService.SwitchChat(ChatName, _enabled);
+                }
+                RaisePropertyChanged(EnabledPropertyName);
             }
         }
     }

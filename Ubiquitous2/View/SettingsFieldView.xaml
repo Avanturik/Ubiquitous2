@@ -11,8 +11,14 @@
              Name="userControl"
              Background="{DynamicResource {x:Static SystemColors.ControlBrushKey}}"
              >
-    <!--DataContext="{Binding Source={StaticResource Locator}, Path=SettingsField}"-->
+    <d:UserControl.DataContext>
+        <viewModel:SettingsFieldViewModel LabelText="Lorem:" DataType="Text" Text="Ipsum" />
+    </d:UserControl.DataContext>
+
     <UserControl.Resources>
+        <Style TargetType="{x:Type TextBox}">
+            <Setter Property="Foreground" Value="Black"/>
+        </Style>
         <Style TargetType="{x:Type Border}">
             <Setter Property="Padding" Value="5,5,5,5"/>
             <Setter Property="Background" Value="{Binding ElementName=userControl, Path=Background}"/>

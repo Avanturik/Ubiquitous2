@@ -6,6 +6,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:settings="clr-namespace:UB.Properties"
              xmlns:Fluent="clr-namespace:Fluent;assembly=Fluent" x:Class="UB.App"
+    
              StartupUri="MainWindow.xaml"
              mc:Ignorable="d">
     

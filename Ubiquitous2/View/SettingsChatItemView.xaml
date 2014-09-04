@@ -31,7 +31,7 @@
 
         <StackPanel Orientation="Vertical" HorizontalAlignment="Left">
             <TextBlock Padding="5" Margin="1">
-					<CheckBox Margin="0,-3"/>
+					<CheckBox Margin="0,-3" IsChecked="{Binding Enabled}"/>
 					<Image Margin="0,-5" Width="16" Source="/favicon.ico"/>
 					<TextBlock Text="{Binding ChatName}"></TextBlock>
 					<TextBlock><Hyperlink Command="{Binding ToggleEdit}"><TextBlock Text="{Binding EditLinkTitle}"/></Hyperlink></TextBlock>

@@ -7,6 +7,7 @@
         xmlns:Custom="http://www.galasoft.ch/mvvmlight"
         x:Class="UB.MainWindow"
         mc:Ignorable="d ignore"
+        UseLayoutRounding="True"
         Height="{Binding Source={StaticResource Settings}, Path=Default.MainWindowHeight, Mode=TwoWay}"
         Width="{Binding Source={StaticResource Settings}, Path=Default.MainWindowWidth, Mode=TwoWay}"
         Title="Ubiquitous 2.0" Icon="ubiquitous smile.ico" Style="{DynamicResource MainWindowStyle}"

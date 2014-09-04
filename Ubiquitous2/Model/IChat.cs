@@ -8,14 +8,15 @@ namespace UB.Model
 {
     public interface IChat
     {
+        event EventHandler<ChatServiceEventArgs> MessageReceived;
         String ChatName { get; }
         String IconURL { get;  }
         bool Enabled { get; set; }
         bool IsStopping { get; set; }
-        event EventHandler<ChatServiceEventArgs> MessageReceived;
         bool Start();
         bool Stop();
         bool Restart();
         bool SendMessage(String channel, ChatMessage message);
+        Action<ChatMessage> ContentParser {get;set;}
     }
 }

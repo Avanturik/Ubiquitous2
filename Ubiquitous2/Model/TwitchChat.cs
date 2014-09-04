@@ -1,6 +1,10 @@
 ﻿using System;
 using UB.Model.IRC;
 using UB.Utils;
+using System.Web.UI;
+using System.IO;
+using UB.Utils;
+using System.Text.RegularExpressions;
 
 namespace UB.Model
 {
@@ -16,7 +20,8 @@ namespace UB.Model
                 RealName = config.Parameters.StringValue("Username"),
             })
         {
-
+            Enabled = config.Enabled;
+            ContentParser = contentParser;
         }
         public override string IconURL
         {
@@ -31,6 +36,20 @@ namespace UB.Model
             { 
                 return "Twitch.tv"; 
             } 
+        }
+
+        void contentParser(ChatMessage message)
+        {
+            //Parse links
+            message.Text = Html.ConvertUrlsToLinks(message.Text);
+
+            //Parse emoticons
+            if (message.Text.Contains(":)"))
+            {                
+                message.Text = message.Text.Replace(":)", 
+                    Html.CreateImageTag("http://static-cdn.jtvnw.net/jtv_user_pictures/chansub-global-emoticon-ebf60cd72f7aa600-24x18.png",24,18));
+            }
+
         }
 
     }

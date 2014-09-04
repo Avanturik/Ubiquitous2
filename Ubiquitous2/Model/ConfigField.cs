@@ -22,8 +22,5 @@ namespace UB.Model
 
         [XmlElement]
         public object Value { get; set; }
-
-        [XmlIgnore]
-        public Action<object> Update { get;set; }
     }
 }

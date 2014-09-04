@@ -33,5 +33,21 @@ namespace UB.Design
         {
 
         }
+
+
+        public void SwitchChat(string chatName, bool enabled)
+        {
+            throw new NotImplementedException();
+        }
+
+        public IChat GetChat(string chatName)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void StartAllChats()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

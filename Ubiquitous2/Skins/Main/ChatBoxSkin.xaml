@@ -11,19 +11,13 @@
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type UserControl}">
                     <DockPanel LastChildFill="True" Margin="0">
-                        <ItemsControl ItemsSource="{Binding Messages,Mode=OneWay}"
+                        <ItemsControl ItemsSource="{Binding Messages}"
                       Padding="0"
                       Margin="0,0,-4,0"
                       VirtualizingStackPanel.IsVirtualizing="True"
                       VirtualizingStackPanel.VirtualizationMode="Recycling"
                       ScrollViewer.HorizontalScrollBarVisibility="Disabled"
                       ScrollViewer.VerticalScrollBarVisibility="Auto">
-                            <ItemsControl.CacheMode>
-                                <BitmapCache EnableClearType="False" RenderAtScale="1" SnapsToDevicePixels="True">
-
-                                </BitmapCache>
-                            </ItemsControl.CacheMode>
-
                             <ItemsControl.Template>
                                 <ControlTemplate>
                                     <ScrollViewer Template="{DynamicResource ScrollStyle}" CanContentScroll="True">

@@ -20,19 +20,11 @@ namespace UB.ViewModel
         public const string DataTypePropertyName = "DataType";
         private ConfigField _configField;
         private String _dataType = "Text";
-        private SettingsDataService _settingsDataService;
 
-        
-        //public SettingsFieldViewModel(SettingsDataService settingsDataService )
-        //{
-        //    _settingsDataService = settingsDataService;
-        //    _settingsDataService.GetRandomTextField((field) => {
-        //        DataType = field.DataType;
-        //        LabelText = field.Label;
-        //        Text = (String)field.Value;
-        //    });
-        //}
-
+        [PreferredConstructor]
+        public SettingsFieldViewModel()
+        {
+        }
         public SettingsFieldViewModel(ConfigField configField)
         {
             _configField = configField;
@@ -99,7 +91,9 @@ namespace UB.ViewModel
                 {
                     return;
                 }
-                _configField.Value = value;
+                if( _configField != null )
+                    _configField.Value = value;
+
                 RaisePropertyChanging(TextPropertyName);
                 _text = value;
                 RaisePropertyChanged(TextPropertyName);
@@ -112,8 +106,6 @@ namespace UB.ViewModel
         public const string LabelTextPropertyName = "LabelText";
 
         private String _labelText = "Label";
-        private ConfigField param;
-
 
         /// <summary>
         /// Sets and gets the LabelText property.
