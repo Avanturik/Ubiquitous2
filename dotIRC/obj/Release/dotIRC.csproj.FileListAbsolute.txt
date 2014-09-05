@@ -1,0 +1,7 @@
+D:\Ubiquitous\dotIRC\bin\Release\net40\dotIRC.xml
+D:\Ubiquitous\dotIRC\bin\Release\net40\dotIRC.dll
+D:\Ubiquitous\dotIRC\bin\Release\net40\dotIRC.pdb
+D:\Ubiquitous\dotIRC\obj\Release\dotIRC.Properties.Resources.resources
+D:\Ubiquitous\dotIRC\obj\Release\dotIRC.csproj.GenerateResource.Cache
+D:\Ubiquitous\dotIRC\obj\Release\dotIRC.dll
+D:\Ubiquitous\dotIRC\obj\Release\dotIRC.pdb

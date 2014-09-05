@@ -72,6 +72,11 @@ namespace UB.ViewModel
                     }
                     if (MessageAdded != null)
                         MessageAdded(this, EventArgs.Empty);
+
+                    GC.Collect();
+                    GC.WaitForPendingFinalizers();
+                    GC.Collect();
+
                 });
         }
 

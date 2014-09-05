@@ -7,16 +7,19 @@ using UB.Model.IRC;
 
 namespace UB.Model
 {
-    public class ChatDataService : IChatDataService
+    public class ChatDataService : IChatDataService, IDisposable
     {
         private List<ChatMessage> messageQueue = new List<ChatMessage>();
         private object messageQueueLock = new object();
-        private Timer receiveTimer;
         private SettingsDataService settingsDataService;
         private Random random;
         private Action<ChatMessage[], Exception> readChatCallback;
         private List<ChatConfig> chatConfigs;
         private List<IChat> chats;
+        
+        //Disposable
+        private Timer receiveTimer;
+
         public ChatDataService()
         {
             settingsDataService = ServiceLocator.Current.GetInstance<SettingsDataService>();
@@ -102,9 +105,9 @@ namespace UB.Model
             }, null, 0, 1000);
 
             Chats.ForEach(chat => {
-                if( chat.Enabled )
+                chat.MessageReceived += chat_MessageReceived;
+                if (chat.Enabled)
                 {
-                    chat.MessageReceived += chat_MessageReceived;
                     chat.Start();
                 }
             });
@@ -127,5 +130,13 @@ namespace UB.Model
             }
         }
 
+        public void Dispose()
+        {
+            Dispose(true);
+        }
+        protected virtual void Dispose(bool nativeOnly)
+        {
+            receiveTimer.Dispose();
+        }
     }
 }

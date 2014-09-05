@@ -19,7 +19,7 @@ namespace UB.ViewModel
         /// </summary>
         public const string DataTypePropertyName = "DataType";
         private ConfigField _configField;
-        private String _dataType = "Text";
+        private String _dataType;
 
         [PreferredConstructor]
         public SettingsFieldViewModel()
@@ -28,16 +28,16 @@ namespace UB.ViewModel
         public SettingsFieldViewModel(ConfigField configField)
         {
             _configField = configField;
-            LabelText = configField.Label;
+            _labelText = configField.Label;
             switch (configField.DataType.ToLower())
             {
                 case "text":
-                    Text = (String)configField.Value;
-                    DataType = "Text";
+                    _text = (String)configField.Value;
+                    _dataType = "Text";
                     break;
                 case "password":
-                    Text = (String)configField.Value;
-                    DataType = "Password";
+                    _text = (String)configField.Value;
+                    _dataType = "Password";
                     break;
             }
 

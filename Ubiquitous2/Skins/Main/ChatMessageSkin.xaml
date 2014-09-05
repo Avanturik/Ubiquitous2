@@ -5,10 +5,10 @@
                     xmlns:Interactivity="clr-namespace:UB.Interactivity"
                     >
 
-    <Converter:ChatMessageToFlowDocument x:Key="textConverter" />
-    
+    <Converter:ChatMessageToInlines x:Key="textConverter" />
+
+
     <Style TargetType="{x:Type TextBox}">
-        <Setter Property="Foreground" Value="White"/>
         <Setter Property="Background" Value="Transparent"/>
         <Setter Property="BorderThickness" Value="0"/>
         <Setter Property="IsReadOnly" Value="True"/>
@@ -16,24 +16,22 @@
         <Setter Property="TextOptions.TextRenderingMode" Value="Aliased"/>
         <Setter Property="TextWrapping" Value="Wrap"/>
     </Style>
-    
+
     <Style TargetType="{x:Type Image}">
         <Setter Property="RenderOptions.BitmapScalingMode" Value="HighQuality"/>
         <Setter Property="UseLayoutRounding" Value="True"/>
         <Setter Property="Stretch" Value="Fill"/>
     </Style>
-    
-    <Style TargetType="{x:Type RichTextBox}">
-        <Setter Property="Foreground" Value="White"/>
-        <Setter Property="Background" Value="Transparent"/>
-        <Setter Property="BorderThickness" Value="0"/>
-        <Setter Property="IsReadOnly" Value="True"/>
-        <Setter Property="RenderOptions.EdgeMode" Value="Aliased"/>
-        <Setter Property="TextOptions.TextRenderingMode" Value="Aliased"/>
+    <Style x:Key="{x:Type Hyperlink}" TargetType="{x:Type Hyperlink}">
+        <Setter Property="TextDecorations" Value="Underline"/>
+        <Setter Property="Foreground" Value="Yellow"/>
+        <Style.Triggers>
+            <Trigger Property="IsMouseOver" Value="True">
+                <Setter Property="Foreground" Value="Red"/>
+                <Setter Property="Cursor" Value="Hand"/>
+            </Trigger>
+        </Style.Triggers>
     </Style>
-
-
-
     <Style x:Key="ChatMessageTemplate" TargetType="{x:Type UserControl}">
         <Setter Property="Template">
             <Setter.Value>
@@ -65,20 +63,7 @@
                                     <TextBox Text="{Binding Message.TimeStamp,Mode=OneTime}" FontSize="10" Foreground="#FFD69B33" TextAlignment="Right" DockPanel.Dock="Right" Margin="0,1,0,0" FontWeight="Bold" RenderTransformOrigin="0.5,0.5"/>
                                 </DockPanel>
                                 <Border Grid.ColumnSpan="2" Grid.Row="1" CornerRadius="10" Background="#FF303030" BorderThickness="0" Padding="1,2,1,0" Margin="0,0,0,-8">
-                                    <RichTextBox FontSize="14" Foreground="#FFCDCDCD"  Interactivity:RichTextBoxAttached.Document="{Binding Message, Converter={StaticResource ResourceKey=textConverter}}" AcceptsReturn="False" IsReadOnly="True" IsUndoEnabled="False" UseLayoutRounding="True" IsDocumentEnabled="True">
-                                        <RichTextBox.Resources>
-                                            <Style x:Key="{x:Type Hyperlink}" TargetType="{x:Type Hyperlink}">
-                                                <Setter Property="TextDecorations" Value="Underline"/>
-                                                <Setter Property="Foreground" Value="Yellow"/>
-                                                <Style.Triggers>
-                                                    <Trigger Property="IsMouseOver" Value="True">
-                                                        <Setter Property="Foreground" Value="Red"/>
-                                                        <Setter Property="Cursor" Value="Hand"/>
-                                                    </Trigger>
-                                                </Style.Triggers>
-                                            </Style>
-                                        </RichTextBox.Resources>
-                                    </RichTextBox>
+                                    <TextBlock TextAlignment="Justify" Margin="1,1,1,1" TextWrapping="Wrap" FontSize="14" Foreground="#FFCDCDCD" Interactivity:TextBlockAttached.InlineList="{Binding Message, Converter={StaticResource ResourceKey=textConverter}}"  UseLayoutRounding="True"/>                                    
                                 </Border>
                             </Grid>
                         </Border>

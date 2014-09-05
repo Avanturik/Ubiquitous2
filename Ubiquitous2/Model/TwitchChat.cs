@@ -1,15 +1,20 @@
 ﻿using System;
 using UB.Model.IRC;
 using UB.Utils;
+using System.Linq;
 using System.Web.UI;
 using System.IO;
-using UB.Utils;
 using System.Text.RegularExpressions;
+using System.Collections.Generic;
+using Newtonsoft.Json.Linq;
+using System.Diagnostics;
+using System.Threading.Tasks;
 
 namespace UB.Model
 {
     public class TwitchChat : IRCChatBase
-    {
+    {        
+        private object iconLock = new object();
         public TwitchChat(ChatConfig config) : 
             base(new IRCLoginInfo() { 
                 Channels = config.Parameters.StringArrayValue("Channels"),
@@ -22,15 +27,21 @@ namespace UB.Model
         {
             Enabled = config.Enabled;
             ContentParser = contentParser;
+            var baseDir = AppDomain.CurrentDomain.BaseDirectory;
+            
+            //Fallback icons
+            DownloadEmoticons(baseDir + @"Content\twitchemoticons.json");
+            //Web icons
+            Task.Factory.StartNew( () => DownloadEmoticons("http://api.twitch.tv/kraken/chat/emoticons") );
         }
-        public override string IconURL
+        public new static string IconURL
         {
             get
             {
                 return @"/favicon.ico";
             }
         }
-        public override String ChatName 
+        public new static String ChatName 
         { 
             get 
             { 
@@ -44,13 +55,57 @@ namespace UB.Model
             message.Text = Html.ConvertUrlsToLinks(message.Text);
 
             //Parse emoticons
-            if (message.Text.Contains(":)"))
-            {                
-                message.Text = message.Text.Replace(":)", 
-                    Html.CreateImageTag("http://static-cdn.jtvnw.net/jtv_user_pictures/chansub-global-emoticon-ebf60cd72f7aa600-24x18.png",24,18));
+            lock(iconLock)
+            {
+                foreach( var emoticon in Emoticons )
+                {
+                    if( emoticon.Pattern != null )
+                        message.Text = Regex.Replace(message.Text, emoticon.Pattern, emoticon.HtmlCode);
+                }
             }
-
         }
+
+        public override void DownloadEmoticons(String url)
+        {
+            
+            var list = new List<Emoticon>();
+
+            using ( var wc = new WebClientBase() )
+            {
+                var jsonEmoticons = this.With(x => wc.Download(url))
+                    .With(x => JToken.Parse(x))
+                    .With(x => x.SelectToken("emoticons"))
+                    .With(x => x.ToObject<JArray>());
+
+                if (jsonEmoticons == null)
+                {
+                    Debug.Print("Error getting Twitch.tv emoticons!");
+                    list = new List<Emoticon>();
+                }
+                else
+                {
+                    foreach (dynamic icon in jsonEmoticons.Children())
+                    {
+                        if (icon != null && icon.images != null && icon.regex != null)
+                        {
+                            string regex = (string)icon.regex;
+                            JArray images = icon.images as JArray;
+                            dynamic image = this.With(x => (JArray)icon.images).With(x => (dynamic)x.First);
+
+                            if (image != null && image.width != null && image.height != null && image.url != null)
+                            {
+                                list.Add(new Emoticon(regex, (string)image.url, (int)image.width, (int)image.height));
+                            }
+
+                        }
+
+                    }
+                }
+            }
+            lock (iconLock)
+                Emoticons = list;
+        }
+
 
     }
 

@@ -18,5 +18,7 @@ namespace UB.Model
         bool Restart();
         bool SendMessage(String channel, ChatMessage message);
         Action<ChatMessage> ContentParser {get;set;}
+        List<Emoticon> Emoticons { get; set; }
+        void DownloadEmoticons(String url);
     }
 }

@@ -18,7 +18,6 @@ namespace UB.ViewModel
         private ChatConfig chatConfig;
         private SettingsDataService _dataService;
         private IChatDataService chatDataService;
-        public String ChatName { get; set; }
 
         [PreferredConstructor]
         public SettingsChatItemViewModel(SettingsDataService dataService)
@@ -27,8 +26,8 @@ namespace UB.ViewModel
             _dataService.GetRandomChatSetting(
             (item) =>
             {
-                Enabled = item.Enabled;
-                ChatName = item.ChatName;
+                _enabled = item.Enabled;
+                _chatName = item.ChatName;
                 foreach (var field in item.Parameters)
                 {
                     if (field.IsVisible)
@@ -44,8 +43,8 @@ namespace UB.ViewModel
         {
             chatDataService = ServiceLocator.Current.GetInstance<IChatDataService>();
             chatConfig = config;
-            Enabled = config.Enabled;
-            ChatName = config.ChatName;
+            _enabled = config.Enabled;
+            _chatName = config.ChatName;
             foreach( var param in config.Parameters )
             {
                 if( param.IsVisible)
@@ -59,6 +58,36 @@ namespace UB.ViewModel
             return 30;
         }
 
+        /// <summary>
+        /// The <see cref="ChatName" /> property's name.
+        /// </summary>
+        public const string ChatNamePropertyName = "ChatName";
+
+        private String _chatName = "LoremIpsum";
+
+        /// <summary>
+        /// Sets and gets the ChatName property.
+        /// Changes to that property's value raise the PropertyChanged event. 
+        /// </summary>
+        public String ChatName
+        {
+            get
+            {
+                return _chatName;
+            }
+
+            set
+            {
+                if (_chatName == value)
+                {
+                    return;
+                }
+
+                RaisePropertyChanging(ChatNamePropertyName);
+                _chatName = value;
+                RaisePropertyChanged(ChatNamePropertyName);
+            }
+        }
         /// <summary>
         /// The <see cref="CalculatedHeight" /> property's name.
         /// </summary>

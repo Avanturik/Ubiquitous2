@@ -40,6 +40,7 @@ namespace UB.ViewModel
                 SimpleIoc.Default.Register<IChatDataService, ChatDataService>();
             }
 
+            SimpleIoc.Default.Register<IImageDataSource, ImageCacheDataService>();
             SimpleIoc.Default.Register<SettingsFieldViewModel>();
             SimpleIoc.Default.Register<SettingsChatItemViewModel>();
             SimpleIoc.Default.Register<MainViewModel>();

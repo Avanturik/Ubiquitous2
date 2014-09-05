@@ -100,6 +100,10 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\CommonServiceLocator.1.3\lib\portable-net4+sl5+netcore45+wpa81+wp8\Microsoft.Practices.ServiceLocation.dll</HintPath>
     </Reference>
+    <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Newtonsoft.Json.6.0.4\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Data" />
@@ -133,6 +137,7 @@
     <Compile Include="Controls\SmoothPanel\SmoothPanelTemplate.cs" />
     <Compile Include="Controls\SmoothPanel\SmoothPanelViewCache.cs" />
     <Compile Include="Converter\ChatMessageToFlowDocument.cs" />
+    <Compile Include="Converter\ChatMessageToTextBlock.cs" />
     <Compile Include="Design\DesignDataService.cs" />
     <Compile Include="Design\DesignSettingsDataService.cs" />
     <Compile Include="GlobalSuppressions.cs" />
@@ -142,10 +147,14 @@
     <Compile Include="Interactivity\PasswordBoxAssistant.cs" />
     <Compile Include="Interactivity\RichTextBoxAttached.cs" />
     <Compile Include="Interactivity\ScrollViewerAttached.cs" />
+    <Compile Include="Interactivity\TextBlockAttached.cs" />
     <Compile Include="Model\ChatConfig.cs" />
     <Compile Include="Model\ChatMessage.cs" />
     <Compile Include="Model\ConfigField.cs" />
     <Compile Include="Model\ConfigSections.cs" />
+    <Compile Include="Model\Emoticon.cs" />
+    <Compile Include="Model\IImageDataSource.cs" />
+    <Compile Include="Model\ImageCacheDataService.cs" />
     <Compile Include="Model\SettingsDataService.cs" />
     <Compile Include="Model\CustomEventArgs.cs" />
     <Compile Include="Model\ChatDataService.cs" />
@@ -155,6 +164,9 @@
     <Compile Include="Model\IRC\IRCLoginInfo.cs" />
     <Compile Include="Model\ISettingsDataService.cs" />
     <Compile Include="Model\LoginInfoBase.cs" />
+    <Compile Include="Model\WebClientBase.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="Properties\PortableSettingsProvider.cs" />
     <Compile Include="Model\TwitchChat.cs" />
     <Compile Include="Properties\Ubiqiutous.cs" />
@@ -169,6 +181,7 @@
     <Compile Include="SettingsWindow.xaml.cs">
       <DependentUpon>SettingsWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Utils\Sugar.cs" />
     <Compile Include="Utils\TextMeasurer.cs" />
     <Compile Include="ViewModel\ChatBoxViewModel.cs" />
     <Compile Include="ViewModel\ChatMessageViewModel.cs" />
@@ -280,6 +293,9 @@
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Ubiqiutous.Designer.cs</LastGenOutput>
     </None>
+    <Content Include="Content\twitchemoticons.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <None Include="ubiquitous2.snk" />
     <None Include="Ubiquitous2_TemporaryKey.pfx" />
   </ItemGroup>

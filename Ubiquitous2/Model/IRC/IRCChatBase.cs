@@ -66,7 +66,7 @@ namespace UB.Model
             }
         }
 
-        public bool Start()
+        public virtual bool Start()
         {
             var tries = 0;
             while (IsStopping && tries < 60)
@@ -96,7 +96,7 @@ namespace UB.Model
         }
 
 
-        public bool Stop()
+        public virtual bool Stop()
         {
             Debug.Print("Stopping IRC...");
             noPongTimer.Change(Timeout.Infinite, Timeout.Infinite);
@@ -239,11 +239,11 @@ namespace UB.Model
         }
 
 
+        public bool Enabled { get; set; }
+        public Action<ChatMessage> ContentParser { get; set; }
         public virtual String ChatName { get { return String.Empty; } }
         public virtual String IconURL { get { return String.Empty; } }
-        public bool Enabled { get; set; }
-
-
-        public Action<ChatMessage> ContentParser { get; set; }
+        public virtual List<Emoticon> Emoticons {get;set;}
+        public virtual void DownloadEmoticons(string url){}
     }
 }

@@ -1,0 +1,14 @@
+D:\Ubiquitous\dotIRC\bin\Debug\net40\dotIRC.dll
+D:\Ubiquitous\dotIRC\bin\Debug\net40\dotIRC.pdb
+D:\Ubiquitous\dotIRC\obj\Debug\dotIRC.csprojResolveAssemblyReference.cache
+D:\Ubiquitous\dotIRC\obj\Debug\dotIRC.Properties.Resources.resources
+D:\Ubiquitous\dotIRC\obj\Debug\dotIRC.csproj.GenerateResource.Cache
+D:\Ubiquitous\dotIRC\obj\Debug\dotIRC.dll
+D:\Ubiquitous\dotIRC\obj\Debug\dotIRC.pdb
+C:\Users\meshkov\documents\visual studio 2013\Projects\Ubiquitous2\dotIRC\bin\Debug\net40\dotIRC.dll
+C:\Users\meshkov\documents\visual studio 2013\Projects\Ubiquitous2\dotIRC\bin\Debug\net40\dotIRC.pdb
+C:\Users\meshkov\documents\visual studio 2013\Projects\Ubiquitous2\dotIRC\obj\Debug\dotIRC.csprojResolveAssemblyReference.cache
+C:\Users\meshkov\documents\visual studio 2013\Projects\Ubiquitous2\dotIRC\obj\Debug\dotIRC.Properties.Resources.resources
+C:\Users\meshkov\documents\visual studio 2013\Projects\Ubiquitous2\dotIRC\obj\Debug\dotIRC.csproj.GenerateResource.Cache
+C:\Users\meshkov\documents\visual studio 2013\Projects\Ubiquitous2\dotIRC\obj\Debug\dotIRC.dll
+C:\Users\meshkov\documents\visual studio 2013\Projects\Ubiquitous2\dotIRC\obj\Debug\dotIRC.pdb

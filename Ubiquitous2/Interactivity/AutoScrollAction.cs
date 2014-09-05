@@ -11,7 +11,6 @@ namespace UB.Interactivity
     {
         private Storyboard storyBoard;
         private ScrollViewer scrollViewer;
-
         protected override void Invoke(object parameter)
         {
             ScrollDown();
@@ -19,11 +18,12 @@ namespace UB.Interactivity
 
         protected void ScrollDown()
         {
-            Dispatcher.Invoke(new Action(() => { }), DispatcherPriority.Render, null);
             storyBoard = new Storyboard();
 
-
             scrollViewer = this.Target;
+            scrollViewer.InvalidateScrollInfo();
+
+            Dispatcher.Invoke(new Action(() => { }), DispatcherPriority.Render, null);
 
             DoubleAnimation mainAnimation = new DoubleAnimation()
             {
@@ -32,7 +32,6 @@ namespace UB.Interactivity
                 DecelerationRatio = 0,
                 Duration = new Duration(TimeSpan.FromMilliseconds(Duration)),
             };
-
             storyBoard.Children.Add(mainAnimation);
             Storyboard.SetTarget(mainAnimation, AssociatedObject);
             Storyboard.SetTargetProperty(mainAnimation, new PropertyPath(ScrollViewerAttached.VerticalPositionProperty));
