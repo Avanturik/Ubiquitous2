@@ -78,6 +78,9 @@ namespace UB.Model
 
             var chat = GetChat(chatName);
 
+            if (chat == null)
+                return; 
+
             if (enabled)
                 chat.Start();
             else

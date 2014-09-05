@@ -5,3 +5,10 @@ D:\Ubiquitous\dotIRC\obj\Release\dotIRC.Properties.Resources.resources
 D:\Ubiquitous\dotIRC\obj\Release\dotIRC.csproj.GenerateResource.Cache
 D:\Ubiquitous\dotIRC\obj\Release\dotIRC.dll
 D:\Ubiquitous\dotIRC\obj\Release\dotIRC.pdb
+C:\Users\dacha\Source\Repos\Ubiquitous2\dotIRC\bin\Release\net40\dotIRC.xml
+C:\Users\dacha\Source\Repos\Ubiquitous2\dotIRC\bin\Release\net40\dotIRC.dll
+C:\Users\dacha\Source\Repos\Ubiquitous2\dotIRC\bin\Release\net40\dotIRC.pdb
+C:\Users\dacha\Source\Repos\Ubiquitous2\dotIRC\obj\Release\dotIRC.Properties.Resources.resources
+C:\Users\dacha\Source\Repos\Ubiquitous2\dotIRC\obj\Release\dotIRC.csproj.GenerateResource.Cache
+C:\Users\dacha\Source\Repos\Ubiquitous2\dotIRC\obj\Release\dotIRC.dll
+C:\Users\dacha\Source\Repos\Ubiquitous2\dotIRC\obj\Release\dotIRC.pdb

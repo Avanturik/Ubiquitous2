@@ -9,4 +9,5 @@
              DataContext="{Binding Path=ChatMessage, Source={StaticResource Locator}}"
              d:DesignHeight="89" d:DesignWidth="300" Style="{DynamicResource ChatMessageTemplate}"
              >
+
 </UserControl>

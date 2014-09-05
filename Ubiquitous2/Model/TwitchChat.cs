@@ -1,9 +1,6 @@
 ﻿using System;
 using UB.Model.IRC;
 using UB.Utils;
-using System.Linq;
-using System.Web.UI;
-using System.IO;
 using System.Text.RegularExpressions;
 using System.Collections.Generic;
 using Newtonsoft.Json.Linq;
@@ -13,35 +10,40 @@ using System.Threading.Tasks;
 namespace UB.Model
 {
     public class TwitchChat : IRCChatBase
-    {        
+    {
         private object iconLock = new object();
         public TwitchChat(ChatConfig config) : 
-            base(new IRCLoginInfo() { 
-                Channels = config.Parameters.StringArrayValue("Channels"),
-                HostName = "irc.twitch.tv",
-                UserName = config.Parameters.StringValue("Username"),
-                Password = config.Parameters.StringValue("Password"),
-                Port = 6667,
-                RealName = config.Parameters.StringValue("Username"),
+            base(new IRCLoginInfo()
+        {
+            Channels = config.Parameters.StringArrayValue("Channels"),
+            HostName = "irc.twitch.tv",
+            UserName = config.Parameters.StringValue("Username"),
+            Password = config.Parameters.StringValue("Password"),
+            Port = 6667,
+            RealName = config.Parameters.StringValue("Username"),
             })
         {
             Enabled = config.Enabled;
             ContentParser = contentParser;
             var baseDir = AppDomain.CurrentDomain.BaseDirectory;
-            
+
             //Fallback icons
             DownloadEmoticons(baseDir + @"Content\twitchemoticons.json");
             //Web icons
-            Task.Factory.StartNew( () => DownloadEmoticons("http://api.twitch.tv/kraken/chat/emoticons") );
+            Task.Factory.StartNew(() => DownloadEmoticons("http://api.twitch.tv/kraken/chat/emoticons") );
+            GC.Collect();
+            GC.WaitForPendingFinalizers();
+            GC.Collect();
+
         }
-        public new static string IconURL
+        public override string IconURL
         {
             get
             {
                 return @"/favicon.ico";
             }
         }
-        public new static String ChatName 
+        public override string ChatName 
         { 
             get 
             { 
@@ -55,22 +57,22 @@ namespace UB.Model
             message.Text = Html.ConvertUrlsToLinks(message.Text);
 
             //Parse emoticons
-            lock(iconLock)
+            lock (iconLock)
             {
-                foreach( var emoticon in Emoticons )
+                foreach (var emoticon in Emoticons)
                 {
-                    if( emoticon.Pattern != null )
+                    if (emoticon.Pattern != null)
                         message.Text = Regex.Replace(message.Text, emoticon.Pattern, emoticon.HtmlCode);
                 }
             }
         }
 
-        public override void DownloadEmoticons(String url)
+        public override void DownloadEmoticons(string url)
         {
-            
+
             var list = new List<Emoticon>();
 
-            using ( var wc = new WebClientBase() )
+            using (var wc = new WebClientBase())
             {
                 var jsonEmoticons = this.With(x => wc.Download(url))
                     .With(x => JToken.Parse(x))
@@ -102,6 +104,7 @@ namespace UB.Model
                     }
                 }
             }
+
             lock (iconLock)
                 Emoticons = list;
         }
