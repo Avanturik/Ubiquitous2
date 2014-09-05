@@ -10,12 +10,16 @@ namespace UB.Model
 {
     public class Emoticon
     {
-        public Emoticon(String pattern, String url, int width, int height)
+        public Emoticon(string pattern, string url, int width, int height)
         {
-            if (String.IsNullOrWhiteSpace(url) || width <= 0 || height <= 0)
+            if (string.IsNullOrWhiteSpace(url) || width <= 0 || height <= 0)
                 return;
 
-            Pattern = pattern;
+            if (!Regex.IsMatch(pattern, @"\W"))
+                ExactWord = pattern;
+            else
+                Pattern = pattern;
+
             Width = width;
             Height = height;
             HtmlCode = Html.CreateImageTag(url, width, height);
@@ -23,9 +27,10 @@ namespace UB.Model
 
         }
         public Uri Uri { get; set; }
-        public String Pattern { get; set; }
+        public string Pattern { get; set; }
+        public string ExactWord { get;set; }
         public int Width { get; set; }
         public int Height { get; set; }
-        public readonly String HtmlCode;
+        public readonly string HtmlCode;
     }
 }

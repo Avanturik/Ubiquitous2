@@ -105,7 +105,7 @@ namespace UB.Model
                         messageQueue.Clear();
                     }
                 }
-            }, null, 0, 1000);
+            }, null, 0, 1500);
 
             Chats.ForEach(chat => {
                 chat.MessageReceived += chat_MessageReceived;

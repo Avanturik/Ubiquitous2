@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using Newtonsoft.Json.Linq;
 using System.Diagnostics;
 using System.Threading.Tasks;
+using System.Linq;
 
 namespace UB.Model
 {
@@ -59,10 +60,23 @@ namespace UB.Model
             //Parse emoticons
             lock (iconLock)
             {
+                bool containsNonAlpha = Regex.IsMatch(message.Text, @"\W");
+                HashSet<string> words = null;
+
+                if( containsNonAlpha )
+                    words = new HashSet<string>(Regex.Split(message.Text, @"\W").Where(s=>s != String.Empty));
+
                 foreach (var emoticon in Emoticons)
                 {
-                    if (emoticon.Pattern != null)
-                        message.Text = Regex.Replace(message.Text, emoticon.Pattern, emoticon.HtmlCode);
+                    if (words != null && emoticon.ExactWord != null)
+                    {
+                        if (words.Contains(emoticon.ExactWord))
+                            message.Text = message.Text.Replace(emoticon.ExactWord, emoticon.HtmlCode);
+                    }
+                    else if (emoticon.Pattern != null && containsNonAlpha)
+                    {
+                        message.Text = Regex.Replace(message.Text, emoticon.Pattern, emoticon.HtmlCode, RegexOptions.Singleline );
+                    }
                 }
             }
         }
