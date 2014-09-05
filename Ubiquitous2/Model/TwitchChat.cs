@@ -7,6 +7,7 @@ using Newtonsoft.Json.Linq;
 using System.Diagnostics;
 using System.Threading.Tasks;
 using System.Linq;
+using System.Web;
 
 namespace UB.Model
 {
@@ -75,6 +76,7 @@ namespace UB.Model
                     }
                     else if (emoticon.Pattern != null && containsNonAlpha)
                     {
+                        Debug.Print(emoticon.Pattern);
                         message.Text = Regex.Replace(message.Text, emoticon.Pattern, emoticon.HtmlCode, RegexOptions.Singleline );
                     }
                 }
@@ -110,7 +112,8 @@ namespace UB.Model
 
                             if (image != null && image.width != null && image.height != null && image.url != null)
                             {
-                                list.Add(new Emoticon(regex, (string)image.url, (int)image.width, (int)image.height));
+                                // HttpUtility.Decode won't work because there no ending semicolon
+                                var decodedRegex = regex.Replace(@"\&gt\;", ">").Replace(@"\&lt\;", "<").Replace(@"\&amp\;", "&");         list.Add(new Emoticon(decodedRegex, (string)image.url, (int)image.width, (int)image.height));
                             }
 
                         }

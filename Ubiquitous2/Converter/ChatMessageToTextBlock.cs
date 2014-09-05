@@ -31,6 +31,7 @@ namespace UB.Converter
                 textBlock.AllowDrop = false;
                 textBlock.Focusable = false;
                 var message = value as ChatMessage;
+
                 if (!String.IsNullOrEmpty(message.Text))
                 {
                     var htmlDoc = new HtmlDocument();
