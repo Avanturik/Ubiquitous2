@@ -64,19 +64,21 @@ namespace UB.Model
                 bool containsNonAlpha = Regex.IsMatch(message.Text, @"\W");
                 HashSet<string> words = null;
 
-                if( containsNonAlpha )
-                    words = new HashSet<string>(Regex.Split(message.Text, @"\W").Where(s=>s != String.Empty));
+                if (containsNonAlpha)
+                    words = new HashSet<string>(Regex.Split(message.Text, @"\W").Where(s => s != String.Empty));
+                else
+                    words = new HashSet<string>(new string[] { message.Text });
+                    
 
                 foreach (var emoticon in Emoticons)
                 {
-                    if (words != null && emoticon.ExactWord != null)
+                    if ((words != null || !containsNonAlpha) && emoticon.ExactWord != null)
                     {
                         if (words.Contains(emoticon.ExactWord))
                             message.Text = message.Text.Replace(emoticon.ExactWord, emoticon.HtmlCode);
                     }
                     else if (emoticon.Pattern != null && containsNonAlpha)
                     {
-                        Debug.Print(emoticon.Pattern);
                         message.Text = Regex.Replace(message.Text, emoticon.Pattern, emoticon.HtmlCode, RegexOptions.Singleline );
                     }
                 }
@@ -112,7 +114,6 @@ namespace UB.Model
 
                             if (image != null && image.width != null && image.height != null && image.url != null)
                             {
-                                // HttpUtility.Decode won't work because there no ending semicolon
                                 var decodedRegex = regex.Replace(@"\&gt\;", ">").Replace(@"\&lt\;", "<").Replace(@"\&amp\;", "&");         list.Add(new Emoticon(decodedRegex, (string)image.url, (int)image.width, (int)image.height));
                             }
 
