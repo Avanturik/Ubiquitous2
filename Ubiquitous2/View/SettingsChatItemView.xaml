@@ -46,9 +46,6 @@
                       VirtualizingStackPanel.VirtualizationMode="Recycling"
                       ScrollViewer.HorizontalScrollBarVisibility="Disabled"
                       ScrollViewer.VerticalScrollBarVisibility="Auto" Background="#FF494949">
-                    <ItemsControl.CacheMode>
-                        <BitmapCache EnableClearType="False" RenderAtScale="1" SnapsToDevicePixels="True"/>
-                    </ItemsControl.CacheMode>
                     <ItemsControl.ItemsPanel>
                         <ItemsPanelTemplate>
                             <Devart:SmoothPanel Width="300" HorizontalAlignment="Left" Height="{Binding CalculatedHeight}" Background="{DynamicResource {x:Static SystemColors.ControlBrushKey}}">

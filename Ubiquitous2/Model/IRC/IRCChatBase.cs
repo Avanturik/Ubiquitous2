@@ -6,6 +6,7 @@ using System.Net;
 using System.Threading;
 using dotIRC;
 using UB.Model.IRC;
+using UB.Model;
 
 namespace UB.Model
 {
@@ -165,7 +166,7 @@ namespace UB.Model
                     if( loginInfo.Channels.Contains(message.Channel) )
                     {
                         if (ContentParser != null)
-                            ContentParser(message);
+                            ContentParser(message,Emoticons);
 
                         MessageReceived(this, new ChatServiceEventArgs()
                         {
@@ -240,10 +241,17 @@ namespace UB.Model
 
 
         public bool Enabled { get; set; }
-        public Action<ChatMessage> ContentParser { get; set; }
+        
         public virtual String ChatName { get { return String.Empty; } }
         public virtual String IconURL { get { return String.Empty; } }
         public virtual List<Emoticon> Emoticons {get;set;}
         public virtual void DownloadEmoticons(string url){}
+
+
+        public Action<ChatMessage, List<Emoticon>> ContentParser
+        {
+            get;
+            set;
+        }
     }
 }

@@ -13,7 +13,6 @@ namespace UB.Model
 {
     public class TwitchChat : IRCChatBase
     {
-        private object iconLock = new object();
         public TwitchChat(ChatConfig config) : 
             base(new IRCLoginInfo()
         {
@@ -26,7 +25,7 @@ namespace UB.Model
             })
         {
             Enabled = config.Enabled;
-            ContentParser = contentParser;
+            ContentParser = MessageParser.ParseMessage;
             var baseDir = AppDomain.CurrentDomain.BaseDirectory;
 
             //Fallback icons
@@ -51,38 +50,6 @@ namespace UB.Model
             { 
                 return "Twitch.tv"; 
             } 
-        }
-
-        void contentParser(ChatMessage message)
-        {
-            //Parse links
-            message.Text = Html.ConvertUrlsToLinks(message.Text);
-
-            //Parse emoticons
-            lock (iconLock)
-            {
-                bool containsNonAlpha = Regex.IsMatch(message.Text, @"\W");
-                HashSet<string> words = null;
-
-                if (containsNonAlpha)
-                    words = new HashSet<string>(Regex.Split(message.Text, @"\W").Where(s => s != String.Empty));
-                else
-                    words = new HashSet<string>(new string[] { message.Text });
-                    
-
-                foreach (var emoticon in Emoticons)
-                {
-                    if ((words != null || !containsNonAlpha) && emoticon.ExactWord != null)
-                    {
-                        if (words.Contains(emoticon.ExactWord))
-                            message.Text = message.Text.Replace(emoticon.ExactWord, emoticon.HtmlCode);
-                    }
-                    else if (emoticon.Pattern != null && containsNonAlpha)
-                    {
-                        message.Text = Regex.Replace(message.Text, emoticon.Pattern, emoticon.HtmlCode, RegexOptions.Singleline );
-                    }
-                }
-            }
         }
 
         public override void DownloadEmoticons(string url)
@@ -114,7 +81,8 @@ namespace UB.Model
 
                             if (image != null && image.width != null && image.height != null && image.url != null)
                             {
-                                var decodedRegex = regex.Replace(@"\&gt\;", ">").Replace(@"\&lt\;", "<").Replace(@"\&amp\;", "&");         list.Add(new Emoticon(decodedRegex, (string)image.url, (int)image.width, (int)image.height));
+                                var decodedRegex = regex.Replace(@"\&gt\;", ">").Replace(@"\&lt\;", "<").Replace(@"\&amp\;", "&");
+                                list.Add(new Emoticon(decodedRegex, (string)image.url, (int)image.width, (int)image.height));
                             }
 
                         }
@@ -122,8 +90,7 @@ namespace UB.Model
                     }
                 }
             }
-
-            lock (iconLock)
+            if( list != null && list.Count > 0 )
                 Emoticons = list;
         }
 

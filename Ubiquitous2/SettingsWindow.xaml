@@ -32,9 +32,6 @@
 					VirtualizingPanel.VirtualizationMode="Recycling"
 					ScrollViewer.HorizontalScrollBarVisibility="Disabled"
 					ScrollViewer.VerticalScrollBarVisibility="Auto" Background="#FF494949">
-                    <ItemsControl.CacheMode>
-                        <BitmapCache EnableClearType="False" RenderAtScale="1" SnapsToDevicePixels="True"/>
-                    </ItemsControl.CacheMode>
                     <ItemsControl.Template>
                         <ControlTemplate>
                             <ScrollViewer Template="{DynamicResource ScrollStyle}" CanContentScroll="True">

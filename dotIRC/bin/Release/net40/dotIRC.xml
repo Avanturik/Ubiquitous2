@@ -58,26 +58,6 @@
             <param name="dictionary">The dictionary to wrap.</param>
             <exception cref="T:System.ArgumentNullException"><paramref name="dictionary"/> is <see langword="null"/>.</exception>
         </member>
-        <member name="P:dotIRC.Collections.ReadOnlyDictionary`2.Keys">
-            <summary>
-            Gets a collection containing the keys in the dictionary.
-            </summary>
-            <value>A collection containing the keys in the dictionary.</value>
-        </member>
-        <member name="P:dotIRC.Collections.ReadOnlyDictionary`2.Values">
-            <summary>
-            Gets a collection containing the values in the dictionary.
-            </summary>
-            <value>A collection containing the values in the dictionary.</value>
-        </member>
-        <member name="P:dotIRC.Collections.ReadOnlyDictionary`2.Item(`0)">
-            <summary>
-            Gets or sets the element with the specified key.
-            </summary>
-            <value>The element with the specified key.</value>
-            <exception cref="T:System.NotSupportedException">This operation is not supported on a read-only dictionary.
-            </exception>
-        </member>
         <member name="M:dotIRC.Collections.ReadOnlyDictionary`2.ContainsKey(`0)">
             <summary>
             Determines whether the dictionary contains the specified key.
@@ -99,17 +79,37 @@
             <see langword="false"/>, otherwise.</returns>
             <exception cref="T:System.ArgumentNullException"><paramref name="key"/> is <see langword="null"/>.</exception>
         </member>
-        <member name="P:dotIRC.Collections.ReadOnlyDictionary`2.Count">
-            <summary>
-            Gets the number of key/value pairs contained in the dictionary.
-            </summary>
-            <value>The number of key/value pairs contained in the dictionary.</value>
-        </member>
         <member name="M:dotIRC.Collections.ReadOnlyDictionary`2.GetEnumerator">
             <summary>
             Returns an enumerator that iterates through the dictionary.
             </summary>
             <returns>An enumerator for the dictionary.</returns>
+        </member>
+        <member name="P:dotIRC.Collections.ReadOnlyDictionary`2.Keys">
+            <summary>
+            Gets a collection containing the keys in the dictionary.
+            </summary>
+            <value>A collection containing the keys in the dictionary.</value>
+        </member>
+        <member name="P:dotIRC.Collections.ReadOnlyDictionary`2.Values">
+            <summary>
+            Gets a collection containing the values in the dictionary.
+            </summary>
+            <value>A collection containing the values in the dictionary.</value>
+        </member>
+        <member name="P:dotIRC.Collections.ReadOnlyDictionary`2.Item(`0)">
+            <summary>
+            Gets or sets the element with the specified key.
+            </summary>
+            <value>The element with the specified key.</value>
+            <exception cref="T:System.NotSupportedException">This operation is not supported on a read-only dictionary.
+            </exception>
+        </member>
+        <member name="P:dotIRC.Collections.ReadOnlyDictionary`2.Count">
+            <summary>
+            Gets the number of key/value pairs contained in the dictionary.
+            </summary>
+            <value>The number of key/value pairs contained in the dictionary.</value>
         </member>
         <member name="T:dotIRC.Collections.ReadOnlySet`1">
             <summary>
@@ -190,12 +190,6 @@
             </returns>
             <exception cref="T:System.ArgumentNullException"><paramref name="other"/> is <see langword="null"/>.</exception>
         </member>
-        <member name="P:dotIRC.Collections.ReadOnlySet`1.Count">
-            <summary>
-            Gets the number of elements that are contained in the set.
-            </summary>
-            <value>The number of elements that are contained in the set.</value>
-        </member>
         <member name="M:dotIRC.Collections.ReadOnlySet`1.Contains(`0)">
             <summary>
             Determines whether the set contains the specified element.
@@ -225,6 +219,12 @@
             Returns an enumerator that iterates through the set.
             </summary>
             <returns>An enumerator for the set.</returns>
+        </member>
+        <member name="P:dotIRC.Collections.ReadOnlySet`1.Count">
+            <summary>
+            Gets the number of elements that are contained in the set.
+            </summary>
+            <value>The number of elements that are contained in the set.</value>
         </member>
         <member name="T:dotIRC.IrcServerInfo">
             <summary>
@@ -274,63 +274,6 @@
             Initializes a new instance of the <see cref="T:dotIRC.Ctcp.CtcpClient"/> class.
             </summary>
             <param name="ircClient">The IRC client by which the CTCP client should communicate.</param>
-        </member>
-        <member name="P:dotIRC.Ctcp.CtcpClient.ClientVersion">
-            <summary>
-            Gets or sets information about the client version.
-            </summary>
-            <value>Information about the client version.</value>
-        </member>
-        <member name="P:dotIRC.Ctcp.CtcpClient.IrcClient">
-            <summary>
-            Gets or sets the IRC client by which the CTCP client should communicate.
-            </summary>
-            <value>The IRC client.</value>
-        </member>
-        <member name="E:dotIRC.Ctcp.CtcpClient.ActionSent">
-            <summary>
-            Occurs when an action has been sent to a user.
-            </summary>
-        </member>
-        <member name="E:dotIRC.Ctcp.CtcpClient.ActionReceived">
-            <summary>
-            Occurs when an action has been received from a user.
-            </summary>
-        </member>
-        <member name="E:dotIRC.Ctcp.CtcpClient.TimeResponseReceived">
-            <summary>
-            Occurs when a response to a date/time request has been received from a user.
-            </summary>
-        </member>
-        <member name="E:dotIRC.Ctcp.CtcpClient.VersionResponseReceived">
-            <summary>
-            Occurs when a response to a version request has been received from a user.
-            </summary>
-        </member>
-        <member name="E:dotIRC.Ctcp.CtcpClient.ErrorMessageReceived">
-            <summary>
-            Occurs when an error message has been received from a user. 
-            </summary>
-        </member>
-        <member name="E:dotIRC.Ctcp.CtcpClient.PingResponseReceived">
-            <summary>
-            Occurs when a ping response has been received from a user.
-            </summary>
-        </member>
-        <member name="E:dotIRC.Ctcp.CtcpClient.RawMessageSent">
-            <summary>
-            Occurs when a raw message has been sent to a user.
-            </summary>
-        </member>
-        <member name="E:dotIRC.Ctcp.CtcpClient.RawMessageReceived">
-            <summary>
-            Occurs when a raw message has been received from a user.
-            </summary>
-        </member>
-        <member name="E:dotIRC.Ctcp.CtcpClient.Error">
-            <summary>
-            Occurs when the client encounters an error during execution.
-            </summary>
         </member>
         <member name="M:dotIRC.Ctcp.CtcpClient.SendAction(dotIRC.IIrcMessageTarget,System.String)">
             <inheritdoc cref="M:dotIRC.Ctcp.CtcpClient.SendAction(System.Collections.Generic.IList{dotIRC.IIrcMessageTarget},System.String)"/>
@@ -486,61 +429,6 @@
             </summary>
             <returns>A string that represents this instance.</returns>
         </member>
-        <member name="T:dotIRC.Ctcp.CtcpClient.MessageProcessor">
-            <summary>
-            Represents a method that processes <see cref="T:dotIRC.Ctcp.CtcpClient.CtcpMessage"/> objects.
-            </summary>
-            <param name="message">The message to be processed.</param>
-        </member>
-        <member name="T:dotIRC.Ctcp.CtcpClient.CtcpMessage">
-            <summary>
-            Represents a raw CTCP message that is sent/received by <see cref="T:dotIRC.Ctcp.CtcpClient"/>.
-            </summary>
-            <seealso cref="T:dotIRC.Ctcp.CtcpClient"/>
-        </member>
-        <member name="F:dotIRC.Ctcp.CtcpClient.CtcpMessage.Source">
-            <summary>
-            The user that sent the message.
-            </summary>
-        </member>
-        <member name="F:dotIRC.Ctcp.CtcpClient.CtcpMessage.Targets">
-            <summary>
-            A list of users to which to send the message. 
-            </summary>
-        </member>
-        <member name="F:dotIRC.Ctcp.CtcpClient.CtcpMessage.Tag">
-            <summary>
-            The tag of the message, that specifies the kind of data it contains or the type of the request.
-            </summary>
-        </member>
-        <member name="F:dotIRC.Ctcp.CtcpClient.CtcpMessage.Data">
-            <summary>
-            The data contained by the message.
-            </summary>
-        </member>
-        <member name="F:dotIRC.Ctcp.CtcpClient.CtcpMessage.IsResponse">
-            <summary>
-            <see langword="true"/> if this message is a response to another message; <see langword="false"/>,
-            otherwise.
-            </summary>
-        </member>
-        <member name="M:dotIRC.Ctcp.CtcpClient.CtcpMessage.#ctor(dotIRC.IrcUser,System.Collections.Generic.IList{dotIRC.IIrcMessageTarget},System.String,System.String,System.Boolean)">
-            <summary>
-            Initializes a new instance of the <see cref="T:dotIRC.Ctcp.CtcpClient.CtcpMessage"/> structure.
-            </summary>
-            <param name="source">The source of the message.</param>
-            <param name="targets">A list of the targets of the message.</param>
-            <param name="tag">The tag of the message.</param>
-            <param name="data">The data contained by the message, or <see langword="null"/> for no data.</param>
-            <param name="isResponse"><see langword="true"/> if the message is a response to another message; 
-            <see langword="false"/>, otherwise.</param>
-        </member>
-        <member name="M:dotIRC.Ctcp.CtcpClient.CtcpMessage.ToString">
-            <summary>
-            Returns a string representation of this instance.
-            </summary>
-            <returns>A string that represents this instance.</returns>
-        </member>
         <member name="M:dotIRC.Ctcp.CtcpClient.ProcessMessageAction(dotIRC.Ctcp.CtcpClient.CtcpMessage)">
             <summary>
             Process ACTION messages received from a user.
@@ -614,6 +502,118 @@
             <param name="isResponse"><see langword="true"/> if the message is a response; <see langword="false"/>,
             otherwise.</param>
         </member>
+        <member name="P:dotIRC.Ctcp.CtcpClient.ClientVersion">
+            <summary>
+            Gets or sets information about the client version.
+            </summary>
+            <value>Information about the client version.</value>
+        </member>
+        <member name="P:dotIRC.Ctcp.CtcpClient.IrcClient">
+            <summary>
+            Gets or sets the IRC client by which the CTCP client should communicate.
+            </summary>
+            <value>The IRC client.</value>
+        </member>
+        <member name="E:dotIRC.Ctcp.CtcpClient.ActionSent">
+            <summary>
+            Occurs when an action has been sent to a user.
+            </summary>
+        </member>
+        <member name="E:dotIRC.Ctcp.CtcpClient.ActionReceived">
+            <summary>
+            Occurs when an action has been received from a user.
+            </summary>
+        </member>
+        <member name="E:dotIRC.Ctcp.CtcpClient.TimeResponseReceived">
+            <summary>
+            Occurs when a response to a date/time request has been received from a user.
+            </summary>
+        </member>
+        <member name="E:dotIRC.Ctcp.CtcpClient.VersionResponseReceived">
+            <summary>
+            Occurs when a response to a version request has been received from a user.
+            </summary>
+        </member>
+        <member name="E:dotIRC.Ctcp.CtcpClient.ErrorMessageReceived">
+            <summary>
+            Occurs when an error message has been received from a user. 
+            </summary>
+        </member>
+        <member name="E:dotIRC.Ctcp.CtcpClient.PingResponseReceived">
+            <summary>
+            Occurs when a ping response has been received from a user.
+            </summary>
+        </member>
+        <member name="E:dotIRC.Ctcp.CtcpClient.RawMessageSent">
+            <summary>
+            Occurs when a raw message has been sent to a user.
+            </summary>
+        </member>
+        <member name="E:dotIRC.Ctcp.CtcpClient.RawMessageReceived">
+            <summary>
+            Occurs when a raw message has been received from a user.
+            </summary>
+        </member>
+        <member name="E:dotIRC.Ctcp.CtcpClient.Error">
+            <summary>
+            Occurs when the client encounters an error during execution.
+            </summary>
+        </member>
+        <member name="T:dotIRC.Ctcp.CtcpClient.MessageProcessor">
+            <summary>
+            Represents a method that processes <see cref="T:dotIRC.Ctcp.CtcpClient.CtcpMessage"/> objects.
+            </summary>
+            <param name="message">The message to be processed.</param>
+        </member>
+        <member name="T:dotIRC.Ctcp.CtcpClient.CtcpMessage">
+            <summary>
+            Represents a raw CTCP message that is sent/received by <see cref="T:dotIRC.Ctcp.CtcpClient"/>.
+            </summary>
+            <seealso cref="T:dotIRC.Ctcp.CtcpClient"/>
+        </member>
+        <member name="F:dotIRC.Ctcp.CtcpClient.CtcpMessage.Source">
+            <summary>
+            The user that sent the message.
+            </summary>
+        </member>
+        <member name="F:dotIRC.Ctcp.CtcpClient.CtcpMessage.Targets">
+            <summary>
+            A list of users to which to send the message. 
+            </summary>
+        </member>
+        <member name="F:dotIRC.Ctcp.CtcpClient.CtcpMessage.Tag">
+            <summary>
+            The tag of the message, that specifies the kind of data it contains or the type of the request.
+            </summary>
+        </member>
+        <member name="F:dotIRC.Ctcp.CtcpClient.CtcpMessage.Data">
+            <summary>
+            The data contained by the message.
+            </summary>
+        </member>
+        <member name="F:dotIRC.Ctcp.CtcpClient.CtcpMessage.IsResponse">
+            <summary>
+            <see langword="true"/> if this message is a response to another message; <see langword="false"/>,
+            otherwise.
+            </summary>
+        </member>
+        <member name="M:dotIRC.Ctcp.CtcpClient.CtcpMessage.#ctor(dotIRC.IrcUser,System.Collections.Generic.IList{dotIRC.IIrcMessageTarget},System.String,System.String,System.Boolean)">
+            <summary>
+            Initializes a new instance of the <see cref="T:dotIRC.Ctcp.CtcpClient.CtcpMessage"/> structure.
+            </summary>
+            <param name="source">The source of the message.</param>
+            <param name="targets">A list of the targets of the message.</param>
+            <param name="tag">The tag of the message.</param>
+            <param name="data">The data contained by the message, or <see langword="null"/> for no data.</param>
+            <param name="isResponse"><see langword="true"/> if the message is a response to another message; 
+            <see langword="false"/>, otherwise.</param>
+        </member>
+        <member name="M:dotIRC.Ctcp.CtcpClient.CtcpMessage.ToString">
+            <summary>
+            Returns a string representation of this instance.
+            </summary>
+            <returns>A string that represents this instance.</returns>
+        </member>
         <member name="T:dotIRC.Ctcp.CtcpMessageEventArgs">
             <summary>
             Provides data for events that are raised when a CTCP message or notice is sent or received.
@@ -653,6 +653,24 @@
             Provides data for the <see cref="E:dotIRC.Ctcp.CtcpClient.TimeResponseReceived"/> event.
             </summary>
             <threadsafety static="true" instance="false"/>
+        </member>
+        <member name="T:dotIRC.Ctcp.CtcpResponseReceivedEventArgs">
+            <summary>
+            Provides data for events that indicate a response to a CTCP request.
+            </summary>
+            <threadsafety static="true" instance="false"/>
+        </member>
+        <member name="M:dotIRC.Ctcp.CtcpResponseReceivedEventArgs.#ctor(dotIRC.IrcUser)">
+            <summary>
+            Initializes a new instance of the <see cref="T:dotIRC.Ctcp.CtcpResponseReceivedEventArgs"/> class.
+            </summary>
+            <param name="user">The user from which the response was received.</param>
+        </member>
+        <member name="P:dotIRC.Ctcp.CtcpResponseReceivedEventArgs.User">
+            <summary>
+            Gets the user from which the response was received.
+            </summary>
+            <value>The user from which the request was received.</value>
         </member>
         <member name="M:dotIRC.Ctcp.CtcpTimeResponseReceivedEventArgs.#ctor(dotIRC.IrcUser,System.String)">
             <summary>
@@ -743,24 +761,6 @@
             response.
             </summary>
             <value>The ping time.</value>
-        </member>
-        <member name="T:dotIRC.Ctcp.CtcpResponseReceivedEventArgs">
-            <summary>
-            Provides data for events that indicate a response to a CTCP request.
-            </summary>
-            <threadsafety static="true" instance="false"/>
-        </member>
-        <member name="M:dotIRC.Ctcp.CtcpResponseReceivedEventArgs.#ctor(dotIRC.IrcUser)">
-            <summary>
-            Initializes a new instance of the <see cref="T:dotIRC.Ctcp.CtcpResponseReceivedEventArgs"/> class.
-            </summary>
-            <param name="user">The user from which the response was received.</param>
-        </member>
-        <member name="P:dotIRC.Ctcp.CtcpResponseReceivedEventArgs.User">
-            <summary>
-            Gets the user from which the response was received.
-            </summary>
-            <value>The user from which the request was received.</value>
         </member>
         <member name="T:dotIRC.Ctcp.CtcpRawMessageEventArgs">
             <summary>
@@ -860,6 +860,30 @@
             </summary>
             <threadsafety static="true" instance="false"/>
         </member>
+        <member name="T:dotIRC.IrcRegistrationInfo">
+            <summary>
+            Provides information used by an <see cref="T:dotIRC.IrcClient"/> for registering the connection with the server.
+            </summary>
+            <threadsafety static="true" instance="false"/>
+        </member>
+        <member name="M:dotIRC.IrcRegistrationInfo.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:dotIRC.IrcRegistrationInfo"/> class.
+            </summary>
+        </member>
+        <member name="P:dotIRC.IrcRegistrationInfo.Password">
+            <summary>
+            Gets or sets the password for registering with the server.
+            </summary>
+            <value>The password for registering with the server.</value>
+        </member>
+        <member name="P:dotIRC.IrcRegistrationInfo.NickName">
+            <summary>
+            Gets or sets the nick name of the local user to set initially upon registration.
+            The nick name can be changed after registration.
+            </summary>
+            <value>The initial nick name of the local user.</value>
+        </member>
         <member name="M:dotIRC.IrcServiceRegistrationInfo.#ctor">
             <summary>
             Initializes a new instance of the <see cref="T:dotIRC.IrcServiceRegistrationInfo"/> class.
@@ -911,30 +935,6 @@
             The modes can be changed after registration.
             </summary>
             <value>A collection of modes to set on the local user.</value>
-        </member>
-        <member name="T:dotIRC.IrcRegistrationInfo">
-            <summary>
-            Provides information used by an <see cref="T:dotIRC.IrcClient"/> for registering the connection with the server.
-            </summary>
-            <threadsafety static="true" instance="false"/>
-        </member>
-        <member name="M:dotIRC.IrcRegistrationInfo.#ctor">
-            <summary>
-            Initializes a new instance of the <see cref="T:dotIRC.IrcRegistrationInfo"/> class.
-            </summary>
-        </member>
-        <member name="P:dotIRC.IrcRegistrationInfo.Password">
-            <summary>
-            Gets or sets the password for registering with the server.
-            </summary>
-            <value>The password for registering with the server.</value>
-        </member>
-        <member name="P:dotIRC.IrcRegistrationInfo.NickName">
-            <summary>
-            Gets or sets the nick name of the local user to set initially upon registration.
-            The nick name can be changed after registration.
-            </summary>
-            <value>The initial nick name of the local user.</value>
         </member>
         <member name="T:dotIRC.IrcServerStatisticalEntry">
             <summary>
@@ -1028,32 +1028,6 @@
             </remarks>
             <threadsafety static="true" instance="false"/>
         </member>
-        <member name="M:dotIRC.IrcStandardFloodPreventer.#ctor(System.Int32,System.Int64)">
-            <summary>
-            Initializes a new instance of the <see cref="T:dotIRC.IrcStandardFloodPreventer"/> class.
-            </summary>
-            <param name="maxMessageBurst">The maximum number of messages that can be sent in a burst.</param>
-            <param name="counterPeriod">The number of milliseconds between each decrement of the message counter.
-            </param>
-        </member>
-        <member name="P:dotIRC.IrcStandardFloodPreventer.MaxMessageBurst">
-            <summary>
-            Gets the maximum message number of messages that can be sent in a burst.
-            </summary>
-            <value>The maximum message number of messages that can be sent in a burst..</value>
-        </member>
-        <member name="P:dotIRC.IrcStandardFloodPreventer.CounterPeriod">
-            <summary>
-            Gets the number of milliseconds between each decrement of the message counter.
-            </summary>
-            <value>The period of the counter, in milliseconds.</value>
-        </member>
-        <member name="M:dotIRC.IrcStandardFloodPreventer.GetSendDelay">
-            <inheritdoc/>
-        </member>
-        <member name="M:dotIRC.IrcStandardFloodPreventer.HandleMessageSent">
-            <inheritdoc/>
-        </member>
         <member name="T:dotIRC.IIrcFloodPreventer">
             <summary>
             Defines a mechanism for preventing server floods by limiting the rate of outgoing raw messages from the client.
@@ -1069,6 +1043,32 @@
             <summary>
             Notifies the flood preventer that a message has just been send by the client.
             </summary>
+        </member>
+        <member name="M:dotIRC.IrcStandardFloodPreventer.#ctor(System.Int32,System.Int64)">
+            <summary>
+            Initializes a new instance of the <see cref="T:dotIRC.IrcStandardFloodPreventer"/> class.
+            </summary>
+            <param name="maxMessageBurst">The maximum number of messages that can be sent in a burst.</param>
+            <param name="counterPeriod">The number of milliseconds between each decrement of the message counter.
+            </param>
+        </member>
+        <member name="M:dotIRC.IrcStandardFloodPreventer.GetSendDelay">
+            <inheritdoc/>
+        </member>
+        <member name="M:dotIRC.IrcStandardFloodPreventer.HandleMessageSent">
+            <inheritdoc/>
+        </member>
+        <member name="P:dotIRC.IrcStandardFloodPreventer.MaxMessageBurst">
+            <summary>
+            Gets the maximum message number of messages that can be sent in a burst.
+            </summary>
+            <value>The maximum message number of messages that can be sent in a burst..</value>
+        </member>
+        <member name="P:dotIRC.IrcStandardFloodPreventer.CounterPeriod">
+            <summary>
+            Gets the number of milliseconds between each decrement of the message counter.
+            </summary>
+            <value>The period of the counter, in milliseconds.</value>
         </member>
         <member name="T:dotIRC.IIrcMessageSendHandler">
             <summary>
@@ -1154,17 +1154,17 @@
             <threadsafety static="true" instance="false"/>
             <seealso cref="T:dotIRC.IrcChannelUser"/>
         </member>
-        <member name="P:dotIRC.IrcChannelUserCollection.Channel">
-            <summary>
-            Gets the channel to which the collection of channel users belongs.
-            </summary>
-            <value>The channel to which the collection of channel users belongs..</value>
-        </member>
         <member name="M:dotIRC.IrcChannelUserCollection.GetUsers">
             <summary>
             Gets a collection of all users that correspond to the channel users in the collection.
             </summary>
             <returns>A collection of users.</returns>
+        </member>
+        <member name="P:dotIRC.IrcChannelUserCollection.Channel">
+            <summary>
+            Gets the channel to which the collection of channel users belongs.
+            </summary>
+            <value>The channel to which the collection of channel users belongs..</value>
         </member>
         <member name="T:dotIRC.IrcClient">
             <summary>
@@ -1916,135 +1916,6 @@
             Finalizes an instance of the <see cref="T:dotIRC.IrcClient"/> class.
             </summary>
         </member>
-        <member name="P:dotIRC.IrcClient.IsRegistered">
-            <summary>
-            Gets whether the client connection has been registered with the server.
-            </summary>
-            <value><see langword="true"/> if the connection has been registered; <see langword="false"/>, otherwise.
-            </value>
-        </member>
-        <member name="P:dotIRC.IrcClient.LocalUser">
-            <summary>
-            Gets the local user. The local user is the user managed by this client connection.
-            </summary>
-            <value>The local user.</value>
-        </member>
-        <member name="P:dotIRC.IrcClient.WelcomeMessage">
-            <summary>
-            Gets the 'Welcome' message sent by the server.
-            This value is set after successful registration of the connection.
-            </summary>
-            <value>The 'Welcome' message received from the server..</value>
-        </member>
-        <member name="P:dotIRC.IrcClient.YourHostMessage">
-            <summary>
-            Gets the 'Your Host' message sent by the server.
-            This value is set after successful registration of the connection.
-            </summary>
-            <value>The 'Your Host' message received from the server.</value>
-        </member>
-        <member name="P:dotIRC.IrcClient.ServerCreatedMessage">
-            <summary>
-            Gets the 'Created' message sent by the server.
-            This value is set after successful registration of the connection.
-            </summary>
-            <value>The 'Created' message received from the server.</value>
-        </member>
-        <member name="P:dotIRC.IrcClient.ServerName">
-            <summary>
-            Gets the host name of the server.
-            This value is set after successful registration of the connection.
-            </summary>
-            <value>The host name given received from the server.</value>
-        </member>
-        <member name="P:dotIRC.IrcClient.ServerVersion">
-            <summary>
-            Gets the version of the server.
-            This value is set after successful registration of the connection.
-            </summary>
-            <value>The version given received from the server.</value>
-        </member>
-        <member name="P:dotIRC.IrcClient.ServerAvailableUserModes">
-            <summary>
-            Gets a collection of the user modes available on the server.
-            This value is set after successful registration of the connection.
-            </summary>
-            <value>A list of user modes available on the server.</value>
-        </member>
-        <member name="P:dotIRC.IrcClient.ServerAvailableChannelModes">
-            <summary>
-            Gets a collection of the channel modes available on the server.
-            This value is set after successful registration of the connection.
-            </summary>
-            <value>A list of channel modes available on the server.</value>
-        </member>
-        <member name="P:dotIRC.IrcClient.ServerSupportedFeatures">
-            <summary>
-            Gets a dictionary of the features supported by the server, keyed by feature name, as returned by the
-            ISUPPORT message.
-            This value is set after successful registration of the connection.
-            </summary>
-            <value>A dictionary of features supported by the server.</value>
-        </member>
-        <member name="P:dotIRC.IrcClient.ChannelUserModes">
-            <summary>
-            Gets a collection of channel modes that apply to users in a channel.
-            </summary>
-            <value>A collection of channel modes that apply to users.</value>
-        </member>
-        <member name="P:dotIRC.IrcClient.MessageOfTheDay">
-            <summary>
-            Gets the Message of the Day (MOTD) sent by the server.
-            This value is set after successful registration of the connection.
-            </summary>
-            <value>The Message of the Day sent by the server.</value>
-        </member>
-        <member name="P:dotIRC.IrcClient.NetworkInformation">
-            <summary>
-            Gets information about the IRC network that is given by the server.
-            This value is set after successful registration of the connection.
-            </summary>
-            <value>The Message of the Day sent by the server.</value>
-        </member>
-        <member name="P:dotIRC.IrcClient.Channels">
-            <summary>
-            Gets a collection of all channels known to the client.
-            </summary>
-            <value>A collection of known channels.</value>
-        </member>
-        <member name="P:dotIRC.IrcClient.Users">
-            <summary>
-            Gets a collection of all users known to the client, including the local user.
-            </summary>
-            <value>A collection of known users.</value>
-        </member>
-        <member name="P:dotIRC.IrcClient.FloodPreventer">
-            <summary>
-            Gets or sets an object that limits the rate of outgoing messages in order to prevent flooding the server.
-            The value is <see langword="null"/> by default, which indicates that no flood prevention should be
-            performed.
-            </summary>
-            <value>A flood preventer object.</value>
-        </member>
-        <member name="P:dotIRC.IrcClient.TextEncoding">
-            <summary>
-            Gets or sets the text encoding to use for reading from and writing to the network data stream.
-            </summary>
-            <value>The text encoding of the network stream.</value>
-        </member>
-        <member name="P:dotIRC.IrcClient.IsConnected">
-            <summary>
-            Gets whether the client is currently connected to a server.
-            </summary>
-            <value><see langword="true"/> if the client is connected; <see langword="false"/>, otherwise.</value>
-        </member>
-        <member name="P:dotIRC.IrcClient.IsDisposed">
-            <summary>
-            Gets whether the <see cref="T:dotIRC.IrcClient"/> object has been disposed.
-            </summary>
-            <value><see langword="true"/> if the <see cref="T:dotIRC.IrcClient"/> object has been disposed;
-            <see langword="false"/>, otherwise.</value>
-        </member>
         <member name="M:dotIRC.IrcClient.Dispose">
             <summary>
             Releases all resources used by the <see cref="T:dotIRC.IrcClient"/> object.
@@ -2056,146 +1927,6 @@
             </summary>
             <param name="disposing"><see langword="true"/> if the consumer is actively disposing the object;
             <see langword="false"/> if the garbage collector is finalizing the object.</param>
-        </member>
-        <member name="E:dotIRC.IrcClient.Connected">
-            <summary>
-            Occurs when the client has connected to the server.
-            </summary>
-            <remarks>
-            Note that the <see cref="P:dotIRC.IrcClient.LocalUser"/> object is not yet set when this event occurs, but is only accessible
-            when the <see cref="E:dotIRC.IrcClient.Registered"/> event is raised.
-            </remarks>
-        </member>
-        <member name="E:dotIRC.IrcClient.ConnectFailed">
-            <summary>
-            Occurs when the client has failed to connect to the server.
-            </summary>
-        </member>
-        <member name="E:dotIRC.IrcClient.Disconnected">
-            <summary>
-            Occurs when the client has disconnected from the server.
-            </summary>
-        </member>
-        <member name="E:dotIRC.IrcClient.Error">
-            <summary>
-            Occurs when the client encounters an error during execution, while connected.
-            </summary>
-        </member>
-        <member name="E:dotIRC.IrcClient.ValidateSslCertificate">
-            <summary>
-            Occurs when the SSL certificate received from the server should be validated.
-            The certificate is automatically validated if this event is not handled.
-            </summary>
-        </member>
-        <member name="E:dotIRC.IrcClient.RawMessageSent">
-            <summary>
-            Occurs when a raw message has been sent to the server.
-            </summary>
-        </member>
-        <member name="E:dotIRC.IrcClient.RawMessageReceived">
-            <summary>
-            Occurs when a raw message has been received from the server.
-            </summary>
-        </member>
-        <member name="E:dotIRC.IrcClient.ProtocolError">
-            <summary>
-            Occurs when a protocol (numeric) error is received from the server.
-            </summary>
-        </member>
-        <member name="E:dotIRC.IrcClient.ErrorMessageReceived">
-            <summary>
-            Occurs when an error message (ERROR command) is received from the server.
-            </summary>
-        </member>
-        <member name="E:dotIRC.IrcClient.Registered">
-            <summary>
-            Occurs when the connection has been registered.
-            </summary>
-            <remarks>
-            The <see cref="P:dotIRC.IrcClient.LocalUser"/> object is set when this event occurs.
-            </remarks>
-        </member>
-        <member name="E:dotIRC.IrcClient.ClientInfoReceived">
-            <summary>
-            Occurs when the client information has been received from the server, following registration.
-            </summary>
-            <remarks>
-            Client information is accessible via <see cref="P:dotIRC.IrcClient.WelcomeMessage"/>, <see cref="P:dotIRC.IrcClient.YourHostMessage"/>,
-            <see cref="P:dotIRC.IrcClient.ServerCreatedMessage"/>, <see cref="P:dotIRC.IrcClient.ServerName"/>, <see cref="P:dotIRC.IrcClient.ServerVersion"/>,
-            <see cref="P:dotIRC.IrcClient.ServerAvailableUserModes"/>, and <see cref="P:dotIRC.IrcClient.ServerAvailableChannelModes"/>.
-            </remarks>
-        </member>
-        <member name="E:dotIRC.IrcClient.ServerBounce">
-            <summary>
-            Occurs when a bounce message is received from the server, telling the client to connect to a new server.
-            </summary>
-        </member>
-        <member name="E:dotIRC.IrcClient.ServerSupportedFeaturesReceived">
-            <summary>
-            Occurs when a list of features supported by the server (ISUPPORT) has been received.
-            This event may be raised more than once after registration, depending on the size of the list received.
-            </summary>
-        </member>
-        <member name="E:dotIRC.IrcClient.PingReceived">
-            <summary>
-            Occurs when a ping query is received from the server.
-            The client automatically replies to pings from the server; this event is only a notification.
-            </summary>
-        </member>
-        <member name="E:dotIRC.IrcClient.PongReceived">
-            <summary>
-            Occurs when a pong reply is received from the server.
-            </summary>
-        </member>
-        <member name="E:dotIRC.IrcClient.MotdReceived">
-            <summary>
-            Occurs when the Message of the Day (MOTD) has been received from the server.
-            </summary>
-        </member>
-        <member name="E:dotIRC.IrcClient.NetworkInformationReceived">
-            <summary>
-            Occurs when information about the IRC network has been received from the server.
-            </summary>
-        </member>
-        <member name="E:dotIRC.IrcClient.ServerVersionInfoReceived">
-            <summary>
-            Occurs when information about a specific server on the IRC network has been received from the server.
-            </summary>
-        </member>
-        <member name="E:dotIRC.IrcClient.ServerTimeReceived">
-            <summary>
-            Occurs when the local date/time for a specific server has been received from the server.
-            </summary>
-        </member>
-        <member name="E:dotIRC.IrcClient.ServerLinksListReceived">
-            <summary>
-            Occurs when a list of server links has been received from the server.
-            </summary>
-        </member>
-        <member name="E:dotIRC.IrcClient.ServerStatsReceived">
-            <summary>
-            Occurs when server statistics have been received from the server.
-            </summary>
-        </member>
-        <member name="E:dotIRC.IrcClient.WhoReplyReceived">
-            <summary>
-            Occurs when a reply to a Who query has been received from the server.
-            </summary>
-        </member>
-        <member name="E:dotIRC.IrcClient.WhoIsReplyReceived">
-            <summary>
-            Occurs when a reply to a Who Is query has been received from the server.
-            </summary>
-        </member>
-        <member name="E:dotIRC.IrcClient.WhoWasReplyReceived">
-            <summary>
-            Occurs when a reply to a Who Was query has been received from the server.
-            </summary>
-        </member>
-        <member name="E:dotIRC.IrcClient.ChannelListReceived">
-            <summary>
-            Occurs when a list of channels has been received from the server in response to a query.
-            </summary>
         </member>
         <member name="M:dotIRC.IrcClient.ListChannels(System.String[])">
             <inheritdoc cref="M:dotIRC.IrcClient.ListChannels(System.Collections.Generic.IEnumerable{System.String})"/>
@@ -2733,6 +2464,275 @@
             </summary>
             <returns>A string that represents this instance.</returns>
         </member>
+        <member name="P:dotIRC.IrcClient.IsRegistered">
+            <summary>
+            Gets whether the client connection has been registered with the server.
+            </summary>
+            <value><see langword="true"/> if the connection has been registered; <see langword="false"/>, otherwise.
+            </value>
+        </member>
+        <member name="P:dotIRC.IrcClient.LocalUser">
+            <summary>
+            Gets the local user. The local user is the user managed by this client connection.
+            </summary>
+            <value>The local user.</value>
+        </member>
+        <member name="P:dotIRC.IrcClient.WelcomeMessage">
+            <summary>
+            Gets the 'Welcome' message sent by the server.
+            This value is set after successful registration of the connection.
+            </summary>
+            <value>The 'Welcome' message received from the server..</value>
+        </member>
+        <member name="P:dotIRC.IrcClient.YourHostMessage">
+            <summary>
+            Gets the 'Your Host' message sent by the server.
+            This value is set after successful registration of the connection.
+            </summary>
+            <value>The 'Your Host' message received from the server.</value>
+        </member>
+        <member name="P:dotIRC.IrcClient.ServerCreatedMessage">
+            <summary>
+            Gets the 'Created' message sent by the server.
+            This value is set after successful registration of the connection.
+            </summary>
+            <value>The 'Created' message received from the server.</value>
+        </member>
+        <member name="P:dotIRC.IrcClient.ServerName">
+            <summary>
+            Gets the host name of the server.
+            This value is set after successful registration of the connection.
+            </summary>
+            <value>The host name given received from the server.</value>
+        </member>
+        <member name="P:dotIRC.IrcClient.ServerVersion">
+            <summary>
+            Gets the version of the server.
+            This value is set after successful registration of the connection.
+            </summary>
+            <value>The version given received from the server.</value>
+        </member>
+        <member name="P:dotIRC.IrcClient.ServerAvailableUserModes">
+            <summary>
+            Gets a collection of the user modes available on the server.
+            This value is set after successful registration of the connection.
+            </summary>
+            <value>A list of user modes available on the server.</value>
+        </member>
+        <member name="P:dotIRC.IrcClient.ServerAvailableChannelModes">
+            <summary>
+            Gets a collection of the channel modes available on the server.
+            This value is set after successful registration of the connection.
+            </summary>
+            <value>A list of channel modes available on the server.</value>
+        </member>
+        <member name="P:dotIRC.IrcClient.ServerSupportedFeatures">
+            <summary>
+            Gets a dictionary of the features supported by the server, keyed by feature name, as returned by the
+            ISUPPORT message.
+            This value is set after successful registration of the connection.
+            </summary>
+            <value>A dictionary of features supported by the server.</value>
+        </member>
+        <member name="P:dotIRC.IrcClient.ChannelUserModes">
+            <summary>
+            Gets a collection of channel modes that apply to users in a channel.
+            </summary>
+            <value>A collection of channel modes that apply to users.</value>
+        </member>
+        <member name="P:dotIRC.IrcClient.MessageOfTheDay">
+            <summary>
+            Gets the Message of the Day (MOTD) sent by the server.
+            This value is set after successful registration of the connection.
+            </summary>
+            <value>The Message of the Day sent by the server.</value>
+        </member>
+        <member name="P:dotIRC.IrcClient.NetworkInformation">
+            <summary>
+            Gets information about the IRC network that is given by the server.
+            This value is set after successful registration of the connection.
+            </summary>
+            <value>The Message of the Day sent by the server.</value>
+        </member>
+        <member name="P:dotIRC.IrcClient.Channels">
+            <summary>
+            Gets a collection of all channels known to the client.
+            </summary>
+            <value>A collection of known channels.</value>
+        </member>
+        <member name="P:dotIRC.IrcClient.Users">
+            <summary>
+            Gets a collection of all users known to the client, including the local user.
+            </summary>
+            <value>A collection of known users.</value>
+        </member>
+        <member name="P:dotIRC.IrcClient.FloodPreventer">
+            <summary>
+            Gets or sets an object that limits the rate of outgoing messages in order to prevent flooding the server.
+            The value is <see langword="null"/> by default, which indicates that no flood prevention should be
+            performed.
+            </summary>
+            <value>A flood preventer object.</value>
+        </member>
+        <member name="P:dotIRC.IrcClient.TextEncoding">
+            <summary>
+            Gets or sets the text encoding to use for reading from and writing to the network data stream.
+            </summary>
+            <value>The text encoding of the network stream.</value>
+        </member>
+        <member name="P:dotIRC.IrcClient.IsConnected">
+            <summary>
+            Gets whether the client is currently connected to a server.
+            </summary>
+            <value><see langword="true"/> if the client is connected; <see langword="false"/>, otherwise.</value>
+        </member>
+        <member name="P:dotIRC.IrcClient.IsDisposed">
+            <summary>
+            Gets whether the <see cref="T:dotIRC.IrcClient"/> object has been disposed.
+            </summary>
+            <value><see langword="true"/> if the <see cref="T:dotIRC.IrcClient"/> object has been disposed;
+            <see langword="false"/>, otherwise.</value>
+        </member>
+        <member name="E:dotIRC.IrcClient.Connected">
+            <summary>
+            Occurs when the client has connected to the server.
+            </summary>
+            <remarks>
+            Note that the <see cref="P:dotIRC.IrcClient.LocalUser"/> object is not yet set when this event occurs, but is only accessible
+            when the <see cref="E:dotIRC.IrcClient.Registered"/> event is raised.
+            </remarks>
+        </member>
+        <member name="E:dotIRC.IrcClient.ConnectFailed">
+            <summary>
+            Occurs when the client has failed to connect to the server.
+            </summary>
+        </member>
+        <member name="E:dotIRC.IrcClient.Disconnected">
+            <summary>
+            Occurs when the client has disconnected from the server.
+            </summary>
+        </member>
+        <member name="E:dotIRC.IrcClient.Error">
+            <summary>
+            Occurs when the client encounters an error during execution, while connected.
+            </summary>
+        </member>
+        <member name="E:dotIRC.IrcClient.ValidateSslCertificate">
+            <summary>
+            Occurs when the SSL certificate received from the server should be validated.
+            The certificate is automatically validated if this event is not handled.
+            </summary>
+        </member>
+        <member name="E:dotIRC.IrcClient.RawMessageSent">
+            <summary>
+            Occurs when a raw message has been sent to the server.
+            </summary>
+        </member>
+        <member name="E:dotIRC.IrcClient.RawMessageReceived">
+            <summary>
+            Occurs when a raw message has been received from the server.
+            </summary>
+        </member>
+        <member name="E:dotIRC.IrcClient.ProtocolError">
+            <summary>
+            Occurs when a protocol (numeric) error is received from the server.
+            </summary>
+        </member>
+        <member name="E:dotIRC.IrcClient.ErrorMessageReceived">
+            <summary>
+            Occurs when an error message (ERROR command) is received from the server.
+            </summary>
+        </member>
+        <member name="E:dotIRC.IrcClient.Registered">
+            <summary>
+            Occurs when the connection has been registered.
+            </summary>
+            <remarks>
+            The <see cref="P:dotIRC.IrcClient.LocalUser"/> object is set when this event occurs.
+            </remarks>
+        </member>
+        <member name="E:dotIRC.IrcClient.ClientInfoReceived">
+            <summary>
+            Occurs when the client information has been received from the server, following registration.
+            </summary>
+            <remarks>
+            Client information is accessible via <see cref="P:dotIRC.IrcClient.WelcomeMessage"/>, <see cref="P:dotIRC.IrcClient.YourHostMessage"/>,
+            <see cref="P:dotIRC.IrcClient.ServerCreatedMessage"/>, <see cref="P:dotIRC.IrcClient.ServerName"/>, <see cref="P:dotIRC.IrcClient.ServerVersion"/>,
+            <see cref="P:dotIRC.IrcClient.ServerAvailableUserModes"/>, and <see cref="P:dotIRC.IrcClient.ServerAvailableChannelModes"/>.
+            </remarks>
+        </member>
+        <member name="E:dotIRC.IrcClient.ServerBounce">
+            <summary>
+            Occurs when a bounce message is received from the server, telling the client to connect to a new server.
+            </summary>
+        </member>
+        <member name="E:dotIRC.IrcClient.ServerSupportedFeaturesReceived">
+            <summary>
+            Occurs when a list of features supported by the server (ISUPPORT) has been received.
+            This event may be raised more than once after registration, depending on the size of the list received.
+            </summary>
+        </member>
+        <member name="E:dotIRC.IrcClient.PingReceived">
+            <summary>
+            Occurs when a ping query is received from the server.
+            The client automatically replies to pings from the server; this event is only a notification.
+            </summary>
+        </member>
+        <member name="E:dotIRC.IrcClient.PongReceived">
+            <summary>
+            Occurs when a pong reply is received from the server.
+            </summary>
+        </member>
+        <member name="E:dotIRC.IrcClient.MotdReceived">
+            <summary>
+            Occurs when the Message of the Day (MOTD) has been received from the server.
+            </summary>
+        </member>
+        <member name="E:dotIRC.IrcClient.NetworkInformationReceived">
+            <summary>
+            Occurs when information about the IRC network has been received from the server.
+            </summary>
+        </member>
+        <member name="E:dotIRC.IrcClient.ServerVersionInfoReceived">
+            <summary>
+            Occurs when information about a specific server on the IRC network has been received from the server.
+            </summary>
+        </member>
+        <member name="E:dotIRC.IrcClient.ServerTimeReceived">
+            <summary>
+            Occurs when the local date/time for a specific server has been received from the server.
+            </summary>
+        </member>
+        <member name="E:dotIRC.IrcClient.ServerLinksListReceived">
+            <summary>
+            Occurs when a list of server links has been received from the server.
+            </summary>
+        </member>
+        <member name="E:dotIRC.IrcClient.ServerStatsReceived">
+            <summary>
+            Occurs when server statistics have been received from the server.
+            </summary>
+        </member>
+        <member name="E:dotIRC.IrcClient.WhoReplyReceived">
+            <summary>
+            Occurs when a reply to a Who query has been received from the server.
+            </summary>
+        </member>
+        <member name="E:dotIRC.IrcClient.WhoIsReplyReceived">
+            <summary>
+            Occurs when a reply to a Who Is query has been received from the server.
+            </summary>
+        </member>
+        <member name="E:dotIRC.IrcClient.WhoWasReplyReceived">
+            <summary>
+            Occurs when a reply to a Who Was query has been received from the server.
+            </summary>
+        </member>
+        <member name="E:dotIRC.IrcClient.ChannelListReceived">
+            <summary>
+            Occurs when a list of channels has been received from the server in response to a query.
+            </summary>
+        </member>
         <member name="T:dotIRC.IrcClient.MessageProcessor">
             <summary>
             Represents a method that processes <see cref="T:dotIRC.IrcClient.IrcMessage"/> objects.
@@ -2809,6 +2809,12 @@
             <param name="type">The type.</param>
             <param name="mask">The mask.</param>
         </member>
+        <member name="M:dotIRC.IrcTargetMask.ToString">
+            <summary>
+            Returns a string representation of this instance.
+            </summary>
+            <returns>A string that represents this instance.</returns>
+        </member>
         <member name="P:dotIRC.IrcTargetMask.Type">
             <summary>
             Gets the type of the target mask; either a server mask or channel mask.
@@ -2821,12 +2827,6 @@
             The <see cref="P:dotIRC.IrcTargetMask.Type"/> property determines the type of the mask.
             </summary>
             <value>The target mask.</value>
-        </member>
-        <member name="M:dotIRC.IrcTargetMask.ToString">
-            <summary>
-            Returns a string representation of this instance.
-            </summary>
-            <returns>A string that represents this instance.</returns>
         </member>
         <member name="T:dotIRC.IrcTargetMaskType">
             <summary>
@@ -2851,76 +2851,178 @@
             </summary>
             <threadsafety static="true" instance="false"/>
         </member>
-        <member name="P:dotIRC.IrcLocalUser.IsService">
+        <member name="T:dotIRC.IrcUser">
             <summary>
-            Gets whether the local user is a service or normal user.
+            Represents an IRC user that exists on a specific <see cref="T:dotIRC.IrcClient"/>.
             </summary>
-            <value><see langword="true"/> if the user is a service; <see langword="false"/>, if the user is a normal
-            user.</value>
+            <threadsafety static="true" instance="false"/>
         </member>
-        <member name="P:dotIRC.IrcLocalUser.Modes">
+        <member name="M:dotIRC.IrcUser.WhoIs">
             <summary>
-            Gets a read-only collection of the modes the user currently has.
-            </summary>
-            <value>The current modes of the user.</value>
-        </member>
-        <member name="P:dotIRC.IrcLocalUser.ServiceDistribution">
-            <summary>
-            Gets the distribution of the service, which determines its visibility to users on specific servers.
-            </summary>
-            <value>A wildcard expression for matching against the names of servers on which the service should be
-            visible.</value>
-        </member>
-        <member name="P:dotIRC.IrcLocalUser.ServiceDescription">
-            <summary>
-            Gets the distribution of the service, which determines its visibility to users on specific servers.
-            </summary>
-            <value>A wildcard expression for matching against the names of servers on which the service should be
-            visible.</value>
-        </member>
-        <member name="E:dotIRC.IrcLocalUser.ModesChanged">
-            <summary>
-            Occurs when the modes of the local user have changed.
+            Sends a Who Is query to server for the user.
             </summary>
         </member>
-        <member name="E:dotIRC.IrcLocalUser.JoinedChannel">
+        <member name="M:dotIRC.IrcUser.WhoWas(System.Int32)">
             <summary>
-            Occurs when the local user has joined a channel.
+            Sends a Who Was query to server for the user.
+            </summary>
+            <param name="entriesCount">The maximum number of entries that the server should return. A negative number
+            specifies an unlimited number of entries.</param>
+        </member>
+        <member name="M:dotIRC.IrcUser.GetChannelUsers">
+            <summary>
+            Gets a collection of all channel users that correspond to the user.
+            Each <see cref="T:dotIRC.IrcChannelUser"/> represents a channel of which the user is currently a member.
+            </summary>
+            <returns>A collection of all <see cref="T:dotIRC.IrcChannelUser"/> object that correspond to the <see cref="T:dotIRC.IrcUser"/>.
+            </returns>
+        </member>
+        <member name="M:dotIRC.IrcUser.OnNickNameChanged(System.EventArgs)">
+            <summary>
+            Raises the <see cref="E:dotIRC.IrcUser.NickNameChanged"/> event.
+            </summary>
+            <param name="e">The <see cref="T:System.EventArgs"/> instance containing the event data.</param>
+        </member>
+        <member name="M:dotIRC.IrcUser.OnIsAwayChanged(System.EventArgs)">
+            <summary>
+            Raises the <see cref="E:dotIRC.IrcUser.IsAwayChanged"/> event.
+            </summary>
+            <param name="e">The <see cref="T:System.EventArgs"/> instance containing the event data.</param>
+        </member>
+        <member name="M:dotIRC.IrcUser.OnInviteReceived(dotIRC.IrcChannelInvitationEventArgs)">
+            <summary>
+            Raises the <see cref="E:dotIRC.IrcUser.InviteReceived"/> event.
+            </summary>
+            <param name="e">The <see cref="T:dotIRC.IrcChannelEventArgs"/> instance containing the event data.</param>
+        </member>
+        <member name="M:dotIRC.IrcUser.OnQuit(dotIRC.IrcCommentEventArgs)">
+            <summary>
+            Raises the <see cref="E:dotIRC.IrcUser.Quit"/> event.
+            </summary>
+            <param name="e">The <see cref="T:dotIRC.IrcCommentEventArgs"/> instance containing the event data.</param>
+        </member>
+        <member name="M:dotIRC.IrcUser.OnPropertyChanged(System.ComponentModel.PropertyChangedEventArgs)">
+            <summary>
+            Raises the <see cref="E:PropertyChanged"/> event.
+            </summary>
+            <param name="e">The <see cref="T:System.ComponentModel.PropertyChangedEventArgs"/> instance containing the event data.</param>
+        </member>
+        <member name="M:dotIRC.IrcUser.ToString">
+            <summary>
+            Returns a string representation of this instance.
+            </summary>
+            <returns>A string that represents this instance.</returns>
+        </member>
+        <member name="P:dotIRC.IrcUser.IsOnline">
+            <summary>
+            Gets whether the user is currently connected to the IRC network. This value may not be always be
+            up-to-date.
+            </summary>
+            <value><see langword="true"/> if the user is currently online; <see langword="false"/> if the user is
+            currently offline.</value>
+        </member>
+        <member name="P:dotIRC.IrcUser.NickName">
+            <summary>
+            Gets the current nick name of the user.
+            </summary>
+            <value>The nick name of the user.</value>
+        </member>
+        <member name="P:dotIRC.IrcUser.UserName">
+            <summary>
+            Gets the current user name of the user. This value never changes until the user reconnects.
+            </summary>
+            <value>The user name of the user.</value>
+        </member>
+        <member name="P:dotIRC.IrcUser.RealName">
+            <summary>
+            Gets the real name of the user. This value never changes until the user reconnects.
+            </summary>
+            <value>The real name of the user.</value>
+        </member>
+        <member name="P:dotIRC.IrcUser.HostName">
+            <summary>
+            Gets the host name of the user.
+            </summary>
+            <value>The host name of the user.</value>
+        </member>
+        <member name="P:dotIRC.IrcUser.ServerName">
+            <summary>
+            Gets the name of the server to which the user is connected.
+            </summary>
+            <value>The name of the server to which the user is connected.</value>
+        </member>
+        <member name="P:dotIRC.IrcUser.ServerInfo">
+            <summary>
+            Gets arbitrary information about the server to which the user is connected.
+            </summary>
+            <value>Arbitrary information about the server.</value>
+        </member>
+        <member name="P:dotIRC.IrcUser.IsOperator">
+            <summary>
+            Gets whether the user is a server operator.
+            </summary>
+            <value><see langword="true"/> if the user is a server operator; <see langword="false"/>, otherwise.</value>
+        </member>
+        <member name="P:dotIRC.IrcUser.IsAway">
+            <summary>
+            Gets whether the user has been been seen as away. This value is always up-to-date for the local user;
+            though it is only updated for remote users when a private message is sent to them or a Who Is response
+            is received for the user.
+            </summary>
+            <value><see langword="true"/> if the user is currently away; <see langword="false"/>, if the user is
+            currently here.</value>
+        </member>
+        <member name="P:dotIRC.IrcUser.AwayMessage">
+            <summary>
+            Gets the current away message received when the user was seen as away.
+            </summary>
+            <value>The current away message of the user.</value>
+        </member>
+        <member name="P:dotIRC.IrcUser.IdleDuration">
+            <summary>
+            Gets the duration for which the user has been idle. This is set when a Who Is response is received.
+            </summary>
+            <value>The duration for which the user has been idle.</value>
+        </member>
+        <member name="P:dotIRC.IrcUser.HopCount">
+            <summary>
+            Gets the hop count of the user, which is the number of servers between the user and the server on which the
+            client is connected, within the network.
+            </summary>
+            <value>The hop count of the user.</value>
+        </member>
+        <member name="P:dotIRC.IrcUser.Client">
+            <summary>
+            Gets the client on which the user exists.
+            </summary>
+            <value>The client on which the user exists.</value>
+        </member>
+        <member name="E:dotIRC.IrcUser.NickNameChanged">
+            <summary>
+            Occurs when the nick name of the user has changed.
             </summary>
         </member>
-        <member name="E:dotIRC.IrcLocalUser.LeftChannel">
+        <member name="E:dotIRC.IrcUser.IsAwayChanged">
             <summary>
-            Occurs when the local user has left a channel.
+            Occurs when the user has been seen as away or here.
             </summary>
         </member>
-        <member name="E:dotIRC.IrcLocalUser.MessageSent">
+        <member name="E:dotIRC.IrcUser.InviteReceived">
             <summary>
-            Occurs when the local user has sent a message.
+            Occurs when an invitation to join a channel has been received.
+            </summary>
+            <remarks>
+            This event should only be raised for the local user (the instance of <see cref="T:dotIRC.IrcLocalUser"/>).
+            </remarks>
+        </member>
+        <member name="E:dotIRC.IrcUser.Quit">
+            <summary>
+            Occurs when the user has quit the network. This may not always be sent.
             </summary>
         </member>
-        <member name="E:dotIRC.IrcLocalUser.MessageReceived">
+        <member name="E:dotIRC.IrcUser.PropertyChanged">
             <summary>
-            Occurs when the local user has received a message.
-            </summary>
-        </member>
-        <member name="E:dotIRC.IrcLocalUser.PreviewMessageReceived">
-            <summary>
-            Occurs when the local user has received a message, before the <see cref="E:dotIRC.IrcLocalUser.MessageReceived"/> event.
-            </summary>
-        </member>
-        <member name="E:dotIRC.IrcLocalUser.NoticeSent">
-            <summary>
-            Occurs when the local user has sent a notice.
-            </summary>
-        </member>
-        <member name="E:dotIRC.IrcLocalUser.NoticeReceived">
-            <summary>
-            Occurs when the local user has received a notice.
-            </summary>
-        </member>
-        <member name="E:dotIRC.IrcLocalUser.PreviewNoticeReceived">
-            <summary>
-            Occurs when the local user has received a notice, before the <see cref="E:dotIRC.IrcLocalUser.NoticeReceived"/> event.
+            Occurs when a property value changes.
             </summary>
         </member>
         <member name="M:dotIRC.IrcLocalUser.SendMessage(dotIRC.IIrcMessageTarget,System.String)">
@@ -3076,23 +3178,95 @@
             </summary>
             <param name="e">The <see cref="T:dotIRC.IrcMessageEventArgs"/> instance containing the event data.</param>
         </member>
+        <member name="P:dotIRC.IrcLocalUser.IsService">
+            <summary>
+            Gets whether the local user is a service or normal user.
+            </summary>
+            <value><see langword="true"/> if the user is a service; <see langword="false"/>, if the user is a normal
+            user.</value>
+        </member>
+        <member name="P:dotIRC.IrcLocalUser.Modes">
+            <summary>
+            Gets a read-only collection of the modes the user currently has.
+            </summary>
+            <value>The current modes of the user.</value>
+        </member>
+        <member name="P:dotIRC.IrcLocalUser.ServiceDistribution">
+            <summary>
+            Gets the distribution of the service, which determines its visibility to users on specific servers.
+            </summary>
+            <value>A wildcard expression for matching against the names of servers on which the service should be
+            visible.</value>
+        </member>
+        <member name="P:dotIRC.IrcLocalUser.ServiceDescription">
+            <summary>
+            Gets the distribution of the service, which determines its visibility to users on specific servers.
+            </summary>
+            <value>A wildcard expression for matching against the names of servers on which the service should be
+            visible.</value>
+        </member>
+        <member name="E:dotIRC.IrcLocalUser.ModesChanged">
+            <summary>
+            Occurs when the modes of the local user have changed.
+            </summary>
+        </member>
+        <member name="E:dotIRC.IrcLocalUser.JoinedChannel">
+            <summary>
+            Occurs when the local user has joined a channel.
+            </summary>
+        </member>
+        <member name="E:dotIRC.IrcLocalUser.LeftChannel">
+            <summary>
+            Occurs when the local user has left a channel.
+            </summary>
+        </member>
+        <member name="E:dotIRC.IrcLocalUser.MessageSent">
+            <summary>
+            Occurs when the local user has sent a message.
+            </summary>
+        </member>
+        <member name="E:dotIRC.IrcLocalUser.MessageReceived">
+            <summary>
+            Occurs when the local user has received a message.
+            </summary>
+        </member>
+        <member name="E:dotIRC.IrcLocalUser.PreviewMessageReceived">
+            <summary>
+            Occurs when the local user has received a message, before the <see cref="E:dotIRC.IrcLocalUser.MessageReceived"/> event.
+            </summary>
+        </member>
+        <member name="E:dotIRC.IrcLocalUser.NoticeSent">
+            <summary>
+            Occurs when the local user has sent a notice.
+            </summary>
+        </member>
+        <member name="E:dotIRC.IrcLocalUser.NoticeReceived">
+            <summary>
+            Occurs when the local user has received a notice.
+            </summary>
+        </member>
+        <member name="E:dotIRC.IrcLocalUser.PreviewNoticeReceived">
+            <summary>
+            Occurs when the local user has received a notice, before the <see cref="E:dotIRC.IrcLocalUser.NoticeReceived"/> event.
+            </summary>
+        </member>
         <member name="T:dotIRC.IrcServer">
             <summary>
             Represents an IRC server from the view of a particular client.
             </summary>
             <threadsafety static="true" instance="false"/>
         </member>
-        <member name="P:dotIRC.IrcServer.HostName">
-            <summary>
-            Gets the host name of the server.
-            </summary>
-            <value>The host name of the server.</value>
-        </member>
         <member name="M:dotIRC.IrcServer.ToString">
             <summary>
             Returns a string representation of this instance.
             </summary>
             <returns>A string that represents this instance.</returns>
+        </member>
+        <member name="P:dotIRC.IrcServer.HostName">
+            <summary>
+            Gets the host name of the server.
+            </summary>
+            <value>The host name of the server.</value>
         </member>
         <member name="T:dotIRC.IrcUserCollection">
             <summary>
@@ -3113,12 +3287,6 @@
             </summary>
             <threadsafety static="true" instance="false"/>
             <seealso cref="T:dotIRC.IrcChannel"/>
-        </member>
-        <member name="P:dotIRC.IrcChannelCollection.Client">
-            <summary>
-            Gets the client to which the collection of channels belongs.
-            </summary>
-            <value>The client to which the collection of channels belongs.</value>
         </member>
         <member name="M:dotIRC.IrcChannelCollection.Join(System.String[])">
             <inheritdoc cref="M:dotIRC.IrcChannelCollection.Join(System.Collections.Generic.IEnumerable{System.String})"/>
@@ -3147,6 +3315,12 @@
             <param name="comment">The comment to send the server upon leaving the channel, or <see langword="null"/> for
             no comment.</param>
         </member>
+        <member name="P:dotIRC.IrcChannelCollection.Client">
+            <summary>
+            Gets the client to which the collection of channels belongs.
+            </summary>
+            <value>The client to which the collection of channels belongs.</value>
+        </member>
         <member name="T:dotIRC.IrcChannelUser">
             <summary>
             Represents an IRC user that exists on a specific channel on a specific <see cref="T:dotIRC.IrcClient"/>.
@@ -3154,34 +3328,6 @@
             <threadsafety static="true" instance="false"/>
             <seealso cref="T:dotIRC.IrcUser"/>
             <seealso cref="T:dotIRC.IrcChannel"/>
-        </member>
-        <member name="P:dotIRC.IrcChannelUser.Modes">
-            <summary>
-            A read-only collection of the channel modes the user currently has.
-            </summary>
-            <value>The current channel modes of the user.</value>
-        </member>
-        <member name="P:dotIRC.IrcChannelUser.Channel">
-            <summary>
-            Gets or sets the channel.
-            </summary>
-            <value>The channel.</value>
-        </member>
-        <member name="P:dotIRC.IrcChannelUser.User">
-            <summary>
-            Gets the <see cref="T:dotIRC.IrcUser"/> that is represented by the <see cref="T:dotIRC.IrcChannelUser"/>.
-            </summary>
-            <value>The <see cref="T:dotIRC.IrcUser"/> that is represented by the <see cref="T:dotIRC.IrcChannelUser"/>.</value>
-        </member>
-        <member name="E:dotIRC.IrcChannelUser.ModesChanged">
-            <summary>
-            Occurs when the channel modes of the user have changed.
-            </summary>
-        </member>
-        <member name="E:dotIRC.IrcChannelUser.PropertyChanged">
-            <summary>
-            Occurs when a property value changes.
-            </summary>
         </member>
         <member name="M:dotIRC.IrcChannelUser.Kick(System.String)">
             <summary>
@@ -3227,108 +3373,39 @@
             </summary>
             <returns>A string that represents this instance.</returns>
         </member>
+        <member name="P:dotIRC.IrcChannelUser.Modes">
+            <summary>
+            A read-only collection of the channel modes the user currently has.
+            </summary>
+            <value>The current channel modes of the user.</value>
+        </member>
+        <member name="P:dotIRC.IrcChannelUser.Channel">
+            <summary>
+            Gets or sets the channel.
+            </summary>
+            <value>The channel.</value>
+        </member>
+        <member name="P:dotIRC.IrcChannelUser.User">
+            <summary>
+            Gets the <see cref="T:dotIRC.IrcUser"/> that is represented by the <see cref="T:dotIRC.IrcChannelUser"/>.
+            </summary>
+            <value>The <see cref="T:dotIRC.IrcUser"/> that is represented by the <see cref="T:dotIRC.IrcChannelUser"/>.</value>
+        </member>
+        <member name="E:dotIRC.IrcChannelUser.ModesChanged">
+            <summary>
+            Occurs when the channel modes of the user have changed.
+            </summary>
+        </member>
+        <member name="E:dotIRC.IrcChannelUser.PropertyChanged">
+            <summary>
+            Occurs when a property value changes.
+            </summary>
+        </member>
         <member name="T:dotIRC.IrcChannel">
             <summary>
             Represents an IRC channel that exists on a specific <see cref="T:dotIRC.IrcClient"/>.
             </summary>
             <threadsafety static="true" instance="false"/>
-        </member>
-        <member name="P:dotIRC.IrcChannel.Name">
-            <summary>
-            Gets the name of the channel.
-            </summary>
-            <value>The name of the channel.</value>
-        </member>
-        <member name="P:dotIRC.IrcChannel.Type">
-            <summary>
-            Gets the type of the channel.
-            </summary>
-            <value>The type of the channel.</value>
-        </member>
-        <member name="P:dotIRC.IrcChannel.Topic">
-            <summary>
-            Gets the current topic of the channel.
-            </summary>
-            <value>The current topic of the channel.</value>
-        </member>
-        <member name="P:dotIRC.IrcChannel.Modes">
-            <summary>
-            Gets a read-only collection of the modes the channel currently has.
-            </summary>
-            <value>The current modes of the channel.</value>
-        </member>
-        <member name="P:dotIRC.IrcChannel.Users">
-            <summary>
-            Gets a collection of all channel users currently in the channel.
-            </summary>
-            <value>A collection of all users currently in the channel.</value>
-        </member>
-        <member name="P:dotIRC.IrcChannel.Client">
-            <summary>
-            Gets the client to which the channel belongs.
-            </summary>
-            <value>The client to which the channel belongs.</value>
-        </member>
-        <member name="E:dotIRC.IrcChannel.UsersListReceived">
-            <summary>
-            Occurs when the list of users in the channel has been received.
-            The list of users is sent initially upon joining the channel, or on the request of the client.
-            </summary>
-        </member>
-        <member name="E:dotIRC.IrcChannel.ModesChanged">
-            <summary>
-            Occurs when any of the modes of the channel have changed.
-            </summary>
-        </member>
-        <member name="E:dotIRC.IrcChannel.TopicChanged">
-            <summary>
-            Occurs when the topic of the channel has changed.
-            </summary>
-        </member>
-        <member name="E:dotIRC.IrcChannel.UserJoined">
-            <summary>
-            Occurs when a user has joined the channel.
-            </summary>
-        </member>
-        <member name="E:dotIRC.IrcChannel.UserLeft">
-            <summary>
-            Occurs when a user has left the channel.
-            </summary>
-        </member>
-        <member name="E:dotIRC.IrcChannel.UserKicked">
-            <summary>
-            Occurs when a user is kicked from the channel.
-            </summary>
-        </member>
-        <member name="E:dotIRC.IrcChannel.UserInvited">
-            <summary>
-            Occurs when a user is invited to join the channel.
-            </summary>
-        </member>
-        <member name="E:dotIRC.IrcChannel.PreviewMessageReceived">
-            <summary>
-            Occurs when the channel has received a message, before the <see cref="E:dotIRC.IrcChannel.MessageReceived"/> event.
-            </summary>
-        </member>
-        <member name="E:dotIRC.IrcChannel.MessageReceived">
-            <summary>
-            Occurs when the channel has received a message.
-            </summary>
-        </member>
-        <member name="E:dotIRC.IrcChannel.NoticeReceived">
-            <summary>
-            Occurs when the channel has received a notice.
-            </summary>
-        </member>
-        <member name="E:dotIRC.IrcChannel.PreviewNoticeReceived">
-            <summary>
-            Occurs when the channel has received a notice, before the <see cref="E:dotIRC.IrcChannel.NoticeReceived"/> event.
-            </summary>
-        </member>
-        <member name="E:dotIRC.IrcChannel.PropertyChanged">
-            <summary>
-            Occurs when a property value changes.
-            </summary>
         </member>
         <member name="M:dotIRC.IrcChannel.GetChannelUser(dotIRC.IrcUser)">
             <summary>
@@ -3489,6 +3566,103 @@
             </summary>
             <returns>A string that represents this instance.</returns>
         </member>
+        <member name="P:dotIRC.IrcChannel.Name">
+            <summary>
+            Gets the name of the channel.
+            </summary>
+            <value>The name of the channel.</value>
+        </member>
+        <member name="P:dotIRC.IrcChannel.Type">
+            <summary>
+            Gets the type of the channel.
+            </summary>
+            <value>The type of the channel.</value>
+        </member>
+        <member name="P:dotIRC.IrcChannel.Topic">
+            <summary>
+            Gets the current topic of the channel.
+            </summary>
+            <value>The current topic of the channel.</value>
+        </member>
+        <member name="P:dotIRC.IrcChannel.Modes">
+            <summary>
+            Gets a read-only collection of the modes the channel currently has.
+            </summary>
+            <value>The current modes of the channel.</value>
+        </member>
+        <member name="P:dotIRC.IrcChannel.Users">
+            <summary>
+            Gets a collection of all channel users currently in the channel.
+            </summary>
+            <value>A collection of all users currently in the channel.</value>
+        </member>
+        <member name="P:dotIRC.IrcChannel.Client">
+            <summary>
+            Gets the client to which the channel belongs.
+            </summary>
+            <value>The client to which the channel belongs.</value>
+        </member>
+        <member name="E:dotIRC.IrcChannel.UsersListReceived">
+            <summary>
+            Occurs when the list of users in the channel has been received.
+            The list of users is sent initially upon joining the channel, or on the request of the client.
+            </summary>
+        </member>
+        <member name="E:dotIRC.IrcChannel.ModesChanged">
+            <summary>
+            Occurs when any of the modes of the channel have changed.
+            </summary>
+        </member>
+        <member name="E:dotIRC.IrcChannel.TopicChanged">
+            <summary>
+            Occurs when the topic of the channel has changed.
+            </summary>
+        </member>
+        <member name="E:dotIRC.IrcChannel.UserJoined">
+            <summary>
+            Occurs when a user has joined the channel.
+            </summary>
+        </member>
+        <member name="E:dotIRC.IrcChannel.UserLeft">
+            <summary>
+            Occurs when a user has left the channel.
+            </summary>
+        </member>
+        <member name="E:dotIRC.IrcChannel.UserKicked">
+            <summary>
+            Occurs when a user is kicked from the channel.
+            </summary>
+        </member>
+        <member name="E:dotIRC.IrcChannel.UserInvited">
+            <summary>
+            Occurs when a user is invited to join the channel.
+            </summary>
+        </member>
+        <member name="E:dotIRC.IrcChannel.PreviewMessageReceived">
+            <summary>
+            Occurs when the channel has received a message, before the <see cref="E:dotIRC.IrcChannel.MessageReceived"/> event.
+            </summary>
+        </member>
+        <member name="E:dotIRC.IrcChannel.MessageReceived">
+            <summary>
+            Occurs when the channel has received a message.
+            </summary>
+        </member>
+        <member name="E:dotIRC.IrcChannel.NoticeReceived">
+            <summary>
+            Occurs when the channel has received a notice.
+            </summary>
+        </member>
+        <member name="E:dotIRC.IrcChannel.PreviewNoticeReceived">
+            <summary>
+            Occurs when the channel has received a notice, before the <see cref="E:dotIRC.IrcChannel.NoticeReceived"/> event.
+            </summary>
+        </member>
+        <member name="E:dotIRC.IrcChannel.PropertyChanged">
+            <summary>
+            Occurs when a property value changes.
+            </summary>
+        </member>
         <member name="T:dotIRC.IrcChannelType">
             <summary>
             Defines the types of channels. Each channel may only be of a single type at any one time.
@@ -3514,180 +3688,6 @@
             The channel is secret. The server never lists this channel and pretends it does not exist when responding to
             queries.
             </summary>
-        </member>
-        <member name="T:dotIRC.IrcUser">
-            <summary>
-            Represents an IRC user that exists on a specific <see cref="T:dotIRC.IrcClient"/>.
-            </summary>
-            <threadsafety static="true" instance="false"/>
-        </member>
-        <member name="P:dotIRC.IrcUser.IsOnline">
-            <summary>
-            Gets whether the user is currently connected to the IRC network. This value may not be always be
-            up-to-date.
-            </summary>
-            <value><see langword="true"/> if the user is currently online; <see langword="false"/> if the user is
-            currently offline.</value>
-        </member>
-        <member name="P:dotIRC.IrcUser.NickName">
-            <summary>
-            Gets the current nick name of the user.
-            </summary>
-            <value>The nick name of the user.</value>
-        </member>
-        <member name="P:dotIRC.IrcUser.UserName">
-            <summary>
-            Gets the current user name of the user. This value never changes until the user reconnects.
-            </summary>
-            <value>The user name of the user.</value>
-        </member>
-        <member name="P:dotIRC.IrcUser.RealName">
-            <summary>
-            Gets the real name of the user. This value never changes until the user reconnects.
-            </summary>
-            <value>The real name of the user.</value>
-        </member>
-        <member name="P:dotIRC.IrcUser.HostName">
-            <summary>
-            Gets the host name of the user.
-            </summary>
-            <value>The host name of the user.</value>
-        </member>
-        <member name="P:dotIRC.IrcUser.ServerName">
-            <summary>
-            Gets the name of the server to which the user is connected.
-            </summary>
-            <value>The name of the server to which the user is connected.</value>
-        </member>
-        <member name="P:dotIRC.IrcUser.ServerInfo">
-            <summary>
-            Gets arbitrary information about the server to which the user is connected.
-            </summary>
-            <value>Arbitrary information about the server.</value>
-        </member>
-        <member name="P:dotIRC.IrcUser.IsOperator">
-            <summary>
-            Gets whether the user is a server operator.
-            </summary>
-            <value><see langword="true"/> if the user is a server operator; <see langword="false"/>, otherwise.</value>
-        </member>
-        <member name="P:dotIRC.IrcUser.IsAway">
-            <summary>
-            Gets whether the user has been been seen as away. This value is always up-to-date for the local user;
-            though it is only updated for remote users when a private message is sent to them or a Who Is response
-            is received for the user.
-            </summary>
-            <value><see langword="true"/> if the user is currently away; <see langword="false"/>, if the user is
-            currently here.</value>
-        </member>
-        <member name="P:dotIRC.IrcUser.AwayMessage">
-            <summary>
-            Gets the current away message received when the user was seen as away.
-            </summary>
-            <value>The current away message of the user.</value>
-        </member>
-        <member name="P:dotIRC.IrcUser.IdleDuration">
-            <summary>
-            Gets the duration for which the user has been idle. This is set when a Who Is response is received.
-            </summary>
-            <value>The duration for which the user has been idle.</value>
-        </member>
-        <member name="P:dotIRC.IrcUser.HopCount">
-            <summary>
-            Gets the hop count of the user, which is the number of servers between the user and the server on which the
-            client is connected, within the network.
-            </summary>
-            <value>The hop count of the user.</value>
-        </member>
-        <member name="P:dotIRC.IrcUser.Client">
-            <summary>
-            Gets the client on which the user exists.
-            </summary>
-            <value>The client on which the user exists.</value>
-        </member>
-        <member name="E:dotIRC.IrcUser.NickNameChanged">
-            <summary>
-            Occurs when the nick name of the user has changed.
-            </summary>
-        </member>
-        <member name="E:dotIRC.IrcUser.IsAwayChanged">
-            <summary>
-            Occurs when the user has been seen as away or here.
-            </summary>
-        </member>
-        <member name="E:dotIRC.IrcUser.InviteReceived">
-            <summary>
-            Occurs when an invitation to join a channel has been received.
-            </summary>
-            <remarks>
-            This event should only be raised for the local user (the instance of <see cref="T:dotIRC.IrcLocalUser"/>).
-            </remarks>
-        </member>
-        <member name="E:dotIRC.IrcUser.Quit">
-            <summary>
-            Occurs when the user has quit the network. This may not always be sent.
-            </summary>
-        </member>
-        <member name="E:dotIRC.IrcUser.PropertyChanged">
-            <summary>
-            Occurs when a property value changes.
-            </summary>
-        </member>
-        <member name="M:dotIRC.IrcUser.WhoIs">
-            <summary>
-            Sends a Who Is query to server for the user.
-            </summary>
-        </member>
-        <member name="M:dotIRC.IrcUser.WhoWas(System.Int32)">
-            <summary>
-            Sends a Who Was query to server for the user.
-            </summary>
-            <param name="entriesCount">The maximum number of entries that the server should return. A negative number
-            specifies an unlimited number of entries.</param>
-        </member>
-        <member name="M:dotIRC.IrcUser.GetChannelUsers">
-            <summary>
-            Gets a collection of all channel users that correspond to the user.
-            Each <see cref="T:dotIRC.IrcChannelUser"/> represents a channel of which the user is currently a member.
-            </summary>
-            <returns>A collection of all <see cref="T:dotIRC.IrcChannelUser"/> object that correspond to the <see cref="T:dotIRC.IrcUser"/>.
-            </returns>
-        </member>
-        <member name="M:dotIRC.IrcUser.OnNickNameChanged(System.EventArgs)">
-            <summary>
-            Raises the <see cref="E:dotIRC.IrcUser.NickNameChanged"/> event.
-            </summary>
-            <param name="e">The <see cref="T:System.EventArgs"/> instance containing the event data.</param>
-        </member>
-        <member name="M:dotIRC.IrcUser.OnIsAwayChanged(System.EventArgs)">
-            <summary>
-            Raises the <see cref="E:dotIRC.IrcUser.IsAwayChanged"/> event.
-            </summary>
-            <param name="e">The <see cref="T:System.EventArgs"/> instance containing the event data.</param>
-        </member>
-        <member name="M:dotIRC.IrcUser.OnInviteReceived(dotIRC.IrcChannelInvitationEventArgs)">
-            <summary>
-            Raises the <see cref="E:dotIRC.IrcUser.InviteReceived"/> event.
-            </summary>
-            <param name="e">The <see cref="T:dotIRC.IrcChannelEventArgs"/> instance containing the event data.</param>
-        </member>
-        <member name="M:dotIRC.IrcUser.OnQuit(dotIRC.IrcCommentEventArgs)">
-            <summary>
-            Raises the <see cref="E:dotIRC.IrcUser.Quit"/> event.
-            </summary>
-            <param name="e">The <see cref="T:dotIRC.IrcCommentEventArgs"/> instance containing the event data.</param>
-        </member>
-        <member name="M:dotIRC.IrcUser.OnPropertyChanged(System.ComponentModel.PropertyChangedEventArgs)">
-            <summary>
-            Raises the <see cref="E:PropertyChanged"/> event.
-            </summary>
-            <param name="e">The <see cref="T:System.ComponentModel.PropertyChangedEventArgs"/> instance containing the event data.</param>
-        </member>
-        <member name="M:dotIRC.IrcUser.ToString">
-            <summary>
-            Returns a string representation of this instance.
-            </summary>
-            <returns>A string that represents this instance.</returns>
         </member>
         <member name="T:dotIRC.IrcChannelListReceivedEventArgs">
             <summary>
@@ -3814,16 +3814,6 @@
             </summary>
             <threadsafety static="true" instance="false"/>
         </member>
-        <member name="M:dotIRC.IrcPreviewMessageEventArgs.#ctor(dotIRC.IIrcMessageSource,System.Collections.Generic.IList{dotIRC.IIrcMessageTarget},System.String,System.Text.Encoding)">
-            <inheritdoc/>
-        </member>
-        <member name="P:dotIRC.IrcPreviewMessageEventArgs.Handled">
-            <summary>
-            Gets or sets whether the event has been handled. If it is handled, the corresponding normal (non-preview)
-            event is not raised.
-            </summary>
-            <value><see langword="true"/> if the event has been handled; <see langword="false"/>, otherwise.</value>
-        </member>
         <member name="T:dotIRC.IrcMessageEventArgs">
             <summary>
             Provides data for events that are raised when an IRC message or notice is sent or received.
@@ -3873,11 +3863,58 @@
             </summary>
             <value>The encoding of the message text.</value>
         </member>
+        <member name="M:dotIRC.IrcPreviewMessageEventArgs.#ctor(dotIRC.IIrcMessageSource,System.Collections.Generic.IList{dotIRC.IIrcMessageTarget},System.String,System.Text.Encoding)">
+            <inheritdoc/>
+        </member>
+        <member name="P:dotIRC.IrcPreviewMessageEventArgs.Handled">
+            <summary>
+            Gets or sets whether the event has been handled. If it is handled, the corresponding normal (non-preview)
+            event is not raised.
+            </summary>
+            <value><see langword="true"/> if the event has been handled; <see langword="false"/>, otherwise.</value>
+        </member>
         <member name="T:dotIRC.IrcChannelInvitationEventArgs">
             <summary>
             Provides data for the <see cref="E:dotIRC.IrcClient.PingReceived"/> event.
             </summary>
             <threadsafety static="true" instance="false"/>
+        </member>
+        <member name="T:dotIRC.IrcChannelEventArgs">
+            <summary>
+            Provides data for events that concern an <see cref="T:dotIRC.IrcChannel"/>.
+            </summary>
+            <threadsafety static="true" instance="false"/>
+        </member>
+        <member name="T:dotIRC.IrcCommentEventArgs">
+            <summary>
+            Provides data for events that specify a name.
+            </summary>
+            <threadsafety static="true" instance="false"/>
+        </member>
+        <member name="M:dotIRC.IrcCommentEventArgs.#ctor(System.String)">
+            <summary>
+            Initializes a new instance of the <see cref="T:dotIRC.IrcCommentEventArgs"/> class.
+            </summary>
+            <param name="comment">The comment that the event specified.</param>
+        </member>
+        <member name="P:dotIRC.IrcCommentEventArgs.Comment">
+            <summary>
+            Gets the comment that the event specified.
+            </summary>
+            <value>The comment that the event specified.</value>
+        </member>
+        <member name="M:dotIRC.IrcChannelEventArgs.#ctor(dotIRC.IrcChannel,System.String)">
+            <inheritdoc/>
+            <summary>
+            Initializes a new instance of the <see cref="T:dotIRC.IrcChannelEventArgs"/> class.
+            </summary>
+            <param name="channel">The channel that the event concerns.</param>
+        </member>
+        <member name="P:dotIRC.IrcChannelEventArgs.Channel">
+            <summary>
+            Gets the channel that the event concerns.
+            </summary>
+            <value>The channel that the event concerns.</value>
         </member>
         <member name="M:dotIRC.IrcChannelInvitationEventArgs.#ctor(dotIRC.IrcChannel,dotIRC.IrcUser)">
             <summary>
@@ -3910,25 +3947,6 @@
             Gets the channel user that the event concerns.
             </summary>
             <value>The channel user that the event concerns.</value>
-        </member>
-        <member name="T:dotIRC.IrcChannelEventArgs">
-            <summary>
-            Provides data for events that concern an <see cref="T:dotIRC.IrcChannel"/>.
-            </summary>
-            <threadsafety static="true" instance="false"/>
-        </member>
-        <member name="M:dotIRC.IrcChannelEventArgs.#ctor(dotIRC.IrcChannel,System.String)">
-            <inheritdoc/>
-            <summary>
-            Initializes a new instance of the <see cref="T:dotIRC.IrcChannelEventArgs"/> class.
-            </summary>
-            <param name="channel">The channel that the event concerns.</param>
-        </member>
-        <member name="P:dotIRC.IrcChannelEventArgs.Channel">
-            <summary>
-            Gets the channel that the event concerns.
-            </summary>
-            <value>The channel that the event concerns.</value>
         </member>
         <member name="T:dotIRC.IrcUserEventArgs">
             <summary>
@@ -3966,24 +3984,6 @@
             Gets the name that the event specified.
             </summary>
             <value>The name that the event specified.</value>
-        </member>
-        <member name="T:dotIRC.IrcCommentEventArgs">
-            <summary>
-            Provides data for events that specify a name.
-            </summary>
-            <threadsafety static="true" instance="false"/>
-        </member>
-        <member name="M:dotIRC.IrcCommentEventArgs.#ctor(System.String)">
-            <summary>
-            Initializes a new instance of the <see cref="T:dotIRC.IrcCommentEventArgs"/> class.
-            </summary>
-            <param name="comment">The comment that the event specified.</param>
-        </member>
-        <member name="P:dotIRC.IrcCommentEventArgs.Comment">
-            <summary>
-            Gets the comment that the event specified.
-            </summary>
-            <value>The comment that the event specified.</value>
         </member>
         <member name="T:dotIRC.IrcPingOrPongReceivedEventArgs">
             <summary>

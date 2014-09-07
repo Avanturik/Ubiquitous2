@@ -155,6 +155,7 @@
     <Compile Include="Model\Emoticon.cs" />
     <Compile Include="Model\IImageDataSource.cs" />
     <Compile Include="Model\ImageCacheDataService.cs" />
+    <Compile Include="Model\MessageParser.cs" />
     <Compile Include="Model\SettingsDataService.cs" />
     <Compile Include="Model\CustomEventArgs.cs" />
     <Compile Include="Model\ChatDataService.cs" />
