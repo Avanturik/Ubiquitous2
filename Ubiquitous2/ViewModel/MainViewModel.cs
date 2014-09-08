@@ -1,6 +1,7 @@
 ﻿using System.Diagnostics;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
+using GalaSoft.MvvmLight.Ioc;
 using Microsoft.Practices.ServiceLocation;
 using UB.Model;
 
@@ -19,11 +20,11 @@ namespace UB.ViewModel
         /// <summary>
         /// Initializes a new instance of the MainViewModel class.
         /// </summary>
+        [PreferredConstructor]
         public MainViewModel(IChatDataService dataService)
         {
             _dataService = dataService;
-            var test = Properties.Ubiqiutous.Default.LoremIpsum;
-
+            SendText = dataService.GetRandomText();
         }
 
         private RelayCommand _showSettings;
@@ -128,6 +129,38 @@ namespace UB.ViewModel
                                           {
                                               IsOverlayVisible = true;
                                           }));
+            }
+        }
+
+
+        /// <summary>
+        /// The <see cref="SendText" /> property's name.
+        /// </summary>
+        public const string SendTextPropertyName = "SendText";
+
+        private string _sendText = "";
+
+        /// <summary>
+        /// Sets and gets the SendText property.
+        /// Changes to that property's value raise the PropertyChanged event. 
+        /// </summary>
+        public string SendText
+        {
+            get
+            {
+                return _sendText;
+            }
+
+            set
+            {
+                if (_sendText == value)
+                {
+                    return;
+                }
+
+                RaisePropertyChanging(SendTextPropertyName);
+                _sendText = value;
+                RaisePropertyChanged(SendTextPropertyName);
             }
         }
         ////public override void Cleanup()

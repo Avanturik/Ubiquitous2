@@ -8,27 +8,25 @@
         x:Class="UB.MainWindow"
         mc:Ignorable="d ignore"
         UseLayoutRounding="True"
-        Height="{Binding Source={StaticResource Settings}, Path=Default.MainWindowHeight, Mode=TwoWay}"
-        Width="{Binding Source={StaticResource Settings}, Path=Default.MainWindowWidth, Mode=TwoWay}"
+        Height="425"
+        Width="324"
         Title="Ubiquitous 2.0" Icon="ubiquitous smile.ico" Style="{DynamicResource MainWindowStyle}"
         DataContext="{Binding Source={StaticResource Locator},Path=Main}"
-        d:DesignHeight="500"
-        d:DesignWidth="400"
         >
 
 
-            
-        <i:Interaction.Triggers>
-            <i:EventTrigger EventName="Closing">
-                <Custom:EventToCommand Command="{Binding ExitApplication}"/>
-            </i:EventTrigger>
-            <i:EventTrigger EventName="MouseEnter">
-                <i:InvokeCommandAction Command="{Binding ShowOverlay}"/>
-            </i:EventTrigger>
-            <i:EventTrigger EventName="MouseLeave">
-                <i:InvokeCommandAction Command="{Binding HideOverlay}"/>
-            </i:EventTrigger>
-        </i:Interaction.Triggers>
+
+    <i:Interaction.Triggers>
+        <i:EventTrigger EventName="Closing">
+            <Custom:EventToCommand Command="{Binding ExitApplication}"/>
+        </i:EventTrigger>
+        <i:EventTrigger EventName="MouseEnter">
+            <i:InvokeCommandAction Command="{Binding ShowOverlay}"/>
+        </i:EventTrigger>
+        <i:EventTrigger EventName="MouseLeave">
+            <i:InvokeCommandAction Command="{Binding HideOverlay}"/>
+        </i:EventTrigger>
+    </i:Interaction.Triggers>
 
 
 

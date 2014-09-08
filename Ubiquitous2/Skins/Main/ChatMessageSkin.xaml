@@ -13,10 +13,10 @@
                     <ControlTemplate.Resources>
                         <Style x:Key="{x:Type Hyperlink}" TargetType="{x:Type Hyperlink}">
                             <Setter Property="TextDecorations" Value="Underline"/>
-                            <Setter Property="Foreground" Value="Yellow"/>
+                            <Setter Property="Foreground" Value="#FFCB972F"/>
                             <Style.Triggers>
                                 <Trigger Property="IsMouseOver" Value="True">
-                                    <Setter Property="Foreground" Value="Red"/>
+                                    <Setter Property="Foreground" Value="#FFFFC042"/>
                                     <Setter Property="Cursor" Value="Hand"/>
                                 </Trigger>
                             </Style.Triggers>

@@ -13,6 +13,7 @@
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type UserControl}">
+                    <Grid>              
                         <ItemsControl ItemsSource="{Binding Messages}" Padding="0" Margin="0,0,-4,0">
                             <ItemsControl.Template>
                                 <ControlTemplate>
@@ -36,6 +37,7 @@
                                 </ItemsPanelTemplate>
                             </ItemsControl.ItemsPanel>
                         </ItemsControl>
+                    </Grid>
                 </ControlTemplate>
             </Setter.Value>
         </Setter>

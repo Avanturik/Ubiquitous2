@@ -29,6 +29,17 @@ namespace UB.Design
             callback(message, null);
         }
 
+        public string GetRandomText()
+        {
+            var lorem = Properties.Settings.Default.LoremIpsum;
+
+            var words = lorem.Split(' ');
+            var wordsCount = rnd.Next(5, words.Length);
+            var text = String.Join(" ", Enumerable.Range(0, wordsCount).Select((i, str) => words[i]));
+
+            return "Lorem ipsum " + text;
+        }
+
         public void ReadMessages(Action<ChatMessage[],Exception> callback)
         {
 

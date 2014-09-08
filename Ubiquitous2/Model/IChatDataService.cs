@@ -10,5 +10,6 @@ namespace UB.Model
         void SwitchChat( String chatName, bool enabled);
         IChat GetChat( String chatName );
         void StartAllChats();
+        string GetRandomText();
     }
 }

@@ -141,5 +141,11 @@ namespace UB.Model
         {
             receiveTimer.Dispose();
         }
+
+
+        public string GetRandomText()
+        {
+            return String.Empty;
+        }
     }
 }
