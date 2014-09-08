@@ -161,8 +161,9 @@ namespace Devart.Controls
                         _panel.UpdateScrollInfo(_availableSize, 0);
                         return;
                     }
-
-                    _children.CreateTopmostElements(_availableSize);
+                    
+                    // It's faster to recreate elements than get and measure topmost items
+                    //_children.CreateTopmostElements(_availableSize);
 
                     _totalHeight = GetTotalHeight(out _lastItemIndex, out _lastItemClippedRatio);
 
