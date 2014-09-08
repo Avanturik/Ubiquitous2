@@ -3,6 +3,7 @@
                     xmlns:ub="clr-namespace:UB.View"
                     xmlns:Converter="clr-namespace:UB.Converter"
                     xmlns:Interactivity="clr-namespace:UB.Interactivity"
+                    xmlns:gif="http://wpfanimatedgif.codeplex.com"
                     >
     <Converter:ChatMessageToInlines x:Key="textConverter" />
     <Style x:Key="ChatMessageTemplate" TargetType="{x:Type UserControl}">
@@ -54,8 +55,8 @@
                                 <RowDefinition MinHeight="18"/>
                             </Grid.RowDefinitions>
                             <DockPanel Grid.Row="0" HorizontalAlignment="Stretch">
-                                <Image Stretch="Fill" Margin ="0,4,0,0" Width="12" Height="12" Source="{Binding Message.ChatIconURL, Mode=OneTime}" VerticalAlignment="Top" HorizontalAlignment="Left">
-                                    <Image.Effect>
+                                <Image gif:ImageBehavior.AnimatedSource="{Binding Message.ChatIconURL, Mode=OneTime}" gif:ImageBehavior.RepeatBehavior="Forever" Stretch="Fill" Margin ="0,4,0,0" Width="12" Height="12" VerticalAlignment="Top" HorizontalAlignment="Left">
+                                <Image.Effect>
                                         <DropShadowEffect BlurRadius="2" Opacity="0.2" ShadowDepth="2"/>
                                     </Image.Effect>
                                 </Image>

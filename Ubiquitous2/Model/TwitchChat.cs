@@ -13,28 +13,28 @@ namespace UB.Model
 {
     public class TwitchChat : IRCChatBase
     {
+        private const string ircDomain = "irc.twitch.tv";
+        private const int ircPort = 6667;
+        private const string emoticonUrl = "http://api.twitch.tv/kraken/chat/emoticons";
+        private const string emoticonFallbackUrl = @"Content\twitchemoticons.json";
+
         public TwitchChat(ChatConfig config) : 
             base(new IRCLoginInfo()
         {
-            Channels = config.Parameters.StringArrayValue("Channels"),
-            HostName = "irc.twitch.tv",
-            UserName = config.Parameters.StringValue("Username"),
-            Password = config.Parameters.StringValue("Password"),
-            Port = 6667,
-            RealName = config.Parameters.StringValue("Username"),
-            })
+            HostName = ircDomain,
+            Port = ircPort,
+        })
         {
+            Config = config;
             Enabled = config.Enabled;
-            ContentParser = MessageParser.ParseMessage;
-            var baseDir = AppDomain.CurrentDomain.BaseDirectory;
+            ContentParsers.Add(MessageParser.ParseURLs);
+            ContentParsers.Add(MessageParser.ParseEmoticons);
 
             //Fallback icons
-            DownloadEmoticons(baseDir + @"Content\twitchemoticons.json");
+            DownloadEmoticons(AppDomain.CurrentDomain.BaseDirectory + emoticonFallbackUrl);
             //Web icons
-            Task.Factory.StartNew(() => DownloadEmoticons("http://api.twitch.tv/kraken/chat/emoticons") );
-            GC.Collect();
-            GC.WaitForPendingFinalizers();
-            GC.Collect();
+            Task.Factory.StartNew(() => DownloadEmoticons(emoticonUrl) );
+
 
         }
         public override string IconURL

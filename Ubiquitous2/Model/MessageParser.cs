@@ -10,13 +10,13 @@ namespace UB.Model
 {
     public class MessageParser
     {
-        public static void ParseMessage(ChatMessage message, List<Emoticon> emoticons)
+        public static void ParseURLs( ChatMessage message, IChat chat )
         {
-            //Parse links
             message.Text = Html.ConvertUrlsToLinks(message.Text);
-
-            //Parse emoticons
-
+        }
+        public static void ParseEmoticons(ChatMessage message, IChat chat)
+        {
+            var emoticons = chat.Emoticons.ToList();
             bool containsNonAlpha = Regex.IsMatch(message.Text, @"\W");
             HashSet<string> words = null;
 
@@ -26,7 +26,7 @@ namespace UB.Model
                 words = new HashSet<string>(new string[] { message.Text });
 
 
-            foreach (var emoticon in emoticons.ToList())
+            foreach (var emoticon in emoticons)
             {
                 if ((words != null || !containsNonAlpha) && emoticon.ExactWord != null)
                 {

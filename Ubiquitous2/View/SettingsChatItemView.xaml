@@ -7,6 +7,7 @@
              xmlns:Devart="clr-namespace:Devart.Controls"
              xmlns:ViewModel="clr-namespace:UB.ViewModel"
              xmlns:View="clr-namespace:UB.View"
+             xmlns:gif="http://wpfanimatedgif.codeplex.com"
              DataContext="{Binding Source={StaticResource Locator},Path=SettingsChatItem}"
              mc:Ignorable="d"
              d:DesignHeight="31.433" d:DesignWidth="184.566">
@@ -19,6 +20,7 @@
             <Setter Property="Margin" Value="0"/>
         </Style>
 
+        <BooleanToVisibilityConverter x:Key="boolToVisibilityConverter"></BooleanToVisibilityConverter>
     </UserControl.Resources>
 
     <Border BorderThickness="0,1,0,0" Background="{DynamicResource {x:Static SystemColors.ControlBrushKey}}" HorizontalAlignment="Left">
@@ -35,7 +37,8 @@
 					<Image Margin="0,-5" Width="16" Source="/favicon.ico"/>
 					<TextBlock Text="{Binding ChatName}"></TextBlock>
 					<TextBlock><Hyperlink Command="{Binding ToggleEdit}"><TextBlock Text="{Binding EditLinkTitle}"/></Hyperlink></TextBlock>
-                    <TextBlock><Hyperlink><TextBlock>restart</TextBlock></Hyperlink></TextBlock>
+                    <TextBlock><Hyperlink Command="{Binding RestartChat}"><TextBlock>restart</TextBlock></Hyperlink></TextBlock>
+                    <Image Visibility="{Binding IsLoaderVisible, Converter={StaticResource boolToVisibilityConverter}}" Width="16" Height="16" gif:ImageBehavior.AnimatedSource="c:\loader.gif" gif:ImageBehavior.RepeatBehavior="Forever" Margin="0,0,0,-4" />
             </TextBlock>
             <Expander HorizontalAlignment="Left" HorizontalContentAlignment="Left" Padding="10"  IsExpanded="{Binding Expanded}" Style="{DynamicResource ExpanderStyle}" VerticalAlignment="Top">
                 <ItemsControl ItemsSource="{Binding SettingsFields}"

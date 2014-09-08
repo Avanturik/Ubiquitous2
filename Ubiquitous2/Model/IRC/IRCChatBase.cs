@@ -7,6 +7,7 @@ using System.Threading;
 using dotIRC;
 using UB.Model.IRC;
 using UB.Model;
+using UB.Utils;
 
 namespace UB.Model
 {
@@ -21,24 +22,13 @@ namespace UB.Model
         private const int pingInterval = 30000;
         private bool isConnecting = true;
         private Dictionary<String, Action<IrcRawMessageEventArgs>> rawMessageHandlers;
-
         private Random random { get; set; }
+
         public IRCChatBase( IRCLoginInfo info )
         {
+            IsStopping = false;
+
             loginInfo = info;
-            if (!info.Channels.Any(ch => ch.Equals(loginInfo.UserName, StringComparison.InvariantCultureIgnoreCase)))
-                info.Channels = info.Channels.Union(new String[] { loginInfo.UserName.ToLower() }).ToArray();
-
-            for (int i = 0; i < loginInfo.Channels.Length; i++)
-            {
-                loginInfo.Channels[i] = "#" + loginInfo.Channels[i].Replace("#", "");
-            }
-
-            if (String.IsNullOrEmpty(LoginInfo.HostName))
-                throw new Exception("Hostname must be specified!");
-            
-            if (String.IsNullOrEmpty(LoginInfo.UserName))
-                throw new Exception("Username must be specified!");
 
             random = new Random();
 
@@ -48,6 +38,8 @@ namespace UB.Model
                 {"JOIN", UserJoin},
                 {"PART", UserLeft},
             };
+
+            ContentParsers = new List<Action<ChatMessage, IChat>>();
 
         }
         public bool IsStopping { get; set; }
@@ -69,14 +61,15 @@ namespace UB.Model
 
         public virtual bool Start()
         {
-            Initialize();
 
             var tries = 0;
-            while (IsStopping && tries < 60)
+            while (IsStopping && tries < 1000)
             {
-                Thread.Sleep(1000);
+                Thread.Sleep(60);
                 tries++;
             }
+
+            Initialize();
 
             noPongTimer = new Timer((obj) => {
                 if (!IsStopping)
@@ -123,7 +116,26 @@ namespace UB.Model
                 var hostCount = hostList.AddressList.Count();
                 if (hostCount <= 0)
                     throw new Exception("All servers are down. Domain:" + LoginInfo.HostName);
-                
+
+                loginInfo.Channels = Config.Parameters.StringArrayValue("Channels");
+                loginInfo.UserName = Config.Parameters.StringValue("Username");
+                loginInfo.Password = Config.Parameters.StringValue("Password");
+                loginInfo.RealName = Config.Parameters.StringValue("Username");
+
+                if (String.IsNullOrEmpty(LoginInfo.HostName))
+                    throw new Exception("Hostname must be specified!");
+
+                if (String.IsNullOrEmpty(LoginInfo.UserName))
+                    throw new Exception("Username must be specified!");
+
+                if (!loginInfo.Channels.Any(ch => ch.Equals(loginInfo.UserName, StringComparison.InvariantCultureIgnoreCase)))
+                    loginInfo.Channels = loginInfo.Channels.Union(new String[] { loginInfo.UserName.ToLower() }).ToArray();
+
+                for (int i = 0; i < loginInfo.Channels.Length; i++)
+                {
+                    loginInfo.Channels[i] = "#" + loginInfo.Channels[i].Replace("#", "");
+                }
+
                 Connect(hostList.AddressList[random.Next(0,hostCount)], LoginInfo.Port, false, new IrcUserRegistrationInfo()
                 { 
                     UserName = LoginInfo.UserName,
@@ -168,8 +180,8 @@ namespace UB.Model
                     
                     if( loginInfo.Channels.Contains(message.Channel) )
                     {
-                        if (ContentParser != null)
-                            ContentParser(message,Emoticons);
+                        if (ContentParsers != null)
+                            ContentParsers.ForEach(parser => parser(message, this));
 
                         MessageReceived(this, new ChatServiceEventArgs()
                         {
@@ -225,6 +237,8 @@ namespace UB.Model
         }
         protected override void OnError(IrcErrorEventArgs e)
         {
+            IsStopping = false;
+
             Debug.Print("Error: {0}", e.Error);
             Restart();
             base.OnError(e);
@@ -251,7 +265,14 @@ namespace UB.Model
         public virtual void DownloadEmoticons(string url){}
 
 
-        public Action<ChatMessage, List<Emoticon>> ContentParser
+        public List<Action<ChatMessage, IChat>> ContentParsers
+        {
+            get;
+            set;
+        }
+
+
+        public ChatConfig Config
         {
             get;
             set;

@@ -150,6 +150,31 @@ namespace UB.ViewModel
             }
         }
 
+        private RelayCommand _restartChat;
+
+        /// <summary>
+        /// Gets the RestartChat.
+        /// </summary>
+        public RelayCommand RestartChat
+        {
+            get
+            {
+                return _restartChat
+                    ?? (_restartChat = new RelayCommand(
+                                          () =>
+                                          {
+                                              Task.Factory.StartNew(() => {
+                                                  if (this.Enabled)
+                                                  {
+                                                      this.Enabled = false;
+                                                      this.Enabled = true;
+                                                  }
+                                              
+                                              });
+                                          }));
+            }
+        }
+
         private RelayCommand _toggleEdit;
 
         /// <summary>
@@ -258,14 +283,47 @@ namespace UB.ViewModel
 
                 RaisePropertyChanging(EnabledPropertyName);
                 _enabled = value;
-                if( chatConfig != null )
+                IsLoaderVisible = true;
+                if (chatConfig != null)
                     chatConfig.Enabled = _enabled;
 
                 if( chatDataService != null && ChatName != null )
                 {
                     chatDataService.SwitchChat(ChatName, _enabled);
                 }
+                IsLoaderVisible = false;
                 RaisePropertyChanged(EnabledPropertyName);
+            }
+        }
+
+        /// <summary>
+        /// The <see cref="IsLoaderVisible" /> property's name.
+        /// </summary>
+        public const string IsLoaderVisiblePropertyName = "IsLoaderVisible";
+
+        private bool _isLoaderVisible = false;
+
+        /// <summary>
+        /// Sets and gets the IsLoaderVisible property.
+        /// Changes to that property's value raise the PropertyChanged event. 
+        /// </summary>
+        public bool IsLoaderVisible
+        {
+            get
+            {
+                return _isLoaderVisible;
+            }
+
+            set
+            {
+                if (_isLoaderVisible == value)
+                {
+                    return;
+                }
+
+                RaisePropertyChanging(IsLoaderVisiblePropertyName);
+                _isLoaderVisible = value;
+                RaisePropertyChanged(IsLoaderVisiblePropertyName);
             }
         }
     }
