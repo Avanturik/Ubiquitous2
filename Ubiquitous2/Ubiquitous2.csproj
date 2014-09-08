@@ -143,6 +143,7 @@
     <Compile Include="Converter\ChatMessageToTextBlock.cs" />
     <Compile Include="Design\DesignDataService.cs" />
     <Compile Include="Design\DesignSettingsDataService.cs" />
+    <Compile Include="Design\DesignImageCacheDataService.cs" />
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="Interactivity\AutoScrollAction.cs" />
     <Compile Include="Interactivity\BindingListener.cs" />
@@ -281,8 +282,11 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
+    <Resource Include="Resources\gear.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
     <EmbeddedResource Include="Properties\Resources.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
+      <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <None Include="app.config" />
@@ -304,7 +308,9 @@
     <None Include="Ubiquitous2_TemporaryKey.pfx" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="ubiquitous smile.ico" />
+    <Resource Include="ubiquitous smile.ico">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\dotIRC\dotIRC.csproj">
@@ -315,6 +321,7 @@
   <ItemGroup>
     <Content Include="favicon.ico">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <CustomToolNamespace>UB</CustomToolNamespace>
     </Content>
   </ItemGroup>
   <ItemGroup>

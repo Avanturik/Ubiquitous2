@@ -62,6 +62,17 @@ namespace UB.ViewModel
 
         private void AddMessages(ChatMessage[] messages)
         {
+            if( IsInDesignMode )
+            {
+                foreach (var msg in messages)
+                {
+                    Messages.Add(
+                        new ChatMessageViewModel(msg)
+                    );
+                }
+            }
+            else
+            {
                 DispatcherHelper.CheckBeginInvokeOnUI(() =>
                 {               
                     foreach( var msg in messages)
@@ -73,11 +84,12 @@ namespace UB.ViewModel
                     if (MessageAdded != null)
                         MessageAdded(this, EventArgs.Empty);
 
-                    GC.Collect();
-                    GC.WaitForPendingFinalizers();
-                    GC.Collect();
-
                 });
+            }
+            GC.Collect();
+            GC.WaitForPendingFinalizers();
+            GC.Collect();
+
         }
 
         /// <summary>

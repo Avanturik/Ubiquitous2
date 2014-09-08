@@ -11,6 +11,7 @@
 
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Ioc;
+using GalaSoft.MvvmLight.Threading;
 using Microsoft.Practices.ServiceLocation;
 using UB.Model;
 
@@ -27,20 +28,24 @@ namespace UB.ViewModel
     {
         static ViewModelLocator()
         {
+            DispatcherHelper.Initialize();
+
+
             ServiceLocator.SetLocatorProvider(() => SimpleIoc.Default);
 
             if (ViewModelBase.IsInDesignModeStatic)
             {
                 SimpleIoc.Default.Register<SettingsDataService, Design.DesignSettingsDataService>();
                 SimpleIoc.Default.Register<IChatDataService, Design.DesignDataService>();
+                SimpleIoc.Default.Register<IImageDataSource, Design.DesignImageCacheDataService>();
             }
             else
             {
                 SimpleIoc.Default.Register<SettingsDataService, SettingsDataService>();
                 SimpleIoc.Default.Register<IChatDataService, ChatDataService>();
+                SimpleIoc.Default.Register<IImageDataSource, ImageCacheDataService>();
             }
 
-            SimpleIoc.Default.Register<IImageDataSource, ImageCacheDataService>();
             SimpleIoc.Default.Register<SettingsFieldViewModel>();
             SimpleIoc.Default.Register<SettingsChatItemViewModel>();
             SimpleIoc.Default.Register<MainViewModel>();

@@ -18,7 +18,6 @@ namespace UB
         {
             Utils.Net.DemandTCPPermission();
 
-            DispatcherHelper.Initialize();
             if (RenderCapability.Tier == 0)
                 Timeline.DesiredFrameRateProperty.OverrideMetadata(
                     typeof(Timeline),

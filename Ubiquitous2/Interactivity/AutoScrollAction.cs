@@ -23,7 +23,8 @@ namespace UB.Interactivity
             scrollViewer = this.Target;
             scrollViewer.InvalidateScrollInfo();
 
-            Dispatcher.Invoke(new Action(() => { }), DispatcherPriority.Render, null);
+            if( Dispatcher != null )
+                Dispatcher.Invoke(new Action(() => { }), DispatcherPriority.Render, null);
 
             DoubleAnimation mainAnimation = new DoubleAnimation()
             {

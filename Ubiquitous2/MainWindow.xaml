@@ -12,13 +12,23 @@
         Width="{Binding Source={StaticResource Settings}, Path=Default.MainWindowWidth, Mode=TwoWay}"
         Title="Ubiquitous 2.0" Icon="ubiquitous smile.ico" Style="{DynamicResource MainWindowStyle}"
         DataContext="{Binding Source={StaticResource Locator},Path=Main}"
-        >    
-   
-    <i:Interaction.Triggers>
-        <i:EventTrigger EventName="Closing">
-            <Custom:EventToCommand Command="{Binding ExitApplication}"/>
-        </i:EventTrigger>
-    </i:Interaction.Triggers>
+        d:DesignHeight="500"
+        d:DesignWidth="400"
+        >
+
+
+            
+        <i:Interaction.Triggers>
+            <i:EventTrigger EventName="Closing">
+                <Custom:EventToCommand Command="{Binding ExitApplication}"/>
+            </i:EventTrigger>
+            <i:EventTrigger EventName="MouseEnter">
+                <i:InvokeCommandAction Command="{Binding ShowOverlay}"/>
+            </i:EventTrigger>
+            <i:EventTrigger EventName="MouseLeave">
+                <i:InvokeCommandAction Command="{Binding HideOverlay}"/>
+            </i:EventTrigger>
+        </i:Interaction.Triggers>
 
 
 

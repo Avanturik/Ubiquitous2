@@ -31,7 +31,10 @@ namespace UB.Model
                 }
                 
                 image.Source = bitmapImageCache[uri.AbsoluteUri];
-                callback(image);
+                DispatcherHelper.CheckBeginInvokeOnUI(() =>
+                {
+                    callback(image);
+                });
             }
         }
     }

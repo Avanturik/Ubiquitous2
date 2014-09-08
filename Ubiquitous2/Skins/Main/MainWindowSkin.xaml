@@ -4,9 +4,25 @@
                     xmlns:Interactivity="clr-namespace:UB.Interactivity"
                     xmlns:dc="clr-namespace:Devart.Controls"
                     xmlns:View="clr-namespace:UB.View" 
+                    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+                    xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+                    mc:Ignorable="d" 
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 
-    <ControlTemplate x:Key="WindowTemplateKey" TargetType="{x:Type Window}">        
+    <Style x:Key="OverlayHyperlink"  TargetType="{x:Type Hyperlink}">
+        <Setter Property="TextDecorations" Value="None"/>
+        <Setter Property="Foreground" Value="LightGray"/>
+        <Style.Triggers>
+            <Trigger Property="IsMouseOver" Value="True">
+                <Setter Property="Foreground" Value="White"/>
+                <Setter Property="Cursor" Value="Hand"/>
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+
+    <BooleanToVisibilityConverter x:Key="boolToVisibilityConverter"></BooleanToVisibilityConverter>
+    <BitmapImage UriSource="Resources/gear.png" x:Key="Gear"/>
+    <!--<ControlTemplate x:Key="WindowTemplateKey" TargetType="{x:Type Window}">
         <Border BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Background="{TemplateBinding Background}">
             <Grid>
                 <AdornerDecorator>
@@ -24,34 +40,37 @@
                 <Setter Property="Visibility" TargetName="WindowResizeGrip" Value="Visible"/>
             </MultiTrigger>
         </ControlTemplate.Triggers>
-    </ControlTemplate>
+    </ControlTemplate>-->
     <Style x:Key="MainWindowStyle" TargetType="{x:Type Window}">
         <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.WindowTextBrushKey}}"/>
         <Setter Property="Background" Value="{DynamicResource {x:Static SystemColors.WindowBrushKey}}"/>
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type Window}">
+                    <DockPanel d:DesignHeight="300" d:DesignWidth="500"> 
+                        <Grid Background="#FF09210A">
+                            <Border Padding="5" VerticalAlignment="Top" HorizontalAlignment="Stretch" Panel.ZIndex="1" Visibility="{Binding IsOverlayVisible, Converter={StaticResource boolToVisibilityConverter}}" Background="#B2000000">
+                                <TextBlock Background="Transparent" Foreground="White">
+                                    <Hyperlink Style="{StaticResource ResourceKey=OverlayHyperlink}" Command="{Binding ShowSettings}">
+                                        <Image Source="/Ubiquitous2;component/Resources/gear.png" Width="16" Height="16" Margin="0,0,0,-3"/> Settings
+                                    </Hyperlink>
+                                </TextBlock>
+                            </Border>
+                            <View:ChatBoxView Margin="3,0" RenderTransformOrigin="1,0" OverridesDefaultStyle="True" Padding="0"/>
+                        </Grid>
+                        <Border Padding="5" VerticalAlignment="Bottom" HorizontalAlignment="Stretch" Panel.ZIndex="1" Visibility="{Binding IsOverlayVisible, Converter={StaticResource boolToVisibilityConverter}}" Background="#B2000000">
+                            <DockPanel VerticalAlignment="Bottom" Background="Transparent" Margin="0,0,0,24">                                                                
+                                <Label Foreground="#FFFFF300">Reply:</Label>
+                                <Border CornerRadius="7" Background="#FF2C2C2C" Padding="6,0" Margin="0,2,9,-22">                                    
+                                    <TextBox Margin="0" Background="#FF2C2C2C" Foreground="#FFBDBDBD" BorderThickness="0"/>
+                                </Border>
+                            </DockPanel>
+                        </Border>
 
-                    <Grid x:Name="LayoutRoot" Background="#FF09210A">
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="104*"/>
-                            <RowDefinition Height="31*"/>
-                        </Grid.RowDefinitions>
-                        <View:ChatBoxView Margin="3,0" RenderTransformOrigin="1,0" OverridesDefaultStyle="True" Padding="0"/>
-
-                        <Button Content="Open settings" HorizontalAlignment="Left" Margin="138,0,0,10" Grid.Row="1" VerticalAlignment="Bottom" Width="127">
-                            <i:Interaction.Triggers>
-                                <i:EventTrigger EventName="Click">
-                                    <Custom:EventToCommand Command="{Binding ShowSettings}"/>
-                                </i:EventTrigger>
-                            </i:Interaction.Triggers>
-                        </Button>
-                    </Grid>
-
+                    </DockPanel>
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
-
         <Style.Triggers>
             <Trigger Property="ResizeMode" Value="CanResizeWithGrip">
                 <Setter Property="Template" Value="{StaticResource WindowTemplateKey}"/>

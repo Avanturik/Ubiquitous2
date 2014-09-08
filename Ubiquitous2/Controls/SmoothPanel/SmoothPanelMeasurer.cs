@@ -24,6 +24,7 @@ namespace Devart.Controls
         /// </summary>
         private class SmoothPanelMeasurer
         {
+            private static bool IsInitialized = false;
             /// <summary>
             /// The panel.
             /// </summary>
@@ -161,9 +162,14 @@ namespace Devart.Controls
                         _panel.UpdateScrollInfo(_availableSize, 0);
                         return;
                     }
+
                     
                     // It's faster to recreate elements than get and measure topmost items
-                    //_children.CreateTopmostElements(_availableSize);
+                    if( !IsInitialized )
+                    {
+                        _children.CreateTopmostElements(_availableSize);
+                        IsInitialized = true;
+                    }
 
                     _totalHeight = GetTotalHeight(out _lastItemIndex, out _lastItemClippedRatio);
 
@@ -175,7 +181,7 @@ namespace Devart.Controls
 
                     if (FirstItemIndex < 0)
                     {
-                        Debug.Assert(false, "First visible item should be determined");
+                        //Debug.Assert(false, "First visible item should be determined");
 
                         // Some unexpected result - just reset to top.
                         _panel.SetFirstVisibleItem(0, 0);
@@ -242,7 +248,7 @@ namespace Devart.Controls
 
                     // Recalculate positions if scroll changed.
                     lastChance = !lastChance;
-                    Debug.Assert(lastChance, "SmoothPanel measuring failed.");
+                    //Debug.Assert(lastChance, "SmoothPanel measuring failed.");
                 }
                 while (lastChance);
 

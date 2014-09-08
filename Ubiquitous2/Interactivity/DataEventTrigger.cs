@@ -6,6 +6,7 @@ using System.Reflection;
 using System.Windows;
 using System.Windows.Data;
 using System.Windows.Interactivity;
+using UB.Utils;
 
 namespace UB.Interactivity
 {

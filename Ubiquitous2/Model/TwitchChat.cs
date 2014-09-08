@@ -25,12 +25,14 @@ namespace UB.Model
             Port = ircPort,
         })
         {
+            Emoticons = new List<Emoticon>();
+
             Config = config;
             Enabled = config.Enabled;
             ContentParsers.Add(MessageParser.ParseURLs);
-            ContentParsers.Add(MessageParser.ParseEmoticons);
-
-            //Fallback icons
+            ContentParsers.Add(MessageParser.ParseEmoticons);            
+            
+            //Fallback icon list
             DownloadEmoticons(AppDomain.CurrentDomain.BaseDirectory + emoticonFallbackUrl);
             //Web icons
             Task.Factory.StartNew(() => DownloadEmoticons(emoticonUrl) );

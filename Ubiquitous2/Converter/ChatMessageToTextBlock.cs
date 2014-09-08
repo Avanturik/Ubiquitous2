@@ -55,13 +55,9 @@ namespace UB.Converter
                                         int.TryParse(node.Attributes["height"].Value, out height);
                                         width = width <= 0 ? 16 : width;
                                         height = height <= 0 ? 16 : height;
-                                        DispatcherHelper.CheckBeginInvokeOnUI(() =>
+                                        dataService.GetImage(new Uri(url), width, height, (image) =>
                                         {
-                                            dataService.GetImage(new Uri(url), width, height, (image) =>
-                                            {
-                                                textBlock.Inlines.Add(image);
-                                            });
-
+                                            textBlock.Inlines.Add(image);
                                         });
                                         break;
                                     case "a":

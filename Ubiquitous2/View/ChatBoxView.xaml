@@ -5,7 +5,8 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              mc:Ignorable="d" 
              UseLayoutRounding="True"
-             DataContext="{Binding Path=ChatBox, Source={StaticResource Locator}}"
-             d:DesignHeight="300" d:DesignWidth="300" Style="{DynamicResource ChatBoxStyle}">
-    
+             DataContext="{Binding Path=ChatBox, Source={StaticResource Locator}}"              
+             Style="{DynamicResource ChatBoxStyle}"
+             d:DesignHeight="300" 
+             d:DesignWidth="300">    
 </UserControl>
