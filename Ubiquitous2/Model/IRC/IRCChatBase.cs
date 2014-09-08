@@ -14,6 +14,7 @@ namespace UB.Model
     public class IRCChatBase : IrcClient, IChat
     {
         public event EventHandler<ChatServiceEventArgs> MessageReceived;
+        public event EventHandler<StringEventArgs> NoticeReceived;
 
         private IRCLoginInfo loginInfo;
         private const String dummyPass = "!@$#@";
@@ -37,6 +38,7 @@ namespace UB.Model
                 {"PRIVMSG", ReadPrivateMessage},
                 {"JOIN", UserJoin},
                 {"PART", UserLeft},
+                {"NOTICE", ReadNotice}
             };
 
             ContentParsers = new List<Action<ChatMessage, IChat>>();
@@ -58,10 +60,8 @@ namespace UB.Model
                 }
             }
         }
-
-        public virtual bool Start()
+        public bool Start(ChatConfig config)
         {
-
             var tries = 0;
             while (IsStopping && tries < 1000)
             {
@@ -71,7 +71,8 @@ namespace UB.Model
 
             Initialize();
 
-            noPongTimer = new Timer((obj) => {
+            noPongTimer = new Timer((obj) =>
+            {
                 if (!IsStopping)
                 {
                     Debug.Print("No ping reply. Restarting IRC");
@@ -84,21 +85,52 @@ namespace UB.Model
                 Ping();
                 noPongTimer.Change(pingInterval, Timeout.Infinite);
             }, null, Timeout.Infinite, Timeout.Infinite);
-            
+
+            var oauthToken = Config.Parameters.StringValue("OAuthToken");
+
+            loginInfo.Channels = Config.Parameters.StringArrayValue("Channels");
+            loginInfo.UserName = Config.Parameters.StringValue("Username");
+            loginInfo.Password = oauthToken ?? Config.Parameters.StringValue("Password");
+            loginInfo.RealName = Config.Parameters.StringValue("Username");
+
+            if (String.IsNullOrEmpty(LoginInfo.HostName))
+                throw new Exception("Hostname must be specified!");
+
+            if (String.IsNullOrEmpty(LoginInfo.UserName))
+                throw new Exception("Username must be specified!");
+
+            if (!loginInfo.Channels.Any(ch => ch.Equals(loginInfo.UserName, StringComparison.InvariantCultureIgnoreCase)))
+                loginInfo.Channels = loginInfo.Channels.Union(new String[] { loginInfo.UserName.ToLower() }).ToArray();
+
+            for (int i = 0; i < loginInfo.Channels.Length; i++)
+            {
+                loginInfo.Channels[i] = "#" + loginInfo.Channels[i].Replace("#", "");
+            }
+
             IsStopping = false;
             isConnecting = true;
             Connect();
             return true;
+
+        }
+
+        public virtual bool Start()
+        {
+            if (Config == null)
+                return false;
+
+            return Start(Config);           
         }
 
 
         public virtual bool Stop()
         {
-            Debug.Print("Stopping IRC...");
-            noPongTimer.Change(Timeout.Infinite, Timeout.Infinite);
-            pingTimer.Change(Timeout.Infinite, Timeout.Infinite);
-
             IsStopping = true;
+
+            Debug.Print("Stopping IRC...");
+            if( noPongTimer != null ) noPongTimer.Change(Timeout.Infinite, Timeout.Infinite);
+            if( pingTimer != null ) pingTimer.Change(Timeout.Infinite, Timeout.Infinite);
+
             Quit(500,"bye!");
             
             Disconnect();
@@ -116,25 +148,6 @@ namespace UB.Model
                 var hostCount = hostList.AddressList.Count();
                 if (hostCount <= 0)
                     throw new Exception("All servers are down. Domain:" + LoginInfo.HostName);
-
-                loginInfo.Channels = Config.Parameters.StringArrayValue("Channels");
-                loginInfo.UserName = Config.Parameters.StringValue("Username");
-                loginInfo.Password = Config.Parameters.StringValue("Password");
-                loginInfo.RealName = Config.Parameters.StringValue("Username");
-
-                if (String.IsNullOrEmpty(LoginInfo.HostName))
-                    throw new Exception("Hostname must be specified!");
-
-                if (String.IsNullOrEmpty(LoginInfo.UserName))
-                    throw new Exception("Username must be specified!");
-
-                if (!loginInfo.Channels.Any(ch => ch.Equals(loginInfo.UserName, StringComparison.InvariantCultureIgnoreCase)))
-                    loginInfo.Channels = loginInfo.Channels.Union(new String[] { loginInfo.UserName.ToLower() }).ToArray();
-
-                for (int i = 0; i < loginInfo.Channels.Length; i++)
-                {
-                    loginInfo.Channels[i] = "#" + loginInfo.Channels[i].Replace("#", "");
-                }
 
                 Connect(hostList.AddressList[random.Next(0,hostCount)], LoginInfo.Port, false, new IrcUserRegistrationInfo()
                 { 
@@ -189,6 +202,14 @@ namespace UB.Model
                         });
                     }
                 }
+            }
+        }
+        private void ReadNotice(IrcRawMessageEventArgs e)
+        {
+            if (e.Message.Parameters.Count >= 1)
+            {
+                if (NoticeReceived != null)
+                    NoticeReceived(this, new StringEventArgs(e.RawContent));
             }
         }
         private void GetServerList(Action<IPHostEntry> callback)
@@ -271,14 +292,22 @@ namespace UB.Model
         public ChatConfig Config
         {
             get;
-            set;
+            set;        
         }
 
 
-        public virtual void Authorize(Action afterAction);
+        public virtual void Authorize(Action afterAction) { }
         public virtual String ChatName { get { return String.Empty; } }
         public virtual String IconURL { get { return String.Empty; } }
         public virtual List<Emoticon> Emoticons { get; set; }
         public virtual void DownloadEmoticons(string url) { }
+
+
+        public string LastError
+        {
+            get;set;
+        }
+
+
     }
 }

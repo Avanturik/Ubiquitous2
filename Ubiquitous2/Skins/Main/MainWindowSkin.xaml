@@ -21,7 +21,7 @@
     </Style>
 
     <BooleanToVisibilityConverter x:Key="boolToVisibilityConverter"></BooleanToVisibilityConverter>
-    <BitmapImage UriSource="Resources/gear.png" x:Key="Gear"/>
+    <!--<BitmapImage UriSource="Resources/gear.png" x:Key="Gear"/>-->
     <!--<ControlTemplate x:Key="WindowTemplateKey" TargetType="{x:Type Window}">
         <Border BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Background="{TemplateBinding Background}">
             <Grid>

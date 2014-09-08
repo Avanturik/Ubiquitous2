@@ -17,6 +17,10 @@ namespace UB.Model
         private const int ircPort = 6667;
         private const string emoticonUrl = "http://api.twitch.tv/kraken/chat/emoticons";
         private const string emoticonFallbackUrl = @"Content\twitchemoticons.json";
+        private string authorizedAs = String.Empty;
+
+        private bool authenticationFailed = false;
+        private ChatConfig oldConfig = null;
 
         private WebClientBase webClient = new WebClientBase();
 
@@ -32,9 +36,17 @@ namespace UB.Model
             Config = config;
             Enabled = config.Enabled;
             ContentParsers.Add(MessageParser.ParseURLs);
-            ContentParsers.Add(MessageParser.ParseEmoticons);            
-            
+            ContentParsers.Add(MessageParser.ParseEmoticons);
 
+            this.NoticeReceived += TwitchChat_NoticeReceived;
+        }
+
+        void TwitchChat_NoticeReceived(object sender, StringEventArgs e)
+        {
+            if (e.Text.Contains("Login unsuccessful"))
+            {
+                authenticationFailed = true;
+            }
         }
         public override string IconURL
         {
@@ -58,12 +70,38 @@ namespace UB.Model
             if (Regex.IsMatch(Config.Parameters.StringValue("Username"), @"justinfan\d+", RegexOptions.IgnoreCase))
                 anonymousAccess = true;
 
-            if (!anonymousAccess)
-                Task.Factory.StartNew(() => Authorize(() => { 
-                    
-                }));
+            if (authenticationFailed && oldConfig == Config)
+            {
+                LastError = "Check credentials";
+                return false;
+            }
 
-            base.Start();
+            if(!anonymousAccess)
+            {
+                oldConfig = Config.Clone();
+            }
+
+            if (!anonymousAccess)
+            {
+                var oauthParam = Config.Parameters.FirstOrDefault(fld => fld.Name.Equals("OAuthToken", StringComparison.InvariantCultureIgnoreCase));
+                if( oauthParam != null && !String.IsNullOrEmpty(oauthParam.Value.ToString()))
+                {
+                        if (IsConnected) base.Stop();
+                        base.Start();
+                }
+                Task.Factory.StartNew(() => Authorize(() =>
+                {
+                    if (oauthParam == null || String.IsNullOrEmpty(oauthParam.Value.ToString()))
+                    {
+                        ReadOAuthToken(oauthParam);
+                        if (IsConnected) base.Stop();
+                        base.Start();
+                    }
+
+                }));
+            }
+
+            //base.Start();
             InitEmoticons();
 
 
@@ -78,7 +116,6 @@ namespace UB.Model
         }
         public override void DownloadEmoticons(string url)
         {
-
             var list = new List<Emoticon>();
 
             using (var wc = new WebClientBase())
@@ -117,6 +154,31 @@ namespace UB.Model
             if( list != null && list.Count > 0 )
                 Emoticons = list;
         }
+        private void ReadOAuthToken( ConfigField oldAuthParam )
+        {
+            var oauthToken = this.With(x => webClient.Download("http://api.twitch.tv/api/me?on_site=1"))
+                .With(x => JToken.Parse(x))
+                .With(x => x.Value<string>("chat_oauth_token"));
+
+            if ( oauthToken != null )
+            {
+                if (oldAuthParam != null)
+                {
+                    oldAuthParam.Value = "oauth:" + oauthToken;
+                }
+                else
+                {
+                    Config.Parameters.Add(new ConfigField()
+                    {
+                        DataType = "Text",
+                        IsVisible = false,
+                        Label = "OAuth token",
+                        Name = "OAuthToken",
+                        Value = "oauth:" + oauthToken
+                    });
+                }
+            }
+        }
         public override void Authorize( Action afterAction)
         {
             webClient.Headers["X-Requested-With"] = "XMLHttpRequest";
@@ -137,31 +199,15 @@ namespace UB.Model
                     csrfToken,
                     Config.Parameters.StringValue("Username"),
                     Config.Parameters.StringValue("Password"))))
-                .With( x => webClient.CookieValue("api_token", "http://twitch.tv");
+                .With( x => webClient.CookieValue("api_token", "http://twitch.tv"));
 
             webClient.Headers["Twitch-Api-Token"] = apiToken;
             webClient.Headers["Accept"] = "application/vnd.twitchtv.v2+json";
 
-            
-
-
-            //result = webClient.DownloadString(oauthUrl);
-            //if (String.IsNullOrEmpty(result))
-            //    return false;
-
-            //JObject chatOauthJson = JObject.Parse(result);
-            //if (chatOauthJson == null)
-            //    return false;
-
-            //String chatOauthKey = chatOauthJson["chat_oauth_token"].ToString();
-            //if (String.IsNullOrEmpty(chatOauthKey))
-            //    return false;
-
-                    
-            //ChatOAuthKey = "oauth:" + chatOauthKey;
-
-
+            afterAction();
         }
+
+        
 
 
     }

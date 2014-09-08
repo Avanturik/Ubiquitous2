@@ -14,6 +14,7 @@ namespace UB.Model
         bool Enabled { get; set; }
         bool IsStopping { get; set; }
         bool Start();
+        bool Start(ChatConfig config);
         bool Stop();
         bool Restart();
         bool SendMessage(String channel, ChatMessage message);
@@ -22,6 +23,6 @@ namespace UB.Model
         void DownloadEmoticons(String url);
         ChatConfig Config {get;set;}
         void Authorize( Action afterAction);
-        
+        string LastError { get; set; }
     }
 }

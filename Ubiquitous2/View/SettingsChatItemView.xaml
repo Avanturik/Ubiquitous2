@@ -38,7 +38,7 @@
 					<TextBlock Text="{Binding ChatName}"></TextBlock>
 					<TextBlock><Hyperlink Command="{Binding ToggleEdit}"><TextBlock Text="{Binding EditLinkTitle}"/></Hyperlink></TextBlock>
                     <TextBlock><Hyperlink Command="{Binding RestartChat}"><TextBlock>restart</TextBlock></Hyperlink></TextBlock>
-                    <Image Visibility="{Binding IsLoaderVisible, Converter={StaticResource boolToVisibilityConverter}}" Width="16" Height="16" gif:ImageBehavior.AnimatedSource="c:\loader.gif" gif:ImageBehavior.RepeatBehavior="Forever" Margin="0,0,0,-4" />
+                    <Image Visibility="{Binding IsLoaderVisible, Converter={StaticResource boolToVisibilityConverter}}" Width="16" Height="16" gif:ImageBehavior.AnimatedSource="/Ubiquitous2;component/Resources/gear.png" gif:ImageBehavior.RepeatBehavior="Forever" Margin="0,0,0,-4" />
             </TextBlock>
             <Expander HorizontalAlignment="Left" HorizontalContentAlignment="Left" Padding="10"  IsExpanded="{Binding Expanded}" Style="{DynamicResource ExpanderStyle}" VerticalAlignment="Top">
                 <ItemsControl ItemsSource="{Binding SettingsFields}"
