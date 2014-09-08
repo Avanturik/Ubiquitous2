@@ -69,6 +69,8 @@ namespace UB.Model
 
         public virtual bool Start()
         {
+            Initialize();
+
             var tries = 0;
             while (IsStopping && tries < 60)
             {
@@ -104,7 +106,8 @@ namespace UB.Model
             pingTimer.Change(Timeout.Infinite, Timeout.Infinite);
 
             IsStopping = true;
-            Quit();
+            Quit(500,"bye!");
+            
             Disconnect();
             return true;
         }
@@ -188,7 +191,7 @@ namespace UB.Model
 
         void JoinChannels()
         {
-            pingTimer.Change(0, pingInterval);
+            pingTimer.Change(pingInterval, pingInterval);
             foreach (String channel in LoginInfo.Channels)
                 Channels.Join( channel );
         }

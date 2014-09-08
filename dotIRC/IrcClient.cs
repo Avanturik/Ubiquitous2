@@ -160,6 +160,12 @@ namespace dotIRC
         /// </summary>
         public IrcClient()
         {
+            Initialize();
+
+        }
+
+        public void Initialize()
+        {
             this.socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
             this.sendTimer = new Timer(new TimerCallback(WritePendingMessages), null,
                 Timeout.Infinite, Timeout.Infinite);
@@ -175,7 +181,6 @@ namespace dotIRC
             InitializeMessageProcessors();
 
             disconnectTimer = new Timer(new TimerCallback(SendDisconnectEvent), null, Timeout.Infinite, Timeout.Infinite);
-
         }
 
         /// <summary>

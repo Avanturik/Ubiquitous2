@@ -36,7 +36,9 @@
                         </Style>
                     </ControlTemplate.Resources>
                     <DockPanel>
-
+                        <DockPanel.CacheMode>
+                            <BitmapCache/>
+                        </DockPanel.CacheMode>
                         <Border CornerRadius="10" Margin="1,0,1,5" BorderThickness="0,0,1,1" Padding="3,0,3,8">
                             <Border.Background>
                                 <LinearGradientBrush EndPoint="200,165.008" MappingMode="Absolute" StartPoint="80,0">
@@ -58,9 +60,9 @@
 						                    <DropShadowEffect BlurRadius="2" Opacity="0.2" ShadowDepth="2"/>
 					                    </Image.Effect>
 				                    </Image>
-                                    <TextBox FontSize="11" Text="{Binding Message.Channel,Mode=OneTime}" Margin="1,0,0,0" Foreground="#FFCB972F" HorizontalAlignment="Left" FontWeight="Bold"/>
-				                    <TextBox FontSize="11" Text="{Binding Message.FromUserName,Mode=OneTime}" Margin="0" Foreground="#FFFFC042" HorizontalAlignment="Left" FontWeight="Bold"/>
-                                    <TextBox Text="{Binding Message.TimeStamp,Mode=OneTime}" FontSize="10" Foreground="#FFD69B33" TextAlignment="Right" DockPanel.Dock="Right" Margin="0,1,0,0" FontWeight="Bold" RenderTransformOrigin="0.5,0.5"/>
+                                    <TextBox FontSize="11" Text="{Binding Message.Channel}" Margin="1,0,0,0" Foreground="#FFCB972F" HorizontalAlignment="Left" FontWeight="Bold"/>
+				                    <TextBox FontSize="11" Text="{Binding Message.FromUserName}" Margin="0" Foreground="#FFFFC042" HorizontalAlignment="Left" FontWeight="Bold"/>
+                                    <TextBox Text="{Binding Message.TimeStamp}" FontSize="10" Foreground="#FFD69B33" TextAlignment="Right" DockPanel.Dock="Right" Margin="0,1,0,0" FontWeight="Bold"/>
                                 </DockPanel>
                                 <Border Grid.ColumnSpan="2" Grid.Row="1" CornerRadius="10" Background="#FF303030" BorderThickness="0" Padding="1,2,1,0" Margin="0,0,0,-8">
                                     <TextBlock TextAlignment="Justify" Margin="1,1,1,1" TextWrapping="Wrap" FontSize="14" Foreground="#FFCDCDCD" Interactivity:TextBlockAttached.InlineList="{Binding Message, Converter={StaticResource ResourceKey=textConverter}}"  UseLayoutRounding="True">
