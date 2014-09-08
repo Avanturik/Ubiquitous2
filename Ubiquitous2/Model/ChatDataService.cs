@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
+using System.Threading.Tasks;
 using Microsoft.Practices.ServiceLocation;
 using UB.Model.IRC;
 
@@ -111,7 +112,7 @@ namespace UB.Model
                 chat.MessageReceived += chat_MessageReceived;
                 if (chat.Enabled)
                 {
-                    chat.Start();
+                  Task.Factory.StartNew( ()=> chat.Start() );
                 }
             });
         }

@@ -18,6 +18,8 @@ namespace UB.Model
         private const string emoticonUrl = "http://api.twitch.tv/kraken/chat/emoticons";
         private const string emoticonFallbackUrl = @"Content\twitchemoticons.json";
 
+        private WebClientBase webClient = new WebClientBase();
+
         public TwitchChat(ChatConfig config) : 
             base(new IRCLoginInfo()
         {
@@ -32,11 +34,6 @@ namespace UB.Model
             ContentParsers.Add(MessageParser.ParseURLs);
             ContentParsers.Add(MessageParser.ParseEmoticons);            
             
-            //Fallback icon list
-            DownloadEmoticons(AppDomain.CurrentDomain.BaseDirectory + emoticonFallbackUrl);
-            //Web icons
-            Task.Factory.StartNew(() => DownloadEmoticons(emoticonUrl) );
-
 
         }
         public override string IconURL
@@ -54,6 +51,31 @@ namespace UB.Model
             } 
         }
 
+        public override bool Start()
+        {
+            bool anonymousAccess = false;
+
+            if (Regex.IsMatch(Config.Parameters.StringValue("Username"), @"justinfan\d+", RegexOptions.IgnoreCase))
+                anonymousAccess = true;
+
+            if (!anonymousAccess)
+                Task.Factory.StartNew(() => Authorize(() => { 
+                    
+                }));
+
+            base.Start();
+            InitEmoticons();
+
+
+            return true;
+        }
+        private void InitEmoticons()
+        {
+            //Fallback icon list
+            DownloadEmoticons(AppDomain.CurrentDomain.BaseDirectory + emoticonFallbackUrl);
+            //Web icons
+            Task.Factory.StartNew(() => DownloadEmoticons(emoticonUrl));
+        }
         public override void DownloadEmoticons(string url)
         {
 
@@ -94,6 +116,51 @@ namespace UB.Model
             }
             if( list != null && list.Count > 0 )
                 Emoticons = list;
+        }
+        public override void Authorize( Action afterAction)
+        {
+            webClient.Headers["X-Requested-With"] = "XMLHttpRequest";
+
+            var csrfToken = this.With(x => webClient.Download("http://ru.twitch.tv/user/login_popup"))
+                .With( x => Re.GetSubString(x, @"^.*authenticity_token.*?value=""(.*?)"""));
+
+            if (csrfToken == null)
+                throw new Exception("Can't get CSRF token. Twitch web layout changed ?");
+
+            webClient.SetCookie("csrf_token", csrfToken, "twitch.tv");
+
+            webClient.ContentType = ContentType.UrlEncoded;
+            webClient.Headers["Accept"] = "text/html, application/xhtml+xml, */*";
+
+            var apiToken = this.With(x => webClient.Upload("https://secure.twitch.tv/user/login", String.Format(
+                    "utf8=%E2%9C%93&authenticity_token={0}%3D&redirect_on_login=&embed_form=false&user%5Blogin%5D={1}&user%5Bpassword%5D={2}",
+                    csrfToken,
+                    Config.Parameters.StringValue("Username"),
+                    Config.Parameters.StringValue("Password"))))
+                .With( x => webClient.CookieValue("api_token", "http://twitch.tv");
+
+            webClient.Headers["Twitch-Api-Token"] = apiToken;
+            webClient.Headers["Accept"] = "application/vnd.twitchtv.v2+json";
+
+            
+
+
+            //result = webClient.DownloadString(oauthUrl);
+            //if (String.IsNullOrEmpty(result))
+            //    return false;
+
+            //JObject chatOauthJson = JObject.Parse(result);
+            //if (chatOauthJson == null)
+            //    return false;
+
+            //String chatOauthKey = chatOauthJson["chat_oauth_token"].ToString();
+            //if (String.IsNullOrEmpty(chatOauthKey))
+            //    return false;
+
+                    
+            //ChatOAuthKey = "oauth:" + chatOauthKey;
+
+
         }
 
 

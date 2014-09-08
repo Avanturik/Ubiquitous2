@@ -26,6 +26,12 @@
         <i:EventTrigger EventName="MouseLeave">
             <i:InvokeCommandAction Command="{Binding HideOverlay}"/>
         </i:EventTrigger>
+        <i:EventTrigger EventName="Activated">
+            <i:InvokeCommandAction Command="{Binding SetFocused}"/>
+        </i:EventTrigger>
+        <i:EventTrigger EventName="Deactivated">
+            <i:InvokeCommandAction Command="{Binding SetUnFocused}"/>
+        </i:EventTrigger>
     </i:Interaction.Triggers>
 
 

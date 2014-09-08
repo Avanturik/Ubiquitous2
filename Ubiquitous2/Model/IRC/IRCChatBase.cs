@@ -259,10 +259,6 @@ namespace UB.Model
 
         public bool Enabled { get; set; }
         
-        public virtual String ChatName { get { return String.Empty; } }
-        public virtual String IconURL { get { return String.Empty; } }
-        public virtual List<Emoticon> Emoticons {get;set;}
-        public virtual void DownloadEmoticons(string url){}
 
 
         public List<Action<ChatMessage, IChat>> ContentParsers
@@ -277,5 +273,12 @@ namespace UB.Model
             get;
             set;
         }
+
+
+        public virtual void Authorize(Action afterAction);
+        public virtual String ChatName { get { return String.Empty; } }
+        public virtual String IconURL { get { return String.Empty; } }
+        public virtual List<Emoticon> Emoticons { get; set; }
+        public virtual void DownloadEmoticons(string url) { }
     }
 }

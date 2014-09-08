@@ -21,6 +21,7 @@ namespace UB.Model
         List<Emoticon> Emoticons { get; set; }
         void DownloadEmoticons(String url);
         ChatConfig Config {get;set;}
+        void Authorize( Action afterAction);
         
     }
 }

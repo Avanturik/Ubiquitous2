@@ -186,6 +186,7 @@
     <Compile Include="SettingsWindow.xaml.cs">
       <DependentUpon>SettingsWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Utils\Re.cs" />
     <Compile Include="Utils\Sugar.cs" />
     <Compile Include="Utils\TextMeasurer.cs" />
     <Compile Include="ViewModel\ChatBoxViewModel.cs" />
