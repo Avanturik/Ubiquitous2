@@ -9,6 +9,7 @@ using System.Reflection;
 using System.Threading;
 using System.Xml.Linq;
 using System.Xml.XPath;
+using UB.Model;
 
 namespace UB
 {
@@ -73,7 +74,7 @@ namespace UB
             }
             catch (Exception ex)
             {
-                Debug.Print("{0} {1} {2}", "Settings save error: ", ex.Message, FileName);
+                Log.WriteError("{0} {1} {2}", "Settings save error: ", ex.Message, FileName);
             }  
         }
 
@@ -140,14 +141,14 @@ namespace UB
 
                 if (settingsXml.Root.Name.LocalName != SettingsRootName)
                 {
-                    Debug.Print("{0}", "Invalid settings format");
+                    Log.WriteError("{0}", "Invalid settings format");
 
                     settingsXml = null;
                 }
             }
             catch (Exception ex)
             {
-                Debug.Print("{0}", "Invalid settings file {0} {1}",filePath,ex.Message);
+                Log.WriteError("{0}", "Invalid settings file {0} {1}",filePath,ex.Message);
             }
 
             return settingsXml ??

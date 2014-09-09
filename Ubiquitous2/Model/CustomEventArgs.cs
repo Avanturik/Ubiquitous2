@@ -17,11 +17,19 @@ namespace UB.Model
 
     public class ExceptionEventArgs : EventArgs
     {
-        public ExceptionEventArgs( Exception exception)
+        public ExceptionEventArgs(Exception exception)
         {
             Exception = exception;
         }
         public Exception Exception { get; set; }
+    }
+    public class ChatUserEventArgs : EventArgs
+    {
+        public ChatUserEventArgs(ChatUser user)
+        {
+            ChatUser = user;
+        }
+        public ChatUser ChatUser { get; set; }
     }
 
 

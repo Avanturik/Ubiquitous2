@@ -17,11 +17,8 @@ namespace UB.Model
         private const int ircPort = 6667;
         private const string emoticonUrl = "http://api.twitch.tv/kraken/chat/emoticons";
         private const string emoticonFallbackUrl = @"Content\twitchemoticons.json";
-        private string authorizedAs = String.Empty;
-
-        private bool authenticationFailed = false;
-        private ChatConfig oldConfig = null;
-
+        private bool isOAuthTokenRenewed = false;
+        private bool isAnonymous = false;
         private WebClientBase webClient = new WebClientBase();
 
         public TwitchChat(ChatConfig config) : 
@@ -38,14 +35,50 @@ namespace UB.Model
             ContentParsers.Add(MessageParser.ParseURLs);
             ContentParsers.Add(MessageParser.ParseEmoticons);
 
+            Users = new Dictionary<string, ChatUser>();
+
+
             this.NoticeReceived += TwitchChat_NoticeReceived;
+            this.ChatUserJoined += TwitchChat_ChatUserJoined;
+            this.ChatUserLeft += TwitchChat_ChatUserLeft;
+        }
+
+        void TwitchChat_ChatUserLeft(object sender, ChatUserEventArgs e)
+        {
+            e.ChatUser.ChatName = this.ChatName;
+
+            if (Users.ContainsKey(e.ChatUser.NickName))
+                Users.Remove(e.ChatUser.NickName);
+        }
+
+        void TwitchChat_ChatUserJoined(object sender, ChatUserEventArgs e)
+        {
+            e.ChatUser.ChatName = this.ChatName;
+
+            if( Users.ContainsKey( e.ChatUser.NickName ))
+            {
+                Users[e.ChatUser.NickName] = e.ChatUser;
+            }
+            else
+            {
+                Users.Add(e.ChatUser.NickName, e.ChatUser);
+            }
+            if( e.ChatUser.NickName.Equals( LoginInfo.UserName,StringComparison.InvariantCultureIgnoreCase ))
+            {
+                Status.IsLoggedIn = true;
+                Status.IsStarting = false;
+                Status.IsConnecting = false;
+                Status.IsLoginFailed = false;
+            }
         }
 
         void TwitchChat_NoticeReceived(object sender, StringEventArgs e)
         {
             if (e.Text.Contains("Login unsuccessful"))
             {
-                authenticationFailed = true;
+                Status.IsLoginFailed = true;
+                Status.IsGotAuthenticationInfo = false;
+                Status.IsLoggedIn = false;
             }
         }
         public override string IconURL
@@ -65,47 +98,97 @@ namespace UB.Model
 
         public override bool Start()
         {
-            bool anonymousAccess = false;
-
-            if (Regex.IsMatch(Config.Parameters.StringValue("Username"), @"justinfan\d+", RegexOptions.IgnoreCase))
-                anonymousAccess = true;
-
-            if (authenticationFailed && oldConfig == Config)
-            {
-                LastError = "Check credentials";
-                return false;
-            }
-
-            if(!anonymousAccess)
-            {
-                oldConfig = Config.Clone();
-            }
-
-            if (!anonymousAccess)
-            {
-                var oauthParam = Config.Parameters.FirstOrDefault(fld => fld.Name.Equals("OAuthToken", StringComparison.InvariantCultureIgnoreCase));
-                if( oauthParam != null && !String.IsNullOrEmpty(oauthParam.Value.ToString()))
-                {
-                        if (IsConnected) base.Stop();
-                        base.Start();
-                }
-                Task.Factory.StartNew(() => Authorize(() =>
-                {
-                    if (oauthParam == null || String.IsNullOrEmpty(oauthParam.Value.ToString()))
-                    {
-                        ReadOAuthToken(oauthParam);
-                        if (IsConnected) base.Stop();
-                        //base.Start();
-                    }
-
-                }));
-            }
-
-            //base.Start();
             InitEmoticons();
 
+            isAnonymous = false;
+            Status.IsLoggedIn = false;
 
+            var userName = Config.Parameters.StringValue("Username");
+            var password = Config.Parameters.StringValue("Password");
+
+            // Reset failed status if credentials are changed
+            if (Status.IsLoginFailed && (userName != LoginInfo.UserName || LoginInfo.Password != password))
+            {
+                Status.IsLoginFailed = false;
+                isOAuthTokenRenewed = false;
+            }
+
+            LoginInfo.Channels = Config.Parameters.StringArrayValue("Channels");
+            LoginInfo.UserName = userName;
+            LoginInfo.Password = password;
+            LoginInfo.RealName = userName;
+            
+            if (Regex.IsMatch(Config.Parameters.StringValue("Username"), @"justinfan\d+", RegexOptions.IgnoreCase))
+            {
+                isAnonymous = true;
+            }
+            else
+            {
+                if (!LoginInfo.Channels.Any(ch => ch.Equals(LoginInfo.UserName, StringComparison.InvariantCultureIgnoreCase)))
+                    LoginInfo.Channels = LoginInfo.Channels.Union(new String[] { LoginInfo.UserName.ToLower() }).ToArray();
+
+                for (int i = 0; i < LoginInfo.Channels.Length; i++)
+                {
+                    LoginInfo.Channels[i] = "#" + LoginInfo.Channels[i].Replace("#", "");
+                }
+            }
+
+            if( !isAnonymous && !(Status.IsLoginFailed && isOAuthTokenRenewed) )
+            {
+                // Login anonymously if password is empty
+                if (String.IsNullOrWhiteSpace(LoginInfo.Password))
+                {
+                    StartAnonymously();
+                }
+                else // Login with OAuth token
+                {
+                    var oauthToken = Config.Parameters.StringValue("OAuthToken");
+                    if (!String.IsNullOrWhiteSpace(oauthToken) && !Status.IsLoginFailed)
+                    {
+                        StartWithToken(oauthToken);
+                    }
+                    else
+                    {
+                        Task.Factory.StartNew(() => Authenticate(() =>
+                        {
+                            Status.IsGotAuthenticationInfo = true;
+                            oauthToken = ReadOAuthToken();
+                            if( oauthToken != null )
+                            {
+                                isOAuthTokenRenewed = true;
+                                StartWithToken(oauthToken);
+                            }
+                            else
+                            {
+                                Log.WriteError("Unable to get Twitch OAuth token. Joining anonymously...");
+                                StartAnonymously();
+                            }
+                        }));
+                    }
+                }
+
+            }
+            else if( isAnonymous )
+            {
+                base.Start();
+            }
+            else
+            {
+                Log.WriteError("Twitch Login failed. Joining anonymously...");
+                StartAnonymously();
+            }
             return true;
+        }
+        private void StartWithToken(string oauthToken)
+        {
+            LoginInfo.Password = "oauth:" + oauthToken;
+            base.Start();
+        }
+        private void StartAnonymously()
+        {
+            LoginInfo.UserName = "justinfan" + Random.Next(1000000, 9999999).ToString();
+            isAnonymous = true;
+            base.Start();
         }
         private void InitEmoticons()
         {
@@ -127,7 +210,7 @@ namespace UB.Model
 
                 if (jsonEmoticons == null)
                 {
-                    Debug.Print("Error getting Twitch.tv emoticons!");
+                    Log.WriteError("Error getting Twitch.tv emoticons!");
                     list = new List<Emoticon>();
                 }
                 else
@@ -154,7 +237,7 @@ namespace UB.Model
             if( list != null && list.Count > 0 )
                 Emoticons = list;
         }
-        private void ReadOAuthToken( ConfigField oldAuthParam )
+        private string ReadOAuthToken()
         {
             var oauthToken = this.With(x => webClient.Download("http://api.twitch.tv/api/me?on_site=1"))
                 .With(x => JToken.Parse(x))
@@ -162,24 +245,25 @@ namespace UB.Model
 
             if ( oauthToken != null )
             {
-                if (oldAuthParam != null)
+                var oauthField = new ConfigField()
                 {
-                    oldAuthParam.Value = oauthToken;
-                }
+                    DataType = "Text",
+                    IsVisible = false,
+                    Label = "OAuth token",
+                    Name = "OAuthToken",
+                    Value = oauthToken
+                };
+
+                var existingOAuthField = Config.Parameters.FirstOrDefault( fld => fld.Name == oauthField.Name);
+                if (existingOAuthField != null)
+                    existingOAuthField = oauthField;
                 else
-                {
-                    Config.Parameters.Add(new ConfigField()
-                    {
-                        DataType = "Text",
-                        IsVisible = false,
-                        Label = "OAuth token",
-                        Name = "OAuthToken",
-                        Value = oauthToken
-                    });
-                }
+                    Config.Parameters.Add(oauthField);
+
             }
+            return oauthToken;
         }
-        public override void Authorize( Action afterAction)
+        public void Authenticate( Action afterAction)
         {
             webClient.Headers["X-Requested-With"] = "XMLHttpRequest";
 
@@ -187,10 +271,12 @@ namespace UB.Model
                 .With( x => Re.GetSubString(x, @"^.*authenticity_token.*?value=""(.*?)"""));
 
             if (csrfToken == null)
-                throw new Exception("Can't get CSRF token. Twitch web layout changed ?");
+            {
+                Log.WriteError("Twitch: Can't get CSRF token. Twitch web layout changed ?");
+                return;
+            }
 
             webClient.SetCookie("csrf_token", csrfToken, "twitch.tv");
-
             webClient.ContentType = ContentType.UrlEncoded;
             webClient.Headers["Accept"] = "text/html, application/xhtml+xml, */*";
 
@@ -201,9 +287,13 @@ namespace UB.Model
                     Config.Parameters.StringValue("Password"))))
                 .With( x => webClient.CookieValue("api_token", "http://twitch.tv"));
 
+            if( String.IsNullOrWhiteSpace(apiToken))
+            {
+                Log.WriteError("Twitch: Can't get API token");
+                return;
+            }
             webClient.Headers["Twitch-Api-Token"] = apiToken;
             webClient.Headers["Accept"] = "application/vnd.twitchtv.v2+json";
-
             afterAction();
         }
 

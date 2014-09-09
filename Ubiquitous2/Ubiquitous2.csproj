@@ -154,11 +154,15 @@
     <Compile Include="Interactivity\TextBlockAttached.cs" />
     <Compile Include="Model\ChatConfig.cs" />
     <Compile Include="Model\ChatMessage.cs" />
+    <Compile Include="Model\ChatStatusBase.cs" />
+    <Compile Include="Model\ChatUser.cs" />
     <Compile Include="Model\ConfigField.cs" />
     <Compile Include="Model\ConfigSections.cs" />
     <Compile Include="Model\Emoticon.cs" />
+    <Compile Include="Model\IChatStatus.cs" />
     <Compile Include="Model\IImageDataSource.cs" />
     <Compile Include="Model\ImageCacheDataService.cs" />
+    <Compile Include="Model\Log.cs" />
     <Compile Include="Model\MessageParser.cs" />
     <Compile Include="Model\SettingsDataService.cs" />
     <Compile Include="Model\CustomEventArgs.cs" />
@@ -231,6 +235,10 @@
     <Page Include="Skins\Main\ChatMessageSkin.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Skins\Main\ChatReplyCombo.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Skins\Main\Expander.xaml">
       <SubType>Designer</SubType>

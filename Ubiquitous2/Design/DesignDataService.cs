@@ -60,5 +60,16 @@ namespace UB.Design
         {
             throw new NotImplementedException();
         }
+
+
+        public void AddChannels(Action<string, IChat> callback)
+        {
+
+        }
+
+        public void RemoveChannels(Action<string, IChat> callback)
+        {
+
+        }
     }
 }

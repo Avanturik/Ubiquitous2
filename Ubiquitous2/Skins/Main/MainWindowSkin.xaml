@@ -21,26 +21,6 @@
     </Style>
 
     <BooleanToVisibilityConverter x:Key="boolToVisibilityConverter"></BooleanToVisibilityConverter>
-    <!--<BitmapImage UriSource="Resources/gear.png" x:Key="Gear"/>-->
-    <!--<ControlTemplate x:Key="WindowTemplateKey" TargetType="{x:Type Window}">
-        <Border BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Background="{TemplateBinding Background}">
-            <Grid>
-                <AdornerDecorator>
-                    <ContentPresenter/>
-                </AdornerDecorator>
-                <ResizeGrip x:Name="WindowResizeGrip" HorizontalAlignment="Right" IsTabStop="false" Visibility="Collapsed" VerticalAlignment="Bottom"/>
-            </Grid>
-        </Border>
-        <ControlTemplate.Triggers>
-            <MultiTrigger>
-                <MultiTrigger.Conditions>
-                    <Condition Property="ResizeMode" Value="CanResizeWithGrip"/>
-                    <Condition Property="WindowState" Value="Normal"/>
-                </MultiTrigger.Conditions>
-                <Setter Property="Visibility" TargetName="WindowResizeGrip" Value="Visible"/>
-            </MultiTrigger>
-        </ControlTemplate.Triggers>
-    </ControlTemplate>-->
     <Style x:Key="MainWindowStyle" TargetType="{x:Type Window}">
         <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.WindowTextBrushKey}}"/>
         <Setter Property="Background" Value="{DynamicResource {x:Static SystemColors.WindowBrushKey}}"/>
@@ -69,11 +49,13 @@
                                 </TextBlock>
                             </Border>
                             <View:ChatBoxView Grid.Row="1" Margin="3,0" RenderTransformOrigin="1,0" OverridesDefaultStyle="True" Padding="0"/>
-                            <Border Grid.Row="2" Padding="5" VerticalAlignment="Bottom" HorizontalAlignment="Stretch" Panel.ZIndex="1" Visibility="{Binding IsOverlayVisible, Converter={StaticResource boolToVisibilityConverter}}" BorderBrush="#FF165B1D" BorderThickness="1" CornerRadius="5" Margin="9,9,13,5">
-                                <DockPanel VerticalAlignment="Bottom" Background="Transparent" Margin="0,0,0,24">
-                                    <Label Foreground="#FFFFC042">Reply:</Label>
-                                    <Border CornerRadius="7" Background="#FF303030" Padding="6,0" Margin="0,2,9,-22">
-                                        <TextBox TextWrapping="Wrap" Margin="0,4,0,0" Background="#7F303030" Foreground="#FFBDBDBD" BorderThickness="0" Text="{Binding SendText}"/>
+                            <Border Grid.Row="2" Padding="23,4,5,0" VerticalAlignment="Bottom" HorizontalAlignment="Stretch" Panel.ZIndex="1" Visibility="{Binding IsOverlayVisible, Converter={StaticResource boolToVisibilityConverter}}" BorderBrush="#FF165B1D" BorderThickness="1" CornerRadius="5" Margin="9,9,13,6" Height="36">
+                                <DockPanel VerticalAlignment="Bottom" Background="Transparent" Margin="0">
+                                     <ComboBox Style="{DynamicResource ReplyComboStyle}" ItemsSource="{Binding ChatList}" SelectedItem="{Binding SelectedChatChannel}" ItemTemplate="{DynamicResource ReplyComboTemplate}" IsReadOnly="True" IsEditable="False" Margin="-18,-5,61,0"/>
+                                    <Label Foreground="#FFFFC042" Margin="-61,0,17,6" BorderThickness="0">#asdfasd</Label>
+                                    <Border CornerRadius="7" Background="#FF303030" Padding="6,0" Margin="-18,-20,1,-18" Height="27">
+                                        <TextBox TextWrapping="Wrap" Margin="0" Background="#7F303030" Foreground="#FFBDBDBD" BorderThickness="0" Text="{Binding SendText}" Padding="5" MaxHeight="54" ScrollViewer.CanContentScroll="True" VerticalScrollBarVisibility="Auto">
+                                        </TextBox>
                                     </Border>
                                 </DockPanel>
                             </Border>
@@ -83,11 +65,6 @@
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
-        <!--<Style.Triggers>
-            <Trigger Property="ResizeMode" Value="CanResizeWithGrip">
-                <Setter Property="Template" Value="{StaticResource WindowTemplateKey}"/>
-            </Trigger>
-        </Style.Triggers>-->
     </Style>
 
 </ResourceDictionary>

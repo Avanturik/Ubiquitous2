@@ -11,5 +11,7 @@ namespace UB.Model
         IChat GetChat( String chatName );
         void StartAllChats();
         string GetRandomText();
+        void AddChannels( Action<string, IChat> callback);
+        void RemoveChannels( Action<string,IChat> callback);
     }
 }

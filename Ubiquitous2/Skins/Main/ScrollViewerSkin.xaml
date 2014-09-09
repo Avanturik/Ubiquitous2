@@ -4,6 +4,7 @@
                     >
 
     <sys:Double x:Key="{x:Static SystemParameters.VerticalScrollBarWidthKey}">12</sys:Double>
+    <sys:Double x:Key="{x:Static SystemParameters.VerticalScrollBarThumbHeightKey}">12</sys:Double>
     <sys:Double x:Key="{x:Static SystemParameters.VerticalScrollBarButtonHeightKey}">100</sys:Double>
 
     <SolidColorBrush x:Key="ScrollBarColor" Color="#FF787878"/>

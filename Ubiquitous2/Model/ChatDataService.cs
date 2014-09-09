@@ -64,6 +64,7 @@ namespace UB.Model
             };
             callback(message, null);
         }
+        
 
         public void ReadMessages( Action<ChatMessage[], Exception> callback)
         {
@@ -147,6 +148,17 @@ namespace UB.Model
         public string GetRandomText()
         {
             return String.Empty;
+        }
+
+
+        public void AddChannels(Action<string, IChat> callback)
+        {
+            
+        }
+
+        public void RemoveChannels(Action<string, IChat> callback)
+        {
+           
         }
     }
 }

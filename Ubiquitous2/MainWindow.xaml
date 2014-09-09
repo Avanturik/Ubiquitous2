@@ -11,7 +11,7 @@
         Height="425"
         Width="324"
         Title="Ubiquitous 2.0" Icon="ubiquitous smile.ico" Style="{DynamicResource MainWindowStyle}"
-        DataContext="{Binding Source={StaticResource Locator},Path=Main}"
+        DataContext="{Binding Source={StaticResource Locator},Path=Main}" Background="#FFFFC042"
         >
 
 
@@ -33,6 +33,7 @@
             <i:InvokeCommandAction Command="{Binding SetUnFocused}"/>
         </i:EventTrigger>
     </i:Interaction.Triggers>
+    
 
 
 

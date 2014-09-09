@@ -9,29 +9,31 @@ using UB.Model.IRC;
 using UB.Model;
 using UB.Utils;
 
+
 namespace UB.Model
 {
     public class IRCChatBase : IrcClient, IChat
     {
         public event EventHandler<ChatServiceEventArgs> MessageReceived;
         public event EventHandler<StringEventArgs> NoticeReceived;
+        public event EventHandler<ChatUserEventArgs> ChatUserJoined;
+        public event EventHandler<ChatUserEventArgs> ChatUserLeft;
 
         private IRCLoginInfo loginInfo;
         private const String dummyPass = "!@$#@";
         private Timer pingTimer;
         private Timer noPongTimer;
         private const int pingInterval = 30000;
-        private bool isConnecting = true;
         private Dictionary<String, Action<IrcRawMessageEventArgs>> rawMessageHandlers;
-        private Random random { get; set; }
+        public Random Random { get; set; }
 
         public IRCChatBase( IRCLoginInfo info )
         {
-            IsStopping = false;
+            Status = new ChatStatusBase();
 
             loginInfo = info;
 
-            random = new Random();
+            Random = new Random();
 
             rawMessageHandlers = new Dictionary<string, Action<IrcRawMessageEventArgs>>()
             {
@@ -44,26 +46,22 @@ namespace UB.Model
             ContentParsers = new List<Action<ChatMessage, IChat>>();
 
         }
-        public bool IsStopping { get; set; }
         
         public IRCLoginInfo LoginInfo { 
             get { return loginInfo;}
-            set {
-                if( value.Channels.Length != loginInfo.Channels.Length || 
-                    value.Channels.Intersect(loginInfo.Channels).Count() != value.Channels.Length )
-                {
-                    if (!IsStopping)
-                    {
-                        Debug.Print("Restarting IRC with new login info");
-                        Restart();
-                    }
-                }
+            set
+            {
+                loginInfo = value;
             }
         }
-        public bool Start(ChatConfig config)
+
+        public virtual bool Start()
         {
+            if (Config == null)
+                return false;
+
             var tries = 0;
-            while (IsStopping && tries < 1000)
+            while (Status.IsStopping && tries < 1000)
             {
                 Thread.Sleep(60);
                 tries++;
@@ -73,9 +71,9 @@ namespace UB.Model
 
             noPongTimer = new Timer((obj) =>
             {
-                if (!IsStopping)
+                if (!Status.IsStopping)
                 {
-                    Debug.Print("No ping reply. Restarting IRC");
+                    Log.WriteError("No ping reply. Restarting IRC");
                     Restart();
                 }
             }, null, Timeout.Infinite, Timeout.Infinite);
@@ -86,46 +84,25 @@ namespace UB.Model
                 noPongTimer.Change(pingInterval, Timeout.Infinite);
             }, null, Timeout.Infinite, Timeout.Infinite);
 
-            loginInfo.Channels = Config.Parameters.StringArrayValue("Channels");
-            loginInfo.UserName = Config.Parameters.StringValue("Username");
-            loginInfo.Password = Config.Parameters.StringValue("Password");
-            loginInfo.RealName = Config.Parameters.StringValue("Username");
-
             if (String.IsNullOrEmpty(LoginInfo.HostName))
                 throw new Exception("Hostname must be specified!");
 
             if (String.IsNullOrEmpty(LoginInfo.UserName))
                 throw new Exception("Username must be specified!");
 
-            if (!loginInfo.Channels.Any(ch => ch.Equals(loginInfo.UserName, StringComparison.InvariantCultureIgnoreCase)))
-                loginInfo.Channels = loginInfo.Channels.Union(new String[] { loginInfo.UserName.ToLower() }).ToArray();
-
-            for (int i = 0; i < loginInfo.Channels.Length; i++)
-            {
-                loginInfo.Channels[i] = "#" + loginInfo.Channels[i].Replace("#", "");
-            }
-
-            IsStopping = false;
-            isConnecting = true;
+            Status.IsStarting = true;
+            Status.IsStopping = false;
+            Status.IsConnecting = true;
             Connect();
-            return true;
-
-        }
-
-        public virtual bool Start()
-        {
-            if (Config == null)
-                return false;
-
-            return Start(Config);           
+            return true;         
         }
 
 
         public virtual bool Stop()
         {
-            IsStopping = true;
+            Status.IsStopping = true;
 
-            Debug.Print("Stopping IRC...");
+            Log.WriteInfo("Stopping IRC...");
             if( noPongTimer != null ) noPongTimer.Change(Timeout.Infinite, Timeout.Infinite);
             if( pingTimer != null ) pingTimer.Change(Timeout.Infinite, Timeout.Infinite);
 
@@ -143,11 +120,14 @@ namespace UB.Model
         private void Connect()
         {
             GetServerList((hostList) => {
-                var hostCount = hostList.AddressList.Count();
-                if (hostCount <= 0)
-                    throw new Exception("All servers are down. Domain:" + LoginInfo.HostName);
+                    
+                if (hostList == null || hostList.AddressList.Count() <= 0)
+                {
+                    Log.WriteError("All servers are down. Domain:" + LoginInfo.HostName);
+                    return;
+                }
 
-                Connect(hostList.AddressList[random.Next(0,hostCount)], LoginInfo.Port, false, new IrcUserRegistrationInfo()
+                Connect(hostList.AddressList[Random.Next(0, hostList.AddressList.Count())], LoginInfo.Port, false, new IrcUserRegistrationInfo()
                 { 
                     UserName = LoginInfo.UserName,
                     NickName = LoginInfo.UserName,
@@ -163,7 +143,13 @@ namespace UB.Model
                 return;
 
             var channel = e.Message.Parameters[0];
-            Debug.Print("User {0} joined to {1}", user, channel);
+            if (ChatUserJoined != null)
+                ChatUserJoined(this, new ChatUserEventArgs(new ChatUser()
+                {
+                    NickName = user.Name,
+                    Channel = channel
+                }));
+            Log.WriteInfo("User {0} joined to {1}", user, channel);
         }
         private void UserLeft(IrcRawMessageEventArgs e)
         {
@@ -172,7 +158,15 @@ namespace UB.Model
                 return;
 
             var channel = e.Message.Parameters[0];
-            Debug.Print("User {0} left from {1}", user, channel);
+
+            if (ChatUserLeft != null)
+                ChatUserLeft(this, new ChatUserEventArgs(new ChatUser()
+                {
+                    NickName = user.Name,
+                    Channel = channel
+                }));
+
+            Log.WriteInfo("User {0} left from {1}", user, channel);
 
         }
         private void ReadPrivateMessage(IrcRawMessageEventArgs e)
@@ -214,8 +208,6 @@ namespace UB.Model
         {
             Utils.Net.TestTCPPort(LoginInfo.HostName, LoginInfo.Port, (hosts, error) =>
             {
-                if (error != null)
-                    throw error;
                 callback(hosts);
             });
         }
@@ -238,27 +230,27 @@ namespace UB.Model
             if (rawMessageHandlers.ContainsKey(e.Message.Command))
                 rawMessageHandlers[e.Message.Command](e);
 
-            if (isConnecting)
+            if (Status.IsConnecting)
             {
-                isConnecting = false;
+                Status.IsConnecting = false;
                 JoinChannels();
             }
         }
         protected override void OnDisconnected(EventArgs e)
         {
-            Debug.Print("Disconnect event from IRC");
-            if (!IsStopping)
+            Log.WriteInfo("Disconnect event from IRC");
+            if (!Status.IsStopping)
                 Restart();
             
             base.OnDisconnected(e);
 
-            IsStopping = false;
+            Status.IsStopping = false;
         }
         protected override void OnError(IrcErrorEventArgs e)
         {
-            IsStopping = false;
+            Status.IsStopping = false;
 
-            Debug.Print("Error: {0}", e.Error);
+            Log.WriteError("Error: {0}", e.Error);
             Restart();
             base.OnError(e);
         }
@@ -294,18 +286,22 @@ namespace UB.Model
         }
 
 
-        public virtual void Authorize(Action afterAction) { }
         public virtual String ChatName { get { return String.Empty; } }
         public virtual String IconURL { get { return String.Empty; } }
         public virtual List<Emoticon> Emoticons { get; set; }
         public virtual void DownloadEmoticons(string url) { }
 
-
-        public string LastError
+        public new Dictionary<string, ChatUser> Users
         {
-            get;set;
+            get;
+            set;
         }
 
 
+        public ChatStatusBase Status
+        {
+            get;
+            set;
+        }
     }
 }

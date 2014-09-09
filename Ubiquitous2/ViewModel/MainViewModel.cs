@@ -1,8 +1,11 @@
-﻿using System.Diagnostics;
+﻿using System;
+using System.Collections.ObjectModel;
+using System.Diagnostics;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
 using GalaSoft.MvvmLight.Ioc;
 using Microsoft.Practices.ServiceLocation;
+using System.Linq;
 using UB.Model;
 
 namespace UB.ViewModel
@@ -24,7 +27,16 @@ namespace UB.ViewModel
         public MainViewModel(IChatDataService dataService)
         {
             _dataService = dataService;
-            SendText = dataService.GetRandomText();
+            _dataService.AddChannels((channel, chat) =>
+            {
+                if (!ChannelList.Any(item => item.ChannelName == channel && chat.IconURL == item.IconURL))
+                    ChannelList.Add(new { ChanelName = channel, IconURL = chat.IconURL });
+            });
+            _dataService.RemoveChannels((channel, chat) =>
+            {
+                ChannelList.Remove(new { ChannelName = channel, IconURL = chat.IconURL });
+            });
+
         }
 
         private RelayCommand _showSettings;
@@ -263,6 +275,68 @@ namespace UB.ViewModel
                                               IsFocused = false;
                                               IsOverlayVisible = false;
                                           }));
+            }
+        }
+
+        /// <summary>
+        /// The <see cref="ChannelList" /> property's name.
+        /// </summary>
+        public const string ChatListPropertyName = "ChannelList";
+
+        private ObservableCollection<dynamic> _chatList = new ObservableCollection<dynamic>();
+
+        /// <summary>
+        /// Sets and gets the ChatList property.
+        /// Changes to that property's value raise the PropertyChanged event. 
+        /// </summary>
+        public ObservableCollection<dynamic> ChannelList
+        {
+            get
+            {
+                return _chatList;
+            }
+
+            set
+            {
+                if (_chatList == value)
+                {
+                    return;
+                }
+
+                RaisePropertyChanging(ChatListPropertyName);
+                _chatList = value;
+                RaisePropertyChanged(ChatListPropertyName);
+            }
+        }
+
+        /// <summary>
+        /// The <see cref="SelectedChatChannel" /> property's name.
+        /// </summary>
+        public const string SelectedChatChannelPropertyName = "SelectedChatChannel";
+
+        private dynamic _selectedChat = new { ChannelName = String.Empty, IconURL = String.Empty };
+
+        /// <summary>
+        /// Sets and gets the SelectedChatChannel property.
+        /// Changes to that property's value raise the PropertyChanged event. 
+        /// </summary>
+        public dynamic SelectedChatChannel
+        {
+            get
+            {
+                return _selectedChat;
+            }
+
+            set
+            {
+                if (_selectedChat == value)
+                {
+                    return;
+                }
+
+                RaisePropertyChanging(SelectedChatChannelPropertyName);
+                _selectedChat = value;
+                RaisePropertyChanged(SelectedChatChannelPropertyName);
             }
         }
         ////public override void Cleanup()

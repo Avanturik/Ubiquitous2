@@ -1,15 +1,18 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     >
-    
+
     <ResourceDictionary.MergedDictionaries>
-        <ResourceDictionary Source="/Skins/Main/ScrollViewerSkin.xaml"></ResourceDictionary>
-        <ResourceDictionary Source="/Skins/Main/SettingsWindowSkin.xaml"></ResourceDictionary>
-        <ResourceDictionary Source="/Skins/Main/ChatMessageSkin.xaml"></ResourceDictionary>
-        <ResourceDictionary Source="/Skins/Main/ChatBoxSkin.xaml"></ResourceDictionary>
-        <ResourceDictionary Source="/Skins/Main/MainWindowSkin.xaml"></ResourceDictionary>
-        <ResourceDictionary Source="/Skins/Main/Expander.xaml"></ResourceDictionary>
+        <ResourceDictionary Source="/Skins/Main/ScrollViewerSkin.xaml"/>
+        <ResourceDictionary Source="/Skins/Main/SettingsWindowSkin.xaml"/>
+        <ResourceDictionary Source="/Skins/Main/ChatMessageSkin.xaml"/>
+        <ResourceDictionary Source="/Skins/Main/ChatBoxSkin.xaml"/>
+        <ResourceDictionary Source="/Skins/Main/MainWindowSkin.xaml"/>
+        <ResourceDictionary Source="/Skins/Main/Expander.xaml"/>
+        <ResourceDictionary Source="/Skins/Main/ChatReplyCombo.xaml"/>
     </ResourceDictionary.MergedDictionaries>
+
+
 
 
 

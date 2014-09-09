@@ -1946,7 +1946,9 @@ namespace dotIRC
                         if (line[0] == ':')
                         {
                             var firstSpaceIndex = line.IndexOf(' ');
-                            Debug.Assert(firstSpaceIndex != -1);
+                            if (firstSpaceIndex == -1)
+                                return;
+
                             prefix = line.Substring(1, firstSpaceIndex - 1);
                             lineAfterPrefix = line.Substring(firstSpaceIndex + 1);
                         }
