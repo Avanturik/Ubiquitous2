@@ -54,7 +54,7 @@ namespace UB.Model
                     else
                     {
                         //Remove unused and add new settings
-                        savedConfig.Parameters.RemoveAll(item => !chatConfig.Parameters.Any(s => s.Name == item.Name && s.DataType == item.DataType ));
+                        //savedConfig.Parameters.RemoveAll(item => !chatConfig.Parameters.Any(s => s.Name == item.Name && s.DataType == item.DataType ));
                         chatConfig.Parameters.ForEach(item =>
                         {
                             if( !savedConfig.Parameters.Any( s => s.Name == item.Name ))

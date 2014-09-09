@@ -86,11 +86,9 @@ namespace UB.Model
                 noPongTimer.Change(pingInterval, Timeout.Infinite);
             }, null, Timeout.Infinite, Timeout.Infinite);
 
-            var oauthToken = Config.Parameters.StringValue("OAuthToken");
-
             loginInfo.Channels = Config.Parameters.StringArrayValue("Channels");
             loginInfo.UserName = Config.Parameters.StringValue("Username");
-            loginInfo.Password = oauthToken ?? Config.Parameters.StringValue("Password");
+            loginInfo.Password = Config.Parameters.StringValue("Password");
             loginInfo.RealName = Config.Parameters.StringValue("Username");
 
             if (String.IsNullOrEmpty(LoginInfo.HostName))

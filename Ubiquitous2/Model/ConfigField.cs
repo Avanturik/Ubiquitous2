@@ -8,33 +8,37 @@ namespace UB.Model
     [DataContract]
     public class ConfigField
     {
-        [XmlAttribute]
+        [XmlElement]
         public bool IsVisible { get; set; }
 
-        [XmlAttribute]
+        [XmlElement]
         public String DataType { get; set; }
 
-        [XmlAttribute]
+        [XmlElement]
         public String Name { get; set; }
 
-        [XmlAttribute]
+        [XmlElement]
         public String Label { get; set; }
 
         [XmlElement]
         public object Value { get; set; }
 
-        public override bool Equals(object o)
-        {
-            var obj = o as ConfigField;
-            if (this.IsVisible == obj.IsVisible &&
-                this.DataType == obj.DataType &&
-                this.Name == obj.Name &&
-                this.Label == obj.Label &&
-                this.Value == obj.Value)
-                return true;
+        //public override bool Equals(object o)
+        //{
+        //    var obj = o as ConfigField;
+        //    if (this.IsVisible == obj.IsVisible &&
+        //        this.DataType == obj.DataType &&
+        //        this.Name == obj.Name &&
+        //        this.Label == obj.Label &&
+        //        this.Value == obj.Value)
+        //        return true;
 
-            return false;
-        }
+        //    return false;
+        //}
+        //public override int GetHashCode()
+        //{
+        //    return base.GetHashCode();
+        //}
 
     }
 }

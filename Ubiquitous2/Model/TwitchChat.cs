@@ -95,7 +95,7 @@ namespace UB.Model
                     {
                         ReadOAuthToken(oauthParam);
                         if (IsConnected) base.Stop();
-                        base.Start();
+                        //base.Start();
                     }
 
                 }));
@@ -164,7 +164,7 @@ namespace UB.Model
             {
                 if (oldAuthParam != null)
                 {
-                    oldAuthParam.Value = "oauth:" + oauthToken;
+                    oldAuthParam.Value = oauthToken;
                 }
                 else
                 {
@@ -174,7 +174,7 @@ namespace UB.Model
                         IsVisible = false,
                         Label = "OAuth token",
                         Name = "OAuthToken",
-                        Value = "oauth:" + oauthToken
+                        Value = oauthToken
                     });
                 }
             }

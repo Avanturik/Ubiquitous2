@@ -60,5 +60,9 @@ namespace UB.Model
 
             return clone;
         }
+        public override int GetHashCode()
+        {
+            return base.GetHashCode();
+        }
     }
 }
