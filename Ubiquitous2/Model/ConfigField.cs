@@ -8,16 +8,16 @@ namespace UB.Model
     [DataContract]
     public class ConfigField
     {
-        [XmlElement]
+        [XmlAttribute]
         public bool IsVisible { get; set; }
 
-        [XmlElement]
+        [XmlAttribute]
         public String DataType { get; set; }
 
-        [XmlElement]
+        [XmlAttribute]
         public String Name { get; set; }
 
-        [XmlElement]
+        [XmlAttribute]
         public String Label { get; set; }
 
         [XmlElement]

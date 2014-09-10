@@ -15,7 +15,7 @@ namespace UB.Model
         bool Start();
         bool Stop();
         bool Restart();
-        bool SendMessage(String channel, ChatMessage message);
+        bool SendMessage(ChatMessage message);
         Action<string, IChat> AddChannel { get; set; }
         Action<string, IChat> RemoveChannel { get; set; }
         List<Action<ChatMessage, IChat>> ContentParsers {get;set;}

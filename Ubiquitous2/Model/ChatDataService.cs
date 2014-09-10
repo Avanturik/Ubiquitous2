@@ -114,14 +114,16 @@ namespace UB.Model
                     chat.AddChannel = (channel, fromChat) => {
                         DispatcherHelper.CheckBeginInvokeOnUI(() =>
                         {
-                            ChatChannels.Add(new { ChannelName = channel, ChatIconURL = fromChat.IconURL });
+                            ChatChannels.Add(new { ChatName = fromChat.ChatName, ChannelName = channel, ChatIconURL = fromChat.IconURL });
                         });
                     };
                     chat.RemoveChannel = (channel, fromChat) =>
                     {
                         DispatcherHelper.CheckBeginInvokeOnUI(() =>
                         {
-                            //ChatChannels.RemoveAll( item => item.ChannelName == channel && item.ChatIconURL == fromChat.IconURL);
+                            var searchItem = ChatChannels.FirstOrDefault(item => item.ChatName == fromChat.ChatName && item.ChannelName == channel && item.ChatIconURL == fromChat.IconURL);
+                            if (searchItem != null)
+                                ChatChannels.Remove(searchItem);
                         });
                     };
                   Task.Factory.StartNew( ()=> chat.Start() );  
@@ -142,6 +144,11 @@ namespace UB.Model
             lock (messageQueueLock)
             {                
                 messageQueue.Add(message);
+                if( message.HighlyImportant )
+                {
+                    readChatCallback(messageQueue.ToArray(), null);
+                    messageQueue.Clear();
+                }
             }
         }
 
@@ -162,5 +169,15 @@ namespace UB.Model
 
 
         public ObservableCollection<dynamic> ChatChannels { get; set; }
+
+
+        public void SendMessage(ChatMessage message)
+        {
+            var chat = Chats.FirstOrDefault(c => c.ChatName == message.ChatName);
+            if( chat != null )
+                chat.SendMessage(message);
+
+            //TODO send message implementation
+        }
     }
 }

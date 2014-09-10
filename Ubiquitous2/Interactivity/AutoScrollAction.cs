@@ -123,5 +123,35 @@ namespace UB.Interactivity
             typeof(bool),
             typeof(AutoScrollAction),
             new UIPropertyMetadata(true));
+
+        /// <summary>
+        /// The <see cref="WaitSizeChange" /> dependency property's name.
+        /// </summary>
+        public const string WaitSizeChangePropertyName = "WaitSizeChange";
+
+        /// <summary>
+        /// Gets or sets the value of the <see cref="WaitSizeChange" />
+        /// property. This is a dependency property.
+        /// </summary>
+        public bool WaitSizeChange
+        {
+            get
+            {
+                return (bool)GetValue(WaitSizeChangeProperty);
+            }
+            set
+            {
+                SetValue(WaitSizeChangeProperty, value);
+            }
+        }
+
+        /// <summary>
+        /// Identifies the <see cref="WaitSizeChange" /> dependency property.
+        /// </summary>
+        public static readonly DependencyProperty WaitSizeChangeProperty = DependencyProperty.Register(
+            WaitSizeChangePropertyName,
+            typeof(bool),
+            typeof(AutoScrollAction),
+            new UIPropertyMetadata(false));
     }
 }

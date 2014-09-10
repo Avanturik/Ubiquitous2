@@ -1453,7 +1453,10 @@ namespace dotIRC
                     var commandRangeStart = int.Parse(commandRangeParts[0]);
                     var commandRangeEnd = int.Parse(commandRangeParts[1]);
                     for (int code = commandRangeStart; code <= commandRangeEnd; code++)
-                        this.numericMessageProcessors.Add(code, methodDelegate);
+                    {
+                        if( !this.numericMessageProcessors.ContainsKey(code))
+                            this.numericMessageProcessors.Add(code, methodDelegate);
+                    }
                 }
                 else if (commandRangeParts.Length == 1)
                 {
@@ -1927,7 +1930,8 @@ namespace dotIRC
 
                     // Indicate that block of data has been read into receive buffer.
                     this.receiveStream.WritePosition += e.BytesTransferred;
-                    this.dataStreamReader.DiscardBufferedData();
+                    if (this.dataStreamReader != null)
+                        this.dataStreamReader.DiscardBufferedData();
                     
                     // Read each terminated line of characters from data stream.
                     while (true)

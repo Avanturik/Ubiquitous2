@@ -53,7 +53,12 @@
                                     <ComboBox Style="{DynamicResource ReplyComboStyle}" Name="replyCombo" ItemsSource="{Binding ChannelList}" SelectedItem="{Binding SelectedChatChannel}" ItemTemplate="{DynamicResource ReplyComboTemplate}" IsReadOnly="True" IsEditable="False" Margin="-18,0,61,6"/>
                                     <Border CornerRadius="7" Background="#FF303030" Padding="6,0" Margin="-55,-29,1,-25" Height="27">
                                         <Grid>
-                                            <TextBox Name="ReplyTextBox" Panel.ZIndex="1" TextWrapping="Wrap" Margin="0" Background="#7F303030" Foreground="#FFBDBDBD" BorderThickness="0" Text="{Binding SendText}" Padding="5" MaxHeight="54" ScrollViewer.CanContentScroll="True" VerticalScrollBarVisibility="Auto"/>
+                                            <TextBox Name="ReplyTextBox" Panel.ZIndex="1" TextWrapping="Wrap" Margin="0" Background="#7F303030" Foreground="#FFBDBDBD" BorderThickness="0" Text="{Binding SendText,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" Padding="5" MaxHeight="54" ScrollViewer.CanContentScroll="True" VerticalScrollBarVisibility="Auto">
+                                                <TextBox.InputBindings>
+                                                    <KeyBinding Key="Enter" Command="{Binding EnterCommand}"/>
+                                                </TextBox.InputBindings>
+                                            </TextBox>
+
                                             <TextBlock Panel.ZIndex="0" MaxHeight="54" Margin="0" Padding="5" Foreground="#66CFCFCF" Text="{Binding SelectedChatChannel.ChannelName}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Visibility="{Binding ElementName=ReplyTextBox, Path=Text.IsEmpty, Converter={StaticResource boolToVisibilityConverter}}" FontStyle="Italic"></TextBlock>
                                         </Grid>
                                     </Border>

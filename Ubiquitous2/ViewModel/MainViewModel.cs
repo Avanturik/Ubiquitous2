@@ -7,6 +7,9 @@ using GalaSoft.MvvmLight.Ioc;
 using Microsoft.Practices.ServiceLocation;
 using System.Linq;
 using UB.Model;
+using System.Windows.Threading;
+using System.Threading;
+using GalaSoft.MvvmLight.Threading;
 
 namespace UB.ViewModel
 {
@@ -33,8 +36,6 @@ namespace UB.ViewModel
 
         void ChatChannels_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
         {
-
-            ChannelList = _dataService.ChatChannels;
             if (e.OldItems == null)
                 SelectedChatChannel = ChannelList[0];
         }
@@ -312,7 +313,7 @@ namespace UB.ViewModel
         /// </summary>
         public const string SelectedChatChannelPropertyName = "SelectedChatChannel";
 
-        private dynamic _selectedChat = new { ChannelName = "#xedoc", IconURL = String.Empty };
+        private dynamic _selectedChat = new { ChatName = "Twitch.tv", ChannelName = "#xedoc", ChatIconURL = String.Empty };
 
         /// <summary>
         /// Sets and gets the SelectedChatChannel property.
@@ -328,8 +329,9 @@ namespace UB.ViewModel
             set
             {
                 if (_selectedChat != null && value != null &&
+                    _selectedChat.ChatName == value.ChatName &&
                     _selectedChat.ChannelName == value.ChannelName &&
-                    _selectedChat.ChatIconURL == value.ChatIconURL )
+                    _selectedChat.ChatIconURL == value.ChatIconURL)
                 {
                     return;
                 }
@@ -373,11 +375,51 @@ namespace UB.ViewModel
         private void SwitchOverlay()
         {
             if (IsMouseOver && IsFocused)
+            {
                 IsOverlayVisible = true;
+                ScrollToLastMessage();
+            }
             else
+            {
                 IsOverlayVisible = false;
+            }
 
             MessengerInstance.Send<bool>(!IsOverlayVisible, "EnableAutoScroll");
+        }
+
+        private RelayCommand _enterCommand;
+
+        /// <summary>
+        /// Gets the EnterCommand.
+        /// </summary>
+        public RelayCommand EnterCommand
+        {
+            get
+            {
+                return _enterCommand
+                    ?? (_enterCommand = new RelayCommand(
+                                          () =>
+                                          {
+                                              _dataService.SendMessage(new ChatMessage() { 
+                                                Channel = SelectedChatChannel.ChannelName,
+                                                ChatName = SelectedChatChannel.ChatName,
+                                                Text = SendText
+                                              });
+                                              SendText = String.Empty;
+                                              ScrollToLastMessage();
+                                          }));
+            }
+        }
+        private void ScrollToLastMessage()
+        {
+            var delaySend = new Timer((obj) =>
+            {
+                DispatcherHelper.CheckBeginInvokeOnUI(() =>
+                {
+                    MessengerInstance.Send<bool>(true, "MessageSent");
+                });
+            }, this, 100, Timeout.Infinite);
+
         }
         ////public override void Cleanup()
         ////{

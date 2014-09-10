@@ -13,6 +13,7 @@ namespace UB.Model
             Id = Guid.NewGuid();
             TimeStamp = DateTime.Now.ToShortTimeString();
             Text = text;
+            HighlyImportant = false;
         }
         public String ChatName { get; set; }
         public String Text{ get; set; }
@@ -21,6 +22,6 @@ namespace UB.Model
         public String ChatIconURL { get; set; }
         public String FromUserName { get; set; }
         public String Channel { get; set; }
-
+        public bool HighlyImportant { get; set; }
     }
 }

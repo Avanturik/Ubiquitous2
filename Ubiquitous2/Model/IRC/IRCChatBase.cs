@@ -188,29 +188,39 @@ namespace UB.Model
         {
             if (e.Message.Parameters.Count >= 2)
             {
-                if (MessageReceived != null)
-                {
-                    var message = new ChatMessage()
-                        {
-                            Text = e.Message.Parameters[1],
-                            Channel = e.Message.Parameters[0],
-                            FromUserName = e.Message.Source.Name,
-                            TimeStamp = DateTime.Now.ToShortTimeString()
-                        };
-                    
-                    if( loginInfo.Channels.Contains(message.Channel) )
-                    {
-                        if (ContentParsers != null)
-                            ContentParsers.ForEach(parser => parser(message, this));
 
-                        MessageReceived(this, new ChatServiceEventArgs()
-                        {
-                            Message = message
-                        });
-                    }
+                RaiseMessageReceive(e.Message.Parameters[1], //text
+                                    e.Message.Parameters[0], //channel
+                                    e.Message.Source.Name //name
+                                    );
+            }
+        }
+        protected void RaiseMessageReceive( string text, string channel, string name, bool important = false)
+        {
+            if (MessageReceived != null)
+            {
+                var message = new ChatMessage()
+                {
+                    Text = text,
+                    Channel = channel,
+                    FromUserName = name,
+                    HighlyImportant = important,
+                    TimeStamp = DateTime.Now.ToShortTimeString()
+                };
+
+                if (loginInfo.Channels.Contains(message.Channel))
+                {
+                    if (ContentParsers != null)
+                        ContentParsers.ForEach(parser => parser(message, this));
+
+                    MessageReceived(this, new ChatServiceEventArgs()
+                    {
+                        Message = message
+                    });
                 }
             }
         }
+
         private void ReadNotice(IrcRawMessageEventArgs e)
         {
             if (e.Message.Parameters.Count >= 1)
@@ -270,9 +280,9 @@ namespace UB.Model
             base.OnError(e);
         }
 
-        public bool SendMessage(String channel, ChatMessage message)
+        public virtual bool SendMessage(ChatMessage message)
         {
-            channel = "#" + channel.Replace("#", "").ToLower();
+            var channel = "#" + message.Channel.Replace("#", "").ToLower();
             var ircChannel = Channels.FirstOrDefault(ch => ch.Name.Equals(channel, StringComparison.InvariantCultureIgnoreCase));
             if( null != ircChannel)
             {

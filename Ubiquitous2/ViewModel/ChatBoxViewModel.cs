@@ -17,6 +17,7 @@ namespace UB.ViewModel
     public class ChatBoxViewModel : ViewModelBase
     {
         public event EventHandler<EventArgs> MessageAdded;
+        public event EventHandler<EventArgs> MessageSent;
         IChatDataService _dataService;
         /// <summary>
         /// Initializes a new instance of the ChatBoxViewModel class.
@@ -49,7 +50,12 @@ namespace UB.ViewModel
 
                     });
             }
-            
+
+            MessengerInstance.Register<bool>(this, "MessageSent", msg =>
+                {
+                    if (MessageSent != null)
+                        MessageSent(this, EventArgs.Empty);
+                });
 
             MessengerInstance.Register<bool>(this, "EnableAutoScroll", msg =>
             {

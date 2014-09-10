@@ -13,5 +13,6 @@ namespace UB.Model
         void StartAllChats();
         string GetRandomText();
         ObservableCollection<dynamic> ChatChannels { get; set; }
+        void SendMessage(ChatMessage message);
     }
 }

@@ -192,6 +192,19 @@ namespace UB.Model
             //Web icons
             Task.Factory.StartNew(() => DownloadEmoticons(emoticonUrl));
         }
+        public override bool Stop()
+        {
+            if (RemoveChannel != null)
+            {
+                foreach (var channel in LoginInfo.Channels)
+                {
+                    RemoveChannel(channel, this);
+                }
+            }
+          
+            return base.Stop();
+        }
+
         public override void DownloadEmoticons(string url)
         {
             var list = new List<Emoticon>();
@@ -257,6 +270,11 @@ namespace UB.Model
 
             }
             return oauthToken;
+        }
+        public override bool SendMessage(ChatMessage message)
+        {
+            RaiseMessageReceive( message.Text, message.Channel, LoginInfo.UserName, true );
+            return base.SendMessage(message);
         }
         public void Authenticate( Action afterAction)
         {

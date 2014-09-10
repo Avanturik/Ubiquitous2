@@ -22,6 +22,9 @@
                                             <Interactivity:DataEventTrigger EventName="MessageAdded" d:EventName="">
                                                 <Interactivity:AutoScrollAction Duration="100" EnableAutoScroll="{Binding EnableAutoScroll}"/>
                                             </Interactivity:DataEventTrigger>
+                                            <Interactivity:DataEventTrigger EventName="MessageSent" d:EventName="">
+                                                <Interactivity:AutoScrollAction Duration="100" EnableAutoScroll="True"/>
+                                            </Interactivity:DataEventTrigger>
                                         </i:Interaction.Triggers>
                                         <ItemsPresenter />
                                     </ScrollViewer>
