@@ -27,16 +27,16 @@ namespace UB.ViewModel
         public MainViewModel(IChatDataService dataService)
         {
             _dataService = dataService;
-            _dataService.AddChannels((channel, chat) =>
-            {
-                if (!ChannelList.Any(item => item.ChannelName == channel && chat.IconURL == item.IconURL))
-                    ChannelList.Add(new { ChanelName = channel, IconURL = chat.IconURL });
-            });
-            _dataService.RemoveChannels((channel, chat) =>
-            {
-                ChannelList.Remove(new { ChannelName = channel, IconURL = chat.IconURL });
-            });
+            dataService.ChatChannels.CollectionChanged += ChatChannels_CollectionChanged;
+            ChannelList = dataService.ChatChannels;
+        }
 
+        void ChatChannels_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+        {
+
+            ChannelList = _dataService.ChatChannels;
+            if (e.OldItems == null)
+                SelectedChatChannel = ChannelList[0];
         }
 
         private RelayCommand _showSettings;
@@ -151,7 +151,7 @@ namespace UB.ViewModel
                                           () =>
                                           {
                                               IsMouseOver = false;
-                                              IsOverlayVisible = false;
+                                              SwitchOverlay();
                                           }));
             }
         }
@@ -170,8 +170,7 @@ namespace UB.ViewModel
                                           () =>
                                           {
                                                 IsMouseOver = true;
-                                                if (IsFocused)
-                                                    IsOverlayVisible = true;
+                                                SwitchOverlay();
                                           }));
             }
         }
@@ -253,8 +252,7 @@ namespace UB.ViewModel
                                           () =>
                                           {
                                               IsFocused = true;
-                                              if (IsMouseOver)
-                                                  IsOverlayVisible = true;
+                                              SwitchOverlay();
                                           }));
             }
         }
@@ -273,7 +271,7 @@ namespace UB.ViewModel
                                           () =>
                                           {
                                               IsFocused = false;
-                                              IsOverlayVisible = false;
+                                              SwitchOverlay();
                                           }));
             }
         }
@@ -314,7 +312,7 @@ namespace UB.ViewModel
         /// </summary>
         public const string SelectedChatChannelPropertyName = "SelectedChatChannel";
 
-        private dynamic _selectedChat = new { ChannelName = String.Empty, IconURL = String.Empty };
+        private dynamic _selectedChat = new { ChannelName = "#xedoc", IconURL = String.Empty };
 
         /// <summary>
         /// Sets and gets the SelectedChatChannel property.
@@ -329,15 +327,57 @@ namespace UB.ViewModel
 
             set
             {
-                if (_selectedChat == value)
+                if (_selectedChat != null && value != null &&
+                    _selectedChat.ChannelName == value.ChannelName &&
+                    _selectedChat.ChatIconURL == value.ChatIconURL )
                 {
                     return;
                 }
-
+                SelectedChannelName = value.ChannelName;
                 RaisePropertyChanging(SelectedChatChannelPropertyName);
                 _selectedChat = value;
                 RaisePropertyChanged(SelectedChatChannelPropertyName);
             }
+        }
+
+        /// <summary>
+        /// The <see cref="SelectedChannelName" /> property's name.
+        /// </summary>
+        public const string SelectedChannelNamePropertyName = "SelectedChannelName";
+
+        private string _selectedChannelName = "#xedoc";
+
+        /// <summary>
+        /// Sets and gets the SelectedChannelName property.
+        /// Changes to that property's value raise the PropertyChanged event. 
+        /// </summary>
+        public string SelectedChannelName
+        {
+            get
+            {
+                return _selectedChannelName;
+            }
+
+            set
+            {
+                if (_selectedChannelName == value)
+                {
+                    return;
+                }
+
+                RaisePropertyChanging(SelectedChannelNamePropertyName);
+                _selectedChannelName = value;
+                RaisePropertyChanged(SelectedChannelNamePropertyName);
+            }
+        }
+        private void SwitchOverlay()
+        {
+            if (IsMouseOver && IsFocused)
+                IsOverlayVisible = true;
+            else
+                IsOverlayVisible = false;
+
+            MessengerInstance.Send<bool>(!IsOverlayVisible, "EnableAutoScroll");
         }
         ////public override void Cleanup()
         ////{

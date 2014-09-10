@@ -2,11 +2,11 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 
     <ControlTemplate x:Key="ImageOnlyTemplate">
-        <Image Width="16" Height="16" Source="{Binding IconURL}" />
+        <Image Width="16" Height="16" Source="{Binding ChatIconURL}" />
     </ControlTemplate>
     <ControlTemplate x:Key="ImageTitleTemplate">
         <StackPanel Orientation="Horizontal" >
-            <Image Margin="5" Width="16" Height="16" Source="{Binding IconURL}" />
+            <Image Margin="5" Width="16" Height="16" Source="{Binding ChatIconURL}" />
             <TextBlock Margin="5" Text="{Binding ChannelName}" Foreground="#FFE8B041" />
         </StackPanel>
     </ControlTemplate>

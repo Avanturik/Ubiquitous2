@@ -231,7 +231,7 @@ namespace Devart.Controls
 
             _children.AvailableWidth = availableSize.Width;
 
-            var measurer = new SmoothPanelMeasurer(this, availableSize);
+            var measurer = new SmoothPanelMeasurer(this, availableSize, TrackTopMost);
             measurer.Measure();
 
             return availableSize;
@@ -648,5 +648,35 @@ namespace Devart.Controls
         }
 
         #endregion IScrollInfo Members
+
+        /// <summary>
+        /// The <see cref="TrackTopMost" /> dependency property's name.
+        /// </summary>
+        public const string TrackTopMostPropertyName = "TrackTopMost";
+
+        /// <summary>
+        /// Gets or sets the value of the <see cref="TrackTopMost" />
+        /// property. This is a dependency property.
+        /// </summary>
+        public bool TrackTopMost
+        {
+            get
+            {
+                return (bool)GetValue(TrackTopMostProperty);
+            }
+            set
+            {
+                SetValue(TrackTopMostProperty, value);
+            }
+        }
+
+        /// <summary>
+        /// Identifies the <see cref="TrackTopMost" /> dependency property.
+        /// </summary>
+        public static readonly DependencyProperty TrackTopMostProperty = DependencyProperty.Register(
+            TrackTopMostPropertyName,
+            typeof(bool),
+            typeof(SmoothPanel),
+            new UIPropertyMetadata(false));
     }
 }

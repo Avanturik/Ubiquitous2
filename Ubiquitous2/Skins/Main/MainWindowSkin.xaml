@@ -19,7 +19,6 @@
             </Trigger>
         </Style.Triggers>
     </Style>
-
     <BooleanToVisibilityConverter x:Key="boolToVisibilityConverter"></BooleanToVisibilityConverter>
     <Style x:Key="MainWindowStyle" TargetType="{x:Type Window}">
         <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.WindowTextBrushKey}}"/>
@@ -51,11 +50,12 @@
                             <View:ChatBoxView Grid.Row="1" Margin="3,0" RenderTransformOrigin="1,0" OverridesDefaultStyle="True" Padding="0"/>
                             <Border Grid.Row="2" Padding="23,4,5,0" VerticalAlignment="Bottom" HorizontalAlignment="Stretch" Panel.ZIndex="1" Visibility="{Binding IsOverlayVisible, Converter={StaticResource boolToVisibilityConverter}}" BorderBrush="#FF165B1D" BorderThickness="1" CornerRadius="5" Margin="9,9,13,6" Height="36">
                                 <DockPanel VerticalAlignment="Bottom" Background="Transparent" Margin="0">
-                                     <ComboBox Style="{DynamicResource ReplyComboStyle}" ItemsSource="{Binding ChatList}" SelectedItem="{Binding SelectedChatChannel}" ItemTemplate="{DynamicResource ReplyComboTemplate}" IsReadOnly="True" IsEditable="False" Margin="-18,-5,61,0"/>
-                                    <Label Foreground="#FFFFC042" Margin="-61,0,17,6" BorderThickness="0">#asdfasd</Label>
-                                    <Border CornerRadius="7" Background="#FF303030" Padding="6,0" Margin="-18,-20,1,-18" Height="27">
-                                        <TextBox TextWrapping="Wrap" Margin="0" Background="#7F303030" Foreground="#FFBDBDBD" BorderThickness="0" Text="{Binding SendText}" Padding="5" MaxHeight="54" ScrollViewer.CanContentScroll="True" VerticalScrollBarVisibility="Auto">
-                                        </TextBox>
+                                    <ComboBox Style="{DynamicResource ReplyComboStyle}" Name="replyCombo" ItemsSource="{Binding ChannelList}" SelectedItem="{Binding SelectedChatChannel}" ItemTemplate="{DynamicResource ReplyComboTemplate}" IsReadOnly="True" IsEditable="False" Margin="-18,0,61,6"/>
+                                    <Border CornerRadius="7" Background="#FF303030" Padding="6,0" Margin="-55,-29,1,-25" Height="27">
+                                        <Grid>
+                                            <TextBox Name="ReplyTextBox" Panel.ZIndex="1" TextWrapping="Wrap" Margin="0" Background="#7F303030" Foreground="#FFBDBDBD" BorderThickness="0" Text="{Binding SendText}" Padding="5" MaxHeight="54" ScrollViewer.CanContentScroll="True" VerticalScrollBarVisibility="Auto"/>
+                                            <TextBlock Panel.ZIndex="0" MaxHeight="54" Margin="0" Padding="5" Foreground="#66CFCFCF" Text="{Binding SelectedChatChannel.ChannelName}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Visibility="{Binding ElementName=ReplyTextBox, Path=Text.IsEmpty, Converter={StaticResource boolToVisibilityConverter}}" FontStyle="Italic"></TextBlock>
+                                        </Grid>
                                     </Border>
                                 </DockPanel>
                             </Border>

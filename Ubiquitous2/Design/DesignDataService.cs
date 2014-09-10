@@ -9,6 +9,7 @@ namespace UB.Design
         private Random rnd;
         public DesignDataService()
         {
+            ChatChannels = new System.Collections.ObjectModel.ObservableCollection<dynamic>();
             rnd = new Random();
         }
 
@@ -22,7 +23,7 @@ namespace UB.Design
 
             var message = new ChatMessage(text) {
                 FromUserName = "xedoc",
-                ChatIconURL = @"c:\favicon.ico",
+                ChatIconURL = @"/Ubiquitous2;component/Resources/ubiquitous smile.ico",
                 Channel = "#loremipsum"
             };
 
@@ -70,6 +71,13 @@ namespace UB.Design
         public void RemoveChannels(Action<string, IChat> callback)
         {
 
+        }
+
+
+        public System.Collections.ObjectModel.ObservableCollection<dynamic> ChatChannels
+        {
+            get;
+            set;
         }
     }
 }

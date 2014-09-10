@@ -21,36 +21,8 @@ namespace UB
             if (RenderCapability.Tier == 0)
                 Timeline.DesiredFrameRateProperty.OverrideMetadata(
                     typeof(Timeline),
-                    new FrameworkPropertyMetadata { DefaultValue = 10 });
+                    new FrameworkPropertyMetadata { DefaultValue = 20 });
+        }
 
-            //ConfigSections test = Ubiqiutous.Default.Config;
-            //Debug.Print("{0}",test.ChatConfigs.Count);
-            //Ubiqiutous.Default.Config = new ConfigSections();
-            //Ubiqiutous.Default.Config.ChatConfigs = new System.Collections.Generic.List<ChatConfig>();
-            //Ubiqiutous.Default.Config.ChatConfigs.Add(new ChatConfig()
-            //{
-            //    ChatName = "Twitch.tv",
-            //    Enabled = true,
-            //    IconURL = @"/favicon.ico",
-            //    Parameters = new System.Collections.Generic.List<ConfigField>()
-            //{
-            //    new ConfigField() { DataType = "Text", IsVisible = true, Label = "User name:", Name = "Username", Value = "default"}
-            //}
-            //});
-            //Ubiqiutous.Default.Save();
-            //MakePortable(Settings.Default);
-            
-        }
-        private static void MakePortable(ApplicationSettingsBase settings)
-        {
-            //var portableSettingsProvider =
-            //    new PortableSettingsProvider("Ubiquitous.Default.settings");
-            //settings.Providers.Add(portableSettingsProvider);            
-            //foreach (SettingsProperty prop in settings.Properties)
-            //    prop.Provider = portableSettingsProvider;
-            
-            //settings.Reload();
-            //settings.Save();
-        }
     }
 }

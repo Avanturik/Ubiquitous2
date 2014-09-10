@@ -28,6 +28,7 @@ namespace UB.ViewModel
             {
                 _enabled = item.Enabled;
                 _chatName = item.ChatName;
+                _chatIconURL = item.IconURL ?? _chatIconURL;
                 foreach (var field in item.Parameters)
                 {
                     if (field.IsVisible)
@@ -45,6 +46,7 @@ namespace UB.ViewModel
             chatConfig = config;
             _enabled = config.Enabled;
             _chatName = config.ChatName;
+            _chatIconURL = config.IconURL ?? _chatIconURL;
             foreach( var param in config.Parameters )
             {
                 if( param.IsVisible)
@@ -324,6 +326,37 @@ namespace UB.ViewModel
                 RaisePropertyChanging(IsLoaderVisiblePropertyName);
                 _isLoaderVisible = value;
                 RaisePropertyChanged(IsLoaderVisiblePropertyName);
+            }
+        }
+
+        /// <summary>
+        /// The <see cref="ChatIconURL" /> property's name.
+        /// </summary>
+        public const string ChatIconURLPropertyName = "ChatIconURL";
+
+        private string _chatIconURL = @"/Ubiquitous2;component/Resources/ubiquitous smile.ico";
+
+        /// <summary>
+        /// Sets and gets the ChatIconURL property.
+        /// Changes to that property's value raise the PropertyChanged event. 
+        /// </summary>
+        public string ChatIconURL
+        {
+            get
+            {
+                return _chatIconURL;
+            }
+
+            set
+            {
+                if (_chatIconURL == value)
+                {
+                    return;
+                }
+
+                RaisePropertyChanging(ChatIconURLPropertyName);
+                _chatIconURL = value;
+                RaisePropertyChanged(ChatIconURLPropertyName);
             }
         }
     }

@@ -302,7 +302,7 @@ namespace UB.Model
 
 
         public virtual String ChatName { get; set; }
-        public virtual String IconURL { get { return String.Empty; } }
+        public virtual String IconURL { get; set; }
         public virtual List<Emoticon> Emoticons { get; set; }
         public virtual void DownloadEmoticons(string url) { }
 
@@ -318,5 +318,19 @@ namespace UB.Model
             get;
             set;
         }
+
+
+        public Action<string, IChat> AddChannel
+        {
+            get;
+            set;
+        }
+
+        public Action<string, IChat> RemoveChannel
+        {
+            get;
+            set;
+        }
+
     }
 }

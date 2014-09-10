@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using GalaSoft.MvvmLight.Threading;
 using Microsoft.Practices.ServiceLocation;
 using UB.Model.IRC;
 
@@ -17,7 +19,7 @@ namespace UB.Model
         private Action<ChatMessage[], Exception> readChatCallback;
         private List<ChatConfig> chatConfigs;
         private List<IChat> chats;
-        
+
         //Disposable
         private Timer receiveTimer;
 
@@ -25,26 +27,10 @@ namespace UB.Model
         {
             settingsDataService = ServiceLocator.Current.GetInstance<SettingsDataService>();
             random = new Random();
-            StartAllChats();
-        }
+            ChatChannels = new ObservableCollection<dynamic>();
 
-        private Dictionary<String, Func<ChatConfig, IChat>> chatFactory = new Dictionary<String, Func<ChatConfig, IChat>>()
-        {
-            {"Twitch.tv", (config)=>
-                                            { 
-                                                var twitchChatNormal =  new TwitchChat(config);
-                                                twitchChatNormal.ChatName = "Twitch.tv";
-                                                return twitchChatNormal;
-                                            }},
-            {"Twitch.tv(event)", (config)=>
-                                            {
-                                                var twitchChatEvent = new TwitchChat(config);
-                                                twitchChatEvent.ChatName = "Twitch.tv(event)";
-                                                twitchChatEvent.LoginInfo.HostName = "199.9.252.26";
-                                                twitchChatEvent.LoginInfo.Port = 80;
-                                                return twitchChatEvent;
-                                            } },
-        };
+            Task.Factory.StartNew(() => StartAllChats());
+        }
 
         public List<IChat> Chats
         {
@@ -57,7 +43,7 @@ namespace UB.Model
                     {
                         chatConfigs = configs;
                     });
-                    chats = chatConfigs.Select(config => chatFactory[config.ChatName](config)).ToList();
+                    chats = chatConfigs.Select(config => Registry.ChatFactory[config.ChatName](config)).ToList();
                 }
                 return chats;
             }
@@ -72,7 +58,7 @@ namespace UB.Model
 
             var message = new ChatMessage(text) {
                 FromUserName = "xedoc",
-                ChatIconURL = @"/favicon.ico",
+                ChatIconURL = @"/Ubiquitous2;component/Resources/ubiquitous smile.ico",
                 Channel = "#loremipsum"
             };
             callback(message, null);
@@ -121,12 +107,24 @@ namespace UB.Model
                     }
                 }
             }, null, 0, 1500);
-
             Chats.ForEach(chat => {
                 chat.MessageReceived += chat_MessageReceived;
                 if (chat.Enabled)
                 {
-                  Task.Factory.StartNew( ()=> chat.Start() );
+                    chat.AddChannel = (channel, fromChat) => {
+                        DispatcherHelper.CheckBeginInvokeOnUI(() =>
+                        {
+                            ChatChannels.Add(new { ChannelName = channel, ChatIconURL = fromChat.IconURL });
+                        });
+                    };
+                    chat.RemoveChannel = (channel, fromChat) =>
+                    {
+                        DispatcherHelper.CheckBeginInvokeOnUI(() =>
+                        {
+                            //ChatChannels.RemoveAll( item => item.ChannelName == channel && item.ChatIconURL == fromChat.IconURL);
+                        });
+                    };
+                  Task.Factory.StartNew( ()=> chat.Start() );  
                 }
             });
         }
@@ -142,8 +140,7 @@ namespace UB.Model
         void AddMessageToQueue( ChatMessage message )
         {
             lock (messageQueueLock)
-            {
-                message.ChatIconURL = @"/favicon.ico";
+            {                
                 messageQueue.Add(message);
             }
         }
@@ -164,14 +161,6 @@ namespace UB.Model
         }
 
 
-        public void AddChannels(Action<string, IChat> callback)
-        {
-            
-        }
-
-        public void RemoveChannels(Action<string, IChat> callback)
-        {
-           
-        }
+        public ObservableCollection<dynamic> ChatChannels { get; set; }
     }
 }

@@ -25,18 +25,15 @@ namespace UB.Design
             var trace = new StackTrace(true);
             var frame = trace.GetFrame(0);
             var sourceCodeDir = Path.GetDirectoryName(frame.GetFileName());
-            callback(new Image() { Width = 16, Height = 16 });
-            return; 
 
-
-            var imageUri = new Uri(sourceCodeDir + @"/favicon.ico");
-            var bitmap = new BitmapImage(imageUri);
             Image image = new Image();
             image.Height = 16;
             image.Width = image.Height;
-            image.Source = bitmap;
 
             callback(image);
+            return;
+
+
         }
     }
 }

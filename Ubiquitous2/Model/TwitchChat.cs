@@ -49,6 +49,12 @@ namespace UB.Model
 
             if (Users.ContainsKey(e.ChatUser.NickName))
                 Users.Remove(e.ChatUser.NickName);
+
+            if (e.ChatUser.NickName.Equals(LoginInfo.UserName, StringComparison.InvariantCultureIgnoreCase))
+            {
+                if (RemoveChannel != null)
+                    RemoveChannel(e.ChatUser.Channel, this);
+            }
         }
 
         void TwitchChat_ChatUserJoined(object sender, ChatUserEventArgs e)
@@ -63,8 +69,11 @@ namespace UB.Model
             {
                 Users.Add(e.ChatUser.NickName, e.ChatUser);
             }
-            if( e.ChatUser.NickName.Equals( LoginInfo.UserName,StringComparison.InvariantCultureIgnoreCase ))
+            if (e.ChatUser.NickName.Equals(LoginInfo.UserName, StringComparison.InvariantCultureIgnoreCase))
             {
+                if (AddChannel != null)
+                    AddChannel(e.ChatUser.Channel, this);
+
                 Status.IsLoggedIn = true;
                 Status.IsStarting = false;
                 Status.IsConnecting = false;
@@ -80,18 +89,6 @@ namespace UB.Model
                 Status.IsGotAuthenticationInfo = false;
                 Status.IsLoggedIn = false;
             }
-        }
-        public override string IconURL
-        {
-            get
-            {
-                return @"/favicon.ico";
-            }
-        }
-        public override string ChatName
-        {
-            get;
-            set;
         }
 
         public override bool Start()

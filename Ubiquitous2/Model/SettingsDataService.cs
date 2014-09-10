@@ -17,33 +17,6 @@ namespace UB.Model
         }
         private void InitializeChatSettings()
         {
-            var random = new Random();
-
-            //Twitch.tv default settings
-            var twitchDefaultConfig = new ChatConfig() { ChatName = "Twitch.tv", IconURL = @"/favicon.ico", Enabled = false, 
-                Parameters = new List<ConfigField>() {
-                new ConfigField() {  Name = "Username", Label = "Username", DataType = "Text", IsVisible = true, Value = "justinfan" + random.Next(1,123456) },
-                new ConfigField() {  Name = "Password", Label = "Password", DataType = "Password", IsVisible = true, Value = "blah" },
-                new ConfigField() {  Name = "Channels", Label = "Channels", DataType = "Text", IsVisible = true, Value = "goodguygarry,nightblue3,herdyn,#starladder1, mushisgosu" },
-                new ConfigField() {  Name = "OAuthToken", Label = "OAuth token", DataType = "Text", IsVisible = false, Value = String.Empty },
-                }
-            };
-            var twitchEventDefaultConfig = new ChatConfig()
-            {
-                ChatName = "Twitch.tv(event)",
-                IconURL = @"/favicon.ico",
-                Enabled = false,
-                Parameters = new List<ConfigField>() {
-                new ConfigField() {  Name = "Username", Label = "Username", DataType = "Text", IsVisible = true, Value = "justinfan" + random.Next(1,123456) },
-                new ConfigField() {  Name = "Password", Label = "Password", DataType = "Password", IsVisible = true, Value = "blah" },
-                new ConfigField() {  Name = "Channels", Label = "Channels", DataType = "Text", IsVisible = true, Value = "riotgames" },
-                new ConfigField() {  Name = "OAuthToken", Label = "OAuth token", DataType = "Text", IsVisible = false, Value = String.Empty },
-                }
-            };
-
-
-            List<ChatConfig> chatConfigs = new List<ChatConfig>() { twitchDefaultConfig, twitchEventDefaultConfig };
-
             //First launch ?
             if (Ubiqiutous.Default.Config == null)
                 Ubiqiutous.Default.Config = new ConfigSections();
@@ -51,12 +24,12 @@ namespace UB.Model
             if( Ubiqiutous.Default.Config.ChatConfigs == null )
             {
 
-                Ubiqiutous.Default.Config.ChatConfigs = chatConfigs.ToList();
+                Ubiqiutous.Default.Config.ChatConfigs = Registry.DefaultChatSettings.ToList();
                 Ubiqiutous.Default.Save();
             }
             else
             {
-                foreach (ChatConfig chatConfig in chatConfigs)
+                foreach (ChatConfig chatConfig in Registry.DefaultChatSettings)
                 {
                     var savedConfig = Ubiqiutous.Default.Config.ChatConfigs.Where(config => config.ChatName == chatConfig.ChatName).FirstOrDefault();
                     //Chat config is missing
@@ -67,7 +40,8 @@ namespace UB.Model
                     else
                     {
                         //Remove unused and add new settings
-                        //savedConfig.Parameters.RemoveAll(item => !chatConfig.Parameters.Any(s => s.Name == item.Name && s.DataType == item.DataType ));
+                        savedConfig.Parameters.RemoveAll(item => !chatConfig.Parameters.Any(s => s.Name == item.Name && s.DataType == item.DataType ));
+
                         chatConfig.Parameters.ForEach(item =>
                         {
                             if( !savedConfig.Parameters.Any( s => s.Name == item.Name ))

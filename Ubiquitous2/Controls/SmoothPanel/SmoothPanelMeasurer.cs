@@ -66,12 +66,13 @@ namespace Devart.Controls
             /// </summary>
             private double _lastItemClippedRatio;
 
+            private bool _trackTopMost = false;
             /// <summary>
             /// Initializes a new instance of the <see cref="SmoothPanelMeasurer"/> class.
             /// </summary>
             /// <param name="panel">The panel.</param>
             /// <param name="availableSize">The available size.</param>
-            public SmoothPanelMeasurer(SmoothPanel panel, Size availableSize)
+            public SmoothPanelMeasurer(SmoothPanel panel, Size availableSize, bool trackTopMost)
             {
                 _panel = panel;
                 _children = panel._children;
@@ -79,6 +80,7 @@ namespace Devart.Controls
                 _keepFirstItem = FirstItemIndex >= 0;
                 _lastItemIndex = -1;
                 _availableSize = availableSize;
+                _trackTopMost = trackTopMost;
             }
 
             /// <summary>
@@ -165,7 +167,7 @@ namespace Devart.Controls
 
                     
                     // It's faster to recreate elements than get and measure topmost items
-                    if( !IsInitialized )
+                    if( !IsInitialized || _trackTopMost)
                     {
                         _children.CreateTopmostElements(_availableSize);
                         IsInitialized = true;

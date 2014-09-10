@@ -41,18 +41,20 @@ namespace UB.ViewModel
                             // Report error here
                             return;
                         }
-                        item.Text += " http://asdf.com ";
+                        item.ChatIconURL = @"/Ubiquitous2;component/Resources/ubiquitous smile.ico";
+                        item.Text += " http://asdf.com";
                         item.Text = Html.ConvertUrlsToLinks(item.Text);
                         item.Text += @" " + Html.CreateImageTag(@"http://static-cdn.jtvnw.net/jtv_user_pictures/chansub-global-emoticon-ebf60cd72f7aa600-24x18.png",24,18);
                         Messages.Add(new ChatMessageViewModel(item));
 
                     });
             }
+            
 
-            //MessengerInstance.Register<ChatMessage>(this, msg =>
-            //{
-            //    AddMessages(new ChatMessage[] { msg });
-            //});
+            MessengerInstance.Register<bool>(this, "EnableAutoScroll", msg =>
+            {
+                EnableAutoScroll = msg;
+            });
 
             _dataService.ReadMessages((messages,error) => {
                 AddMessages(messages);
@@ -120,6 +122,38 @@ namespace UB.ViewModel
                 RaisePropertyChanging(MessagesPropertyName);
                 _myProperty = value;
                 RaisePropertyChanged(MessagesPropertyName);
+            }
+        }
+
+
+        /// <summary>
+        /// The <see cref="EnableAutoScroll" /> property's name.
+        /// </summary>
+        public const string EnableAutoScrollPropertyName = "EnableAutoScroll";
+
+        private bool _enableAutoScroll = true;
+
+        /// <summary>
+        /// Sets and gets the EnableAutoScroll property.
+        /// Changes to that property's value raise the PropertyChanged event. 
+        /// </summary>
+        public bool EnableAutoScroll
+        {
+            get
+            {
+                return _enableAutoScroll;
+            }
+
+            set
+            {
+                if (_enableAutoScroll == value)
+                {
+                    return;
+                }
+
+                RaisePropertyChanging(EnableAutoScrollPropertyName);
+                _enableAutoScroll = value;
+                RaisePropertyChanged(EnableAutoScrollPropertyName);
             }
         }
     }

@@ -22,24 +22,25 @@
 
         <BooleanToVisibilityConverter x:Key="boolToVisibilityConverter"></BooleanToVisibilityConverter>
     </UserControl.Resources>
+    <Grid>
+        <Border BorderThickness="0,1,0,0" Background="{DynamicResource {x:Static SystemColors.ControlBrushKey}}" HorizontalAlignment="Left">
+            <Border.BorderBrush>
+                <LinearGradientBrush EndPoint="1,1" StartPoint="0.5,0">
+                    <GradientStop Color="#FFC5C5C5" Offset="0"/>
+                    <GradientStop Color="White" Offset="1"/>
+                </LinearGradientBrush>
+            </Border.BorderBrush>
 
-    <Border BorderThickness="0,1,0,0" Background="{DynamicResource {x:Static SystemColors.ControlBrushKey}}" HorizontalAlignment="Left">
-        <Border.BorderBrush>
-            <LinearGradientBrush EndPoint="1,1" StartPoint="0.5,0">
-                <GradientStop Color="#FFC5C5C5" Offset="0"/>
-                <GradientStop Color="White" Offset="1"/>
-            </LinearGradientBrush>
-        </Border.BorderBrush>
-
-        <StackPanel Orientation="Vertical" HorizontalAlignment="Left">
-            <TextBlock Padding="5" Margin="1">
+            <StackPanel Orientation="Vertical" HorizontalAlignment="Left">
+                <TextBlock Padding="5" Margin="1">
 					<CheckBox Margin="0,-3" IsChecked="{Binding Enabled}"/>
-					<Image Margin="0,-5" Width="16" Source="/favicon.ico"/>
+					<Image Margin="0,-5" Width="16" Source="{Binding ChatIconURL}"/>
 					<TextBlock Text="{Binding ChatName}"></TextBlock>
 					<TextBlock><Hyperlink Command="{Binding ToggleEdit}"><TextBlock Text="{Binding EditLinkTitle}"/></Hyperlink></TextBlock>
                     <TextBlock><Hyperlink Command="{Binding RestartChat}"><TextBlock>restart</TextBlock></Hyperlink></TextBlock>
                     <Image Visibility="{Binding IsLoaderVisible, Converter={StaticResource boolToVisibilityConverter}}" Width="16" Height="16" gif:ImageBehavior.AnimatedSource="/Ubiquitous2;component/Resources/loader.gif" gif:ImageBehavior.RepeatBehavior="Forever" Margin="0,0,0,-4" />
             </TextBlock>
+                    
             <Expander HorizontalAlignment="Left" HorizontalContentAlignment="Left" Padding="10"  IsExpanded="{Binding Expanded}" Style="{DynamicResource ExpanderStyle}" VerticalAlignment="Top">
                 <ItemsControl ItemsSource="{Binding SettingsFields}"
                       Padding="0"
@@ -51,7 +52,7 @@
                       ScrollViewer.VerticalScrollBarVisibility="Auto" Background="#FF494949">
                     <ItemsControl.ItemsPanel>
                         <ItemsPanelTemplate>
-                            <Devart:SmoothPanel Width="300" HorizontalAlignment="Left" Height="{Binding CalculatedHeight}" Background="{DynamicResource {x:Static SystemColors.ControlBrushKey}}">
+                            <Devart:SmoothPanel TrackTopMost="False" Width="300" HorizontalAlignment="Left" Height="{Binding CalculatedHeight}" Background="{DynamicResource {x:Static SystemColors.ControlBrushKey}}">
                                 <Devart:SmoothPanel.Templates>
                                     <Devart:SmoothPanelTemplate ViewModel="{x:Type ViewModel:SettingsFieldViewModel}" View="{x:Type View:SettingsFieldView}" />
                                 </Devart:SmoothPanel.Templates>
@@ -60,7 +61,10 @@
                     </ItemsControl.ItemsPanel>
                 </ItemsControl>
             </Expander>
+
                 
         </StackPanel>
     </Border>
+
+    </Grid>
 </UserControl>

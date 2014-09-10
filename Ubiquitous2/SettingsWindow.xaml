@@ -8,45 +8,46 @@
         xmlns:ViewModel="clr-namespace:UB.ViewModel"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" mc:Ignorable="d" x:Class="UB.SettingsWindow"
         SnapsToDevicePixels="True"
+        UseLayoutRounding="True"
         Title="SettingsWindow" Icon="ubiquitous smile.ico" MinWidth="400" Width="500" Height="300" d:DesignHeight="297">
-
-    <Window.Resources>
-        <Style TargetType="{x:Type TextBlock}">
-            <Setter Property="Margin" Value="2,2,2,2"/>
-        </Style>
-    </Window.Resources>
 
     <Window.DataContext>
         <Binding Path="Settings" Source="{StaticResource Locator}"/>
     </Window.DataContext>
 
     <Grid>
-        <fluent:BackstageTabControl SelectedIndex="0" Style="{DynamicResource SettingsStyle}" Background="#FF323232">
+        <fluent:BackstageTabControl SelectedIndex="0" Background="#FF323232" Style="{DynamicResource SettingsStyle}">
             <fluent:BackstageTabItem Header="Chat">
-                <ItemsControl ItemsSource="{Binding Chats}"
+                <Grid>
+                    <ItemsControl ItemsSource="{Binding Chats}"
 					Padding="0"
 					HorizontalAlignment="Left"
 					HorizontalContentAlignment="Left"
 					VirtualizingPanel.IsVirtualizing="True"
 					VirtualizingPanel.VirtualizationMode="Recycling" 
+                    ScrollViewer.VerticalScrollBarVisibility="Auto"
+                    ScrollViewer.CanContentScroll="True"
                     Background="#FF494949">
-                    <ItemsControl.Template>
-                        <ControlTemplate>
-                            <ScrollViewer VerticalScrollBarVisibility="Auto" CanContentScroll="True">
-                                <ItemsPresenter />
-                            </ScrollViewer>
-                        </ControlTemplate>
-                    </ItemsControl.Template>
-                    <ItemsControl.ItemsPanel>
-                        <ItemsPanelTemplate>
-                            <Devart:SmoothPanel Margin="0" Background="{DynamicResource {x:Static SystemColors.ControlBrushKey}}">
-                                <Devart:SmoothPanel.Templates>
-                                    <Devart:SmoothPanelTemplate ViewModel="{x:Type ViewModel:SettingsChatItemViewModel}" View="{x:Type View:SettingsChatItemView}" />
-                                </Devart:SmoothPanel.Templates>
-                            </Devart:SmoothPanel>
-                        </ItemsPanelTemplate>
-                    </ItemsControl.ItemsPanel>
-                </ItemsControl>
+
+                        <ItemsControl.Template>
+                            <ControlTemplate>
+                                <ScrollViewer Template="{DynamicResource ScrollStyle}" CanContentScroll="True">
+                                    <ItemsPresenter/>
+                                </ScrollViewer>
+                            </ControlTemplate>
+                        </ItemsControl.Template>
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <Devart:SmoothPanel TrackTopMost="True" Margin="0" Background="{DynamicResource {x:Static SystemColors.ControlBrushKey}}">
+                                    <Devart:SmoothPanel.Templates>
+                                        <Devart:SmoothPanelTemplate ViewModel="{x:Type ViewModel:SettingsChatItemViewModel}" View="{x:Type View:SettingsChatItemView}" />
+                                    </Devart:SmoothPanel.Templates>
+                                </Devart:SmoothPanel>
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                    </ItemsControl>
+                </Grid>
+
             </fluent:BackstageTabItem>
             <fluent:BackstageTabItem Header="Music ticker">
                 <DockPanel>
