@@ -8,6 +8,7 @@ using dotIRC;
 using UB.Model.IRC;
 using UB.Model;
 using UB.Utils;
+using System.Text.RegularExpressions;
 
 
 namespace UB.Model
@@ -20,7 +21,7 @@ namespace UB.Model
         public event EventHandler<ChatUserEventArgs> ChatUserLeft;
 
         private IRCLoginInfo loginInfo;
-        private const String dummyPass = "!@$#@";
+        private const String dummyPass = "blah";
         private Timer pingTimer;
         private Timer noPongTimer;
         private const int pingInterval = 30000;
@@ -119,22 +120,36 @@ namespace UB.Model
 
         private void Connect()
         {
-            GetServerList((hostList) => {
-                    
-                if (hostList == null || hostList.AddressList.Count() <= 0)
+            if( Regex.IsMatch( LoginInfo.HostName, @"\d+\.\d+\.\d+\.\d+"))
+            {
+                Connect(LoginInfo.HostName, LoginInfo.Port, false, new IrcUserRegistrationInfo()
                 {
-                    Log.WriteError("All servers are down. Domain:" + LoginInfo.HostName);
-                    return;
-                }
-
-                Connect(hostList.AddressList[Random.Next(0, hostList.AddressList.Count())], LoginInfo.Port, false, new IrcUserRegistrationInfo()
-                { 
                     UserName = LoginInfo.UserName,
                     NickName = LoginInfo.UserName,
                     RealName = LoginInfo.RealName,
                     Password = String.IsNullOrEmpty(LoginInfo.Password) ? dummyPass : LoginInfo.Password
                 });
-            });
+            }
+            else
+            {
+                GetServerList((hostList) =>
+                {
+
+                    if (hostList == null || hostList.AddressList.Count() <= 0)
+                    {
+                        Log.WriteError("All servers are down. Domain:" + LoginInfo.HostName);
+                        return;
+                    }
+
+                    Connect(hostList.AddressList[Random.Next(0, hostList.AddressList.Count())], LoginInfo.Port, false, new IrcUserRegistrationInfo()
+                    {
+                        UserName = LoginInfo.UserName,
+                        NickName = LoginInfo.UserName,
+                        RealName = LoginInfo.RealName,
+                        Password = String.IsNullOrEmpty(LoginInfo.Password) ? dummyPass : LoginInfo.Password
+                    });
+                });
+            }
         }
         private void UserJoin(IrcRawMessageEventArgs e)
         {
@@ -286,7 +301,7 @@ namespace UB.Model
         }
 
 
-        public virtual String ChatName { get { return String.Empty; } }
+        public virtual String ChatName { get; set; }
         public virtual String IconURL { get { return String.Empty; } }
         public virtual List<Emoticon> Emoticons { get; set; }
         public virtual void DownloadEmoticons(string url) { }

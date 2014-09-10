@@ -34,7 +34,7 @@ namespace UB.Utils
             if (list.Length > 0)
                 return list.Select(str => str.Replace(" ", "")).ToArray();
             else
-                return list;
+                return new string[] {(string)text};
 
         }
 

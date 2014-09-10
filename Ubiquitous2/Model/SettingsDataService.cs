@@ -23,13 +23,26 @@ namespace UB.Model
             var twitchDefaultConfig = new ChatConfig() { ChatName = "Twitch.tv", IconURL = @"/favicon.ico", Enabled = false, 
                 Parameters = new List<ConfigField>() {
                 new ConfigField() {  Name = "Username", Label = "Username", DataType = "Text", IsVisible = true, Value = "justinfan" + random.Next(1,123456) },
-                new ConfigField() {  Name = "Password", Label = "Password", DataType = "Password", IsVisible = true, Value = "123" },
-                new ConfigField() {  Name = "Channels", Label = "Channels", DataType = "Text", IsVisible = true, Value = "goodguygarry,nightblue3,herdyn,#starladder1, mushisgosu" }
+                new ConfigField() {  Name = "Password", Label = "Password", DataType = "Password", IsVisible = true, Value = "blah" },
+                new ConfigField() {  Name = "Channels", Label = "Channels", DataType = "Text", IsVisible = true, Value = "goodguygarry,nightblue3,herdyn,#starladder1, mushisgosu" },
+                new ConfigField() {  Name = "OAuthToken", Label = "OAuth token", DataType = "Text", IsVisible = false, Value = String.Empty },
                 }
             };
-            
+            var twitchEventDefaultConfig = new ChatConfig()
+            {
+                ChatName = "Twitch.tv(event)",
+                IconURL = @"/favicon.ico",
+                Enabled = false,
+                Parameters = new List<ConfigField>() {
+                new ConfigField() {  Name = "Username", Label = "Username", DataType = "Text", IsVisible = true, Value = "justinfan" + random.Next(1,123456) },
+                new ConfigField() {  Name = "Password", Label = "Password", DataType = "Password", IsVisible = true, Value = "blah" },
+                new ConfigField() {  Name = "Channels", Label = "Channels", DataType = "Text", IsVisible = true, Value = "riotgames" },
+                new ConfigField() {  Name = "OAuthToken", Label = "OAuth token", DataType = "Text", IsVisible = false, Value = String.Empty },
+                }
+            };
 
-            List<ChatConfig> chatConfigs = new List<ChatConfig>() { twitchDefaultConfig };
+
+            List<ChatConfig> chatConfigs = new List<ChatConfig>() { twitchDefaultConfig, twitchEventDefaultConfig };
 
             //First launch ?
             if (Ubiqiutous.Default.Config == null)

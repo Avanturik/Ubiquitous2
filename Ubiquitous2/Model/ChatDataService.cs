@@ -30,7 +30,20 @@ namespace UB.Model
 
         private Dictionary<String, Func<ChatConfig, IChat>> chatFactory = new Dictionary<String, Func<ChatConfig, IChat>>()
         {
-            {"Twitch.tv", (config)=>{ return new TwitchChat(config); }}
+            {"Twitch.tv", (config)=>
+                                            { 
+                                                var twitchChatNormal =  new TwitchChat(config);
+                                                twitchChatNormal.ChatName = "Twitch.tv";
+                                                return twitchChatNormal;
+                                            }},
+            {"Twitch.tv(event)", (config)=>
+                                            {
+                                                var twitchChatEvent = new TwitchChat(config);
+                                                twitchChatEvent.ChatName = "Twitch.tv(event)";
+                                                twitchChatEvent.LoginInfo.HostName = "199.9.252.26";
+                                                twitchChatEvent.LoginInfo.Port = 80;
+                                                return twitchChatEvent;
+                                            } },
         };
 
         public List<IChat> Chats

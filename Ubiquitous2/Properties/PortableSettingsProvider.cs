@@ -108,8 +108,8 @@ namespace UB
 
             if (setting.PropertyType.FullName.Contains("UB.Model"))
             {                
-                var stringXml = propertyElement.Nodes().Aggregate("", (b, node) => b += node.ToString());
-                return propertyElement == null ? null : stringXml;
+
+                return propertyElement == null ? null : propertyElement.Nodes().Aggregate("", (b, node) => b += node.ToString());
             }
             else
             {

@@ -88,12 +88,10 @@ namespace UB.Model
                 return @"/favicon.ico";
             }
         }
-        public override string ChatName 
-        { 
-            get 
-            { 
-                return "Twitch.tv"; 
-            } 
+        public override string ChatName
+        {
+            get;
+            set;
         }
 
         public override bool Start()
@@ -127,10 +125,10 @@ namespace UB.Model
                 if (!LoginInfo.Channels.Any(ch => ch.Equals(LoginInfo.UserName, StringComparison.InvariantCultureIgnoreCase)))
                     LoginInfo.Channels = LoginInfo.Channels.Union(new String[] { LoginInfo.UserName.ToLower() }).ToArray();
 
-                for (int i = 0; i < LoginInfo.Channels.Length; i++)
-                {
-                    LoginInfo.Channels[i] = "#" + LoginInfo.Channels[i].Replace("#", "");
-                }
+            }
+            for (int i = 0; i < LoginInfo.Channels.Length; i++)
+            {
+                LoginInfo.Channels[i] = "#" + LoginInfo.Channels[i].Replace("#", "");
             }
 
             if( !isAnonymous && !(Status.IsLoginFailed && isOAuthTokenRenewed) )

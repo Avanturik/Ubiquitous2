@@ -43,7 +43,7 @@
             <Expander HorizontalAlignment="Left" HorizontalContentAlignment="Left" Padding="10"  IsExpanded="{Binding Expanded}" Style="{DynamicResource ExpanderStyle}" VerticalAlignment="Top">
                 <ItemsControl ItemsSource="{Binding SettingsFields}"
                       Padding="0"
-                      Margin="0,0,39,0"
+                      Margin="0,0,20,0"
                       HorizontalContentAlignment="Left"
                       VirtualizingStackPanel.IsVirtualizing="True"
                       VirtualizingStackPanel.VirtualizationMode="Recycling"

@@ -8,7 +8,7 @@
         xmlns:ViewModel="clr-namespace:UB.ViewModel"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" mc:Ignorable="d" x:Class="UB.SettingsWindow"
         SnapsToDevicePixels="True"
-        Title="SettingsWindow" Icon="ubiquitous smile.ico" MinWidth="400" MinHeight="300" Width="500" Height="300" d:DesignHeight="297">
+        Title="SettingsWindow" Icon="ubiquitous smile.ico" MinWidth="400" Width="500" Height="300" d:DesignHeight="297">
 
     <Window.Resources>
         <Style TargetType="{x:Type TextBlock}">
@@ -27,21 +27,19 @@
 					Padding="0"
 					HorizontalAlignment="Left"
 					HorizontalContentAlignment="Left"
-					Margin="0,0,-4,0"
 					VirtualizingPanel.IsVirtualizing="True"
-					VirtualizingPanel.VirtualizationMode="Recycling"
-					ScrollViewer.HorizontalScrollBarVisibility="Disabled"
-					ScrollViewer.VerticalScrollBarVisibility="Auto" Background="#FF494949">
+					VirtualizingPanel.VirtualizationMode="Recycling" 
+                    Background="#FF494949">
                     <ItemsControl.Template>
                         <ControlTemplate>
-                            <ScrollViewer Template="{DynamicResource ScrollStyle}" CanContentScroll="True">
+                            <ScrollViewer VerticalScrollBarVisibility="Auto" CanContentScroll="True">
                                 <ItemsPresenter />
                             </ScrollViewer>
                         </ControlTemplate>
                     </ItemsControl.Template>
                     <ItemsControl.ItemsPanel>
                         <ItemsPanelTemplate>
-                            <Devart:SmoothPanel Margin="0,0,-2,0" Background="{DynamicResource {x:Static SystemColors.ControlBrushKey}}">
+                            <Devart:SmoothPanel Margin="0" Background="{DynamicResource {x:Static SystemColors.ControlBrushKey}}">
                                 <Devart:SmoothPanel.Templates>
                                     <Devart:SmoothPanelTemplate ViewModel="{x:Type ViewModel:SettingsChatItemViewModel}" View="{x:Type View:SettingsChatItemView}" />
                                 </Devart:SmoothPanel.Templates>

@@ -9,7 +9,7 @@ namespace UB.Model
     public interface IChat
     {
         event EventHandler<ChatServiceEventArgs> MessageReceived;
-        String ChatName { get; }
+        String ChatName { get; set; }
         String IconURL { get;  }
         bool Enabled { get; set; }
         bool Start();
