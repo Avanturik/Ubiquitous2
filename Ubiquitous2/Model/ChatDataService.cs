@@ -109,23 +109,24 @@ namespace UB.Model
             }, null, 0, 1500);
             Chats.ForEach(chat => {
                 chat.MessageReceived += chat_MessageReceived;
+                chat.AddChannel = (channel, fromChat) =>
+                {
+                    DispatcherHelper.CheckBeginInvokeOnUI(() =>
+                    {
+                        ChatChannels.Add(new { ChatName = fromChat.ChatName, ChannelName = channel, ChatIconURL = fromChat.IconURL });
+                    });
+                };
+                chat.RemoveChannel = (channel, fromChat) =>
+                {
+                    DispatcherHelper.CheckBeginInvokeOnUI(() =>
+                    {
+                        var searchItem = ChatChannels.FirstOrDefault(item => item.ChatName == fromChat.ChatName && item.ChannelName == channel && item.ChatIconURL == fromChat.IconURL);
+                        if (searchItem != null)
+                            ChatChannels.Remove(searchItem);
+                    });
+                };
                 if (chat.Enabled)
                 {
-                    chat.AddChannel = (channel, fromChat) => {
-                        DispatcherHelper.CheckBeginInvokeOnUI(() =>
-                        {
-                            ChatChannels.Add(new { ChatName = fromChat.ChatName, ChannelName = channel, ChatIconURL = fromChat.IconURL });
-                        });
-                    };
-                    chat.RemoveChannel = (channel, fromChat) =>
-                    {
-                        DispatcherHelper.CheckBeginInvokeOnUI(() =>
-                        {
-                            var searchItem = ChatChannels.FirstOrDefault(item => item.ChatName == fromChat.ChatName && item.ChannelName == channel && item.ChatIconURL == fromChat.IconURL);
-                            if (searchItem != null)
-                                ChatChannels.Remove(searchItem);
-                        });
-                    };
                   Task.Factory.StartNew( ()=> chat.Start() );  
                 }
             });
@@ -176,8 +177,6 @@ namespace UB.Model
             var chat = Chats.FirstOrDefault(c => c.ChatName == message.ChatName);
             if( chat != null )
                 chat.SendMessage(message);
-
-            //TODO send message implementation
         }
     }
 }

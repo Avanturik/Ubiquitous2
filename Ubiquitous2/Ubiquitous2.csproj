@@ -132,7 +132,6 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="Adorner\WaterMarkAdorner.cs" />
     <Compile Include="Controls\SmoothPanel\DataBindHelper.cs" />
     <Compile Include="Controls\SmoothPanel\IHeightMeasurer.cs" />
     <Compile Include="Controls\SmoothPanel\SmoothPanel.cs" />
@@ -153,7 +152,6 @@
     <Compile Include="Interactivity\RichTextBoxAttached.cs" />
     <Compile Include="Interactivity\ScrollViewerAttached.cs" />
     <Compile Include="Interactivity\TextBlockAttached.cs" />
-    <Compile Include="Interactivity\WatermarkAttached.cs" />
     <Compile Include="Model\ChatConfig.cs" />
     <Compile Include="Model\ChatMessage.cs" />
     <Compile Include="Model\ChatRegistry.cs" />

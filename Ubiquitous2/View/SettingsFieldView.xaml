@@ -41,7 +41,7 @@
                                 <Border>
                                     <DockPanel>
                                         <Label Content="{Binding LabelText, Mode=OneWay}" />
-                                        <PasswordBox Interactivity:PasswordBoxAssistant.BoundPassword="{Binding Path=Text, Mode=TwoWay}"/>
+                                        <PasswordBox Interactivity:PasswordBoxAssistant.BoundPassword="{Binding Path=Text, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                                     </DockPanel>
                                 </Border>
                             </ControlTemplate>
@@ -55,7 +55,7 @@
                                 <Border>
                                     <DockPanel>
                                         <Label Content="{Binding LabelText, Mode=OneWay}"/>
-                                        <TextBox Text="{Binding Text}"/>
+                                        <TextBox Text="{Binding Text,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"/>
                                     </DockPanel>
                                 </Border>
                             </ControlTemplate>

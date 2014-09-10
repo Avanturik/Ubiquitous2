@@ -107,9 +107,8 @@ namespace UB.Model
             if( noPongTimer != null ) noPongTimer.Change(Timeout.Infinite, Timeout.Infinite);
             if( pingTimer != null ) pingTimer.Change(Timeout.Infinite, Timeout.Infinite);
 
-            Quit(500,"bye!");
-            
-            Disconnect();
+            Quit("bye!");
+            Thread.Sleep(1000);
             return true;
         }
 

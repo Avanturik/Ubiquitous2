@@ -31,11 +31,15 @@ namespace UB.ViewModel
         {
             _dataService = dataService;
             dataService.ChatChannels.CollectionChanged += ChatChannels_CollectionChanged;
-            ChannelList = dataService.ChatChannels;
+            ChannelList = new ObservableCollection<dynamic>() { };
+            
         }
 
         void ChatChannels_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
         {
+            if (ChannelList.Count == 0 && _dataService.ChatChannels.Count != 0)
+                ChannelList = _dataService.ChatChannels;
+
             if (e.OldItems == null)
                 SelectedChatChannel = ChannelList[0];
         }
@@ -313,7 +317,7 @@ namespace UB.ViewModel
         /// </summary>
         public const string SelectedChatChannelPropertyName = "SelectedChatChannel";
 
-        private dynamic _selectedChat = new { ChatName = "Twitch.tv", ChannelName = "#xedoc", ChatIconURL = String.Empty };
+        private dynamic _selectedChat;// = new { ChatName = "Ubiquitous 2.0", ChannelName = "#ubiquitous", ChatIconURL = @"/Ubiquitous2;component/Resources/ubiquitous smile.ico" };
 
         /// <summary>
         /// Sets and gets the SelectedChatChannel property.
@@ -400,6 +404,9 @@ namespace UB.ViewModel
                     ?? (_enterCommand = new RelayCommand(
                                           () =>
                                           {
+                                              if (SelectedChatChannel == null)
+                                                  return;
+
                                               _dataService.SendMessage(new ChatMessage() { 
                                                 Channel = SelectedChatChannel.ChannelName,
                                                 ChatName = SelectedChatChannel.ChatName,
