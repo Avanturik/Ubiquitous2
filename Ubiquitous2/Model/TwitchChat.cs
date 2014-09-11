@@ -28,7 +28,6 @@ namespace UB.Model
             Port = ircPort,
         })
         {
-            Emoticons = new List<Emoticon>();
 
             Config = config;
             Enabled = config.Enabled;
@@ -36,7 +35,7 @@ namespace UB.Model
             ContentParsers.Add(MessageParser.ParseEmoticons);
 
             Users = new Dictionary<string, ChatUser>();
-
+            ChatChannels = new List<string>();
 
             this.NoticeReceived += TwitchChat_NoticeReceived;
             this.ChatUserJoined += TwitchChat_ChatUserJoined;
@@ -128,6 +127,9 @@ namespace UB.Model
                 LoginInfo.Channels[i] = "#" + LoginInfo.Channels[i].Replace("#", "");
             }
 
+            ChatChannels = LoginInfo.Channels.ToList();
+            NickName = LoginInfo.UserName;
+
             if( !isAnonymous && !(Status.IsLoginFailed && isOAuthTokenRenewed) )
             {
                 // Login anonymously if password is empty
@@ -207,11 +209,14 @@ namespace UB.Model
 
         public override void DownloadEmoticons(string url)
         {
+            if( Emoticons == null )
+                Emoticons = new List<Emoticon>();
+
             var list = new List<Emoticon>();
 
             using (var wc = new WebClientBase())
             {
-                var jsonEmoticons = this.With(x => wc.Download(url))
+                var jsonEmoticons = list.With(x => wc.Download(url))
                     .With(x => JToken.Parse(x))
                     .With(x => x.SelectToken("emoticons"))
                     .With(x => x.ToObject<JArray>());
@@ -229,7 +234,7 @@ namespace UB.Model
                         {
                             string regex = (string)icon.regex;
                             JArray images = icon.images as JArray;
-                            dynamic image = this.With(x => (JArray)icon.images).With(x => (dynamic)x.First);
+                            dynamic image = images.With(x => (JArray)icon.images).With(x => (dynamic)x.First);
 
                             if (image != null && image.width != null && image.height != null && image.url != null)
                             {
@@ -243,7 +248,10 @@ namespace UB.Model
                 }
             }
             if( list != null && list.Count > 0 )
-                Emoticons = list;
+                Emoticons = list.ToList();
+
+            list.Clear();
+
         }
         private string ReadOAuthToken()
         {
@@ -271,9 +279,10 @@ namespace UB.Model
             }
             return oauthToken;
         }
+
         public override bool SendMessage(ChatMessage message)
         {
-            RaiseMessageReceive( message.Text, message.Channel, LoginInfo.UserName, true );
+            RaiseMessageReceive( message.Text, message.Channel, LoginInfo.UserName, important:true, isSentByMe:true );
             return base.SendMessage(message);
         }
         public void Authenticate( Action afterAction)

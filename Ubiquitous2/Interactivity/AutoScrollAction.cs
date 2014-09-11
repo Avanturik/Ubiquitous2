@@ -15,7 +15,9 @@ namespace UB.Interactivity
         private ScrollViewer scrollViewer;
         protected override void Invoke(object parameter)
         {
-            if( EnableAutoScroll )
+            if (EnableAutoScroll && Duration == 0)
+                InstantScrollToBottom();
+            else if (EnableAutoScroll)
                 ScrollDown();
         }
 

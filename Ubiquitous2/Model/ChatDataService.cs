@@ -28,6 +28,7 @@ namespace UB.Model
             settingsDataService = ServiceLocator.Current.GetInstance<SettingsDataService>();
             random = new Random();
             ChatChannels = new ObservableCollection<dynamic>();
+            ChatChannels.Add(new { ChatName = "AllChats", ChannelName = "#allchats", ChatIconURL = Icons.MainIcon });
 
             Task.Factory.StartNew(() => StartAllChats());
         }
@@ -58,7 +59,7 @@ namespace UB.Model
 
             var message = new ChatMessage(text) {
                 FromUserName = "xedoc",
-                ChatIconURL = @"/Ubiquitous2;component/Resources/ubiquitous smile.ico",
+                ChatIconURL =  Icons.MainIcon,
                 Channel = "#loremipsum"
             };
             callback(message, null);
@@ -72,20 +73,23 @@ namespace UB.Model
 
         public void SwitchChat( String chatName, bool enabled)
         {
-            var chatConfig = chatConfigs.FirstOrDefault(c => c.ChatName.Equals(chatName, StringComparison.InvariantCultureIgnoreCase));
-
-            if( chatConfig == null )
-                return;
-
             var chat = GetChat(chatName);
 
             if (chat == null)
-                return; 
+                return;
 
             if (enabled)
+            {
+                chat.Enabled = true;
                 chat.Start();
+            }
             else
+            {
+                chat.Enabled = false;
                 chat.Stop();
+            }
+
+            Log.WriteInfo("switching {0} to {1}", chatName, enabled);
         }
 
         public IChat GetChat( String chatName )
@@ -173,10 +177,44 @@ namespace UB.Model
 
 
         public void SendMessage(ChatMessage message)
-        {
-            var chat = Chats.FirstOrDefault(c => c.ChatName == message.ChatName);
-            if( chat != null )
-                chat.SendMessage(message);
+        {            
+            if( message.ChatName == "AllChats")
+            {
+                foreach( var chat in Chats)
+                {
+                    foreach( var channel in chat.ChatChannels )
+                    {
+                        DispatchMessage(new ChatMessage() { 
+                            Channel = channel,
+                            ChatIconURL = chat.IconURL,
+                            ChatName = chat.ChatName,
+                            FromUserName = chat.NickName,
+                            HighlyImportant = message.HighlyImportant,
+                            IsSentByMe = message.IsSentByMe,
+                            Text = message.Text,
+                            TimeStamp = DateTime.Now.ToShortTimeString(),                            
+                        });
+                    }
+                }
+            }
+            else
+            {
+                DispatchMessage(message);
+            }
         }
+
+        private void DispatchMessage( ChatMessage message )
+        {
+            var chat = GetChat(message.ChatName);
+            if (chat != null)
+            {
+                DispatcherHelper.CheckBeginInvokeOnUI(() =>
+                {
+                    if( chat.Enabled && chat.Status.IsLoggedIn )
+                        chat.SendMessage(message);
+                });
+            }
+        }
+
     }
 }

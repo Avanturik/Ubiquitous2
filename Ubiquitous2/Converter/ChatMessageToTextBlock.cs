@@ -55,8 +55,10 @@ namespace UB.Converter
                                         int.TryParse(node.Attributes["height"].Value, out height);
                                         width = width <= 0 ? 16 : width;
                                         height = height <= 0 ? 16 : height;
+                                        
                                         dataService.GetImage(new Uri(url), width, height, (image) =>
                                         {
+                                            image.Focusable = false;
                                             textBlock.Inlines.Add(image);
                                         });
                                         break;
@@ -65,6 +67,7 @@ namespace UB.Converter
                                         url = node.Attributes["href"].Value;
                                         link.IsEnabled = true;
                                         link.NavigateUri = new Uri(url);
+                                        link.Focusable = false;
                                         link.RequestNavigate += (sender, e) =>
                                         {
                                             Process.Start(e.Uri.ToString());

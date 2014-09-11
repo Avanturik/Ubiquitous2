@@ -15,7 +15,7 @@ namespace UB.Model
             if (string.IsNullOrWhiteSpace(url) || width <= 0 || height <= 0)
                 return;
 
-            if (!Regex.IsMatch(pattern, @"\W"))
+            if (!Re.IsMatch(pattern, @"\W"))
                 ExactWord = pattern;
             else
                 Pattern = pattern;

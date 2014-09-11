@@ -3,6 +3,7 @@ using GalaSoft.MvvmLight;
 using UB.Utils;
 using UB.Model;
 using GalaSoft.MvvmLight.Ioc;
+using GalaSoft.MvvmLight.Command;
 
 
 namespace UB.ViewModel
@@ -51,6 +52,24 @@ namespace UB.ViewModel
                 estimatedHeight = TextMeasurer.GetEstimatedHeight(Message.Text, width) + 38; // Add margin
             }
             return estimatedHeight;
+        }
+
+        private RelayCommand _setActiveChannel;
+
+        /// <summary>
+        /// Gets the SetActiveChannel.
+        /// </summary>
+        public RelayCommand SetActiveChannel
+        {
+            get
+            {
+                return _setActiveChannel
+                    ?? (_setActiveChannel = new RelayCommand(
+                                          () =>
+                                          {
+                                              MessengerInstance.Send<ChatMessage>(Message, "SetChannel");
+                                          }));
+            }
         }
     }
 

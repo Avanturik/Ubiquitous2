@@ -42,7 +42,7 @@ namespace UB.ViewModel
                             // Report error here
                             return;
                         }
-                        item.ChatIconURL = @"/Ubiquitous2;component/Resources/ubiquitous smile.ico";
+                        item.ChatIconURL = Icons.MainIcon;
                         item.Text += " http://asdf.com";
                         item.Text = Html.ConvertUrlsToLinks(item.Text);
                         item.Text += @" " + Html.CreateImageTag(@"http://static-cdn.jtvnw.net/jtv_user_pictures/chansub-global-emoticon-ebf60cd72f7aa600-24x18.png",24,18);

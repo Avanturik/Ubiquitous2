@@ -63,7 +63,7 @@
     <SignManifests>true</SignManifests>
   </PropertyGroup>
   <PropertyGroup>
-    <SignAssembly>true</SignAssembly>
+    <SignAssembly>false</SignAssembly>
   </PropertyGroup>
   <PropertyGroup>
     <AssemblyOriginatorKeyFile>ubiquitous2.snk</AssemblyOriginatorKeyFile>
@@ -93,9 +93,7 @@
     <Reference Include="HtmlAgilityPack">
       <HintPath>..\packages\HtmlAgilityPack.1.4.6\lib\Net45\HtmlAgilityPack.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.Expression.Interactions, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Windows.Interactivity.WPF.2.0.20525\lib\net40\Microsoft.Expression.Interactions.dll</HintPath>
-    </Reference>
+    <Reference Include="Microsoft.Expression.Interactions, Version=4.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
     <Reference Include="Microsoft.Practices.ServiceLocation, Version=1.3.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\CommonServiceLocator.1.3\lib\portable-net4+sl5+netcore45+wpa81+wp8\Microsoft.Practices.ServiceLocation.dll</HintPath>
@@ -148,6 +146,7 @@
     <Compile Include="Interactivity\AutoScrollAction.cs" />
     <Compile Include="Interactivity\BindingListener.cs" />
     <Compile Include="Interactivity\DataEventTrigger.cs" />
+    <Compile Include="Interactivity\DragBehavior.cs" />
     <Compile Include="Interactivity\PasswordBoxAssistant.cs" />
     <Compile Include="Interactivity\RichTextBoxAttached.cs" />
     <Compile Include="Interactivity\ScrollViewerAttached.cs" />
@@ -161,6 +160,7 @@
     <Compile Include="Model\ConfigSections.cs" />
     <Compile Include="Model\Emoticon.cs" />
     <Compile Include="Model\IChatStatus.cs" />
+    <Compile Include="Model\Icons.cs" />
     <Compile Include="Model\IImageDataSource.cs" />
     <Compile Include="Model\ImageCacheDataService.cs" />
     <Compile Include="Model\Log.cs" />
@@ -188,7 +188,7 @@
     <Compile Include="Utils\Config.cs" />
     <Compile Include="Utils\Html.cs" />
     <Compile Include="Utils\Net.cs" />
-    <Compile Include="SettingsWindow.xaml.cs">
+    <Compile Include="View\SettingsWindow.xaml.cs">
       <DependentUpon>SettingsWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="Utils\Re.cs" />
@@ -213,7 +213,10 @@
     <Compile Include="View\SettingsChatItemView.xaml.cs">
       <DependentUpon>SettingsChatItemView.xaml</DependentUpon>
     </Compile>
-    <Page Include="MainWindow.xaml">
+    <Compile Include="View\StatusWindow.xaml.cs">
+      <DependentUpon>StatusWindow.xaml</DependentUpon>
+    </Compile>
+    <Page Include="View\MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -221,11 +224,11 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="MainWindow.xaml.cs">
+    <Compile Include="View\MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Page Include="SettingsWindow.xaml">
+    <Page Include="View\SettingsWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -277,6 +280,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="View\StatusWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs">
@@ -304,6 +311,7 @@
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <None Include="app.config" />
     <None Include="packages.config" />
@@ -360,7 +368,7 @@
   <PropertyGroup>
     <PostBuildEvent>cmd /c cd "$(TargetDir)"&gt;nul &amp; for /d %25%25d in (??,??-????) do if exist %25%25d rmdir /s /q %25%25d&gt;nul &amp; echo 0
 
-</PostBuildEvent>
+	</PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
@@ -368,5 +376,17 @@
   </Target>
   <Target Name="AfterBuild">
   </Target>
-  -->
+
+  <Target Name="AfterBuild" Condition=" '$(Configuration)' == 'Release' ">
+    <CreateItem Include="@(ReferenceCopyLocalPaths)" Condition="'%(Extension)'=='.dll'">
+      <Output ItemName="AssembliesToMerge" TaskParameter="Include" />
+    </CreateItem>
+    <PropertyGroup>
+      <ReferenceAssemblies>C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5</ReferenceAssemblies>
+    </PropertyGroup>
+    <Message Importance="high" Text="Executing ILMerge...with target platform from $(ReferenceAssemblies)" />
+    <Exec Command="&quot;$(SolutionDir)tools\ILMerge.exe&quot; /allowDup /out:@(MainAssembly) /internalize /targetplatform:v4,&quot;$(ReferenceAssemblies)&quot; &quot;@(IntermediateAssembly)&quot; @(AssembliesToMerge->'&quot;%(FullPath)&quot;', ' ')" />
+    <Delete Files="@(ReferenceCopyLocalPaths->'$(OutDir)%(DestinationSubDirectory)%(Filename)%(Extension)')" />
+  </Target>
+     -->
 </Project>

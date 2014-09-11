@@ -13,16 +13,18 @@ namespace UB.Utils
     {
         public static String CreateImageTag(String src, int width, int height)
         {
-            StringWriter stringWriter = new StringWriter();
-            using (HtmlTextWriter htmlWriter = new HtmlTextWriter(stringWriter,String.Empty))
+            using( StringWriter stringWriter = new StringWriter() )
             {
+                using (HtmlTextWriter htmlWriter = new HtmlTextWriter(stringWriter, String.Empty))
+                {
                     htmlWriter.AddAttribute(HtmlTextWriterAttribute.Src, src);
                     htmlWriter.AddAttribute(HtmlTextWriterAttribute.Width, width.ToString());
                     htmlWriter.AddAttribute(HtmlTextWriterAttribute.Height, height.ToString());
                     htmlWriter.RenderBeginTag(HtmlTextWriterTag.Img);
                     htmlWriter.RenderEndTag();
+                }
+                return stringWriter.ToString();
             }
-            return stringWriter.ToString();
 
         }
         public static string ConvertUrlsToLinks(string msg)

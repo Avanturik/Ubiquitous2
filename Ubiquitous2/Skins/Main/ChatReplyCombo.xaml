@@ -2,12 +2,12 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 
     <ControlTemplate x:Key="ImageOnlyTemplate">
-        <Image Width="16" Height="16" Source="{Binding ChatIconURL}" />
+        <Image Focusable="False" Width="16" Height="16" Source="{Binding ChatIconURL}" />
     </ControlTemplate>
     <ControlTemplate x:Key="ImageTitleTemplate">
-        <StackPanel Orientation="Horizontal" >
-            <Image Margin="5" Width="16" Height="16" Source="{Binding ChatIconURL}" />
-            <TextBlock Margin="5" Text="{Binding ChannelName}" Foreground="#FFE8B041" />
+        <StackPanel Focusable="False" Orientation="Horizontal" >
+            <Image Focusable="False" Margin="5" Width="16" Height="16" Source="{Binding ChatIconURL}" />
+            <TextBlock Focusable="False" Margin="5" Text="{Binding ChannelName}" Foreground="#FFE8B041" />
         </StackPanel>
     </ControlTemplate>
     <DataTemplate x:Key="ReplyComboTemplate">
@@ -52,7 +52,7 @@
 
 
     <ControlTemplate x:Key="ComboBoxToggleButton" TargetType="ToggleButton">
-        <Grid>
+        <Grid Focusable="False">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="24" />
                 <ColumnDefinition Width="15" />
@@ -78,7 +78,7 @@
     </ControlTemplate>
 
     <ControlTemplate x:Key="ComboBoxTextBox" TargetType="TextBox">
-        <Border x:Name="PART_ContentHost" Background="{TemplateBinding Background}" Focusable="False" />
+        <Border Focusable="False" x:Name="PART_ContentHost" Background="{TemplateBinding Background}" />
     </ControlTemplate>
 
     <Style TargetType="{x:Type ComboBox}" x:Key="ReplyComboStyle">
@@ -91,11 +91,18 @@
         <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Auto" />
         <Setter Property="ScrollViewer.CanContentScroll" Value="true" />
         <Setter Property="Margin" Value="2" />
+        <Setter Property="Focusable" Value="False"/>
         <Setter Property="MinHeight" Value="20" />
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="ComboBox">
-                    <Grid>
+                    <ControlTemplate.Resources>
+                        <Style TargetType="{x:Type ComboBoxItem}">
+                            <Setter Property="Focusable" Value="False"/>
+                        </Style>
+
+                    </ControlTemplate.Resources>
+                    <Grid Focusable="False">
                         <VisualStateManager.VisualStateGroups>
                             <VisualStateGroup x:Name="CommonStates">
                                 <VisualState x:Name="Normal"/>
@@ -113,15 +120,15 @@
                         HorizontalAlignment="Left" IsHitTestVisible="False" x:Name="ContentSite"
                         VerticalAlignment="Center" />
                         
-                        <TextBox Style="{x:Null}" x:Name="PART_EditableTextBox" Margin="3,3,23,3" Background="Transparent"
-                        Focusable="True" HorizontalAlignment="Left" IsReadOnly="{TemplateBinding IsReadOnly}"
+                        <TextBox  Style="{x:Null}" x:Name="PART_EditableTextBox" Margin="3,3,23,3" Background="Transparent"
+                        Focusable="False" HorizontalAlignment="Left" IsReadOnly="{TemplateBinding IsReadOnly}"
                         Template="{StaticResource ComboBoxTextBox}" VerticalAlignment="Center" Visibility="Hidden" />
 
                         <Popup AllowsTransparency="True" Focusable="False" IsOpen="{TemplateBinding IsDropDownOpen}" x:Name="Popup" Placement="Top" PopupAnimation="Fade">
                             <Grid MaxHeight="{TemplateBinding MaxDropDownHeight}" MinWidth="{TemplateBinding ActualWidth}" x:Name="DropDown" SnapsToDevicePixels="True">
                                 <Border x:Name="DropDownBorder" BorderBrush="#FF5D5D5D" BorderThickness="1" CornerRadius="0" Background="#FF303030" />
-                                <ScrollViewer Margin="2" SnapsToDevicePixels="True" Foreground="#FFFFC042">
-                                    <StackPanel KeyboardNavigation.DirectionalNavigation="Contained" IsItemsHost="True" TextBlock.Foreground="Black" />
+                                <ScrollViewer Focusable="False" Margin="2" SnapsToDevicePixels="True" Foreground="#FFFFC042">
+                                    <StackPanel Focusable="False" KeyboardNavigation.DirectionalNavigation="Contained" IsItemsHost="True" TextBlock.Foreground="Black" />
                                 </ScrollViewer>
                             </Grid>
                         </Popup>

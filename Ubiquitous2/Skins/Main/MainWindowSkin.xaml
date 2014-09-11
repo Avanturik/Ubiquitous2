@@ -6,7 +6,7 @@
                     xmlns:View="clr-namespace:UB.View" 
                     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
                     xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-                    mc:Ignorable="d" 
+                    mc:Ignorable="d"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 
     <Style x:Key="OverlayHyperlink"  TargetType="{x:Type Hyperlink}">
@@ -26,14 +26,14 @@
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type Window}">
-                    <DockPanel d:DesignHeight="300" d:DesignWidth="500">
-                        <Grid Background="#FF09210A">
+                    <DockPanel Focusable="False" d:DesignHeight="300" d:DesignWidth="500">
+                        <Grid Focusable="False" Background="#FF09210A">
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="Auto"/>
                                 <RowDefinition/>
                                 <RowDefinition Height="Auto"/>
                             </Grid.RowDefinitions>
-                            <Border Grid.Row="0" Padding="5" VerticalAlignment="Top" HorizontalAlignment="Stretch" Panel.ZIndex="1" Visibility="{Binding IsOverlayVisible, Converter={StaticResource boolToVisibilityConverter}}">
+                            <Border Focusable="False" Grid.Row="0" Padding="5" VerticalAlignment="Top" HorizontalAlignment="Stretch" Panel.ZIndex="1" Visibility="{Binding IsOverlayVisible, Converter={StaticResource boolToVisibilityConverter}}">
                                 <Border.Background>
                                     <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
                                         <GradientStop Color="#FF252525" Offset="0.465"/>
@@ -41,25 +41,26 @@
                                         <GradientStop Color="#FF175B14"/>
                                     </LinearGradientBrush>
                                 </Border.Background>
-                                <TextBlock Background="Transparent" Foreground="White">
-                                    <Hyperlink Style="{StaticResource ResourceKey=OverlayHyperlink}" Command="{Binding ShowSettings}">
-                                        <Image Source="/Ubiquitous2;component/Resources/gear.png" Width="16" Height="16" Margin="0,0,0,-3"/> Settings
+                                <TextBlock Focusable="False" Background="Transparent" Foreground="White">
+                                    <Hyperlink Focusable="False" Style="{StaticResource ResourceKey=OverlayHyperlink}" Command="{Binding ShowSettings}">
+                                        <Image Focusable="False" Source="/Ubiquitous2;component/Resources/gear.png" Width="16" Height="16" Margin="0,0,0,-3"/> Settings
                                     </Hyperlink>
                                 </TextBlock>
                             </Border>
-                            <View:ChatBoxView Grid.Row="1" Margin="3,0" RenderTransformOrigin="1,0" OverridesDefaultStyle="True" Padding="0"/>
-                            <Border Grid.Row="2" Padding="23,4,5,0" VerticalAlignment="Bottom" HorizontalAlignment="Stretch" Panel.ZIndex="1" Visibility="{Binding IsOverlayVisible, Converter={StaticResource boolToVisibilityConverter}}" BorderBrush="#FF165B1D" BorderThickness="1" CornerRadius="5" Margin="9,9,13,6" Height="36">
-                                <DockPanel VerticalAlignment="Bottom" Background="Transparent" Margin="0">
-                                    <ComboBox Style="{DynamicResource ReplyComboStyle}" Name="replyCombo" ItemsSource="{Binding ChannelList}" SelectedItem="{Binding SelectedChatChannel}" ItemTemplate="{DynamicResource ReplyComboTemplate}" IsReadOnly="True" IsEditable="False" Margin="-18,0,61,6"/>
-                                    <Border CornerRadius="7" Background="#FF303030" Padding="6,0" Margin="-55,-29,1,-25" Height="27">
-                                        <Grid>
-                                            <TextBox Name="ReplyTextBox" Panel.ZIndex="1" TextWrapping="Wrap" Margin="0" Background="#7F303030" Foreground="#FFBDBDBD" BorderThickness="0" Text="{Binding SendText,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" Padding="5" MaxHeight="54" ScrollViewer.CanContentScroll="True" VerticalScrollBarVisibility="Auto">
-                                                <TextBox.InputBindings>
+                            <View:ChatBoxView Focusable="False" Grid.Row="1" Margin="3,0" RenderTransformOrigin="1,0" OverridesDefaultStyle="True" Padding="0">
+                                <MouseBinding Gesture="LeftClick" Command="{Binding ShowOverlay}"/>
+                            </View:ChatBoxView>
+                            <Border Focusable="False" Grid.Row="2" Padding="23,4,5,0" VerticalAlignment="Bottom" HorizontalAlignment="Stretch" Panel.ZIndex="1" Visibility="{Binding IsOverlayVisible, Converter={StaticResource boolToVisibilityConverter}}" BorderBrush="#FF165B1D" BorderThickness="1" CornerRadius="5" Margin="9,9,13,6" Height="36">
+                                <DockPanel Focusable="False" VerticalAlignment="Bottom" Background="Transparent" Margin="0">
+                                    <ComboBox Focusable="False" Style="{DynamicResource ReplyComboStyle}" Name="replyCombo" ItemsSource="{Binding ChannelList}" SelectedItem="{Binding SelectedChatChannel}" ItemTemplate="{DynamicResource ReplyComboTemplate}" IsReadOnly="True" IsEditable="False" Margin="-18,1,61,6" VerticalAlignment="Stretch"/>
+                                    <Border Focusable="False" CornerRadius="7" Background="#FF303030" Padding="6,0" Margin="-55,-24,1,-19" Height="22">
+                                        <Grid Focusable="False" Margin="0">
+                                            <TextBox FocusManager.IsFocusScope="True" x:Name="ReplyTextBox" Panel.ZIndex="1" TextWrapping="Wrap" Margin="0" Background="#7F303030" Foreground="#FFBDBDBD" BorderThickness="0" Text="{Binding SendText,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" Padding="5,2,5,0" MaxHeight="54" ScrollViewer.CanContentScroll="True" VerticalScrollBarVisibility="Auto" MinHeight="20">
+                                                    <TextBox.InputBindings>
                                                     <KeyBinding Key="Enter" Command="{Binding EnterCommand}"/>
                                                 </TextBox.InputBindings>
                                             </TextBox>
-
-                                            <TextBlock Panel.ZIndex="0" MaxHeight="54" Margin="0" Padding="5" Foreground="#66CFCFCF" Text="{Binding SelectedChatChannel.ChannelName}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Visibility="{Binding ElementName=ReplyTextBox, Path=Text.IsEmpty, Converter={StaticResource boolToVisibilityConverter}}" FontStyle="Italic"></TextBlock>
+                                            <TextBlock Focusable="False" Panel.ZIndex="0" MaxHeight="54" Margin="0,-3,0,0" Padding="5" Foreground="#66CFCFCF" Text="{Binding SelectedChatChannel.ChannelName}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Visibility="{Binding ElementName=ReplyTextBox, Path=Text.IsEmpty, Converter={StaticResource boolToVisibilityConverter}}" FontStyle="Italic"></TextBlock>
                                         </Grid>
                                     </Border>
                                 </DockPanel>
@@ -67,9 +68,17 @@
                         </Grid>
 
                     </DockPanel>
+                    <ControlTemplate.Triggers>
+                        <DataTrigger Binding="{Binding SendTextEditMode}" Value="True">
+                            <Setter TargetName="ReplyTextBox" Property="FocusManager.FocusedElement" Value="{Binding ElementName=ReplyTextBox}"/>
+                            <Setter TargetName="ReplyTextBox" Property="FocusManager.FocusedElement" Value="{Binding ElementName=ReplyTextBox}"/>
+                        </DataTrigger>
+                    </ControlTemplate.Triggers>
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
+
+
     </Style>
 
 </ResourceDictionary>

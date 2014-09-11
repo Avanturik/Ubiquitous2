@@ -10,6 +10,8 @@ using UB.Model;
 using System.Windows.Threading;
 using System.Threading;
 using GalaSoft.MvvmLight.Threading;
+using UB.Utils;
+using UB.View;
 
 namespace UB.ViewModel
 {
@@ -30,18 +32,19 @@ namespace UB.ViewModel
         public MainViewModel(IChatDataService dataService)
         {
             _dataService = dataService;
-            dataService.ChatChannels.CollectionChanged += ChatChannels_CollectionChanged;
-            ChannelList = new ObservableCollection<dynamic>() { };
+            ChannelList = _dataService.ChatChannels;
+            SelectedChatChannel = ChannelList[0];
+
+            //var testStatusWindow = new StatusWindow();
+            //testStatusWindow.Show();
             
-        }
 
-        void ChatChannels_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
-        {
-            if (ChannelList.Count == 0 && _dataService.ChatChannels.Count != 0)
-                ChannelList = _dataService.ChatChannels;
+            MessengerInstance.Register<ChatMessage>(this, "SetChannel", (message) => {
+                SelectedChatChannel = ChannelList.FirstOrDefault(channel =>
+                    channel.ChatName == message.ChatName &&
+                    channel.ChannelName == message.Channel) ?? ChannelList[0];
 
-            if (e.OldItems == null)
-                SelectedChatChannel = ChannelList[0];
+            });
         }
 
         private RelayCommand _showSettings;
@@ -77,6 +80,7 @@ namespace UB.ViewModel
                                           () =>
                                           {
                                               Properties.Ubiqiutous.Default.Save();
+
                                           }));
             }
         }
@@ -382,13 +386,17 @@ namespace UB.ViewModel
             {
                 IsOverlayVisible = true;
                 ScrollToLastMessage();
+                SendTextEditMode = true;
+
             }
             else
             {
                 IsOverlayVisible = false;
+                SendTextEditMode = false;
             }
 
             MessengerInstance.Send<bool>(!IsOverlayVisible, "EnableAutoScroll");
+
         }
 
         private RelayCommand _enterCommand;
@@ -410,6 +418,8 @@ namespace UB.ViewModel
                                               _dataService.SendMessage(new ChatMessage() { 
                                                 Channel = SelectedChatChannel.ChannelName,
                                                 ChatName = SelectedChatChannel.ChatName,
+                                                IsSentByMe = true,
+                                                HighlyImportant = true,
                                                 Text = SendText
                                               });
                                               SendText = String.Empty;
@@ -427,6 +437,37 @@ namespace UB.ViewModel
                 });
             }, this, 100, Timeout.Infinite);
 
+        }
+
+        /// <summary>
+        /// The <see cref="SendTextEditMode" /> property's name.
+        /// </summary>
+        public const string SendTextEditModePropertyName = "SendTextEditMode";
+
+        private bool _sendTextEditMode = false;
+
+        /// <summary>
+        /// Sets and gets the SendTextEditMode property.
+        /// Changes to that property's value raise the PropertyChanged event. 
+        /// </summary>
+        public bool SendTextEditMode
+        {
+            get
+            {
+                return _sendTextEditMode;
+            }
+
+            set
+            {
+                if (_sendTextEditMode == value)
+                {
+                    return;
+                }
+
+                RaisePropertyChanging(SendTextEditModePropertyName);
+                _sendTextEditMode = value;
+                RaisePropertyChanged(SendTextEditModePropertyName);
+            }
         }
         ////public override void Cleanup()
         ////{

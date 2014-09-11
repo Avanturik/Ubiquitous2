@@ -334,7 +334,7 @@ namespace UB.ViewModel
         /// </summary>
         public const string ChatIconURLPropertyName = "ChatIconURL";
 
-        private string _chatIconURL = @"/Ubiquitous2;component/Resources/ubiquitous smile.ico";
+        private string _chatIconURL = Icons.MainIcon;
 
         /// <summary>
         /// Sets and gets the ChatIconURL property.

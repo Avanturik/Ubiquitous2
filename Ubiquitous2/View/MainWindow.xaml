@@ -10,13 +10,12 @@
         UseLayoutRounding="True"
         Height="425"
         Width="324"
-        Title="Ubiquitous 2.0" Icon="ubiquitous smile.ico" Style="{DynamicResource MainWindowStyle}"
+        Title="Ubiquitous 2.0" Icon="..\ubiquitous smile.ico" Style="{DynamicResource MainWindowStyle}"
         DataContext="{Binding Source={StaticResource Locator},Path=Main}" Background="#FFFFC042"
         >
-
-
-
+    
     <i:Interaction.Triggers>
+        
         <i:EventTrigger EventName="Closing">
             <Custom:EventToCommand Command="{Binding ExitApplication}"/>
         </i:EventTrigger>
@@ -34,7 +33,7 @@
         </i:EventTrigger>
     </i:Interaction.Triggers>
     
-
+   
 
 
 </Window>

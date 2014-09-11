@@ -10,6 +10,7 @@
              xmlns:gif="http://wpfanimatedgif.codeplex.com"
              DataContext="{Binding Source={StaticResource Locator},Path=SettingsChatItem}"
              mc:Ignorable="d"
+             Focusable="False"
              d:DesignHeight="31.433" d:DesignWidth="184.566">
 
     <UserControl.Resources>

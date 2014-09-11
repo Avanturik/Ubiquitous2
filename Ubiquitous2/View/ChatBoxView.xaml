@@ -6,6 +6,7 @@
              mc:Ignorable="d" 
              UseLayoutRounding="True"
              DataContext="{Binding Path=ChatBox, Source={StaticResource Locator}}"              
+             Focusable="False"             
              Style="{DynamicResource ChatBoxStyle}"
              d:DesignHeight="300" 
              d:DesignWidth="300">    

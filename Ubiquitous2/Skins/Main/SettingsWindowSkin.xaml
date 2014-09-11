@@ -1047,6 +1047,7 @@
                                                             <Style TargetType="{x:Type ComboBoxItem}">
                                                                 <Setter Property="HorizontalAlignment" Value="Stretch"/>
                                                                 <Setter Property="MinHeight" Value="40"/>
+                                                                <Setter Property="Focusable" Value="False"/>
                                                                 <Setter Property="Template">
                                                                     <Setter.Value>
                                                                         <ControlTemplate TargetType="{x:Type ComboBoxItem}">

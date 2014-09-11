@@ -60,7 +60,7 @@ namespace dotIRC
 
         private static readonly string isupportPrefix;
 
-        private static Timer disconnectTimer;
+        private Timer disconnectTimer;
 
         private object receiveLock = new object();
 

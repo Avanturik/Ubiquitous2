@@ -20,9 +20,11 @@ namespace UB.Model
         Action<string, IChat> RemoveChannel { get; set; }
         List<Action<ChatMessage, IChat>> ContentParsers {get;set;}
         List<Emoticon> Emoticons { get; set; }
+        List<string> ChatChannels { get; set; }
         void DownloadEmoticons(String url);
         ChatConfig Config {get;set;}
         ChatStatusBase Status { get; set; }
         Dictionary<string, ChatUser> Users { get; set; }
+        string NickName { get; set; }
     }
 }

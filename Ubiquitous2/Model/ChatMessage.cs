@@ -23,5 +23,6 @@ namespace UB.Model
         public String FromUserName { get; set; }
         public String Channel { get; set; }
         public bool HighlyImportant { get; set; }
+        public bool IsSentByMe { get; set; }
     }
 }

@@ -5,6 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              mc:Ignorable="d" 
              UseLayoutRounding="True"             
+             Focusable="False"
              xmlns:m="clr-namespace:UB.ViewModel"
              DataContext="{Binding Path=ChatMessage, Source={StaticResource Locator}}"
              d:DesignHeight="89" d:DesignWidth="300" Style="{DynamicResource ChatMessageTemplate}"

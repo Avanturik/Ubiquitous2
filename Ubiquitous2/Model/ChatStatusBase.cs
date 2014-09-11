@@ -11,14 +11,21 @@ namespace UB.Model
     {
         public ChatStatusBase()
         {
+            ResetToDefault();
+        }
+        public void ResetToDefault()
+        {
             IsGotAuthenticationInfo = false;
             IsLoginFailed = false;
             IsLoggedIn = false;
+            IsConnected = false;
+            IsJoined = false;
             IsStopping = false;
             IsStarting = false;
             IsConnecting = false;
         }
-
+        public bool IsConnected { get; set; }
+        public bool IsJoined { get; set; }
         public bool IsGotAuthenticationInfo
         {
             get;

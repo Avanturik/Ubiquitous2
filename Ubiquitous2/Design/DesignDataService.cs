@@ -23,7 +23,7 @@ namespace UB.Design
 
             var message = new ChatMessage(text) {
                 FromUserName = "xedoc",
-                ChatIconURL = @"/Ubiquitous2;component/Resources/ubiquitous smile.ico",
+                ChatIconURL = Icons.MainIcon,
                 Channel = "#loremipsum"
             };
 

@@ -58,6 +58,10 @@ namespace UB.Model
 
         public virtual bool Start()
         {
+            Log.WriteInfo("Trying to start IRC for {0}, chatname: {1}", LoginInfo.UserName,ChatName);
+            if (Status.IsConnecting || Status.IsStarting )
+                return false;
+
             if (Config == null)
                 return false;
 
@@ -101,9 +105,14 @@ namespace UB.Model
 
         public virtual bool Stop()
         {
+            Log.WriteInfo("Trying to stop IRC for {0}, chatname: {1}", LoginInfo.UserName, ChatName);
+            if (Status.IsConnecting || Status.IsStarting || Status.IsStopping)
+                return false;
+
+            Status.IsStarting = false;
+            Status.IsConnecting = false;
             Status.IsStopping = true;
 
-            Log.WriteInfo("Stopping IRC...");
             if( noPongTimer != null ) noPongTimer.Change(Timeout.Infinite, Timeout.Infinite);
             if( pingTimer != null ) pingTimer.Change(Timeout.Infinite, Timeout.Infinite);
 
@@ -152,6 +161,7 @@ namespace UB.Model
         }
         private void UserJoin(IrcRawMessageEventArgs e)
         {
+            Status.IsJoined = true;
             var user = e.Message.Source;
             if (e.Message.Parameters.Count < 1)
                 return;
@@ -194,7 +204,7 @@ namespace UB.Model
                                     );
             }
         }
-        protected void RaiseMessageReceive( string text, string channel, string name, bool important = false)
+        protected void RaiseMessageReceive( string text, string channel, string name, bool important = false, bool isSentByMe = false )
         {
             if (MessageReceived != null)
             {
@@ -203,6 +213,7 @@ namespace UB.Model
                     Text = text,
                     Channel = channel,
                     FromUserName = name,
+                    IsSentByMe = isSentByMe,
                     HighlyImportant = important,
                     TimeStamp = DateTime.Now.ToShortTimeString()
                 };
@@ -265,14 +276,14 @@ namespace UB.Model
             Log.WriteInfo("Disconnect event from IRC");
             if (!Status.IsStopping)
                 Restart();
-            
-            base.OnDisconnected(e);
+            else
+                Status.IsStopping = false;
 
-            Status.IsStopping = false;
+            Status.ResetToDefault();
         }
         protected override void OnError(IrcErrorEventArgs e)
         {
-            Status.IsStopping = false;
+            Status.ResetToDefault();
 
             Log.WriteError("Error: {0}", e.Error);
             Restart();
@@ -341,5 +352,19 @@ namespace UB.Model
             set;
         }
 
+
+
+        public List<string> ChatChannels
+        {
+            get;
+            set;
+        }
+
+
+        public string NickName
+        {
+            get;
+            set;
+        }
     }
 }

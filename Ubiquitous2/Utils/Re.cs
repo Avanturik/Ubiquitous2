@@ -22,5 +22,10 @@ namespace UB.Utils
 
             return String.IsNullOrEmpty(result) ? null : result;
         }
+
+        public static bool IsMatch(string input,string pattern)
+        {
+            return Regex.IsMatch(input, pattern);
+        }
     }
 }
