@@ -19,7 +19,7 @@
         Background="{x:Null}" 
         ResizeMode="CanResizeWithGrip"
         Margin="0" 
-        Padding="0"
+        Padding="0" Icon="/Ubiquitous2;component/Resources/ubiquitous smile.ico"
         >
         <Window.CacheMode>
             <BitmapCache></BitmapCache>
