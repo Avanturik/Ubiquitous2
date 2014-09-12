@@ -242,7 +242,7 @@ namespace UB.Model
                                 var images = icon.images;
                                 var image = images.With(x => images).With(x => x.First());
 
-                                if (image != null && image.width != null && image.height != null && image.url != null)
+                                if (image != null && image.url != null)
                                 {
                                     var decodedRegex = regex.Replace(@"\&gt\;", ">").Replace(@"\&lt\;", "<").Replace(@"\&amp\;", "&");
                                     list.Add(new Emoticon(decodedRegex, image.url, image.width, image.height));
