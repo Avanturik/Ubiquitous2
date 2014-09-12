@@ -28,7 +28,7 @@ namespace UB.Model
                     //imageCache.Add(new Image() { Width = width, Height = height });
                     bitmapImageCache.Add(uri.AbsoluteUri, new BitmapImage(uri));
                 }
-                Image image = new Image() { Width = width, Height = height };                
+                Image image = new Image() { Width = width, Height = height };
                 image.Source = bitmapImageCache[uri.AbsoluteUri];
                 DispatcherHelper.CheckBeginInvokeOnUI(() =>
                 {

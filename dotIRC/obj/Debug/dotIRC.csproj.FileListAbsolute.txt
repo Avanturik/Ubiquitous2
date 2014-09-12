@@ -21,7 +21,6 @@ C:\Users\user\Source\Repos\Ubiquitous2\dotIRC\obj\Debug\dotIRC.dll
 C:\Users\user\Source\Repos\Ubiquitous2\dotIRC\obj\Debug\dotIRC.pdb
 C:\Users\meshkov\Documents\Visual Studio 2013\Projects\Ubiquitous2\dotIRC\bin\Debug\net40\dotIRC.dll
 C:\Users\meshkov\Documents\Visual Studio 2013\Projects\Ubiquitous2\dotIRC\bin\Debug\net40\dotIRC.pdb
-C:\Users\meshkov\Documents\Visual Studio 2013\Projects\Ubiquitous2\dotIRC\obj\Debug\dotIRC.csprojResolveAssemblyReference.cache
 C:\Users\meshkov\Documents\Visual Studio 2013\Projects\Ubiquitous2\dotIRC\obj\Debug\dotIRC.Properties.Resources.resources
 C:\Users\meshkov\Documents\Visual Studio 2013\Projects\Ubiquitous2\dotIRC\obj\Debug\dotIRC.csproj.GenerateResource.Cache
 C:\Users\meshkov\Documents\Visual Studio 2013\Projects\Ubiquitous2\dotIRC\obj\Debug\dotIRC.dll

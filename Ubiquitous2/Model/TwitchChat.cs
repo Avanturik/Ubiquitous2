@@ -20,6 +20,7 @@ namespace UB.Model
         private bool isOAuthTokenRenewed = false;
         private bool isAnonymous = false;
         private WebClientBase webClient = new WebClientBase();
+        private object iconParseLock = new object();
 
         public TwitchChat(ChatConfig config) : 
             base(new IRCLoginInfo()
@@ -209,48 +210,61 @@ namespace UB.Model
 
         public override void DownloadEmoticons(string url)
         {
-            if( Emoticons == null )
-                Emoticons = new List<Emoticon>();
-
-            var list = new List<Emoticon>();
-
-            using (var wc = new WebClientBase())
+            lock(iconParseLock )
             {
-                var jsonEmoticons = list.With(x => wc.Download(url))
-                    .With(x => JToken.Parse(x))
-                    .With(x => x.SelectToken("emoticons"))
-                    .With(x => x.ToObject<JArray>());
+                var list = new List<Emoticon>();
 
-                if (jsonEmoticons == null)
+                if (Emoticons == null)
+                    Emoticons = new List<Emoticon>();
+
+                var listRef = new WeakReference(list);
+
+                using (var wc = new WebClientBase())
                 {
-                    Log.WriteError("Error getting Twitch.tv emoticons!");
-                    list = new List<Emoticon>();
-                }
-                else
-                {
-                    foreach (dynamic icon in jsonEmoticons.Children())
+                    var jsonEmoticons = this.With(x => wc.Download(url))
+                        .With(x => JToken.Parse(x))
+                        .With(x => x.SelectToken("emoticons"))
+                        .With(x => x.ToObject<TwitchJsonEmoticons[]>());
+
+                    var jsonRef = new WeakReference(jsonEmoticons);
+
+                    if (jsonEmoticons == null)
                     {
-                        if (icon != null && icon.images != null && icon.regex != null)
+                        Log.WriteError("Error getting Twitch.tv emoticons!");
+                    }
+                    else
+                    {
+                        foreach (TwitchJsonEmoticons icon in jsonEmoticons)
                         {
-                            string regex = (string)icon.regex;
-                            JArray images = icon.images as JArray;
-                            dynamic image = images.With(x => (JArray)icon.images).With(x => (dynamic)x.First);
-
-                            if (image != null && image.width != null && image.height != null && image.url != null)
+                            if (icon != null && icon.images != null && icon.regex != null)
                             {
-                                var decodedRegex = regex.Replace(@"\&gt\;", ">").Replace(@"\&lt\;", "<").Replace(@"\&amp\;", "&");
-                                list.Add(new Emoticon(decodedRegex, (string)image.url, (int)image.width, (int)image.height));
+                                string regex = (string)icon.regex;
+                                var images = icon.images;
+                                var image = images.With(x => images).With(x => x.First());
+
+                                if (image != null && image.width != null && image.height != null && image.url != null)
+                                {
+                                    var decodedRegex = regex.Replace(@"\&gt\;", ">").Replace(@"\&lt\;", "<").Replace(@"\&amp\;", "&");
+                                    list.Add(new Emoticon(decodedRegex, image.url, image.width, image.height));
+                                }
                             }
 
                         }
-
                     }
-                }
-            }
-            if( list != null && list.Count > 0 )
-                Emoticons = list.ToList();
+                    if (list != null && list.Count > 0)
+                    {
+                        Emoticons = list.ToList();
+                    }
 
-            list.Clear();
+                    list = null;
+                    jsonEmoticons = null;
+                    GC.Collect();
+                    GC.WaitForPendingFinalizers();
+                    GC.Collect();
+                }
+
+
+            }
 
         }
         private string ReadOAuthToken()
@@ -285,6 +299,7 @@ namespace UB.Model
             RaiseMessageReceive( message.Text, message.Channel, LoginInfo.UserName, important:true, isSentByMe:true );
             return base.SendMessage(message);
         }
+
         public void Authenticate( Action afterAction)
         {
             webClient.Headers["X-Requested-With"] = "XMLHttpRequest";
@@ -324,4 +339,18 @@ namespace UB.Model
 
     }
 
+
+    class TwitchJsonEmoticons
+    {
+        public string regex { get; set; }
+        public TwitchJsonImage[] images {get;set;}
+    }
+
+    class TwitchJsonImage
+    {
+        public int width { get; set; }
+        public int height { get; set; }
+        public string url { get; set; }
+        public string emoticon_set { get; set; }
+    }
 }
