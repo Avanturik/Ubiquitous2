@@ -10,7 +10,7 @@
         UseLayoutRounding="True"
         Height="425"
         Width="324"
-        Title="Ubiquitous 2.0" Icon="..\ubiquitous smile.ico" 
+        Title="Ubiquitous 2.0"   
         Style="{DynamicResource MainWindowStyle}"
         xmlns:Interactivity="clr-namespace:UB.Interactivity"
         WindowStyle="None"
