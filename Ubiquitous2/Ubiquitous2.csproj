@@ -171,6 +171,7 @@
     <Compile Include="Model\ImageCacheDataService.cs" />
     <Compile Include="Model\Log.cs" />
     <Compile Include="Model\MessageParser.cs" />
+    <Compile Include="Model\NotifyPropertyChangeBase.cs" />
     <Compile Include="Model\SettingsDataService.cs" />
     <Compile Include="Model\CustomEventArgs.cs" />
     <Compile Include="Model\ChatDataService.cs" />
@@ -193,6 +194,7 @@
     </Compile>
     <Compile Include="Utils\Config.cs" />
     <Compile Include="Utils\Html.cs" />
+    <Compile Include="Utils\Json.cs" />
     <Compile Include="Utils\Net.cs" />
     <Compile Include="View\SettingsWindow.xaml.cs">
       <DependentUpon>SettingsWindow.xaml</DependentUpon>

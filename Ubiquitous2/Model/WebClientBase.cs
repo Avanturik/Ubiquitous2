@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Cache;
@@ -68,23 +69,37 @@ namespace UB.Model
                 return request;
             }
 
-            public String Download( String url )
+            public String Download(String url)
             {
-                string result = null;
                 try
                 {
-                    lock( downloadLock )
+                    lock (downloadLock)
                     {
-                        result = DownloadString(new Uri(url));
+                        return DownloadString(new Uri(url));
                     }
                 }
                 catch
                 {
-                    
-                }
-                return result;
-            }
 
+                }
+                return String.Empty;
+            }
+            public MemoryStream DownloadToStream(String url)
+            {
+                try
+                {
+                    lock (downloadLock)
+                    {
+                        return new MemoryStream(DownloadData(new Uri(url)));
+                    }
+                }
+                catch
+                {
+
+                }
+                return null;
+            }
+            
             public String Upload(string url, string args)
             {
                 string result = null;

@@ -21,7 +21,7 @@ namespace UB.Interactivity
 
         [DllImport("user32.dll")]
         static extern int SetWindowLong(IntPtr hwnd, int index, int newStyle);
-
+        
         protected override void OnAttached()
         {
             Window window = AssociatedObject as Window;

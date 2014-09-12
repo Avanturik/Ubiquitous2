@@ -79,6 +79,7 @@ namespace UB.Model
                 if (!Status.IsStopping)
                 {
                     Log.WriteError("No ping reply. Restarting IRC");
+                    Status.ResetToDefault();
                     Restart();
                 }
             }, null, Timeout.Infinite, Timeout.Infinite);

@@ -8,6 +8,8 @@ using System.Diagnostics;
 using System.Threading.Tasks;
 using System.Linq;
 using System.Web;
+using Newtonsoft.Json;
+using System.IO;
 
 namespace UB.Model
 {
@@ -21,7 +23,6 @@ namespace UB.Model
         private bool isAnonymous = false;
         private WebClientBase webClient = new WebClientBase();
         private object iconParseLock = new object();
-
         public TwitchChat(ChatConfig config) : 
             base(new IRCLoginInfo()
         {
@@ -219,38 +220,34 @@ namespace UB.Model
 
                 var listRef = new WeakReference(list);
 
-                using (var wc = new WebClientBase())
+
+                var jsonEmoticons = this.With( x => Json.DeserializeUrl<TwitchJsonEmoticons>(url))
+                    .With( x => x.emoticons);
+
+                if (jsonEmoticons == null)
                 {
-                    var jsonEmoticons = this.With(x => wc.Download(url))
-                        .With(x => JToken.Parse(x))
-                        .With(x => x.SelectToken("emoticons"))
-                        .With(x => x.ToObject<TwitchJsonEmoticons[]>());
-
-                    var jsonRef = new WeakReference(jsonEmoticons);
-
-                    if (jsonEmoticons == null)
+                    Log.WriteError("Unable to get Twitch.tv emoticons!");
+                }
+                else
+                {
+                    foreach (TwitchJsonEmoticon icon in jsonEmoticons)
                     {
-                        Log.WriteError("Error getting Twitch.tv emoticons!");
-                    }
-                    else
-                    {
-                        foreach (TwitchJsonEmoticons icon in jsonEmoticons)
+                        if (icon != null && icon.images != null && icon.regex != null)
                         {
-                            if (icon != null && icon.images != null && icon.regex != null)
+                            string regex = icon.regex;
+                            var images = icon.images;
+                            var image = images.With(x => images).With(x => x.First());
+                            var imageRef = new WeakReference(image);
+                            if (image != null && image.url != null)
                             {
-                                string regex = (string)icon.regex;
-                                var images = icon.images;
-                                var image = images.With(x => images).With(x => x.First());
-
-                                if (image != null && image.url != null)
-                                {
-                                    var decodedRegex = regex.Replace(@"\&gt\;", ">").Replace(@"\&lt\;", "<").Replace(@"\&amp\;", "&");
-                                    list.Add(new Emoticon(decodedRegex, image.url, image.width, image.height));
-                                }
+                                var decodedRegex = regex.Replace(@"\&gt\;", ">").Replace(@"\&lt\;", "<").Replace(@"\&amp\;", "&");
+                                list.Add(new Emoticon(decodedRegex, image.url, image.width, image.height));
                             }
-
+                            image = null;
                         }
+
                     }
+
                     if (list != null && list.Count > 0)
                     {
                         Emoticons = list.ToList();
@@ -339,8 +336,12 @@ namespace UB.Model
 
     }
 
-
     class TwitchJsonEmoticons
+    {
+        public object _links { get; set; }
+        public TwitchJsonEmoticon[] emoticons { get; set; }
+    }
+    class TwitchJsonEmoticon
     {
         public string regex { get; set; }
         public TwitchJsonImage[] images {get;set;}
