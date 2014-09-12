@@ -130,6 +130,9 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Controls\ResizableBorder.xaml.cs">
+      <DependentUpon>ResizableBorder.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\SmoothPanel\DataBindHelper.cs" />
     <Compile Include="Controls\SmoothPanel\IHeightMeasurer.cs" />
     <Compile Include="Controls\SmoothPanel\SmoothPanel.cs" />
@@ -137,6 +140,7 @@
     <Compile Include="Controls\SmoothPanel\SmoothPanelMeasurer.cs" />
     <Compile Include="Controls\SmoothPanel\SmoothPanelTemplate.cs" />
     <Compile Include="Controls\SmoothPanel\SmoothPanelViewCache.cs" />
+    <Compile Include="Converter\BoolToScrollBarVisibility.cs" />
     <Compile Include="Converter\ChatMessageToFlowDocument.cs" />
     <Compile Include="Converter\ChatMessageToTextBlock.cs" />
     <Compile Include="Design\DesignDataService.cs" />
@@ -145,12 +149,18 @@
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="Interactivity\AutoScrollAction.cs" />
     <Compile Include="Interactivity\BindingListener.cs" />
+    <Compile Include="Interactivity\BorderPosition.cs" />
+    <Compile Include="Interactivity\ClickThroughBehavior.cs" />
     <Compile Include="Interactivity\DataEventTrigger.cs" />
+    <Compile Include="Interactivity\DragThumbBehavior.cs" />
     <Compile Include="Interactivity\DragBehavior.cs" />
     <Compile Include="Interactivity\PasswordBoxAssistant.cs" />
     <Compile Include="Interactivity\RichTextBoxAttached.cs" />
     <Compile Include="Interactivity\ScrollViewerAttached.cs" />
     <Compile Include="Interactivity\TextBlockAttached.cs" />
+    <Compile Include="Interactivity\WindowBorder.cs" />
+    <Compile Include="Interactivity\WindowResizeBehavior.cs" />
+    <Compile Include="Interactivity\WindowResizer.cs" />
     <Compile Include="Model\ChatConfig.cs" />
     <Compile Include="Model\ChatMessage.cs" />
     <Compile Include="Model\ChatRegistry.cs" />
@@ -216,6 +226,10 @@
     <Compile Include="View\StatusWindow.xaml.cs">
       <DependentUpon>StatusWindow.xaml</DependentUpon>
     </Compile>
+    <Page Include="Controls\ResizableBorder.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="View\MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -299,6 +313,9 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
+    <Resource Include="Resources\close.ico">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
     <Resource Include="Resources\ubiquitous smile.ico">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Resource>

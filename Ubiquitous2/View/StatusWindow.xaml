@@ -6,22 +6,32 @@
         xmlns:Interactivity="clr-namespace:UB.Interactivity"
         WindowStyle="None"
         AllowsTransparency="True"
-        ResizeMode="CanResizeWithGrip"
-        Title="StatusWindow" Height="300" Width="300" 
-        Topmost="True">
+        ResizeMode="NoResize"
+        Title="StatusWindow"
+        Topmost="True" Background="{x:Null}" 
+        SizeToContent="WidthAndHeight" HorizontalAlignment="Center" VerticalAlignment="Center"  MaxWidth="56" MaxHeight="32" Padding="0">
     <i:Interaction.Behaviors>
         <Interactivity:DragWindow/>
     </i:Interaction.Behaviors>
 
-    <Grid>
-        <Border>
+
+    <Grid MinWidth="32"  Margin="0" HorizontalAlignment="Center" VerticalAlignment="Center" Opacity="0.9">
+        <Border BorderBrush="#FF033E0B" BorderThickness="1" Margin="0,0,0,4" CornerRadius="5" Padding="0">
             <Border.Background>
                 <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
-                    <GradientStop Color="Black" Offset="0"/>
-                    <GradientStop Color="White" Offset="1"/>
+                    <GradientStop Color="Black" Offset="0.391"/>
+                    <GradientStop Color="#FF066E14" Offset="1"/>
                 </LinearGradientBrush>
             </Border.Background>
-
         </Border>
+
+        <Image Width="16" Source="/Ubiquitous2;component/Resources/ubiquitous smile.ico" HorizontalAlignment="Center" VerticalAlignment="Center" Opacity="1" Margin="0,0,0,10" />
+        <Rectangle Fill="#66000000" Margin="3,10,3,7" RadiusX="5" RadiusY="5"></Rectangle>
+        <TextBlock Margin="0,4,0,2" HorizontalAlignment="Center" VerticalAlignment="Center" Padding="5" FontFamily="Tahoma" Opacity="0.8" FontWeight="Bold" FontSize="16" Foreground="#FFF3B841" >
+            <TextBlock.Effect>
+                <DropShadowEffect ShadowDepth="0" BlurRadius="0" Color="White"/>
+            </TextBlock.Effect>
+                99
+        </TextBlock>
     </Grid>
 </Window>

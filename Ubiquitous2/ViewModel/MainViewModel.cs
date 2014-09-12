@@ -12,6 +12,7 @@ using System.Threading;
 using GalaSoft.MvvmLight.Threading;
 using UB.Utils;
 using UB.View;
+using System.Windows;
 
 namespace UB.ViewModel
 {
@@ -37,7 +38,6 @@ namespace UB.ViewModel
 
             //var testStatusWindow = new StatusWindow();
             //testStatusWindow.Show();
-            
 
             MessengerInstance.Register<ChatMessage>(this, "SetChannel", (message) => {
                 SelectedChatChannel = ChannelList.FirstOrDefault(channel =>
@@ -80,7 +80,7 @@ namespace UB.ViewModel
                                           () =>
                                           {
                                               Properties.Ubiqiutous.Default.Save();
-
+                                              Application.Current.Shutdown();
                                           }));
             }
         }
@@ -469,6 +469,38 @@ namespace UB.ViewModel
                 RaisePropertyChanged(SendTextEditModePropertyName);
             }
         }
+
+        /// <summary>
+        /// The <see cref="EnableMouseTransparency" /> property's name.
+        /// </summary>
+        public const string EnableMouseTransparencyPropertyName = "EnableMouseTransparency";
+
+        private bool _enableMouseTransparency = false;
+
+        /// <summary>
+        /// Sets and gets the EnableMouseTransparency property.
+        /// Changes to that property's value raise the PropertyChanged event. 
+        /// </summary>
+        public bool EnableMouseTransparency
+        {
+            get
+            {
+                return _enableMouseTransparency;
+            }
+
+            set
+            {
+                if (_enableMouseTransparency == value)
+                {
+                    return;
+                }
+
+                RaisePropertyChanging(EnableMouseTransparencyPropertyName);
+                _enableMouseTransparency = value;
+                RaisePropertyChanged(EnableMouseTransparencyPropertyName);
+            }
+        }
+
         ////public override void Cleanup()
         ////{
         ////    // Clean up if needed

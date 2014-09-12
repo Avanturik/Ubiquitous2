@@ -156,10 +156,43 @@ namespace UB.ViewModel
                 {
                     return;
                 }
-
                 RaisePropertyChanging(EnableAutoScrollPropertyName);
                 _enableAutoScroll = value;
+                IsScrollBarVisible = !_enableAutoScroll;
+                Log.WriteInfo("Scrollbar visible = {0}", IsScrollBarVisible);
+
                 RaisePropertyChanged(EnableAutoScrollPropertyName);
+            }
+        }
+
+        /// <summary>
+        /// The <see cref="IsScrollBarVisible" /> property's name.
+        /// </summary>
+        public const string IsScrollBarVisiblePropertyName = "IsScrollBarVisible";
+
+        private bool _isScrollBarVisible = false;
+
+        /// <summary>
+        /// Sets and gets the IsScrollBarVisible property.
+        /// Changes to that property's value raise the PropertyChanged event. 
+        /// </summary>
+        public bool IsScrollBarVisible
+        {
+            get
+            {
+                return _isScrollBarVisible;
+            }
+
+            set
+            {
+                if (_isScrollBarVisible == value)
+                {
+                    return;
+                }
+
+                RaisePropertyChanging(IsScrollBarVisiblePropertyName);
+                _isScrollBarVisible = value;
+                RaisePropertyChanged(IsScrollBarVisiblePropertyName);
             }
         }
     }

@@ -10,12 +10,25 @@
         UseLayoutRounding="True"
         Height="425"
         Width="324"
-        Title="Ubiquitous 2.0" Icon="..\ubiquitous smile.ico" Style="{DynamicResource MainWindowStyle}"
-        DataContext="{Binding Source={StaticResource Locator},Path=Main}" Background="#FFFFC042"
+        Title="Ubiquitous 2.0" Icon="..\ubiquitous smile.ico" 
+        Style="{DynamicResource MainWindowStyle}"
+        xmlns:Interactivity="clr-namespace:UB.Interactivity"
+        WindowStyle="None"
+        AllowsTransparency="True"        
+        DataContext="{Binding Source={StaticResource Locator},Path=Main}" 
+        Background="{x:Null}" 
+        ResizeMode="CanResizeWithGrip"
+        Margin="0" 
+        Padding="0"
         >
-    
-    <i:Interaction.Triggers>
-        
+        <Window.CacheMode>
+            <BitmapCache></BitmapCache>
+        </Window.CacheMode>
+        <i:Interaction.Behaviors>
+            <Interactivity:ClickThroughBehavior EnableMouseTransparency="{Binding EnableMouseTransparency}"/>
+        </i:Interaction.Behaviors>
+        <i:Interaction.Triggers>
+
         <i:EventTrigger EventName="Closing">
             <Custom:EventToCommand Command="{Binding ExitApplication}"/>
         </i:EventTrigger>
@@ -32,8 +45,8 @@
             <i:InvokeCommandAction Command="{Binding SetUnFocused}"/>
         </i:EventTrigger>
     </i:Interaction.Triggers>
-    
-   
+
+
 
 
 </Window>

@@ -16,20 +16,19 @@ namespace UB.Model
         private object getLock = new object();
 
         private Dictionary<String, BitmapImage> bitmapImageCache = new Dictionary<string, BitmapImage>();
-        private List<Image> imageCache = new List<Image>();
+        //private List<Image> imageCache = new List<Image>();
         
         public void GetImage(Uri uri, int width, int height, Action<Image> callback)
         {
             lock(getLock)
             {
-                imageCache.Add(new Image() { Width = width, Height = height });
-                Image image = imageCache.LastOrDefault();
-
+                
                 if (!bitmapImageCache.ContainsKey(uri.AbsoluteUri))
                 {
+                    //imageCache.Add(new Image() { Width = width, Height = height });
                     bitmapImageCache.Add(uri.AbsoluteUri, new BitmapImage(uri));
                 }
-                
+                Image image = new Image() { Width = width, Height = height };                
                 image.Source = bitmapImageCache[uri.AbsoluteUri];
                 DispatcherHelper.CheckBeginInvokeOnUI(() =>
                 {

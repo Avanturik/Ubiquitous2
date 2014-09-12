@@ -20,8 +20,13 @@ namespace UB.Interactivity
         }
         void AssociatedObject_PreviewMouseDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
+            if (e.LeftButton == System.Windows.Input.MouseButtonState.Released)
+                return;
+
             var window = AssociatedObject as Window;
             window.DragMove();
+
+
         }
     }
 }
