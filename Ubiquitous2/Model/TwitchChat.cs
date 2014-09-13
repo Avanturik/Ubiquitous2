@@ -23,6 +23,10 @@ namespace UB.Model
         private bool isAnonymous = false;
         private WebClientBase webClient = new WebClientBase();
         private object iconParseLock = new object();
+        private static List<Emoticon> sharedEmoticons = new List<Emoticon>();
+        private static bool isFallbackEmoticons = false;
+        private static bool isWebEmoticons = false;
+
         public TwitchChat(ChatConfig config) : 
             base(new IRCLoginInfo()
         {
@@ -211,18 +215,19 @@ namespace UB.Model
 
         public override void DownloadEmoticons(string url)
         {
+            if (isFallbackEmoticons)
+                return;
+            if (isWebEmoticons)
+                return;
+
             lock(iconParseLock )
             {
                 var list = new List<Emoticon>();
-
                 if (Emoticons == null)
                     Emoticons = new List<Emoticon>();
 
                 var jsonEmoticons = this.With( x => Json.DeserializeUrl<TwitchJsonEmoticons>(url))
                     .With( x => x.emoticons);
-
-                var listRef = new WeakReference(list);
-                var emoticonsRef = new WeakReference(jsonEmoticons);
 
                 if (jsonEmoticons == null)
                 {
@@ -235,7 +240,7 @@ namespace UB.Model
                         if (icon != null && icon.images != null && !String.IsNullOrWhiteSpace(icon.regex))
                         {
                             var image = icon.images.With(x => icon.images).With(x => x.First());
-                            if (image != null && !String.IsNullOrWhiteSpace(icon.regex) && !String.IsNullOrWhiteSpace(image.url))
+                            if (image != null && !String.IsNullOrWhiteSpace(image.url))
                             {
                                 list.Add(new Emoticon(  icon.regex.Replace(@"\&gt\;", ">").Replace(@"\&lt\;", "<").Replace(@"\&amp\;", "&"), 
                                                         image.url, 
@@ -245,17 +250,15 @@ namespace UB.Model
                         }
 
                     }
-
-                    if (list != null && list.Count > 0)
+                    if (list.Count > 0)
                     {
-                        Emoticons = list.ToList();
-                    }
+                        if (isFallbackEmoticons)
+                            isWebEmoticons = true;
 
-                    list = null;
-                    jsonEmoticons = null;
-                    GC.Collect();
-                    GC.WaitForPendingFinalizers();
-                    GC.Collect();
+                        isFallbackEmoticons = true;
+                        sharedEmoticons = list.ToList();
+                        Emoticons = sharedEmoticons;
+                    }
                 }
 
 

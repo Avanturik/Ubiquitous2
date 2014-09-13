@@ -84,13 +84,15 @@ namespace UB.Model
                 }
                 return String.Empty;
             }
-            public MemoryStream DownloadToStream(String url)
+            public Stream DownloadToStream(String url)
             {
                 try
                 {
                     lock (downloadLock)
                     {
-                        return new MemoryStream(DownloadData(new Uri(url)));
+                        var request = GetWebRequest(new Uri(url));
+                        var response = GetWebResponse(request);
+                        return response.GetResponseStream();
                     }
                 }
                 catch

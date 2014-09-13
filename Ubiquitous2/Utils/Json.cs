@@ -14,7 +14,7 @@ namespace UB.Utils
         public static T DeserializeUrl<T>(string url) where T:class
         {
             using (WebClientBase wc = new WebClientBase())
-            using (MemoryStream stream = wc.DownloadToStream(url))
+            using (Stream stream = wc.DownloadToStream(url))
             {
                 if (stream == null)
                     return null;
