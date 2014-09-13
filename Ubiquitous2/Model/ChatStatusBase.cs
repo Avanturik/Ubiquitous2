@@ -25,8 +25,37 @@ namespace UB.Model
             IsStarting = false;
             IsConnecting = false;
         }
-        
 
+        /// <summary>
+        /// The <see cref="ViewersCount" /> property's name.
+        /// </summary>
+        public const string ViewersCountPropertyName = "ViewersCount";
+
+        private int _viewersCount = 0;
+
+        /// <summary>
+        /// Sets and gets the ViewersCount property.
+        /// Changes to that property's value raise the PropertyChanged event. 
+        /// </summary>
+        public int ViewersCount
+        {
+            get
+            {
+                return _viewersCount;
+            }
+
+            set
+            {
+                if (_viewersCount == value)
+                {
+                    return;
+                }
+
+                RaisePropertyChanging(ViewersCountPropertyName);
+                _viewersCount = value;
+                RaisePropertyChanged(ViewersCountPropertyName);
+            }
+        }
         /// <summary>
         /// The <see cref="IsConnected" /> property's name.
         /// </summary>

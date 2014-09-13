@@ -152,7 +152,7 @@ namespace UB.Model
                         {
                             Status.IsGotAuthenticationInfo = true;
                             oauthToken = ReadOAuthToken();
-                            if( oauthToken != null )
+                            if( !String.IsNullOrWhiteSpace(oauthToken) )
                             {
                                 isOAuthTokenRenewed = true;
                                 StartWithToken(oauthToken);
@@ -218,11 +218,11 @@ namespace UB.Model
                 if (Emoticons == null)
                     Emoticons = new List<Emoticon>();
 
-                var listRef = new WeakReference(list);
-
-
                 var jsonEmoticons = this.With( x => Json.DeserializeUrl<TwitchJsonEmoticons>(url))
                     .With( x => x.emoticons);
+
+                var listRef = new WeakReference(list);
+                var emoticonsRef = new WeakReference(jsonEmoticons);
 
                 if (jsonEmoticons == null)
                 {
@@ -232,18 +232,16 @@ namespace UB.Model
                 {
                     foreach (TwitchJsonEmoticon icon in jsonEmoticons)
                     {
-                        if (icon != null && icon.images != null && icon.regex != null)
+                        if (icon != null && icon.images != null && !String.IsNullOrWhiteSpace(icon.regex))
                         {
-                            string regex = icon.regex;
-                            var images = icon.images;
-                            var image = images.With(x => images).With(x => x.First());
-                            var imageRef = new WeakReference(image);
-                            if (image != null && image.url != null)
+                            var image = icon.images.With(x => icon.images).With(x => x.First());
+                            if (image != null && !String.IsNullOrWhiteSpace(icon.regex) && !String.IsNullOrWhiteSpace(image.url))
                             {
-                                var decodedRegex = regex.Replace(@"\&gt\;", ">").Replace(@"\&lt\;", "<").Replace(@"\&amp\;", "&");
-                                list.Add(new Emoticon(decodedRegex, image.url, image.width, image.height));
+                                list.Add(new Emoticon(  icon.regex.Replace(@"\&gt\;", ">").Replace(@"\&lt\;", "<").Replace(@"\&amp\;", "&"), 
+                                                        image.url, 
+                                                        image.width, 
+                                                        image.height));
                             }
-                            image = null;
                         }
 
                     }

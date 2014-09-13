@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
+using System.Windows;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Ioc;
 using UB.Model;
@@ -64,6 +65,7 @@ namespace UB.ViewModel
         public bool? Show()
         {
             var settings = new SettingsWindow();
+            settings.Owner = Application.Current.MainWindow;
             return settings.ShowDialog();
         }
     }
