@@ -73,5 +73,18 @@ namespace UB.Design
         {
             
         }
+
+
+        public void Stop()
+        {
+           
+        }
+
+
+        public void StopAllChats()
+        {
+            throw new NotImplementedException();
+        }
+
     }
 }

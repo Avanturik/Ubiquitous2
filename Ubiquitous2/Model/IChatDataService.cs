@@ -11,8 +11,10 @@ namespace UB.Model
         void SwitchChat( String chatName, bool enabled);
         IChat GetChat( String chatName );
         void StartAllChats();
+        void StopAllChats();
         string GetRandomText();
         ObservableCollection<dynamic> ChatChannels { get; set; }
         void SendMessage(ChatMessage message);
+        void Stop();
     }
 }

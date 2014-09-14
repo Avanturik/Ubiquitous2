@@ -24,8 +24,6 @@ namespace UB
                     typeof(Timeline),
                     new FrameworkPropertyMetadata { DefaultValue = 20 });
 
-            if( Ubiqiutous.Default.WebServerPort >0 && Ubiqiutous.Default.WebServerPort <= 65535)
-                webServer = new WebServer(Ubiqiutous.Default.WebServerPort);
         }
 
     }

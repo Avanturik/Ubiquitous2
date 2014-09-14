@@ -1,12 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Web;
 using GalaSoft.MvvmLight.Threading;
 using Microsoft.Practices.ServiceLocation;
 using UB.Model.IRC;
+using UB.Properties;
+using UB.Utils;
 
 namespace UB.Model
 {
@@ -19,7 +23,7 @@ namespace UB.Model
         private Action<ChatMessage[], Exception> readChatCallback;
         private List<ChatConfig> chatConfigs;
         private List<IChat> chats;
-
+        private WebServer webServer;
         //Disposable
         private Timer receiveTimer;
 
@@ -30,9 +34,47 @@ namespace UB.Model
             ChatChannels = new ObservableCollection<dynamic>();
             ChatChannels.Add(new { ChatName = "AllChats", ChannelName = "#allchats", ChatIconURL = Icons.MainIcon });
 
+            Task.Factory.StartNew(() => startWebServer());
             Task.Factory.StartNew(() => StartAllChats());
         }
 
+
+        private void startWebServer()
+        {
+            if (Ubiqiutous.Default.WebServerPort == 0 && Ubiqiutous.Default.WebServerPort > 65535)
+                return;
+
+            webServer = new WebServer(Ubiqiutous.Default.WebServerPort);
+            webServer.GetUserHandler = (uri) =>
+            {
+                if( uri.LocalPath.Equals("/messages.json",StringComparison.InvariantCultureIgnoreCase))
+                {
+                    var parameters = HttpUtility.ParseQueryString(uri.Query);
+                    var lastMessageId = parameters["lastid"];
+                    if( lastMessageId == null )
+                    {
+                        // return last n messages
+                        GetRandomMessage((msg,err) => {
+                            Json.SerializeToStream(msg, (stream) => {
+                                webServer.SendJsonToClient(stream);
+                            });
+                        });                        
+                    }
+                    else
+                    {
+                        // return messages after specified
+                    }
+                    return true;
+                }
+
+                return false;
+            };
+
+        }
+        private void stopWebServer()
+        {
+            webServer.Stop();
+        }
         public List<IChat> Chats
         {
             get
@@ -96,7 +138,10 @@ namespace UB.Model
         {
             return Chats.FirstOrDefault(chat => chat.ChatName.Equals(chatName, StringComparison.InvariantCultureIgnoreCase));
         }
-        
+        public void StopAllChats()
+        {
+            Chats.ForEach(chat => chat.Stop());
+        }
         public void StartAllChats()
         {
             //Accumulate messages and update ViewModel periodically
@@ -214,6 +259,14 @@ namespace UB.Model
                         chat.SendMessage(message);
                 });
             }
+        }
+
+
+
+        public void Stop()
+        {
+            stopWebServer();
+            StopAllChats();
         }
 
     }

@@ -5,6 +5,7 @@ using System.Net;
 using System.Net.Sockets;
 using System.Threading;
 using System.Diagnostics;
+using System.Threading.Tasks;
 
 namespace UB.Model
 {
@@ -223,10 +224,9 @@ namespace UB.Model
                 listener.Start();
                 while (is_active)
                 {
-                    TcpClient s = listener.AcceptTcpClient();
-                    HttpProcessor processor = new HttpProcessor(s, this);
-                    Thread thread = new Thread(new ThreadStart(processor.Process));
-                    thread.Start();
+                    TcpClient client = listener.AcceptTcpClient();
+                    HttpProcessor processor = new HttpProcessor(client, this);
+                    var task = Task.Factory.StartNew(() => processor.Process());
                     Thread.Sleep(1);
                 }
             }
@@ -234,6 +234,12 @@ namespace UB.Model
             {
                 Log.WriteError("Web server unable to start! {0}", e.Message);
             }
+        }
+
+        public void Stop()
+        {
+            is_active = false;
+            listener.Stop();
         }
 
         public abstract void HandleGETRequest(HttpProcessor p);

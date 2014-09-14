@@ -11,6 +11,21 @@ namespace UB.Utils
 {
     public class Json
     {
+        public static void SerializeToStream<T>( T obj, Action<Stream> callback ) where T: class
+        {
+            JsonSerializer serializer = new JsonSerializer();
+
+            using( MemoryStream stream = new MemoryStream())
+            using( StreamWriter streamWriter = new StreamWriter(stream))
+            using( JsonWriter writer = new JsonTextWriter(streamWriter))
+            {
+
+                serializer.Serialize(writer, obj);
+                writer.Flush();
+                stream.Position = 0;
+                callback(stream);
+            }
+        }
         public static T DeserializeUrl<T>(string url) where T:class
         {
             using (WebClientBase wc = new WebClientBase())

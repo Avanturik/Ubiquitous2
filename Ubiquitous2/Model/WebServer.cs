@@ -10,6 +10,7 @@ namespace UB.Model
     public class WebServer : HttpServer
     {
         private const string webContentFolder = @"web\";
+        private HttpProcessor httpProcessor;
         public WebServer(int httpPort) : base(httpPort)
         {
             Task.Factory.StartNew(() => Listen());
@@ -24,41 +25,54 @@ namespace UB.Model
                 new KeyValuePair<string,string>(".html", "text/html"),
                 new KeyValuePair<string,string>(".htm", "text/html"),
                 new KeyValuePair<string,string>(".map", "text/html"),
+                new KeyValuePair<string,string>(".json", "application/json"),
                 new KeyValuePair<string,string>(".css", "text/css")
         };
+        public Func<Uri,bool> GetUserHandler { get; set; }
 
         public override void HandleGETRequest(HttpProcessor processor)
         {
+            httpProcessor = processor;
+
             Uri uri = new Uri("http://localhost" + processor.HttpPath);
-            String fileName = String.Empty;
-            var contentType = String.Empty;
+            string contentType = ContentTypes.Where(pair => uri.AbsolutePath.ToLower().Contains(pair.Key)).Select(item => item.Value).FirstOrDefault();
+            
+            if (String.IsNullOrWhiteSpace(contentType))
+                contentType = "text/html";
 
             if( !uri.AbsolutePath.Equals("/"))
             {
-                contentType = ContentTypes.Where(pair => uri.AbsolutePath.ToLower().Contains(pair.Key)).Select(item => item.Value).FirstOrDefault();
-                fileName = uri.AbsolutePath;
+                if (GetUserHandler( uri ) )
+                    return;
             }
-            if( !SendFileToClient(processor, contentType, fileName) )
+            if (!SendFileToClient(contentType, uri.AbsolutePath))
             {
-                SendFileToClient(processor, "text/html", "index.html");
+                SendFileToClient("text/html", "index.html");
             }
         }
 
-        private bool SendFileToClient( HttpProcessor processor, string contentType, string fileName )
+        private bool SendFileToClient( string contentType, string fileName )
         {
-            processor.OutputStream.AutoFlush = true;
-            if (contentType != null)
+            if (!String.IsNullOrWhiteSpace(contentType))
             {
-                processor.WriteSuccess(contentType);
-
                 var stream = GetFile(fileName);
                 if (stream != null)
                 {
-                    stream.CopyTo(processor.OutputStream.BaseStream);
+                    httpProcessor.OutputStream.AutoFlush = true;
+                    httpProcessor.WriteSuccess(contentType);
+
+                    stream.CopyTo(httpProcessor.OutputStream.BaseStream);
                     return true;
                 }
             }
             return false;
+        }
+
+        public void SendJsonToClient( Stream jsonStream )
+        {
+            httpProcessor.OutputStream.AutoFlush = true;
+            httpProcessor.WriteSuccess("application/json");
+            jsonStream.CopyTo(httpProcessor.OutputStream.BaseStream);
         }
         private FileStream GetFile( string relativePath )
         {

@@ -80,6 +80,8 @@ namespace UB.ViewModel
                                           () =>
                                           {
                                               Properties.Ubiqiutous.Default.Save();
+                                              _dataService.Stop();
+
                                               Application.Current.Shutdown();
                                           }));
             }
