@@ -14,5 +14,8 @@
     <Setting Name="Config" Provider="PortableSettingsProvider" Type="UB.Model.ConfigSections" Scope="User">
       <Value Profile="(Default)" />
     </Setting>
+    <Setting Name="WebServerPort" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">8080</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

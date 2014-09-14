@@ -4,12 +4,8 @@ using UB.Utils;
 using System.Text.RegularExpressions;
 using System.Collections.Generic;
 using Newtonsoft.Json.Linq;
-using System.Diagnostics;
 using System.Threading.Tasks;
 using System.Linq;
-using System.Web;
-using Newtonsoft.Json;
-using System.IO;
 
 namespace UB.Model
 {
@@ -219,7 +215,6 @@ namespace UB.Model
                 return;
             if (isWebEmoticons)
                 return;
-
             lock(iconParseLock )
             {
                 var list = new List<Emoticon>();
@@ -248,7 +243,6 @@ namespace UB.Model
                                                         image.height));
                             }
                         }
-
                     }
                     if (list.Count > 0)
                     {
@@ -260,10 +254,7 @@ namespace UB.Model
                         Emoticons = sharedEmoticons;
                     }
                 }
-
-
             }
-
         }
         private string ReadOAuthToken()
         {
@@ -287,7 +278,6 @@ namespace UB.Model
                     existingOAuthField = oauthField;
                 else
                     Config.Parameters.Add(oauthField);
-
             }
             return oauthToken;
         }
@@ -331,10 +321,6 @@ namespace UB.Model
             webClient.Headers["Accept"] = "application/vnd.twitchtv.v2+json";
             afterAction();
         }
-
-        
-
-
     }
 
     class TwitchJsonEmoticons

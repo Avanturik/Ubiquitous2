@@ -73,5 +73,17 @@ namespace UB.Properties {
                 this["Config"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("8080")]
+        public int WebServerPort {
+            get {
+                return ((int)(this["WebServerPort"]));
+            }
+            set {
+                this["WebServerPort"] = value;
+            }
+        }
     }
 }

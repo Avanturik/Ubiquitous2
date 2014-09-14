@@ -165,6 +165,7 @@
     <Compile Include="Model\ConfigField.cs" />
     <Compile Include="Model\ConfigSections.cs" />
     <Compile Include="Model\Emoticon.cs" />
+    <Compile Include="Model\HttpServer.cs" />
     <Compile Include="Model\IChatStatus.cs" />
     <Compile Include="Model\Icons.cs" />
     <Compile Include="Model\IImageDataSource.cs" />
@@ -184,6 +185,7 @@
     <Compile Include="Model\WebClientBase.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="Model\WebServer.cs" />
     <Compile Include="Properties\PortableSettingsProvider.cs" />
     <Compile Include="Model\TwitchChat.cs" />
     <Compile Include="Properties\Ubiqiutous.cs" />
@@ -311,6 +313,9 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
+    <Content Include="web\index.html">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Resource Include="Resources\close.ico">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Resource>

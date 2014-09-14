@@ -7,6 +7,7 @@
         xmlns:View="clr-namespace:UB.View"
         xmlns:ViewModel="clr-namespace:UB.ViewModel"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" mc:Ignorable="d" x:Class="UB.SettingsWindow"
+        xmlns:Settings="clr-namespace:UB.Properties"
         SnapsToDevicePixels="True"
         UseLayoutRounding="True"
         Title="SettingsWindow" Icon="..\ubiquitous smile.ico" MinWidth="400" Width="500" Height="300" d:DesignHeight="297" WindowStartupLocation="CenterOwner">
@@ -59,9 +60,12 @@
                     <TextBlock><Run Text="Theme list with thumbnails"/></TextBlock>
                 </DockPanel>
             </fluent:BackstageTabItem>
-            <fluent:BackstageTabItem Header="Other">
+            <fluent:BackstageTabItem Header="Web server">
                 <DockPanel>
-                    <TextBlock><Run Text="OBS settings, stream control..."/></TextBlock>
+                    <Grid>
+                        <Label Content="Web server port" HorizontalAlignment="Left" Margin="10,20,0,0" VerticalAlignment="Top"/>
+                        <TextBox HorizontalAlignment="Left" Height="23" Margin="98,22,0,0" TextWrapping="Wrap" Text="{Binding Source={x:Static Settings:Ubiqiutous.Default}, Path=WebServerPort}" VerticalAlignment="Top" Width="43"/>
+                    </Grid>
                 </DockPanel>
             </fluent:BackstageTabItem>
         </fluent:BackstageTabControl>

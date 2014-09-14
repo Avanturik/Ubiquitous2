@@ -27,5 +27,6 @@ namespace UB.Utils
         {
             return Regex.IsMatch(input, pattern);
         }
+
     }
 }
