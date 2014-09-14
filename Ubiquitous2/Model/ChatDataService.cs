@@ -120,14 +120,13 @@ namespace UB.Model
             if (chat == null)
                 return;
 
+            chat.Enabled = enabled;
             if (enabled)
             {
-                chat.Enabled = true;
                 chat.Start();
             }
             else
             {
-                chat.Enabled = false;
                 chat.Stop();
             }
 
