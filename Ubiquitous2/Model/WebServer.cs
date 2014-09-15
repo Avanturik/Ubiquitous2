@@ -4,13 +4,13 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace UB.Model
 {
     public class WebServer : HttpServer
     {
         private const string webContentFolder = @"web\";
-        private HttpProcessor httpProcessor;
         public WebServer(int httpPort) : base(httpPort)
         {
             Task.Factory.StartNew(() => Listen());
@@ -25,15 +25,14 @@ namespace UB.Model
                 new KeyValuePair<string,string>(".html", "text/html"),
                 new KeyValuePair<string,string>(".htm", "text/html"),
                 new KeyValuePair<string,string>(".map", "text/html"),
+                new KeyValuePair<string,string>(".ico", "image/x-icon"),
                 new KeyValuePair<string,string>(".json", "application/json"),
                 new KeyValuePair<string,string>(".css", "text/css")
         };
-        public Func<Uri,bool> GetUserHandler { get; set; }
+        public Func<Uri, HttpProcessor,bool> GetUserHandler { get; set; }
 
         public override void HandleGETRequest(HttpProcessor processor)
         {
-            httpProcessor = processor;
-
             Uri uri = new Uri("http://localhost" + processor.HttpPath);
             string contentType = ContentTypes.Where(pair => uri.AbsolutePath.ToLower().Contains(pair.Key)).Select(item => item.Value).FirstOrDefault();
             
@@ -42,33 +41,55 @@ namespace UB.Model
 
             if( !uri.AbsolutePath.Equals("/"))
             {
-                if (GetUserHandler( uri ) )
+                if (GetUserHandler( uri,processor ) )
                     return;
+
+                if( uri.LocalPath.ToLower().Contains( "/ubiquitous2;component/resources/"))
+                {
+                    var url = uri.LocalPath;
+                    SendResourceToClient(contentType, new Uri(url, UriKind.Relative),processor);
+                }
             }
-            if (!SendFileToClient(contentType, uri.AbsolutePath))
+
+            Log.WriteInfo("Httpserver sending {0} to client as {1}", uri.LocalPath,contentType);
+
+            if (!SendFileToClient(contentType, uri.LocalPath, processor))
             {
-                SendFileToClient("text/html", "index.html");
+                SendFileToClient("text/html", "index.html", processor);
             }
         }
 
-        private bool SendFileToClient( string contentType, string fileName )
+        private bool SendResourceToClient( string contentType, Uri resourceUri,HttpProcessor httpProcessor )
+        {
+            var resource = Application.GetResourceStream(resourceUri);
+            SendStreamToClient(resource.Stream, contentType,httpProcessor);
+            return true;
+        }
+
+        private bool SendFileToClient(string contentType, string fileName, HttpProcessor httpProcessor)
         {
             if (!String.IsNullOrWhiteSpace(contentType))
             {
                 var stream = GetFile(fileName);
-                if (stream != null)
-                {
-                    httpProcessor.OutputStream.AutoFlush = true;
-                    httpProcessor.WriteSuccess(contentType);
-
-                    stream.CopyTo(httpProcessor.OutputStream.BaseStream);
-                    return true;
-                }
+                return SendStreamToClient(stream, contentType,httpProcessor);
             }
             return false;
         }
 
-        public void SendJsonToClient( Stream jsonStream )
+        private bool SendStreamToClient( Stream stream, string contentType, HttpProcessor httpProcessor)
+        {
+            if (stream != null)
+            {
+                httpProcessor.OutputStream.AutoFlush = true;
+                httpProcessor.WriteSuccess(contentType);
+
+                stream.CopyTo(httpProcessor.OutputStream.BaseStream);
+                return true;
+            }
+            return false;
+        }
+
+        public void SendJsonToClient(Stream jsonStream, HttpProcessor httpProcessor)
         {
             httpProcessor.OutputStream.AutoFlush = true;
             httpProcessor.WriteSuccess("application/json");
@@ -76,7 +97,7 @@ namespace UB.Model
         }
         private FileStream GetFile( string relativePath )
         {
-            var relativeFilePath = webContentFolder + relativePath.Replace("/", @"\");
+            var relativeFilePath = (webContentFolder + relativePath.Replace("/", @"\")).Replace(@"\\",@"\");
             try
             {
                 return File.OpenRead(relativeFilePath);

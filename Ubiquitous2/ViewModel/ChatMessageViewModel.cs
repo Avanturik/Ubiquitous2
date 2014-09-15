@@ -4,6 +4,7 @@ using UB.Utils;
 using UB.Model;
 using GalaSoft.MvvmLight.Ioc;
 using GalaSoft.MvvmLight.Command;
+using Newtonsoft.Json;
 
 
 namespace UB.ViewModel
@@ -59,6 +60,7 @@ namespace UB.ViewModel
         /// <summary>
         /// Gets the SetActiveChannel.
         /// </summary>
+        [JsonIgnore]
         public RelayCommand SetActiveChannel
         {
             get

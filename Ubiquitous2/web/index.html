@@ -1,11 +1,104 @@
 ﻿<!DOCTYPE html>
 
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
-<head>
-    <meta charset="utf-8" />
-    <title></title>
-</head>
+    <head>
+        <meta charset="utf-8" />
+        <link href="css/ubiquitous.css" rel="stylesheet" type="text/css" />
+        <title>Ubiquitous 2.0</title>
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+        <meta name="viewport" content="user-scalable=no, width=device-width, initial-scale=1.0, minimum-scale=1, maximum-scale=1" />
+
+        <script type="text/javascript" src="js/jquery-1.11.1.min.js"></script>
+        <script type="text/javascript" src="js/json2html.js"></script>
+        <script type="text/javascript" src="js/jquery.json2html.js"></script>
+        <script type="text/javascript" src="js/jquery.cookie.js"></script>
+        <script type="text/javascript" src="js/jquery-ui.min.js"></script>
+        <script type="text/javascript" src="js/jquery.ui.touch-punch.min.js"></script>
+
+        <script type="text/javascript">
+            var lastMessageId = "";
+            try {
+                $(document).ready(function () {
+                    var interval = 1000;
+                    var refresh = function () {
+                        //$.ajax({
+                        //    url: "/statusbar.htm",
+                        //    cache: false,
+                        //    success: function (html) { $("#statusbar").html(html); }
+                        //});
+                        try
+                        {
+                            $.ajax({
+                                url: "/messages.json" + (lastMessageId == "" ? "" : "?id=" + lastMessageId),
+                                cache: false,
+                                success: function (json) {
+                                    console.log(json);
+                                    if (!(json instanceof Array))
+                                        json = JSON.parse(json);
+
+                                    var transform = {
+                                        "tag": "div", "class": "msg", "children": [
+                                        { "tag": "img", "class":"ci", "src": "${ChatIconURL}", "html": "" },
+                                        { "tag": "div", "class":"ts", "html": "${TimeStamp}"},
+                                        { "tag": "div", "class": "cn", "html": "${Channel}" },
+                                        { "tag": "div", "class": "un", "html": "${FromUserName}" },
+                                        { "tag": "div", "class": "txt", "html": "${Text}" },
+                                        ]
+                                    };
+
+                                    for (var i = 0; i < json.length; i++) {
+                                        $('#chat').json2html(json[i], transform, {prepend: true });
+                                        lastMessageId = json[i].Id;
+                                    }
+
+                                    setTimeout(function () {
+                                        refresh();
+                                    }, interval);
+                                },
+                                error: function()
+                                {
+                                    setTimeout(function () {
+                                        refresh();
+                                    }, interval*5);
+                                }
+
+                            });
+
+                        }
+                        catch(e)
+                        {
+                        }
+
+                    };
+                    refresh();
+                    //var x = $.cookie('statusbar.x');
+                    //var y = $.cookie('statusbar.y');
+
+                    //if (x != null && y != null) {
+                    //    $("#statusbar").offset({ top: y, left: x });
+                    //}
+                    //$("#statusbar").draggable({
+                    //    stop: function () {
+                    //        $.cookie('statusbar.x', $("#statusbar").offset().left);
+                    //        $.cookie('statusbar.y', $("#statusbar").offset().top);
+                    //    },
+                    //    containment: "parent"
+                    //});
+
+                    $("#chat").animate({ "scrollTop": $("#chat").scrollTop() + 100 });
+                });
+            }
+            catch (e) {
+            }
+
+
+        </script>
+    </head>
+
 <body>
-    Hello world!
+    <!--<div class="fixed" id="statusbar">
+    </div>-->
+    <div id="chat"></div>
 </body>
 </html>

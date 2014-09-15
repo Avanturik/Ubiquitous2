@@ -1,4 +1,5 @@
 ﻿using System;
+using UB.Utils;
 
 namespace UB.Model
 {
@@ -6,13 +7,18 @@ namespace UB.Model
     {
         public ChatMessage()
         {
-
+            Initialize();
         }
         public ChatMessage (String text)
         {
-            Id = Guid.NewGuid();
-            TimeStamp = DateTime.Now.ToShortTimeString();
             Text = text;
+            Initialize();
+        }
+        private void Initialize()
+        {
+            Id = Guid.NewGuid();
+            TimeStamp = DateTime.Now.ToLongTimeString();
+            UnixTimeStamp = Time.UnixTimestamp();
             HighlyImportant = false;
         }
         public String ChatName { get; set; }
@@ -24,5 +30,6 @@ namespace UB.Model
         public String Channel { get; set; }
         public bool HighlyImportant { get; set; }
         public bool IsSentByMe { get; set; }
+        public long UnixTimeStamp { get; set; }
     }
 }

@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.ObjectModel;
+using System.Web;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Ioc;
 using GalaSoft.MvvmLight.Threading;
+using System.Linq;
 using UB.Model;
 using UB.Utils;
 
@@ -31,6 +33,11 @@ namespace UB.ViewModel
         public ChatBoxViewModel(IChatDataService dataService)
         {
             _dataService = dataService;
+            Initialize();
+        }
+
+        private void Initialize()
+        {
             //Test data
             for (var i = 0; i < 3; i++)
             {
@@ -65,9 +72,44 @@ namespace UB.ViewModel
             _dataService.ReadMessages((messages,error) => {
                 AddMessages(messages);
             });
+
+            _dataService.WebServer.GetUserHandler = (uri,httpProcessor) =>
+            {
+                if (uri.LocalPath.Equals("/messages.json", StringComparison.InvariantCultureIgnoreCase))
+                {
+                    var parameters = HttpUtility.ParseQueryString(uri.Query);
+                    var lastMessageId = parameters["id"];
+                    ChatMessage[] messages = null;
+                    
+                    ChatMessageViewModel previousMessage = Messages.FirstOrDefault(m => lastMessageId != null && m.Message.Id.ToString().Equals(lastMessageId.ToString(),StringComparison.InvariantCultureIgnoreCase));
+                    if (previousMessage == null )
+                        lastMessageId = null;
+
+                    if ( lastMessageId == null)
+                    {
+                        var messageNumber = 10;
+                        messages = Messages.Skip(Math.Max(0, Messages.Count() - messageNumber)).Take(messageNumber).Select(m => m.Message).ToArray();
+                    }
+                    else
+                    {
+                        var guid = lastMessageId.ToString();
+                        var skipCount = Messages.IndexOf( previousMessage )+1;
+
+                        messages = Messages.Skip(skipCount).Select(m => m.Message).ToArray();
+                    }
+                    if( messages != null )
+                    {
+                        Json.SerializeToStream(messages, (stream) =>
+                        {
+                            _dataService.WebServer.SendJsonToClient(stream,httpProcessor);
+                        });
+                    }
+                    return true;
+                }
+
+                return false;
+            };
         }
-
-
         private void AddMessages(ChatMessage[] messages)
         {
             if( IsInDesignMode )

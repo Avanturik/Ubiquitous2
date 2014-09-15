@@ -216,7 +216,6 @@ namespace UB.Model
                     FromUserName = name,
                     IsSentByMe = isSentByMe,
                     HighlyImportant = important,
-                    TimeStamp = DateTime.Now.ToShortTimeString()
                 };
 
                 if (loginInfo.Channels.Contains(message.Channel))

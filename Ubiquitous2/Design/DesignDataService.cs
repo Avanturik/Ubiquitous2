@@ -86,5 +86,12 @@ namespace UB.Design
             throw new NotImplementedException();
         }
 
+
+
+        public WebServer WebServer
+        {
+            get;
+            set;
+        }
     }
 }

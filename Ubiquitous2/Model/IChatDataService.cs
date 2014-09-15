@@ -16,5 +16,7 @@ namespace UB.Model
         ObservableCollection<dynamic> ChatChannels { get; set; }
         void SendMessage(ChatMessage message);
         void Stop();
+        WebServer WebServer { get; set; }
     }
+
 }

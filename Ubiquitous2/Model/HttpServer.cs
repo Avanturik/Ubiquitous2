@@ -73,6 +73,7 @@ namespace UB.Model
             }
             catch (Exception e)
             {
+                Log.WriteInfo("HttpServer failed to process a request. {0}", e.Message);
                 WriteFailure();
             }
             try

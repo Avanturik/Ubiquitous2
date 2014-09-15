@@ -13,6 +13,7 @@ using GalaSoft.MvvmLight.Threading;
 using UB.Utils;
 using UB.View;
 using System.Windows;
+using System.Web;
 
 namespace UB.ViewModel
 {
@@ -33,20 +34,24 @@ namespace UB.ViewModel
         public MainViewModel(IChatDataService dataService)
         {
             _dataService = dataService;
+            Initialize();
+        }
+        public void Initialize()
+        {
             ChannelList = _dataService.ChatChannels;
             SelectedChatChannel = ChannelList[0];
 
             //var testStatusWindow = new StatusWindow();
             //testStatusWindow.Show();
 
-            MessengerInstance.Register<ChatMessage>(this, "SetChannel", (message) => {
+            MessengerInstance.Register<ChatMessage>(this, "SetChannel", (message) =>
+            {
                 SelectedChatChannel = ChannelList.FirstOrDefault(channel =>
                     channel.ChatName == message.ChatName &&
                     channel.ChannelName == message.Channel) ?? ChannelList[0];
 
             });
         }
-
         private RelayCommand _showSettings;
 
         /// <summary>
@@ -192,7 +197,7 @@ namespace UB.ViewModel
         /// </summary>
         public const string SendTextPropertyName = "SendText";
 
-        private string _sendText = "";
+        private string _sendText;
 
         /// <summary>
         /// Sets and gets the SendText property.

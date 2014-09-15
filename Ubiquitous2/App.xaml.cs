@@ -14,7 +14,6 @@ namespace UB
     /// </summary>
     public partial class App : Application
     {
-        private WebServer webServer;
         protected override void OnStartup(StartupEventArgs e)
         {
             Utils.Net.DemandTCPPermission();

@@ -23,7 +23,6 @@ namespace UB.Model
         private Action<ChatMessage[], Exception> readChatCallback;
         private List<ChatConfig> chatConfigs;
         private List<IChat> chats;
-        private WebServer webServer;
         //Disposable
         private Timer receiveTimer;
 
@@ -38,42 +37,19 @@ namespace UB.Model
             Task.Factory.StartNew(() => StartAllChats());
         }
 
+        public WebServer WebServer { get; set; }
 
         private void startWebServer()
         {
             if (Ubiqiutous.Default.WebServerPort == 0 && Ubiqiutous.Default.WebServerPort > 65535)
                 return;
 
-            webServer = new WebServer(Ubiqiutous.Default.WebServerPort);
-            webServer.GetUserHandler = (uri) =>
-            {
-                if( uri.LocalPath.Equals("/messages.json",StringComparison.InvariantCultureIgnoreCase))
-                {
-                    var parameters = HttpUtility.ParseQueryString(uri.Query);
-                    var lastMessageId = parameters["lastid"];
-                    if( lastMessageId == null )
-                    {
-                        // return last n messages
-                        GetRandomMessage((msg,err) => {
-                            Json.SerializeToStream(msg, (stream) => {
-                                webServer.SendJsonToClient(stream);
-                            });
-                        });                        
-                    }
-                    else
-                    {
-                        // return messages after specified
-                    }
-                    return true;
-                }
-
-                return false;
-            };
+            WebServer = new WebServer(Ubiqiutous.Default.WebServerPort);
 
         }
         private void stopWebServer()
         {
-            webServer.Stop();
+            WebServer.Stop();
         }
         public List<IChat> Chats
         {
@@ -139,7 +115,19 @@ namespace UB.Model
         }
         public void StopAllChats()
         {
-            Chats.ForEach(chat => chat.Stop());
+            var stopChats = Chats.Where(chat => chat.Enabled == true).ToList();
+
+            Task[] stopTasks = new Task[stopChats.Count()];
+            for (int i = 0; i < stopTasks.Length; i++)
+            {
+                var index = i;
+                stopTasks[i] = Task.Factory.StartNew(() =>
+                {
+                    stopChats[i].Stop();
+                });
+                Thread.Sleep(16);
+            }
+            Task.WaitAll(stopTasks, 1000);
         }
         public void StartAllChats()
         {
@@ -210,7 +198,6 @@ namespace UB.Model
             receiveTimer.Dispose();
         }
 
-
         public string GetRandomText()
         {
             return String.Empty;
@@ -235,8 +222,7 @@ namespace UB.Model
                             FromUserName = chat.NickName,
                             HighlyImportant = message.HighlyImportant,
                             IsSentByMe = message.IsSentByMe,
-                            Text = message.Text,
-                            TimeStamp = DateTime.Now.ToShortTimeString(),                            
+                            Text = message.Text,               
                         });
                     }
                 }
