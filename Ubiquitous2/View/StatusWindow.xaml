@@ -7,11 +7,12 @@
         xmlns:Devart="clr-namespace:Devart.Controls"
         xmlns:UBView="clr-namespace:UB.View"
         xmlns:UBViewModel="clr-namespace:UB.ViewModel"
+        xmlns:ComponentModel="clr-namespace:System.ComponentModel;assembly=WindowsBase"
         WindowStyle="None"
         AllowsTransparency="True"        
         ResizeMode="NoResize"
         Background="{x:Null}"
-        Title="StatusWindow"
+        Title="Ubiquitous 2.0 - Status"
         Topmost="True"
         Icon="..\ubiquitous smile.ico"
         DataContext="{Binding Source={StaticResource Locator},Path=Status}" 
@@ -33,10 +34,11 @@
             <GradientStop Color="Black" Offset="0.391"/>
             <GradientStop Color="Red" Offset="1"/>
         </LinearGradientBrush>
+
     </Window.Resources>
     <Grid>
         <Grid>
-            <ItemsControl Focusable="False" ItemsSource="{Binding Chats}" Padding="0" Margin="0,0,0,0">
+            <ItemsControl Focusable="False" ItemsSource="{Binding ChatsView}" Padding="0" Margin="0,0,0,0">
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
                         <Grid MinWidth="32"  Margin="0" HorizontalAlignment="Center" VerticalAlignment="Center" Opacity="0.9">

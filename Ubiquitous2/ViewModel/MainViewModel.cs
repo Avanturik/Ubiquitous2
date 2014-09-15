@@ -53,6 +53,25 @@ namespace UB.ViewModel
 
             });
         }
+
+        private RelayCommand _minimize;
+
+        /// <summary>
+        /// Gets the Minimize.
+        /// </summary>
+        public RelayCommand Minimize
+        {
+            get
+            {
+                return _minimize
+                    ?? (_minimize = new RelayCommand(
+                                          () =>
+                                          {
+                                              Application.Current.MainWindow.WindowState = WindowState.Minimized;
+                                          }));
+            }
+        }
+
         private RelayCommand _showSettings;
 
         /// <summary>
@@ -344,7 +363,10 @@ namespace UB.ViewModel
 
             set
             {
-                if (_selectedChat != null && value != null &&
+                if (value == null)
+                    return;
+
+                if ( _selectedChat != null &&
                     _selectedChat.ChatName == value.ChatName &&
                     _selectedChat.ChannelName == value.ChannelName &&
                     _selectedChat.ChatIconURL == value.ChatIconURL)

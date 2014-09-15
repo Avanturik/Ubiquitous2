@@ -7,7 +7,7 @@
                     xmlns:View="clr-namespace:UB.View" 
                     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
                     xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-                    mc:Ignorable="d"
+                    mc:Ignorable="d"                    
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
     
     <BooleanToVisibilityConverter x:Key="boolToVisibilityConverter"></BooleanToVisibilityConverter>
@@ -105,17 +105,29 @@
                                             </LinearGradientBrush>
                                         </Border.Background>
                                         <DockPanel HorizontalAlignment="Stretch" VerticalAlignment="Center">
-                                            <TextBlock Focusable="False" Background="Transparent" Foreground="White">
-                                            <Hyperlink Focusable="False" Style="{StaticResource ResourceKey=OverlayHyperlink}" Command="{Binding ShowSettings}">
-                                                <Image Focusable="False" Source="/Ubiquitous2;component/Resources/gear.png" Width="16" Height="16" Margin="0,0,0,-3"/> Settings
-                                            </Hyperlink>
-                                                
-                                            </TextBlock>
+
+                                            <Image Style="{StaticResource TopBarIcon}" DockPanel.Dock="Left" Width="16" Source="/Ubiquitous2;component/Resources/ubiquitous smile.ico" HorizontalAlignment="Left" VerticalAlignment="Center">
+                                            </Image>
+
                                             <TextBlock DockPanel.Dock="Right" HorizontalAlignment="Right" VerticalAlignment="Center">
                                                 <Hyperlink Style="{StaticResource OverlayHyperlink}" Focusable="False" Command="{Binding ExitApplication}">
-                                                    <Image Style="{StaticResource TopBarIcon}" DockPanel.Dock="Right" Width="16" Source="/Ubiquitous2;component/Resources/close.ico" HorizontalAlignment="Right" VerticalAlignment="Center">
+                                                    <Image Style="{StaticResource TopBarIcon}" DockPanel.Dock="Right" Width="14" Source="/Ubiquitous2;component/Resources/close.ico" HorizontalAlignment="Right" VerticalAlignment="Center">
                                                     </Image>
                                                 </Hyperlink>
+                                            </TextBlock>
+                                            <TextBlock DockPanel.Dock="Right" HorizontalAlignment="Right" VerticalAlignment="Center">
+                                                <Hyperlink Style="{StaticResource OverlayHyperlink}" Focusable="False" Command="{Binding Minimize}">
+                                                    <Image Margin="0,0,14,0" Style="{StaticResource TopBarIcon}" DockPanel.Dock="Right" Width="14" Source="/Ubiquitous2;component/Resources/minimize.ico" HorizontalAlignment="Right" VerticalAlignment="Center">
+                                                    </Image>
+                                                </Hyperlink>
+                                            </TextBlock>
+
+                                            <TextBlock DockPanel.Dock="Right" HorizontalAlignment="Right" VerticalAlignment="Center">
+                                                <Hyperlink Style="{StaticResource OverlayHyperlink}" Focusable="False" Command="{Binding ShowSettings}">
+                                                <Image Margin="0,0,14,0" Style="{StaticResource TopBarIcon}" DockPanel.Dock="Right" Width="14" Source="/Ubiquitous2;component/Resources/settings.ico" HorizontalAlignment="Right" VerticalAlignment="Center">
+                                                    </Image>
+                                            </Hyperlink>
+
                                             </TextBlock>
 
                                         </DockPanel>
