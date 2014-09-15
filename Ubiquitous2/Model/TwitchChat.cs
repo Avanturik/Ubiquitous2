@@ -110,12 +110,20 @@ namespace UB.Model
                         var streamInfo = this.With(x => (TwitchChannelInfo)webPoller.LastValue)
                             .With(x => x.stream);
 
+                        var tooltip = toolTips.FirstOrDefault(t => t.Header == webPoller.Id);
                         if (streamInfo != null)
+                        {
                             viewers += streamInfo.viewers;
+                            tooltip.Text = streamInfo.viewers.ToString();
+                        }
+                        else
+                        {
+                            tooltip.Text = "0";
+                        }
+
                     }
                     Status.ViewersCount = viewers;
-                    var tooltip = toolTips.FirstOrDefault(t => t.Header == poller.Id);
-                    tooltip.Text = viewers.ToString();
+                    
 
                 };
                 poller.Start();

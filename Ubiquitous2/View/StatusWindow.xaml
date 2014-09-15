@@ -41,16 +41,16 @@
                     <DataTemplate>
                         <Grid MinWidth="32"  Margin="0" HorizontalAlignment="Center" VerticalAlignment="Center" Opacity="0.9">
                             <Grid.ToolTip>
-                                <ToolTip Background="{x:Null}" BorderBrush="{x:Null}" Foreground="#FF5D5D5D">
-                                    <Border Padding="5" BorderThickness="1" BorderBrush="#FFFFBC2B" CornerRadius="10" Background="#CC000000">
+                                <ToolTip Background="{x:Null}" BorderBrush="{x:Null}" Foreground="#FFCDCDCD">
+                                    <Border Padding="5" BorderThickness="1" BorderBrush="#FFFFBC2B" CornerRadius="10" Background="#FF303030">
                                         <ItemsControl Focusable="False" ItemsSource="{Binding Status.ToolTips}">
                                             <ItemsControl.ItemTemplate>
                                                 <DataTemplate>
-                                                    <StackPanel Orientation="Horizontal">
-                                                        <TextBlock Text="{Binding Header}"></TextBlock>
-                                                        <TextBlock> :</TextBlock>
-                                                        <TextBlock Text="{Binding Text}"/>
-                                                    </StackPanel>
+                                                    <DockPanel HorizontalAlignment="Stretch" VerticalAlignment="Top">
+                                                        <TextBlock DockPanel.Dock="Left" Text="{Binding Header}" HorizontalAlignment="Left"></TextBlock>
+                                                        <TextBlock DockPanel.Dock="Left" Text=" : " HorizontalAlignment="Left" />
+                                                        <TextBlock DockPanel.Dock="Right" Text="{Binding Text}" Foreground="#FFCB972F"/>
+                                                    </DockPanel>
                                                 </DataTemplate>
                                             </ItemsControl.ItemTemplate>
                                             <ItemsControl.ItemsPanel>
