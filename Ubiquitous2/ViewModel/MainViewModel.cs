@@ -41,8 +41,9 @@ namespace UB.ViewModel
             ChannelList = _dataService.ChatChannels;
             SelectedChatChannel = ChannelList[0];
 
-            //var testStatusWindow = new StatusWindow();
-            //testStatusWindow.Show();
+            var testStatusWindow = new StatusWindow();
+            //testStatusWindow.Owner = Application.Current.MainWindow;
+            testStatusWindow.Show();
 
             MessengerInstance.Register<ChatMessage>(this, "SetChannel", (message) =>
             {

@@ -268,6 +268,7 @@ namespace UB.Model
             if (Status.IsConnecting)
             {
                 Status.IsConnecting = false;
+                Status.IsConnected = true;
                 JoinChannels();
             }
         }

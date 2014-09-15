@@ -182,9 +182,11 @@
     <Compile Include="Model\IRC\IRCLoginInfo.cs" />
     <Compile Include="Model\ISettingsDataService.cs" />
     <Compile Include="Model\LoginInfoBase.cs" />
+    <Compile Include="Model\ToolTip.cs" />
     <Compile Include="Model\WebClientBase.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="Model\WebPoller.cs" />
     <Compile Include="Model\WebServer.cs" />
     <Compile Include="Properties\PortableSettingsProvider.cs" />
     <Compile Include="Model\TwitchChat.cs" />
@@ -199,6 +201,11 @@
     <Compile Include="Utils\Json.cs" />
     <Compile Include="Utils\Net.cs" />
     <Compile Include="Utils\Time.cs" />
+    <Compile Include="ViewModel\ChatStatusItemViewModel.cs" />
+    <Compile Include="ViewModel\StatusViewModel.cs" />
+    <Compile Include="View\ChatStatusItemView.xaml.cs">
+      <DependentUpon>ChatStatusItemView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="View\SettingsWindow.xaml.cs">
       <DependentUpon>SettingsWindow.xaml</DependentUpon>
     </Compile>
@@ -228,6 +235,10 @@
       <DependentUpon>StatusWindow.xaml</DependentUpon>
     </Compile>
     <Page Include="Controls\ResizableBorder.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\ChatStatusItemView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -314,6 +325,9 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
+    <Resource Include="Resources\twitchevent.ico">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
     <Content Include="web\css\ubiquitous.css">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

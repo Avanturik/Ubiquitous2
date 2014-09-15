@@ -93,5 +93,18 @@ namespace UB.Design
             get;
             set;
         }
+
+
+        public System.Collections.Generic.List<IChat> Chats
+        {
+            get { return new System.Collections.Generic.List<IChat>(); }                
+        }
+
+
+        public Action<IChat> ChatStatusHandler
+        {
+            get;
+            set;
+        }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
@@ -141,5 +142,32 @@ namespace UB.Model
 
                 return coll[name].Value;
             }
+
+            public CookieContainer Cookies
+            {
+                get { return m_container; }
+                set
+                {
+                    Hashtable table = (Hashtable)value.GetType().InvokeMember("m_domainTable",
+                                                                 BindingFlags.NonPublic |
+                                                                 BindingFlags.GetField |
+                                                                 BindingFlags.Instance,
+                                                                 null,
+                                                                 value,
+                                                                 new object[] { });
+                    foreach (var key in table.Keys)
+                    {
+                        var url = String.Format("http://{0}/", key.ToString().TrimStart('.'));
+
+                        foreach (Cookie cookie in value.GetCookies(new Uri(url)))
+                        {
+                            m_container.Add(cookie);
+                        }
+                    }
+
+
+                }
+            }
+
     }
 }

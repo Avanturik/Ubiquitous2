@@ -93,6 +93,16 @@ namespace UB.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
         /// </summary>
+        public static System.Drawing.Icon twitchevent {
+            get {
+                object obj = ResourceManager.GetObject("twitchevent", resourceCulture);
+                return ((System.Drawing.Icon)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
+        /// </summary>
         public static System.Drawing.Icon ubiquitous_smile {
             get {
                 object obj = ResourceManager.GetObject("ubiquitous_smile", resourceCulture);

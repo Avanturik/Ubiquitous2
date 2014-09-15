@@ -6,6 +6,7 @@ namespace UB.Model
 {
     public interface IChatDataService
     {
+        
         void GetRandomMessage(Action<ChatMessage, Exception> callback);
         void ReadMessages(Action<ChatMessage[], Exception> callback);
         void SwitchChat( String chatName, bool enabled);
@@ -13,10 +14,12 @@ namespace UB.Model
         void StartAllChats();
         void StopAllChats();
         string GetRandomText();
+        List<IChat> Chats { get;}
         ObservableCollection<dynamic> ChatChannels { get; set; }
         void SendMessage(ChatMessage message);
         void Stop();
         WebServer WebServer { get; set; }
+        Action<IChat> ChatStatusHandler { get; set; }
     }
 
 }

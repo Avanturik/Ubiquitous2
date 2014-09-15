@@ -44,13 +44,33 @@ namespace UB.Utils
                     }
                     catch
                     {
-                        Log.WriteError("Deserializing of {0} failed", typeof(T).ToString());
+                        Log.WriteError("Deserializing of {0} from url {1} failed", typeof(T).ToString(), url);
                         return null;
                     }
                 }
 
             }
 
+        }
+        public static T DeserializeStream<T>(Stream stream) where T : class
+        {
+            if (stream == null)
+                return null;
+
+            using (StreamReader streamReader = new StreamReader(stream))
+            using (JsonReader reader = new JsonTextReader(streamReader))
+            {
+                JsonSerializer serializer = new JsonSerializer();
+                try
+                {
+                    return serializer.Deserialize<T>(reader);
+                }
+                catch
+                {
+                    Log.WriteError("Deserializing of {0} failed", typeof(T).ToString());
+                    return null;
+                }
+            }
         }
     }
 }

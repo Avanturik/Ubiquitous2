@@ -14,9 +14,6 @@ namespace UB.Model
         private const string chatTitleNormalTwitch = "Twitch.tv";
         private const string chatTitleEventTwitch = "Twitch.tv(event)";
         
-        //Icons
-        private const string chatIconTwitch = @"/Ubiquitous2;component/Resources/twitch.ico";
-
         public static List<ChatConfig> DefaultChatSettings
         {
             get
@@ -26,7 +23,7 @@ namespace UB.Model
                     new ChatConfig()
                     {
                         ChatName = chatTitleNormalTwitch,
-                        IconURL = chatIconTwitch,
+                        IconURL = Icons.TwitchIcon,
                         Enabled = false,
                         Parameters = new List<ConfigField>() {
                             new ConfigField() {  Name = "Username", Label = "Username", DataType = "Text", IsVisible = true, Value = "justinfan" + random.Next(1,123456) },
@@ -38,7 +35,7 @@ namespace UB.Model
                     new ChatConfig()
                     {
                         ChatName = chatTitleEventTwitch,
-                        IconURL = chatIconTwitch,
+                        IconURL = Icons.TwitchEventIcon,
                         Enabled = false,
                         Parameters = new List<ConfigField>() {
                             new ConfigField() {  Name = "Username", Label = "Username", DataType = "Text", IsVisible = true, Value = "justinfan" + random.Next(1,123456) },
@@ -59,7 +56,7 @@ namespace UB.Model
                                                 return new TwitchChat(config)
                                                 {
                                                     ChatName = chatTitleNormalTwitch,
-                                                    IconURL = chatIconTwitch,
+                                                    IconURL = Icons.TwitchIcon,
                                                 };
                                             }},
             //Twitch's Event channel. e.g. #riotgames                                            
@@ -68,7 +65,7 @@ namespace UB.Model
                                                 var twitchChatEvent = new TwitchChat(config)
                                                 {
                                                     ChatName = chatTitleEventTwitch,
-                                                    IconURL = chatIconTwitch,
+                                                    IconURL = Icons.TwitchEventIcon,
                                                 };
                                                 twitchChatEvent.LoginInfo.HostName = "199.9.252.26";
                                                 twitchChatEvent.LoginInfo.Port = 80;

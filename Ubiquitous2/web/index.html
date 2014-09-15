@@ -56,11 +56,12 @@
                                         refresh();
                                     }, interval);
                                 },
+                                timeout: 3000,
                                 error: function()
                                 {
                                     setTimeout(function () {
                                         refresh();
-                                    }, interval*5);
+                                    }, interval);
                                 }
 
                             });

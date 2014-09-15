@@ -22,6 +22,9 @@ namespace UB.Model
         private static List<Emoticon> sharedEmoticons = new List<Emoticon>();
         private static bool isFallbackEmoticons = false;
         private static bool isWebEmoticons = false;
+        private List<ToolTip> toolTips = new List<ToolTip>();
+
+        private List<WebPoller> counterWebPollers = new List<WebPoller>();
 
         public TwitchChat(ChatConfig config) : 
             base(new IRCLoginInfo()
@@ -42,6 +45,8 @@ namespace UB.Model
             this.NoticeReceived += TwitchChat_NoticeReceived;
             this.ChatUserJoined += TwitchChat_ChatUserJoined;
             this.ChatUserLeft += TwitchChat_ChatUserLeft;
+
+            Status.ToolTips = toolTips;
         }
 
         void TwitchChat_ChatUserLeft(object sender, ChatUserEventArgs e)
@@ -54,10 +59,19 @@ namespace UB.Model
             if (e.ChatUser.NickName.Equals(LoginInfo.UserName, StringComparison.InvariantCultureIgnoreCase))
             {
                 if (RemoveChannel != null)
+                {
                     RemoveChannel(e.ChatUser.Channel, this);
+                }
+                stopCounterPoller(e.ChatUser.Channel);
             }
         }
-
+        void stopCounterPoller( string channelName )
+        {
+            toolTips.RemoveAll(t => t.Header == channelName);
+            var poller = counterWebPollers.FirstOrDefault(p => p.Id == channelName);
+            poller.Stop();
+            counterWebPollers.Remove(poller);
+        }
         void TwitchChat_ChatUserJoined(object sender, ChatUserEventArgs e)
         {
             e.ChatUser.ChatName = this.ChatName;
@@ -73,7 +87,40 @@ namespace UB.Model
             if (e.ChatUser.NickName.Equals(LoginInfo.UserName, StringComparison.InvariantCultureIgnoreCase))
             {
                 if (AddChannel != null)
+                {
                     AddChannel(e.ChatUser.Channel, this);
+                }
+
+                var poller = new WebPoller()
+                {
+                    Id = e.ChatUser.Channel,
+                    Uri = new Uri(String.Format(@"http://api.twitch.tv/kraken/streams/{0}?on_site=1", e.ChatUser.Channel.Replace("#", ""))),
+                };
+
+                toolTips.RemoveAll(t => t.Header == poller.Id);
+                toolTips.Add( new ToolTip(poller.Id, ""));
+
+                poller.ReadStream = (stream) =>
+                {
+                    var channelInfo = Json.DeserializeStream<TwitchChannelInfo>(stream);
+                    poller.LastValue = channelInfo;
+                    var viewers = 0;
+                    foreach (var webPoller in counterWebPollers)
+                    {
+                        var streamInfo = this.With(x => (TwitchChannelInfo)webPoller.LastValue)
+                            .With(x => x.stream);
+
+                        if (streamInfo != null)
+                            viewers += streamInfo.viewers;
+                    }
+                    Status.ViewersCount = viewers;
+                    var tooltip = toolTips.FirstOrDefault(t => t.Header == poller.Id);
+                    tooltip.Text = viewers.ToString();
+
+                };
+                poller.Start();
+
+                counterWebPollers.Add(poller);
 
                 Status.IsLoggedIn = true;
                 Status.IsStarting = false;
@@ -94,10 +141,11 @@ namespace UB.Model
 
         public override bool Start()
         {
-            InitEmoticons();
-
             isAnonymous = false;
             Status.IsLoggedIn = false;
+            Status.IsConnected = false;
+
+            InitEmoticons();
 
             var userName = Config.Parameters.StringValue("Username");
             var password = Config.Parameters.StringValue("Password");
@@ -198,6 +246,12 @@ namespace UB.Model
         }
         public override bool Stop()
         {
+            foreach( var poller in counterWebPollers )
+            {
+                poller.Stop();
+            }
+            counterWebPollers.Clear();
+
             if (RemoveChannel != null)
             {
                 foreach (var channel in LoginInfo.Channels)
@@ -323,6 +377,8 @@ namespace UB.Model
         }
     }
 
+
+    #region Twich emoticon json
     class TwitchJsonEmoticons
     {
         public object _links { get; set; }
@@ -341,4 +397,84 @@ namespace UB.Model
         public string url { get; set; }
         public string emoticon_set { get; set; }
     }
+    #endregion
+
+    #region Twitch channel status json
+
+    public class TwitchLinks
+    {
+        public string self { get; set; }
+        public string channel { get; set; }
+    }
+
+    public class TwitchLinks2
+    {
+        public string self { get; set; }
+    }
+
+    public class TwitchPreview
+    {
+        public string small { get; set; }
+        public string medium { get; set; }
+        public string large { get; set; }
+        public string template { get; set; }
+    }
+
+    public class TwitchLinks3
+    {
+        public string self { get; set; }
+        public string follows { get; set; }
+        public string commercial { get; set; }
+        public string stream_key { get; set; }
+        public string chat { get; set; }
+        public string features { get; set; }
+        public string subscriptions { get; set; }
+        public string editors { get; set; }
+        public string videos { get; set; }
+        public string teams { get; set; }
+    }
+
+    public class TwitchChannel
+    {
+        public TwitchLinks3 _links { get; set; }
+        public object background { get; set; }
+        public object banner { get; set; }
+        public string display_name { get; set; }
+        public string game { get; set; }
+        public string logo { get; set; }
+        public bool mature { get; set; }
+        public string status { get; set; }
+        public string url { get; set; }
+        public string video_banner { get; set; }
+        public int _id { get; set; }
+        public string name { get; set; }
+        public string created_at { get; set; }
+        public string updated_at { get; set; }
+        public object abuse_reported { get; set; }
+        public int delay { get; set; }
+        public int followers { get; set; }
+        public string profile_banner { get; set; }
+        public string profile_banner_background_color { get; set; }
+        public int views { get; set; }
+        public string language { get; set; }
+    }
+
+    public class TwitchStream
+    {
+        public long _id { get; set; }
+        public string game { get; set; }
+        public int viewers { get; set; }
+        public string created_at { get; set; }
+        public TwitchLinks2 _links { get; set; }
+        public TwitchPreview preview { get; set; }
+        public TwitchChannel channel { get; set; }
+    }
+
+    public class TwitchChannelInfo
+    {
+        public TwitchLinks _links { get; set; }
+        public TwitchStream stream { get; set; }    
+    }
+#endregion
+
 }

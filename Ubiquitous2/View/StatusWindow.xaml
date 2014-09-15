@@ -4,34 +4,101 @@
         xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity" 
         xmlns:il="clr-namespace:Microsoft.Expression.Interactivity.Layout;assembly=Microsoft.Expression.Interactions"
         xmlns:Interactivity="clr-namespace:UB.Interactivity"
+        xmlns:Devart="clr-namespace:Devart.Controls"
+        xmlns:UBView="clr-namespace:UB.View"
+        xmlns:UBViewModel="clr-namespace:UB.ViewModel"
         WindowStyle="None"
-        AllowsTransparency="True"
+        AllowsTransparency="True"        
         ResizeMode="NoResize"
+        Background="{x:Null}"
         Title="StatusWindow"
-        Topmost="True" Background="{x:Null}" 
-        SizeToContent="WidthAndHeight" HorizontalAlignment="Center" VerticalAlignment="Center"  MaxWidth="56" MaxHeight="32" Padding="0">
+        Topmost="True"
+        Icon="..\ubiquitous smile.ico"
+        DataContext="{Binding Source={StaticResource Locator},Path=Status}" 
+        SizeToContent="WidthAndHeight" HorizontalAlignment="Center" VerticalAlignment="Center" MaxHeight="32" Padding="0">
     <i:Interaction.Behaviors>
         <Interactivity:DragWindow/>
-    </i:Interaction.Behaviors>
+    </i:Interaction.Behaviors>     
+    
+    <Window.Resources>
+        <LinearGradientBrush x:Key="OnlineGradient" EndPoint="0.5,1" StartPoint="0.5,0">
+            <GradientStop Color="Black" Offset="0.391"/>
+            <GradientStop Color="#FF066E14" Offset="1"/>
+        </LinearGradientBrush>
+        <LinearGradientBrush x:Key="IncompleteGradient" EndPoint="0.5,1" StartPoint="0.5,0">
+            <GradientStop Color="Black" Offset="0.391"/>
+            <GradientStop Color="Yellow" Offset="1"/>
+        </LinearGradientBrush>
+        <LinearGradientBrush x:Key="ErrorGradient" EndPoint="0.5,1" StartPoint="0.5,0">
+            <GradientStop Color="Black" Offset="0.391"/>
+            <GradientStop Color="Red" Offset="1"/>
+        </LinearGradientBrush>
+    </Window.Resources>
+    <Grid>
+        <Grid>
+            <ItemsControl Focusable="False" ItemsSource="{Binding Chats}" Padding="0" Margin="0,0,0,0">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <Grid MinWidth="32"  Margin="0" HorizontalAlignment="Center" VerticalAlignment="Center" Opacity="0.9">
+                            <Grid.ToolTip>
+                                <ToolTip Background="{x:Null}" BorderBrush="{x:Null}" Foreground="#FF5D5D5D">
+                                    <Border Padding="5" BorderThickness="1" BorderBrush="#FFFFBC2B" CornerRadius="10" Background="#CC000000">
+                                        <ItemsControl Focusable="False" ItemsSource="{Binding Status.ToolTips}">
+                                            <ItemsControl.ItemTemplate>
+                                                <DataTemplate>
+                                                    <StackPanel Orientation="Horizontal">
+                                                        <TextBlock Text="{Binding Header}"></TextBlock>
+                                                        <TextBlock> :</TextBlock>
+                                                        <TextBlock Text="{Binding Text}"/>
+                                                    </StackPanel>
+                                                </DataTemplate>
+                                            </ItemsControl.ItemTemplate>
+                                            <ItemsControl.ItemsPanel>
+                                                <ItemsPanelTemplate>
+                                                    <StackPanel Orientation="Vertical">
+                                                    </StackPanel>
+                                                </ItemsPanelTemplate>
+                                            </ItemsControl.ItemsPanel>
+                                        </ItemsControl>
+                                    </Border>
+                                </ToolTip>
+                            </Grid.ToolTip>
+                            <Border BorderBrush="#FF033E0B" BorderThickness="1" Margin="0,0,0,4" CornerRadius="5" Padding="0">
+                                <Border.Style>
+                                    <Style>
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding Enabled}" Value="true">
+                                                <Setter Property="Border.Background" Value="{StaticResource ErrorGradient}"/>
+                                            </DataTrigger>
+                                            <DataTrigger Binding="{Binding Status.IsConnected}" Value="true">
+                                                <Setter Property="Border.Background" Value="{StaticResource IncompleteGradient}"/>
+                                            </DataTrigger>
+                                            <DataTrigger Binding="{Binding Status.IsLoggedIn}" Value="true">
+                                                <Setter Property="Border.Background" Value="{StaticResource OnlineGradient}"/>
+                                            </DataTrigger>
+                                        </Style.Triggers>                                        
+                                    </Style>
+                                </Border.Style>
+                            </Border>
 
-
-    <Grid MinWidth="32"  Margin="0" HorizontalAlignment="Center" VerticalAlignment="Center" Opacity="0.9">
-        <Border BorderBrush="#FF033E0B" BorderThickness="1" Margin="0,0,0,4" CornerRadius="5" Padding="0">
-            <Border.Background>
-                <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
-                    <GradientStop Color="Black" Offset="0.391"/>
-                    <GradientStop Color="#FF066E14" Offset="1"/>
-                </LinearGradientBrush>
-            </Border.Background>
-        </Border>
-
-        <Image Width="16" Source="/Ubiquitous2;component/Resources/ubiquitous smile.ico" HorizontalAlignment="Center" VerticalAlignment="Center" Opacity="1" Margin="0,0,0,10" />
-        <Rectangle Fill="#66000000" Margin="3,10,3,7" RadiusX="5" RadiusY="5"></Rectangle>
-        <TextBlock Margin="0,4,0,2" HorizontalAlignment="Center" VerticalAlignment="Center" Padding="5" FontFamily="Tahoma" Opacity="0.8" FontWeight="Bold" FontSize="16" Foreground="#FFF3B841" >
-            <TextBlock.Effect>
-                <DropShadowEffect ShadowDepth="0" BlurRadius="0" Color="White"/>
-            </TextBlock.Effect>
-                99
-        </TextBlock>
+                            <Image Width="16" Source="{Binding IconURL}" HorizontalAlignment="Center" VerticalAlignment="Center" Opacity="1" Margin="0,0,0,10" />
+                            <Rectangle Fill="#66000000" Margin="3,10,3,7" RadiusX="5" RadiusY="5"></Rectangle>
+                            <TextBlock Text="{Binding Status.ViewersCount}" Margin="0,4,0,2" HorizontalAlignment="Center" VerticalAlignment="Center" Padding="5" FontFamily="Tahoma" Opacity="0.8" FontWeight="Bold" FontSize="16" Foreground="#FFF3B841" >
+                                <TextBlock.Effect>
+                                    <DropShadowEffect ShadowDepth="0" BlurRadius="0" Color="White"/>
+                                </TextBlock.Effect>
+                            </TextBlock>
+                        </Grid>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <StackPanel Orientation="Horizontal">
+                        </StackPanel>
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+            </ItemsControl>
+        </Grid>
     </Grid>
+
 </Window>

@@ -14,5 +14,9 @@ namespace UB.Model
         bool IsStopping { get; set;  }
         bool IsStarting { get; set; }
         bool IsConnecting { get; set; }
+        bool IsConnected { get; set; }
+        bool IsJoined { get; set; }
+        List<ToolTip> ToolTips { get; set; }
+        int ViewersCount { get; set; }
     }
 }

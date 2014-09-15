@@ -45,7 +45,7 @@ namespace UB.ViewModel
                 SimpleIoc.Default.Register<IChatDataService, ChatDataService>();
                 SimpleIoc.Default.Register<IImageDataSource, ImageCacheDataService>();
             }
-
+            SimpleIoc.Default.Register<StatusViewModel>();
             SimpleIoc.Default.Register<SettingsFieldViewModel>();
             SimpleIoc.Default.Register<SettingsChatItemViewModel>();
             SimpleIoc.Default.Register<MainViewModel>();
@@ -139,11 +139,27 @@ namespace UB.ViewModel
                 return ServiceLocator.Current.GetInstance<SettingsFieldViewModel>();
             }
         }
+
+        /// <summary>
+        /// Gets the Main property.
+        /// </summary>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance",
+            "CA1822:MarkMembersAsStatic",
+            Justification = "This non-static member is needed for data binding purposes.")]
+        public StatusViewModel Status
+        {
+            get
+            {
+                return ServiceLocator.Current.GetInstance<StatusViewModel>();
+            }
+        }
         /// <summary>
         /// Cleans up all the resources.
         /// </summary>
         public static void Cleanup()
         {
         }
+
+
     }
 }

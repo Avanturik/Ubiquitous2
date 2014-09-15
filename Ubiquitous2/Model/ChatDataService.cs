@@ -105,7 +105,7 @@ namespace UB.Model
             {
                 chat.Stop();
             }
-
+            Task.Factory.StartNew( () => ChatStatusHandler(chat));
             Log.WriteInfo("switching {0} to {1}", chatName, enabled);
         }
 
@@ -163,7 +163,11 @@ namespace UB.Model
                 };
                 if (chat.Enabled)
                 {
-                  Task.Factory.StartNew( ()=> chat.Start() );  
+                    Task.Factory.StartNew(() => {
+                        var c = chat;
+                        c.Start(); 
+                        ChatStatusHandler(c);
+                    });
                 }
             });
         }
@@ -254,5 +258,12 @@ namespace UB.Model
             StopAllChats();
         }
 
+
+
+        public Action<IChat> ChatStatusHandler
+        {
+            get;
+            set;
+        }
     }
 }

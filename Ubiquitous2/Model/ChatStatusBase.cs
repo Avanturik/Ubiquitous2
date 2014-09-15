@@ -304,6 +304,38 @@ namespace UB.Model
                 RaisePropertyChanged(IsConnectingPropertyName);
             }
         }
-        
+
+
+
+        /// <summary>
+        /// The <see cref="ToolTips" /> property's name.
+        /// </summary>
+        public const string ToolTipsPropertyName = "ToolTips";
+
+        private List<ToolTip> _toolTips = new List<ToolTip>();
+
+        /// <summary>
+        /// Sets and gets the ToolTips property.
+        /// Changes to that property's value raise the PropertyChanged event. 
+        /// </summary>
+        public List<ToolTip> ToolTips
+        {
+            get
+            {
+                return _toolTips;
+            }
+
+            set
+            {
+                if (_toolTips == value)
+                {
+                    return;
+                }
+
+                RaisePropertyChanging(ToolTipsPropertyName);
+                _toolTips = value;
+                RaisePropertyChanged(ToolTipsPropertyName);
+            }
+        }
     }
 }

@@ -10,6 +10,7 @@
         xmlns:Settings="clr-namespace:UB.Properties"
         SnapsToDevicePixels="True"
         UseLayoutRounding="True"
+        Topmost="True"
         Title="SettingsWindow" Icon="..\ubiquitous smile.ico" MinWidth="400" Width="500" Height="300" d:DesignHeight="297" WindowStartupLocation="CenterOwner">
 
     <Window.DataContext>
