@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using System.Windows.Controls;
 using System.Windows.Media.Imaging;
 using GalaSoft.MvvmLight.Threading;
+using UB.Utils;
 
 namespace UB.Model
 {
@@ -30,10 +31,7 @@ namespace UB.Model
                 }
                 Image image = new Image() { Width = width, Height = height };
                 image.Source = bitmapImageCache[uri.AbsoluteUri];
-                DispatcherHelper.CheckBeginInvokeOnUI(() =>
-                {
-                    callback(image);
-                });
+                UI.Dispatch(() => callback(image));
             }
         }
     }

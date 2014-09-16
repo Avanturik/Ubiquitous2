@@ -18,7 +18,7 @@
     </Window.DataContext>
 
     <Grid>
-        <fluent:BackstageTabControl SelectedIndex="3" Background="#FF323232" Style="{DynamicResource SettingsStyle}">
+        <fluent:BackstageTabControl SelectedIndex="0" Background="#FF323232" Style="{DynamicResource SettingsStyle}">
             <fluent:BackstageTabItem Header="Chat">
                 <Grid>
                     <ItemsControl ItemsSource="{Binding Chats}"

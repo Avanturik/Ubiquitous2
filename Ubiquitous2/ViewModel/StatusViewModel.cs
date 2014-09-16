@@ -12,6 +12,7 @@ using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Ioc;
 using GalaSoft.MvvmLight.Threading;
 using UB.Model;
+using UB.Utils;
 
 namespace UB.ViewModel
 {
@@ -35,16 +36,11 @@ namespace UB.ViewModel
             ChatsView.CustomSort = new SortViewerCount();
             _dataService.ChatStatusHandler = (chat) =>
             {
-                    DispatcherHelper.CheckBeginInvokeOnUI(() => {
+                    UI.Dispatch(() => {
+                        Chats.RemoveAll(item => item.ChatName == chat.ChatName);
                         if (chat.Enabled == true)
                         {
                             Chats.Add(chat);
-                        }
-                        else
-                        { 
-                            var removeItem = Chats.FirstOrDefault( item => item.ChatName == chat.ChatName);
-                            if (removeItem != null)
-                                Chats.Remove(removeItem);
                         }
                         if( ChatsView.NeedsRefresh )
                             ChatsView.Refresh();

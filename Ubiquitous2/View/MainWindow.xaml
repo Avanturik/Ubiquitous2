@@ -30,7 +30,9 @@
             <Interactivity:ClickThroughBehavior EnableMouseTransparency="{Binding EnableMouseTransparency}"/>
         </i:Interaction.Behaviors>
         <i:Interaction.Triggers>
-
+        <i:EventTrigger EventName="StateChanged">
+            <Custom:EventToCommand Command="{Binding ChangeState}"/>
+        </i:EventTrigger>
         <i:EventTrigger EventName="Closing">
             <Custom:EventToCommand Command="{Binding ExitApplication}"/>
         </i:EventTrigger>

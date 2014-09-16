@@ -157,14 +157,11 @@ namespace UB.Model
                 chat.MessageReceived += chat_MessageReceived;
                 chat.AddChannel = (channel, fromChat) =>
                 {
-                    DispatcherHelper.CheckBeginInvokeOnUI(() =>
-                    {
-                        ChatChannels.Add(new { ChatName = fromChat.ChatName, ChannelName = channel, ChatIconURL = fromChat.IconURL });
-                    });
+                    UI.Dispatch(() => ChatChannels.Add(new { ChatName = fromChat.ChatName, ChannelName = channel, ChatIconURL = fromChat.IconURL }));
                 };
                 chat.RemoveChannel = (channel, fromChat) =>
                 {
-                    DispatcherHelper.CheckBeginInvokeOnUI(() =>
+                    UI.Dispatch(() =>
                     {
                         var searchItem = ChatChannels.FirstOrDefault(item => item.ChatName == fromChat.ChatName && item.ChannelName == channel && item.ChatIconURL == fromChat.IconURL);
                         if (searchItem != null)
@@ -252,7 +249,7 @@ namespace UB.Model
             var chat = GetChat(message.ChatName);
             if (chat != null)
             {
-                DispatcherHelper.CheckBeginInvokeOnUI(() =>
+                UI.Dispatch(() =>
                 {
                     if( chat.Enabled && chat.Status.IsLoggedIn )
                         chat.SendMessage(message);

@@ -6,6 +6,7 @@ using System.Windows.Interactivity;
 using System.Windows.Media.Animation;
 using System.Windows.Threading;
 using GalaSoft.MvvmLight.Threading;
+using UB.Utils;
 
 namespace UB.Interactivity
 {
@@ -49,9 +50,7 @@ namespace UB.Interactivity
         {
             using (var timer = new Timer((obj) =>
             {
-                DispatcherHelper.CheckBeginInvokeOnUI(
-                    () => InstantScrollToBottom()
-                );
+                UI.Dispatch(() => InstantScrollToBottom());
             }, this, 10, Timeout.Infinite)) { };
         }
 

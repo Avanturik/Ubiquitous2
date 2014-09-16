@@ -22,7 +22,6 @@ namespace UB.Model
         private static List<Emoticon> sharedEmoticons = new List<Emoticon>();
         private static bool isFallbackEmoticons = false;
         private static bool isWebEmoticons = false;
-        private List<ToolTip> toolTips = new List<ToolTip>();
 
         private List<WebPoller> counterWebPollers = new List<WebPoller>();
 
@@ -32,8 +31,7 @@ namespace UB.Model
             HostName = ircDomain,
             Port = ircPort,
         })
-        {
-
+        {            
             Config = config;
             Enabled = config.Enabled;
             ContentParsers.Add(MessageParser.ParseURLs);
@@ -46,7 +44,6 @@ namespace UB.Model
             this.ChatUserJoined += TwitchChat_ChatUserJoined;
             this.ChatUserLeft += TwitchChat_ChatUserLeft;
 
-            Status.ToolTips = toolTips;
         }
 
         void TwitchChat_ChatUserLeft(object sender, ChatUserEventArgs e)
@@ -67,7 +64,7 @@ namespace UB.Model
         }
         void stopCounterPoller( string channelName )
         {
-            toolTips.RemoveAll(t => t.Header == channelName);
+            UI.Dispatch(() => Status.ToolTips.RemoveAll(t => t.Header == channelName));
             var poller = counterWebPollers.FirstOrDefault(p => p.Id == channelName);
             poller.Stop();
             counterWebPollers.Remove(poller);
@@ -97,8 +94,8 @@ namespace UB.Model
                     Uri = new Uri(String.Format(@"http://api.twitch.tv/kraken/streams/{0}?on_site=1", e.ChatUser.Channel.Replace("#", ""))),
                 };
 
-                toolTips.RemoveAll(t => t.Header == poller.Id);
-                toolTips.Add( new ToolTip(poller.Id, ""));
+                UI.Dispatch(() => Status.ToolTips.RemoveAll(t => t.Header == poller.Id));
+                UI.Dispatch(() => Status.ToolTips.Add( new ToolTip(poller.Id, "")));
 
                 poller.ReadStream = (stream) =>
                 {
@@ -110,7 +107,7 @@ namespace UB.Model
                         var streamInfo = this.With(x => (TwitchChannelInfo)webPoller.LastValue)
                             .With(x => x.stream);
 
-                        var tooltip = toolTips.FirstOrDefault(t => t.Header == webPoller.Id);
+                        var tooltip = Status.ToolTips.FirstOrDefault(t => t.Header == webPoller.Id);
                         if (streamInfo != null)
                         {
                             viewers += streamInfo.viewers;
@@ -122,7 +119,7 @@ namespace UB.Model
                         }
 
                     }
-                    Status.ViewersCount = viewers;
+                    UI.Dispatch( () => Status.ViewersCount = viewers);
                     
 
                 };

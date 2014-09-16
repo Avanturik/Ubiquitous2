@@ -26,7 +26,7 @@ namespace UB.ViewModel
     public class MainViewModel : ViewModelBase
     {
         private readonly IChatDataService _dataService;
-
+        private StatusWindow statusWindow = new StatusWindow();
         /// <summary>
         /// Initializes a new instance of the MainViewModel class.
         /// </summary>
@@ -41,9 +41,7 @@ namespace UB.ViewModel
             ChannelList = _dataService.ChatChannels;
             SelectedChatChannel = ChannelList[0];
 
-            var testStatusWindow = new StatusWindow();
-            //testStatusWindow.Owner = Application.Current.MainWindow;
-            testStatusWindow.Show();
+            statusWindow.Show();
 
             MessengerInstance.Register<ChatMessage>(this, "SetChannel", (message) =>
             {
@@ -52,6 +50,25 @@ namespace UB.ViewModel
                     channel.ChannelName == message.Channel) ?? ChannelList[0];
 
             });
+        }
+        private RelayCommand _changeState;
+
+        /// <summary>
+        /// Gets the ChangeState.
+        /// </summary>
+        public RelayCommand ChangeState
+        {
+            get
+            {
+                return _changeState
+                    ?? (_changeState = new RelayCommand(
+                                          () =>
+                                          {
+                                              if( Application.Current.MainWindow.WindowState == WindowState.Normal ||
+                                                  Application.Current.MainWindow.WindowState == WindowState.Minimized)
+                                              statusWindow.WindowState = Application.Current.MainWindow.WindowState;   
+                                          }));
+            }
         }
 
         private RelayCommand _minimize;
@@ -461,10 +478,7 @@ namespace UB.ViewModel
         {
             var delaySend = new Timer((obj) =>
             {
-                DispatcherHelper.CheckBeginInvokeOnUI(() =>
-                {
-                    MessengerInstance.Send<bool>(true, "MessageSent");
-                });
+                UI.Dispatch(() => MessengerInstance.Send<bool>(true, "MessageSent"));
             }, this, 100, Timeout.Infinite);
 
         }

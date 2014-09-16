@@ -123,7 +123,7 @@ namespace UB.ViewModel
             }
             else
             {
-                DispatcherHelper.CheckBeginInvokeOnUI(() =>
+                UI.Dispatch(() =>
                 {               
                     foreach( var msg in messages)
                     {
