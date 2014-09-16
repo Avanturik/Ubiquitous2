@@ -13,6 +13,8 @@ namespace UB.Model
     public class ConfigSections
     {
         [XmlElement]
-        public List<ChatConfig> ChatConfigs;
+        public List<ChatConfig> ChatConfigs { get; set; }
+        [XmlElement]
+        public List<ServiceConfig> ServiceConfigs { get; set; }
     }
 }

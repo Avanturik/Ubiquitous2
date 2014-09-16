@@ -18,7 +18,7 @@
 using System;
 using System.Net;
 
-namespace UB.LastFM
+namespace UB.Model
 {
 	/// <summary>
 	/// Shared properties.

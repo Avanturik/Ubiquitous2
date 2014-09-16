@@ -24,11 +24,9 @@ namespace UB.ViewModel
     {
         private MusicTickerWindow tickerWindow;
         private ISettingsDataService settingsDataService;
-        private ICurrentTrackDataService currentTrackDataService;
         [PreferredConstructor]
         public SettingsViewModel( SettingsDataService dataService )
         {
-            currentTrackDataService = ServiceLocator.Current.GetInstance<ICurrentTrackDataService>();
             WebServerPort = Ubiquitous.Default.WebServerPort;
 
             settingsDataService = dataService;
@@ -38,40 +36,9 @@ namespace UB.ViewModel
                 {
                     Chats.Add(new SettingsChatItemViewModel(chatConfig));
                 }
-            });            
-        }
-
-        private RelayCommand<bool> _switchMusicTicker;
-
-        /// <summary>
-        /// Gets the SwitchMusicTicker.
-        /// </summary>
-        public RelayCommand<bool> SwitchMusicTicker
-        {
-            get
-            {
-                return _switchMusicTicker
-                    ?? (_switchMusicTicker = new RelayCommand<bool>(
-                                          (enable) =>
-                                          {
-                                              if( currentTrackDataService != null )
-                                              {
-                                                  if (enable) 
-                                                  {
-                                                      currentTrackDataService.Start();
-                                                      tickerWindow = new MusicTickerWindow();
-                                                      tickerWindow.Show();
-                                                  }
-                                                      
-                                                  else
-                                                  { 
-                                                      currentTrackDataService.Stop();
-                                                      if (tickerWindow != null)
-                                                          tickerWindow.Close();
-                                                  }
-                                              }
-                                          }));
-            }
+            });
+   
+            
         }
 
         private RelayCommand<string> _selectTheme;
@@ -176,6 +143,38 @@ namespace UB.ViewModel
                                           }));
             }
         }
+
+        /// <summary>
+        /// The <see cref="ServiceItemViewModels" /> property's name.
+        /// </summary>
+        public const string ServiceItemViewModelsPropertyName = "ServiceItemViewModels";
+
+        private ObservableCollection<SettingsServiceItemViewModel> _serviceItemViewModels = new ObservableCollection<SettingsServiceItemViewModel>();
+
+        /// <summary>
+        /// Sets and gets the ServiceItemViewModels property.
+        /// Changes to that property's value raise the PropertyChanged event. 
+        /// </summary>
+        public ObservableCollection<SettingsServiceItemViewModel> ServiceItemViewModels
+        {
+            get
+            {
+                return _serviceItemViewModels;
+            }
+
+            set
+            {
+                if (_serviceItemViewModels == value)
+                {
+                    return;
+                }
+
+                RaisePropertyChanging(ServiceItemViewModelsPropertyName);
+                _serviceItemViewModels = value;
+                RaisePropertyChanged(ServiceItemViewModelsPropertyName);
+            }
+        }
+
         /// <summary>
         /// The <see cref="Chats" /> property's name.
         /// </summary>

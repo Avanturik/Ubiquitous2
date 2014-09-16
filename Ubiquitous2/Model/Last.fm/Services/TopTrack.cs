@@ -17,7 +17,7 @@
 
 using System;
 
-namespace UB.LastFM.Services
+namespace UB.Model.Services
 {
 	/// <summary>
 	/// A top track in a list of top tracks.

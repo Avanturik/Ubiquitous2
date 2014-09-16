@@ -17,7 +17,7 @@
 
 using System;
 
-namespace UB.LastFM.Services
+namespace UB.Model.Services
 {
 	/// <summary>
 	/// Gets thrown when an invalid page value is provided.

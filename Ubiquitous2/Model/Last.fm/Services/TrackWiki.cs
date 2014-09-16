@@ -17,7 +17,7 @@
 
 using System;
 
-namespace UB.LastFM.Services
+namespace UB.Model.Services
 {
 	/// <summary>
 	/// A track wiki on Last.fm.
@@ -37,7 +37,7 @@ namespace UB.LastFM.Services
 		
 		internal override RequestParameters getParams ()
 		{
-			RequestParameters p = new UB.LastFM.RequestParameters();
+			RequestParameters p = new UB.Model.RequestParameters();
 			p["track"] = Track.Title;
 			p["artist"] = Track.Artist.Name;
 

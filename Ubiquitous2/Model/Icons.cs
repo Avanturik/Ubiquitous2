@@ -11,5 +11,6 @@ namespace UB.Model
         public static string MainIcon = @"/Ubiquitous2;component/Resources/ubiquitous smile.ico";
         public static string TwitchEventIcon = @"/Ubiquitous2;component/Resources/twitchevent.ico";
         public static string TwitchIcon = @"/Ubiquitous2;component/Resources/twitch.ico";
+        public static string LastFMIcon = @"/Ubiquitous2;component/Resources/lastfm.ico";
     }
 }

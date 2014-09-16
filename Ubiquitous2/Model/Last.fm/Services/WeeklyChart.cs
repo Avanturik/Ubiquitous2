@@ -18,7 +18,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace UB.LastFM.Services
+namespace UB.Model.Services
 {
 	/// <summary>
 	/// An abstract weekly chart.

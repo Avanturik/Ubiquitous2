@@ -21,7 +21,7 @@ using System.Net;
 using System.IO;
 using System.Text;
 
-namespace UB.LastFM.Scrobbling
+namespace UB.Model.Scrobbling
 {
 	internal class Request
 	{

@@ -27,7 +27,7 @@ using System.IO;
 using System.Threading;
 using System.Net.Cache;
 
-namespace UB.LastFM.Services
+namespace UB.Model.Services
 {
 	internal class Request
 	{

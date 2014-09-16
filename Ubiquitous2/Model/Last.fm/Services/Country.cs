@@ -19,7 +19,7 @@ using System;
 using System.Xml;
 using System.Collections.Generic;
 
-namespace UB.LastFM.Services
+namespace UB.Model.Services
 {
 	/// <summary>
 	/// A country on Last.fm.
@@ -51,7 +51,7 @@ namespace UB.LastFM.Services
 		
 		internal override RequestParameters getParams ()
 		{
-			RequestParameters p = new UB.LastFM.RequestParameters();
+			RequestParameters p = new UB.Model.RequestParameters();
 			p["country"] = Name;
 			
 			return p;

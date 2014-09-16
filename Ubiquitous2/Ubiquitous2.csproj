@@ -157,11 +157,11 @@
     <Compile Include="Interactivity\WindowBorder.cs" />
     <Compile Include="Interactivity\WindowResizeBehavior.cs" />
     <Compile Include="Interactivity\WindowResizer.cs" />
+    <Compile Include="Model\IService.cs" />
+    <Compile Include="Model\ServiceConfig.cs" />
     <Compile Include="Model\ChatConfig.cs" />
     <Compile Include="Model\ChatMessage.cs" />
-    <Compile Include="Model\ChatRegistry.cs" />
-    <Compile Include="Model\CurrentTrackDataService.cs" />
-    <Compile Include="Model\ICurrentTrackDataService.cs" />
+    <Compile Include="Model\SettingsRegistry.cs" />
     <Compile Include="Model\MusicTrackInfo.cs" />
     <Compile Include="Model\StatusBase.cs" />
     <Compile Include="Model\ChatUser.cs" />
@@ -173,7 +173,6 @@
     <Compile Include="Model\Icons.cs" />
     <Compile Include="Model\IImageDataSource.cs" />
     <Compile Include="Model\ImageCacheDataService.cs" />
-    <Compile Include="Model\IMusicTicker.cs" />
     <Compile Include="Model\Last.fm\Lib.cs" />
     <Compile Include="Model\Last.fm\Radio\Station.cs" />
     <Compile Include="Model\Last.fm\Radio\StationURI.cs" />
@@ -266,7 +265,7 @@
     <Compile Include="Model\Last.fm\Services\Wiki.cs" />
     <Compile Include="Model\Last.fm\Services\XSPF.cs" />
     <Compile Include="Model\Last.fm\Session.cs" />
-    <Compile Include="Model\MusicTickerLastFm.cs" />
+    <Compile Include="Model\LastFMService.cs" />
     <Compile Include="Model\Last.fm\Utilities.cs" />
     <Compile Include="Model\Log.cs" />
     <Compile Include="Model\MessageParser.cs" />
@@ -303,6 +302,7 @@
     <Compile Include="Utils\UI.cs" />
     <Compile Include="ViewModel\ChatStatusItemViewModel.cs" />
     <Compile Include="ViewModel\MusicTickerViewModel.cs" />
+    <Compile Include="ViewModel\SettingsServiceItemViewModel.cs" />
     <Compile Include="ViewModel\StatusViewModel.cs" />
     <Compile Include="View\ChatStatusItemView.xaml.cs">
       <DependentUpon>ChatStatusItemView.xaml</DependentUpon>
@@ -481,6 +481,9 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Resource>
     <Resource Include="Resources\SimpleThemeThumbnail.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resources\lastfm.ico">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Resource>
     <Content Include="web\css\ubiquitous.css">

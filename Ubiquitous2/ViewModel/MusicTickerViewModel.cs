@@ -12,18 +12,25 @@ namespace UB.ViewModel
     /// </summary>
     public class MusicTickerViewModel : ViewModelBase
     {
-        private ICurrentTrackDataService _dataService;
+        private IService _dataService;
         /// <summary>
         /// Initializes a new instance of the MusicTickerViewModel class.
         /// </summary>
-        public MusicTickerViewModel( ICurrentTrackDataService dataService )
+        public MusicTickerViewModel( IService dataService )
         {
             _dataService = dataService;
+            
             initialize();
         }
         private void initialize()
         {
-            _dataService.TrackChangeHandler = (track) => UI.Dispatch(() => CurrentTrack = track);
+            if (!_dataService.Status.IsLoggedIn && !_dataService.Status.IsLoginFailed)
+                _dataService.Start();
+
+            _dataService.GetData((dataObject) =>
+            {
+                CurrentTrack = dataObject as MusicTrackInfo;
+            });
         }
 
         /// <summary>

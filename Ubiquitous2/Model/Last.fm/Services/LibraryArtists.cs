@@ -18,7 +18,7 @@ using System;
 using System.Xml;
 using System.Collections.Generic;
 
-namespace UB.LastFM.Services
+namespace UB.Model.Services
 {
 	/// <summary>
 	/// The artists in a <see cref="Library"/>.

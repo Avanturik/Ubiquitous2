@@ -6,10 +6,13 @@ using System.Threading.Tasks;
 
 namespace UB.Model
 {
-    public interface ICurrentTrackDataService
+    public interface IService
     {
-        Action<MusicTrackInfo> TrackChangeHandler { get; set; }
         bool Start();
         bool Stop();
+        void Restart();
+        ServiceConfig Config { get; set; }
+        StatusBase Status { get; set; }
+        void GetData(Action<object> callback);
     }
 }

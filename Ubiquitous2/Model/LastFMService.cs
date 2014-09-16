@@ -3,17 +3,16 @@ using System.Collections.Generic;
 using System.Text;
 using System.Drawing;
 using System.Threading;
-using UB.LastFM.Services;
+using UB.Model.Services;
 using System.Diagnostics;
 using UB.Utils;
 using UB.Model;
-namespace UB.LastFM
+using System.Linq;
+
+namespace UB.Model
 {
-    public class MusicTickerLastFm : IMusicTicker
+    public class LastFMService : IService
     {
-        public event EventHandler<EventArgs> OnLogin;
-        public event EventHandler<EventArgs> OnLoginFailed;
-        public event EventHandler<MusicTickerEventArgs> OnTrackChange;
 
         private Timer pollTimer;
         private const string API_KEY = "601555201ca3988d08079bc5a7a23a59";
@@ -22,8 +21,9 @@ namespace UB.LastFM
         private Session _session;
         private User _lfmUser;
         private object pollLock = new object();
+        private object startStopLock = new object();
         private Track _currentTrack;
-        public MusicTickerLastFm()
+        public LastFMService()
         {
             Status = new StatusBase();
             pollTimer = new Timer(new TimerCallback(pollTimer_Tick), null, Timeout.Infinite, Timeout.Infinite);
@@ -39,6 +39,7 @@ namespace UB.LastFM
             }
             
         }
+
         public StatusBase Status
         {
             get;
@@ -46,30 +47,41 @@ namespace UB.LastFM
         }
         public bool Start()
         {
-            if (Status.IsStarting)
-                return false;
-
-            Status.IsStarting = true;
-            Status.IsConnecting = true;
-            if( !authenticate() )
+            lock( startStopLock )
             {
-                Log.WriteError("Couldn't authenticate on Last.fm. Check credentials!");
-                Status.ResetToDefault();
-                Status.IsLoginFailed = true;
-                return false;
+                if( Config == null )
+                {
+                    Log.WriteError("LastFM can't start without config!");
+                    return false;
+                }
+                if (Status.IsStarting)
+                    return false;
+
+                Status.IsStarting = true;
+                Status.IsConnecting = true;
+                if (!authenticate())
+                {
+                    Log.WriteError("Couldn't authenticate on Last.fm. Check credentials!");
+                    Status.ResetToDefault();
+                    Status.IsLoginFailed = true;
+                    return false;
+                }
+                pollTimer.Change(0, Timeout.Infinite);
+                Status.IsStarting = false;
+                Status.IsLoggedIn = true;
+                Status.IsConnected = true;
+                return true;
             }
-            pollTimer.Change(0, Timeout.Infinite);
-            Status.IsStarting = false;
-            Status.IsLoggedIn = true;
-            Status.IsConnected = true;
-            return true;
 
         }
         public bool Stop()
         {
-            pollTimer.Change(Timeout.Infinite, Timeout.Infinite);
-            Status.ResetToDefault();
-            return true;
+            lock(startStopLock)
+            {
+                pollTimer.Change(Timeout.Infinite, Timeout.Infinite);
+                Status.ResetToDefault();
+                return true;
+            }
         }
         private void poll()
         {
@@ -92,31 +104,38 @@ namespace UB.LastFM
                 else if (artist != null)
                     imageUrl = artist.GetImageURL(ImageSize.Large);
 
-                if (OnTrackChange != null)
-                    OnTrackChange(this, new MusicTickerEventArgs() { TrackInfo = new MusicTrackInfo(){
+                musicTrackInfo = new MusicTrackInfo(){
                             Album = (album == null ? "" : album.Title),
                             Artist = (artist == null ? "" : artist.Name),
                             ImageURL = imageUrl,
                             Title = track.Title 
-                        }
-                    });
+                        };
             }
             _currentTrack = track;
 
         }
-        public LoginInfoBase LoginInfo
-        {
-            get;
-            set;
-        }
+        
+        private MusicTrackInfo musicTrackInfo { get; set; }
+
         private bool authenticate()
         {
             
             if (_session != null && _session.Authenticated)
                 return true;
 
-            if( String.IsNullOrWhiteSpace(LoginInfo.UserName) ||
-                String.IsNullOrWhiteSpace(LoginInfo.Password))
+            if (Config == null)
+            {
+                Log.WriteError("LastFM config is empty. Unable to authenticate");
+                return false;
+            }
+
+            var userName = this.With( x => Config.Parameters.FirstOrDefault(parameter => parameter.Name.Equals("Username", StringComparison.InvariantCultureIgnoreCase)) )
+                .With( x => (string)x.Value);
+            var password = this.With( x => Config.Parameters.FirstOrDefault(parameter => parameter.Name.Equals("Password", StringComparison.InvariantCultureIgnoreCase)) )
+                .With( x => (string)x.Value);
+    
+            if( String.IsNullOrWhiteSpace(userName) ||
+                String.IsNullOrWhiteSpace(password))
             {
                 Log.WriteError("LastFM couldn't be queried with empty username/password");
             }
@@ -126,20 +145,18 @@ namespace UB.LastFM
             {
                 _session = new Session(API_KEY, API_SECRET);
 
-                string md5password = Utilities.MD5(LoginInfo.Password);
+                string md5password = Utilities.MD5(password);
 
-                _session.Authenticate(LoginInfo.UserName, md5password);
+                _session.Authenticate(userName, md5password);
                 if (_session.Authenticated)
                 {
-                    if (OnLogin != null)
-                        OnLogin(this, EventArgs.Empty);
-                    _lfmUser = new User(LoginInfo.UserName, _session);
+                    Status.IsLoggedIn = true;
+                    _lfmUser = new User(userName, _session);
                     return true;
                 }
                 else
                 {
-                    if (OnLoginFailed != null)
-                        OnLoginFailed(this, EventArgs.Empty);
+                    Status.IsLoginFailed = true;
                     return false;
                 }
             }
@@ -148,8 +165,24 @@ namespace UB.LastFM
                 return false;
             }
         }
-        
-         
+
+        public void Restart()
+        {
+            Status.ResetToDefault();
+            Stop();
+            Start();
+        }
+
+        public ServiceConfig Config
+        {
+            get;
+            set;
+        }
+
+        public void GetData(Action<object> callback)
+        {
+            callback(musicTrackInfo);
+        }
     }
 
 

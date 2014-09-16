@@ -19,7 +19,7 @@ using System;
 using System.Xml;
 using System.Collections.Generic;
 
-namespace UB.LastFM.Radio
+namespace UB.Model.Radio
 {
 	
 	/// <summary>

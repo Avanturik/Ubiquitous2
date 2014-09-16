@@ -10,7 +10,7 @@ using Microsoft.Practices.ServiceLocation;
 namespace UB.Model
 {
     [Serializable]
-    [XmlRoot(ElementName="ChatConfigs")]
+    [XmlRoot(ElementName="ChatConfig")]
     public class ChatConfig
     {
         [XmlAttribute]

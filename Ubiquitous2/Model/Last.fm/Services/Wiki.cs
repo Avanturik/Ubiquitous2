@@ -18,7 +18,7 @@
 using System;
 using System.Xml;
 
-namespace UB.LastFM.Services
+namespace UB.Model.Services
 {
 	/// <summary>
 	/// An abstract wiki object.

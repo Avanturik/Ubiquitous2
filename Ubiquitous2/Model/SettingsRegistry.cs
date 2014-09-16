@@ -6,14 +6,36 @@ using System.Threading.Tasks;
 
 namespace UB.Model
 {
-    public static class Registry
+    public static class SettingsRegistry
     {
         private static Random random = new Random();
 
-        //Titles
+        //Chat titles
         private const string chatTitleNormalTwitch = "Twitch.tv";
         private const string chatTitleEventTwitch = "Twitch.tv(event)";
-        
+
+        //Service titles
+        private const string serviceTitleMusicTicker = "Music ticker";
+
+        public static List<ServiceConfig> DefaultServiceSettings
+        {
+            get
+            {
+                return new List<ServiceConfig>()
+                {
+                    new ServiceConfig()
+                    {
+                        ServiceName = serviceTitleMusicTicker,
+                        IconURL = Icons.LastFMIcon,
+                        Enabled = false,
+                        Parameters = new List<ConfigField>() {
+                            new ConfigField("Username", "Username", "Text", true, ""),
+                            new ConfigField("Password", "Username", "Password", true, "")
+                        }
+                    }
+                };
+            }
+        }
         public static List<ChatConfig> DefaultChatSettings
         {
             get
@@ -47,7 +69,18 @@ namespace UB.Model
                 };
             }
         }
-
+        public static Dictionary<String, Func<ServiceConfig, IService>> ServiceFactory = new Dictionary<String, Func<ServiceConfig, IService>>()
+        {
+            //Normal twitch IRC channel
+            {chatTitleNormalTwitch, (config)=>
+                                            {
+                                                return new Model.LastFMService(config)
+                                                {
+                                                    ChatName = chatTitleNormalTwitch,
+                                                    IconURL = Icons.TwitchIcon,
+                                                };
+                                            }},
+        };
         public static Dictionary<String, Func<ChatConfig, IChat>> ChatFactory = new Dictionary<String, Func<ChatConfig, IChat>>()
         {
             //Normal twitch IRC channel

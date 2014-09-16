@@ -40,5 +40,11 @@ namespace UB.Design
                  new ConfigField() { DataType = "Text", IsVisible = true, Label = "User name:", Name = "Username", Value = "loremuser" }
             );
         }
+
+
+        public void GetServiceSettings(Action<List<ServiceConfig>> callback)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

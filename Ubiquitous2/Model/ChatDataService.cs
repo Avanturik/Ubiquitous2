@@ -71,7 +71,7 @@ namespace UB.Model
                     {
                         chatConfigs = configs;
                     });
-                    chats = chatConfigs.Select(config => Registry.ChatFactory[config.ChatName](config)).ToList();
+                    chats = chatConfigs.Select(config => SettingsRegistry.ChatFactory[config.ChatName](config)).ToList();
                 }
                 return chats;
             }

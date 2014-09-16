@@ -17,7 +17,7 @@
 
 using System;
 
-namespace UB.LastFM.Scrobbling
+namespace UB.Model.Scrobbling
 {
 	
 	
@@ -89,7 +89,7 @@ namespace UB.LastFM.Scrobbling
 		
 		internal RequestParameters getParameters()
 		{
-			RequestParameters p = new UB.LastFM.RequestParameters();
+			RequestParameters p = new UB.Model.RequestParameters();
 			
 			// Artist
 			p["a"] = Artist;
@@ -164,9 +164,9 @@ namespace UB.LastFM.Scrobbling
 			return Artist + " - " + Title + " (" + TimeStarted + ")";
 		}
 		
-		public UB.LastFM.Services.Track GetInfo(Session session)
+		public UB.Model.Services.Track GetInfo(Session session)
 		{
-			return new UB.LastFM.Services.Track(this.Artist, this.Title, session);
+			return new UB.Model.Services.Track(this.Artist, this.Title, session);
 		}
 	}
 }

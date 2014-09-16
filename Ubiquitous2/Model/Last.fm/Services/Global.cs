@@ -19,7 +19,7 @@ using System;
 using System.Xml;
 using System.Collections.Generic;
 
-namespace UB.LastFM.Services
+namespace UB.Model.Services
 {
 	/// <summary>
 	/// Global functions that don't fit anywhere else.
@@ -33,7 +33,7 @@ namespace UB.LastFM.Services
 		
 		internal override RequestParameters getParams ()
 		{
-			return new UB.LastFM.RequestParameters();
+			return new UB.Model.RequestParameters();
 		}
 
 		

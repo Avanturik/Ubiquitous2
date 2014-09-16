@@ -59,22 +59,35 @@
             </fluent:BackstageTabItem>
             <fluent:BackstageTabItem Header="Music ticker">
                 <Grid>
-                    <Label Content="Enter Last.fm credentials to display current music track" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="10,9,0,0"/>
-                    <Label Content="Username:" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="10,71,0,0" />
-                    <TextBox Text="{Binding Source={x:Static Properties:Ubiquitous.Default}, Path=LastFMUserName,Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="76,71,0,0" Width="165" Height="25" />
-                    <Label Content="Password:" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="10,107,0,0" />
+                    <ItemsControl ItemsSource="{Binding Chats}"
+					Padding="0"
+					HorizontalAlignment="Left"
+					HorizontalContentAlignment="Left"
+					VirtualizingPanel.IsVirtualizing="True"
+					VirtualizingPanel.VirtualizationMode="Recycling" 
+                    ScrollViewer.VerticalScrollBarVisibility="Auto"
+                    ScrollViewer.CanContentScroll="True"
+                    Background="#FF494949">
 
-                    <PasswordBox Name="LastFMPassword" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="76,107,0,0" Width="165" Height="25">
-                        <i:Interaction.Triggers>
-                            <i:EventTrigger EventName="PasswordChanged">
-                                <i:InvokeCommandAction Command="{Binding LastFMPasswordChanged}" CommandParameter="{Binding ElementName=LastFMPassword}"/>
-                            </i:EventTrigger>
-                        </i:Interaction.Triggers>
-                    </PasswordBox>
-
-                    <CheckBox CommandParameter="{Binding RelativeSource={RelativeSource Self}, Path=IsChecked}" Command="{Binding SwitchMusicTicker}" IsChecked="{Binding Source={x:Static Properties:Ubiquitous.Default}, Path=IsMusicTickerEnabled,Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Left" VerticalAlignment="Top" RenderTransformOrigin="1.846,9.385" Margin="15,41,0,0" />
-                    <Label Content="Enable" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="37,34,0,0" />
+                        <ItemsControl.Template>
+                            <ControlTemplate>
+                                <ScrollViewer Template="{DynamicResource ScrollStyle}" CanContentScroll="True">
+                                    <ItemsPresenter/>
+                                </ScrollViewer>
+                            </ControlTemplate>
+                        </ItemsControl.Template>
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <Devart:SmoothPanel TrackTopMost="True" Margin="0" Background="{DynamicResource {x:Static SystemColors.ControlBrushKey}}">
+                                    <Devart:SmoothPanel.Templates>
+                                        <Devart:SmoothPanelTemplate ViewModel="{x:Type ViewModel:SettingsChatItemViewModel}" View="{x:Type View:SettingsChatItemView}" />
+                                    </Devart:SmoothPanel.Templates>
+                                </Devart:SmoothPanel>
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                    </ItemsControl>
                 </Grid>
+
             </fluent:BackstageTabItem>
             <fluent:BackstageTabItem Header="Theme">
                 <ScrollViewer Template="{DynamicResource ScrollStyle}">
