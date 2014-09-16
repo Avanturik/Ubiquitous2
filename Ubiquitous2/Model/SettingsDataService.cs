@@ -13,29 +13,29 @@ namespace UB.Model
         }
         public void GetChatSettings(Action<List<ChatConfig>> callback)
         {
-            callback(Ubiqiutous.Default.Config.ChatConfigs);
+            callback(Ubiquitous.Default.Config.ChatConfigs);
         }
         private void InitializeChatSettings()
         {
             //First launch ?
-            if (Ubiqiutous.Default.Config == null)
-                Ubiqiutous.Default.Config = new ConfigSections();
+            if (Ubiquitous.Default.Config == null)
+                Ubiquitous.Default.Config = new ConfigSections();
 
-            if( Ubiqiutous.Default.Config.ChatConfigs == null )
+            if( Ubiquitous.Default.Config.ChatConfigs == null )
             {
 
-                Ubiqiutous.Default.Config.ChatConfigs = Registry.DefaultChatSettings.ToList();
-                Ubiqiutous.Default.Save();
+                Ubiquitous.Default.Config.ChatConfigs = Registry.DefaultChatSettings.ToList();
+                Ubiquitous.Default.Save();
             }
             else
             {
                 foreach (ChatConfig chatConfig in Registry.DefaultChatSettings)
                 {
-                    var savedConfig = Ubiqiutous.Default.Config.ChatConfigs.Where(config => config.ChatName == chatConfig.ChatName).FirstOrDefault();
+                    var savedConfig = Ubiquitous.Default.Config.ChatConfigs.Where(config => config.ChatName == chatConfig.ChatName).FirstOrDefault();
                     //Chat config is missing
                     if (savedConfig == null)
                     {
-                        Ubiqiutous.Default.Config.ChatConfigs.Add(chatConfig);
+                        Ubiquitous.Default.Config.ChatConfigs.Add(chatConfig);
                     }
                     else
                     {

@@ -13,11 +13,11 @@ namespace UB.Properties {
     
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "12.0.0.0")]
-    internal sealed partial class Ubiqiutous : global::System.Configuration.ApplicationSettingsBase {
+    internal sealed partial class Ubiquitous : global::System.Configuration.ApplicationSettingsBase {
         
-        private static Ubiqiutous defaultInstance = ((Ubiqiutous)(global::System.Configuration.ApplicationSettingsBase.Synchronized(new Ubiqiutous())));
+        private static Ubiquitous defaultInstance = ((Ubiquitous)(global::System.Configuration.ApplicationSettingsBase.Synchronized(new Ubiquitous())));
         
-        public static Ubiqiutous Default {
+        public static Ubiquitous Default {
             get {
                 return defaultInstance;
             }

@@ -21,7 +21,7 @@
     		<vm:ViewModelLocator x:Key="Locator"
     			d:IsDataSource="True" />
 
-            <settings:Ubiqiutous x:Key="Settings" />
+            <settings:Ubiquitous x:Key="Settings" />
         </ResourceDictionary>
     </Application.Resources>
     

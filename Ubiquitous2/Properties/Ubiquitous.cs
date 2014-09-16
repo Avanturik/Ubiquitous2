@@ -8,9 +8,9 @@ namespace UB.Properties {
     //  The SettingsLoaded event is raised after the setting values are loaded.
     //  The SettingsSaving event is raised before the setting values are saved.
     [SettingsProvider(typeof(UB.PortableSettingsProvider))]
-    internal sealed partial class Ubiqiutous {
+    internal sealed partial class Ubiquitous {
         
-        public Ubiqiutous() {
+        public Ubiquitous() {
             // // To add event handlers for saving and changing settings, uncomment the lines below:
             //
             // this.SettingChanging += this.SettingChangingEventHandler;

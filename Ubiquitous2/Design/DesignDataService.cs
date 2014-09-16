@@ -106,5 +106,11 @@ namespace UB.Design
             get;
             set;
         }
+
+
+        public void Start()
+        {
+            throw new NotImplementedException();
+        }
     }
 }
