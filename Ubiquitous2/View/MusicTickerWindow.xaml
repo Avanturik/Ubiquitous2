@@ -20,7 +20,7 @@
         Topmost="True"
         Icon="..\ubiquitous smile.ico"
         DataContext="{Binding Source={StaticResource Locator},Path=MusicTicker.CurrentTrack}" 
-        SizeToContent="WidthAndHeight" HorizontalAlignment="Center" VerticalAlignment="Center" Padding="0" Foreground="#FFDEDEDE" Width="400" Height="64" d:DesignWidth="416.733" d:DesignHeight="84.186">
+        SizeToContent="WidthAndHeight" HorizontalAlignment="Center" VerticalAlignment="Center" Padding="0" Foreground="#FFDEDEDE" MinWidth="250" Height="64" d:DesignHeight="84.186">
 
     <i:Interaction.Behaviors>
         <Interactivity:DragWindow/>
