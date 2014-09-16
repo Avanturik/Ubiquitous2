@@ -19,7 +19,7 @@ using System;
 using System.Xml;
 
 
-namespace UB.Model
+namespace UB.LastFM
 {
 	/// <summary>
 	/// Represents your identity tokens provided by Last.fm.</summary>
@@ -55,7 +55,7 @@ namespace UB.Model
 	/// </code>
 	/// 
 	/// Please note that a Session object is inhertied among objects. For example
-	/// if you create an <see cref="UB.Model.Artist"/> object with an authenticated session and
+	/// if you create an <see cref="UB.LastFM.Artist"/> object with an authenticated session and
 	/// used the artists returned by <see cref="Artist.GetSimilar"/> they would also have an
 	/// unauthenticated session.
 	/// </remarks>
@@ -128,12 +128,12 @@ namespace UB.Model
 		/// </param>
 		public void Authenticate(string username, string md5Password)
 		{
-			RequestParameters p = new UB.Model.RequestParameters();
+			RequestParameters p = new UB.LastFM.RequestParameters();
 			
 			p["username"] = username;
 			p["authToken"] = Utilities.MD5(username + md5Password);
 			
-			UB.Model.Services.Request request = new UB.Model.Services.Request("auth.getMobileSession", this, p);
+			UB.LastFM.Services.Request request = new UB.LastFM.Services.Request("auth.getMobileSession", this, p);
 			request.signIt();
 			
 			XmlDocument doc = request.execute();
@@ -143,7 +143,7 @@ namespace UB.Model
 		
 		private string getAuthenticationToken()
 		{
-			XmlDocument doc = (new UB.Model.Services.Request("auth.getToken", this, new RequestParameters())).execute();
+			XmlDocument doc = (new UB.LastFM.Services.Request("auth.getToken", this, new RequestParameters())).execute();
 			
 			return doc.GetElementsByTagName("token")[0].InnerText;
 		}
@@ -169,10 +169,10 @@ namespace UB.Model
 		/// </summary>
 		public void AuthenticateViaWeb()
 		{
-			RequestParameters p = new UB.Model.RequestParameters();
+			RequestParameters p = new UB.LastFM.RequestParameters();
 			p["token"] = token;
 			
-			UB.Model.Services.Request r = new UB.Model.Services.Request("auth.getSession", this, p);
+			UB.LastFM.Services.Request r = new UB.LastFM.Services.Request("auth.getSession", this, p);
 			r.signIt();
 			
 			XmlDocument doc = r.execute();

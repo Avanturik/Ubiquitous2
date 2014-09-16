@@ -19,7 +19,7 @@ using System;
 using System.Xml;
 using System.Collections.Generic;
 
-namespace UB.Model.Services
+namespace UB.LastFM.Services
 {	
 	/// <summary>
 	/// A Last.fm event.
@@ -39,7 +39,7 @@ namespace UB.Model.Services
 		
 		internal override RequestParameters getParams ()
 		{
-			RequestParameters p = new UB.Model.RequestParameters();
+			RequestParameters p = new RequestParameters();
 			p["event"] = ID.ToString();
 			
 			return p;

@@ -20,7 +20,7 @@ using System.IO;
 using System.Threading;
 using System.Text;
 
-namespace UB.Model.Scrobbling
+namespace UB.LastFM.Scrobbling
 {
 	/// <summary>
 	/// A classs to be used by a media player,
@@ -105,10 +105,10 @@ namespace UB.Model.Scrobbling
 			
 			foreach (string line in lines)
 			{
-				UB.Model.RequestParameters p = new UB.Model.RequestParameters(line);
+				RequestParameters p = new RequestParameters(line);
 
 				// Append the "[0]" to the key names
-				UB.Model.RequestParameters np = new UB.Model.RequestParameters();
+				RequestParameters np = new RequestParameters();
 				foreach (string key in p.Keys)
 					np[key + "[0]"] = p[key];
 				

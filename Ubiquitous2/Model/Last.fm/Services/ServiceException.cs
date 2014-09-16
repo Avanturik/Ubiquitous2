@@ -18,7 +18,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace UB.Model.Services
+namespace UB.LastFM.Services
 {
 	public enum ServiceExceptionType
 	{

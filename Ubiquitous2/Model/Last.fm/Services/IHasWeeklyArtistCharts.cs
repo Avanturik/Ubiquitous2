@@ -17,7 +17,7 @@
 
 using System;
 
-namespace UB.Model.Services
+namespace UB.LastFM.Services
 {
 	/// <summary>
 	/// Objects that implement this have weekly artist charts.

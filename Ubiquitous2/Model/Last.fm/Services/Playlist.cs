@@ -19,7 +19,7 @@ using System;
 using System.Collections.Generic;
 using System.Xml;
 
-namespace UB.Model.Services
+namespace UB.LastFM.Services
 {
 	/// <summary>
 	/// A Last.fm user playlist.
@@ -52,7 +52,7 @@ namespace UB.Model.Services
 		
 		internal override RequestParameters getParams ()
 		{
-			RequestParameters p = new UB.Model.RequestParameters();
+			RequestParameters p = new RequestParameters();
 			p["id"] = ID.ToString();
 			
 			return p;
@@ -90,7 +90,7 @@ namespace UB.Model.Services
 		
 		private XmlNode getNode()
 		{
-			RequestParameters p = new UB.Model.RequestParameters();
+			RequestParameters p = new RequestParameters();
 			p["user"] = User.Name;
 			
 			XmlDocument doc = request("user.getPlaylists", p);
@@ -213,7 +213,7 @@ namespace UB.Model.Services
 				throw new AuthenticationRequiredException();
 			
 			
-			RequestParameters p = new UB.Model.RequestParameters();
+			RequestParameters p = new RequestParameters();
 			p["title"] = title;
 			p["description"] = description;
 			

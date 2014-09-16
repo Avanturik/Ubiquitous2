@@ -19,7 +19,7 @@ using System;
 using System.Xml;
 using System.Collections.Generic;
 
-namespace UB.Model.Services
+namespace UB.LastFM.Services
 {
 	/// <summary>
 	/// An abstract class inherited by data objects that come in pages.

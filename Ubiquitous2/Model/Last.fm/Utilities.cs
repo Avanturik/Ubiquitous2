@@ -22,9 +22,9 @@ using System.Text;
 using System.Security.Cryptography;
 using System.Net;
 using System.Web;
-using UB.Model.Services;
+using UB.LastFM.Services;
 
-namespace UB.Model
+namespace UB.LastFM
 {
 	/// <summary>
 	/// General utility functions
@@ -33,7 +33,7 @@ namespace UB.Model
 	{
 		internal static string UserAgent
 		{
-			get { return "lastfm-sharp/" + UB.Model.Lib.Version.ToString(); }
+			get { return "lastfm-sharp/" + UB.LastFM.Lib.Version.ToString(); }
 		}
 		
 		/// <summary>

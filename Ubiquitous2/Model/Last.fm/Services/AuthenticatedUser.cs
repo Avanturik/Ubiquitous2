@@ -19,7 +19,7 @@ using System;
 using System.Collections.Generic;
 using System.Xml;
 
-namespace UB.Model.Services
+namespace UB.LastFM.Services
 {
 	/// <summary>
 	/// The authenticated user.

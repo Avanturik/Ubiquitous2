@@ -17,7 +17,7 @@
 
 using System;
 
-namespace UB.Model.Services
+namespace UB.LastFM.Services
 {
 	/// <summary>
 	/// A top tag in a list of top tags.

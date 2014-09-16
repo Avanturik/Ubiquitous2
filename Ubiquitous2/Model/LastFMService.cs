@@ -3,10 +3,11 @@ using System.Collections.Generic;
 using System.Text;
 using System.Drawing;
 using System.Threading;
-using UB.Model.Services;
+using UB.LastFM.Services;
 using System.Diagnostics;
 using UB.Utils;
 using UB.Model;
+using UB.LastFM;
 using System.Linq;
 
 namespace UB.Model

@@ -20,7 +20,7 @@ using System.Collections.Generic;
 using System.Web;
 using System.Text;
 
-namespace UB.Model
+namespace UB.LastFM
 {
 	internal class RequestParameters : SortedDictionary<string, string>
 	{

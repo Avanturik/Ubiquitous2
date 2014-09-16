@@ -11,6 +11,7 @@ using UB.Model;
 using UB.Properties;
 using UB.Utils;
 using UB.View;
+using System.Linq;
 
 namespace UB.ViewModel
 {
@@ -25,7 +26,7 @@ namespace UB.ViewModel
         private MusicTickerWindow tickerWindow;
         private ISettingsDataService settingsDataService;
         [PreferredConstructor]
-        public SettingsViewModel( SettingsDataService dataService )
+        public SettingsViewModel( SettingsDataService dataService, IGeneralDataService generalDataService )
         {
             WebServerPort = Ubiquitous.Default.WebServerPort;
 
@@ -37,8 +38,12 @@ namespace UB.ViewModel
                     Chats.Add(new SettingsChatItemViewModel(chatConfig));
                 }
             });
-   
-            
+
+            var serviceList = generalDataService.Services.Select(service => new SettingsServiceItemViewModel(service));
+            foreach( IService service in serviceList)
+            {
+                ServiceItemViewModels.Add(new SettingsServiceItemViewModel(service));
+            }
         }
 
         private RelayCommand<string> _selectTheme;

@@ -17,7 +17,7 @@
 
 using System;
 
-namespace UB.Model.Scrobbling
+namespace UB.LastFM.Scrobbling
 {
 	public class NowplayingTrack
 	{

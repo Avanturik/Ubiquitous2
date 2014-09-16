@@ -17,7 +17,7 @@
 
 using System;
 
-namespace UB.Model.Services
+namespace UB.LastFM.Services
 {
 	/// <summary>
 	/// An artist in a weekly chart list.

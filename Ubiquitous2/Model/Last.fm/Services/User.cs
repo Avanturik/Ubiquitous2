@@ -19,7 +19,7 @@ using System;
 using System.Collections.Generic;
 using System.Xml;
 
-namespace UB.Model.Services
+namespace UB.LastFM.Services
 {
 	/// <summary>
 	/// A Last.fm user.
@@ -59,7 +59,7 @@ namespace UB.Model.Services
 		
 		internal override RequestParameters getParams ()
 		{
-			RequestParameters p = new UB.Model.RequestParameters();
+			RequestParameters p = new RequestParameters();
 			p["user"] = Name;
 			
 			return p;

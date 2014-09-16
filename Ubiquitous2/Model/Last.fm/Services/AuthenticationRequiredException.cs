@@ -17,7 +17,7 @@
 
 using System;
 
-namespace UB.Model.Services
+namespace UB.LastFM.Services
 {
 	/// <summary>
 	/// This exception is thrown whenever a method is called thar required an authenticated 

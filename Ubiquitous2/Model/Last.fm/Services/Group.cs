@@ -19,7 +19,7 @@ using System;
 using System.Collections.Generic;
 using System.Xml;
 
-namespace UB.Model.Services
+namespace UB.LastFM.Services
 {
 	/// <summary>
 	/// A Last.fm Group.
@@ -40,7 +40,7 @@ namespace UB.Model.Services
 		
 		internal override RequestParameters getParams ()
 		{
-			RequestParameters p = new UB.Model.RequestParameters();
+			RequestParameters p = new RequestParameters();
 			p["group"] = Name;
 			
 			return p;
@@ -90,7 +90,7 @@ namespace UB.Model.Services
 		}
 		
 		/// <summary>
-		/// Returns the weekly track chart for this group in the given <see cref="UB.Model.Services.WeeklyChartTimeSpan"/>.
+		/// Returns the weekly track chart for this group in the given <see cref="UB.LastFM.Services.WeeklyChartTimeSpan"/>.
 		/// </summary>
 		/// <param name="span">
 		/// A <see cref="WeeklyChartTimeSpan"/>
@@ -163,7 +163,7 @@ namespace UB.Model.Services
 		
 		/// <summary>
 		/// Returns the weekly artist chart for this group in the given 
-		/// <see cref="UB.Model.Services.WeeklyChartTimeSpan"/>.
+		/// <see cref="UB.LastFM.Services.WeeklyChartTimeSpan"/>.
 		/// </summary>
 		/// <param name="span">
 		/// A <see cref="WeeklyChartTimeSpan"/>
@@ -235,7 +235,7 @@ namespace UB.Model.Services
 		}
 		
 		/// <summary>
-		/// Returns the weekly album chart for this group in the given <see cref="UB.Model.Services.WeeklyChartTimeSpan"/>.
+		/// Returns the weekly album chart for this group in the given <see cref="UB.LastFM.Services.WeeklyChartTimeSpan"/>.
 		/// </summary>
 		/// <param name="span">
 		/// A <see cref="WeeklyChartTimeSpan"/>

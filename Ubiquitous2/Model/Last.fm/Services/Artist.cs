@@ -19,7 +19,7 @@ using System;
 using System.Collections.Generic;
 using System.Xml;
 
-namespace UB.Model.Services
+namespace UB.LastFM.Services
 {
 	/// <summary>
 	/// An artist on Last.fm
@@ -56,7 +56,7 @@ namespace UB.Model.Services
 		
 		internal override RequestParameters getParams ()
 		{
-			RequestParameters p = new UB.Model.RequestParameters();
+			RequestParameters p = new RequestParameters();
 			p["artist"] = this.Name;
 			
 			return p;
@@ -554,7 +554,7 @@ namespace UB.Model.Services
 		/// </returns>
 		public static Artist GetByMBID(string mbid, Session session)
 		{
-			RequestParameters p = new UB.Model.RequestParameters();
+			RequestParameters p = new RequestParameters();
 			p["mbid"] = mbid;
 			
 			XmlDocument doc = (new Request("artist.getInfo", session, p)).execute();

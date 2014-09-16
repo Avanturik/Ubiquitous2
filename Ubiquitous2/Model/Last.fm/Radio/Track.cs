@@ -17,7 +17,7 @@
 
 using System;
 
-namespace UB.Model.Radio
+namespace UB.LastFM.Radio
 {
 	
 	

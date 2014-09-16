@@ -18,7 +18,7 @@
 using System;
 using System.Text.RegularExpressions;
 
-namespace UB.Model.Radio
+namespace UB.LastFM.Radio
 {
 	/// <summary>
 	/// A unique radio station URI.

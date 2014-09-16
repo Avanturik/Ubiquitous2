@@ -20,7 +20,7 @@ using System.Collections.Generic;
 using System.Xml;
 using System.Web;
 
-namespace UB.Model.Services
+namespace UB.LastFM.Services
 {
 	/// <summary>
 	/// A base class for most of the objects.

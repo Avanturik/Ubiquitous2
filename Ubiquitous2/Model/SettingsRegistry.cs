@@ -74,10 +74,9 @@ namespace UB.Model
             //Normal twitch IRC channel
             {chatTitleNormalTwitch, (config)=>
                                             {
-                                                return new Model.LastFMService(config)
+                                                return new LastFMService()
                                                 {
-                                                    ChatName = chatTitleNormalTwitch,
-                                                    IconURL = Icons.TwitchIcon,
+                                                    Config = config,
                                                 };
                                             }},
         };

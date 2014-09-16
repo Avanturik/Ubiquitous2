@@ -157,6 +157,8 @@
     <Compile Include="Interactivity\WindowBorder.cs" />
     <Compile Include="Interactivity\WindowResizeBehavior.cs" />
     <Compile Include="Interactivity\WindowResizer.cs" />
+    <Compile Include="Model\GeneralDataService.cs" />
+    <Compile Include="Model\IGeneralDataService.cs" />
     <Compile Include="Model\IService.cs" />
     <Compile Include="Model\ServiceConfig.cs" />
     <Compile Include="Model\ChatConfig.cs" />
@@ -332,8 +334,8 @@
     <Compile Include="View\SettingsFieldView.xaml.cs">
       <DependentUpon>SettingsFieldView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="View\SettingsChatItemView.xaml.cs">
-      <DependentUpon>SettingsChatItemView.xaml</DependentUpon>
+    <Compile Include="View\SettingSectionView.xaml.cs">
+      <DependentUpon>SettingSectionView.xaml</DependentUpon>
     </Compile>
     <Compile Include="View\StatusWindow.xaml.cs">
       <DependentUpon>StatusWindow.xaml</DependentUpon>
@@ -442,7 +444,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="View\SettingsChatItemView.xaml">
+    <Page Include="View\SettingSectionView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

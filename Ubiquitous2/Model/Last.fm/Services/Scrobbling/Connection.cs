@@ -17,7 +17,7 @@
 
 using System;
 
-namespace UB.Model.Scrobbling
+namespace UB.LastFM.Scrobbling
 {
 	/// <summary>
 	/// A connection to the Last.fm scrobbling service. Can be used individually for scrobbling

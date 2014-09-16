@@ -18,9 +18,9 @@ namespace UB.View
     /// <summary>
     /// Interaction logic for SettingsHeader.xaml
     /// </summary>
-    public partial class SettingsChatItemView : UserControl
+    public partial class SettingsSectionView : UserControl
     {
-        public SettingsChatItemView()
+        public SettingsSectionView()
         {
             InitializeComponent();
         }

@@ -48,7 +48,7 @@
                             <ItemsPanelTemplate>
                                 <Devart:SmoothPanel TrackTopMost="True" Margin="0" Background="{DynamicResource {x:Static SystemColors.ControlBrushKey}}">
                                     <Devart:SmoothPanel.Templates>
-                                        <Devart:SmoothPanelTemplate ViewModel="{x:Type ViewModel:SettingsChatItemViewModel}" View="{x:Type View:SettingsChatItemView}" />
+                                        <Devart:SmoothPanelTemplate ViewModel="{x:Type ViewModel:SettingsChatItemViewModel}" View="{x:Type View:SettingsSectionView}" />
                                     </Devart:SmoothPanel.Templates>
                                 </Devart:SmoothPanel>
                             </ItemsPanelTemplate>
@@ -59,7 +59,7 @@
             </fluent:BackstageTabItem>
             <fluent:BackstageTabItem Header="Music ticker">
                 <Grid>
-                    <ItemsControl ItemsSource="{Binding Chats}"
+                    <ItemsControl ItemsSource="{Binding ServiceItemViewModels}"
 					Padding="0"
 					HorizontalAlignment="Left"
 					HorizontalContentAlignment="Left"
@@ -80,7 +80,7 @@
                             <ItemsPanelTemplate>
                                 <Devart:SmoothPanel TrackTopMost="True" Margin="0" Background="{DynamicResource {x:Static SystemColors.ControlBrushKey}}">
                                     <Devart:SmoothPanel.Templates>
-                                        <Devart:SmoothPanelTemplate ViewModel="{x:Type ViewModel:SettingsChatItemViewModel}" View="{x:Type View:SettingsChatItemView}" />
+                                        <Devart:SmoothPanelTemplate ViewModel="{x:Type ViewModel:SettingsServiceItemViewModel}" View="{x:Type View:SettingsSectionView}" />
                                     </Devart:SmoothPanel.Templates>
                                 </Devart:SmoothPanel>
                             </ItemsPanelTemplate>

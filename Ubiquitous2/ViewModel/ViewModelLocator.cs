@@ -14,7 +14,6 @@ using GalaSoft.MvvmLight.Ioc;
 using GalaSoft.MvvmLight.Threading;
 using Microsoft.Practices.ServiceLocation;
 using UB.Model;
-using UB.Model;
 
 namespace UB.ViewModel
 {
@@ -46,6 +45,7 @@ namespace UB.ViewModel
                 SimpleIoc.Default.Register<IChatDataService, ChatDataService>();
                 SimpleIoc.Default.Register<IImageDataSource, ImageCacheDataService>();
             }
+            SimpleIoc.Default.Register<IGeneralDataService, GeneralDataService>();
             SimpleIoc.Default.Register<IService, LastFMService>();
             SimpleIoc.Default.Register<MusicTickerViewModel>();
             SimpleIoc.Default.Register<StatusViewModel>();
