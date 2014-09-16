@@ -22,6 +22,7 @@ namespace UB.Model
         private static List<Emoticon> sharedEmoticons = new List<Emoticon>();
         private static bool isFallbackEmoticons = false;
         private static bool isWebEmoticons = false;
+        private object counterLock = new object();
 
         private List<WebPoller> counterWebPollers = new List<WebPoller>();
 
@@ -99,30 +100,35 @@ namespace UB.Model
 
                 poller.ReadStream = (stream) =>
                 {
-                    var channelInfo = Json.DeserializeStream<TwitchChannelInfo>(stream);
-                    poller.LastValue = channelInfo;
-                    var viewers = 0;
-                    foreach (var webPoller in counterWebPollers)
+                    lock( counterLock )
                     {
-                        var streamInfo = this.With(x => (TwitchChannelInfo)webPoller.LastValue)
-                            .With(x => x.stream);
-
-                        var tooltip = Status.ToolTips.FirstOrDefault(t => t.Header == webPoller.Id);
-                        if (tooltip == null)
-                            return;
-
-                        if (streamInfo != null)
+                        var channelInfo = Json.DeserializeStream<TwitchChannelInfo>(stream);
+                        poller.LastValue = channelInfo;
+                        var viewers = 0;
+                        foreach (var webPoller in counterWebPollers)
                         {
-                            viewers += streamInfo.viewers;
-                            tooltip.Text = streamInfo.viewers.ToString();
-                        }
-                        else
-                        {
-                            tooltip.Text = "0";
-                        }
+                            var streamInfo = this.With(x => (TwitchChannelInfo)webPoller.LastValue)
+                                .With(x => x.stream);
 
+                            var tooltip = Status.ToolTips.FirstOrDefault(t => t.Header == webPoller.Id);
+                            if (tooltip == null)
+                                return;
+
+                            if (streamInfo != null)
+                            {
+                                viewers += streamInfo.viewers;
+                                tooltip.Text = streamInfo.viewers.ToString();
+                                tooltip.Number = streamInfo.viewers;
+                            }
+                            else
+                            {
+                                tooltip.Text = "0";
+                                tooltip.Number = 0;
+                            }
+
+                        }
+                        UI.Dispatch( () => Status.ViewersCount = viewers);
                     }
-                    UI.Dispatch( () => Status.ViewersCount = viewers);
                     
 
                 };

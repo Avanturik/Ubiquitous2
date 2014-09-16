@@ -7,6 +7,7 @@
         xmlns:Devart="clr-namespace:Devart.Controls"
         xmlns:UBView="clr-namespace:UB.View"
         xmlns:UBViewModel="clr-namespace:UB.ViewModel"
+        xmlns:ComponentModel="clr-namespace:System.ComponentModel;assembly=WindowsBase"
         WindowStyle="None"
         AllowsTransparency="True"        
         ResizeMode="NoResize"
@@ -36,19 +37,26 @@
     </Window.Resources>
     <Grid>
         <Grid>
-            <ItemsControl Focusable="False" ItemsSource="{Binding Chats}" Padding="0" Margin="0,0,0,0">
-                <ItemsControl.ItemTemplate>
+            <ItemsControl Focusable="False" ItemsSource="{Binding ChatsView}" Padding="0" Margin="0,0,0,0">
+            <ItemsControl.ItemTemplate>
                     <DataTemplate>
                         <Grid MinWidth="32"  Margin="0" HorizontalAlignment="Center" VerticalAlignment="Center" Opacity="0.9">
                             <Grid.ToolTip>
-                                <ToolTip HasDropShadow="False" Placement="Top" Background="{x:Null}" BorderBrush="{x:Null}" Foreground="#FFCBCBCB">
+                                <ToolTip HasDropShadow="False" Placement="Top" Background="{x:Null}" BorderBrush="{x:Null}" Foreground="#FFCBCBCB" StaysOpen="True">
+                                    <ToolTip.Resources>
+                                        <CollectionViewSource Source="{Binding Status.ToolTips}" x:Key="ToolTipsView">
+                                            <CollectionViewSource.SortDescriptions>
+                                                <ComponentModel:SortDescription PropertyName="Text" Direction="Descending" />
+                                            </CollectionViewSource.SortDescriptions>
+                                        </CollectionViewSource>
+                                    </ToolTip.Resources>
                                     <Border Padding="5" BorderThickness="1" BorderBrush="#FF707070" CornerRadius="10" Background="#CC000000">
-                                        <ItemsControl Focusable="False" ItemsSource="{Binding Status.ToolTips}">
+                                        <ItemsControl Focusable="False" ItemsSource="{Binding Source={StaticResource ToolTipsView}}">
                                             <ItemsControl.ItemTemplate>
-                                                <DataTemplate>
+                                                <DataTemplate>                                                    
                                                     <StackPanel Orientation="Horizontal">
                                                         <TextBlock Text="{Binding Header}"></TextBlock>
-                                                        <TextBlock Text=" : "> :</TextBlock>
+                                                        <TextBlock Text=" : "/>
                                                         <TextBlock Text="{Binding Text}" Foreground="#FFFFBB2A"/>
                                                     </StackPanel>
                                                 </DataTemplate>
