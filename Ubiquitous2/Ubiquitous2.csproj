@@ -190,11 +190,11 @@
     <Compile Include="Model\WebServer.cs" />
     <Compile Include="Properties\PortableSettingsProvider.cs" />
     <Compile Include="Model\TwitchChat.cs" />
-    <Compile Include="Properties\Ubiqiutous.cs" />
-    <Compile Include="Properties\Ubiqiutous.Designer.cs">
+    <Compile Include="Properties\Ubiquitous.cs" />
+    <Compile Include="Properties\Ubiquitous.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
-      <DependentUpon>Ubiqiutous.settings</DependentUpon>
+      <DependentUpon>Ubiquitous.settings</DependentUpon>
     </Compile>
     <Compile Include="Utils\Config.cs" />
     <Compile Include="Utils\Html.cs" />
@@ -386,9 +386,9 @@
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
     <AppDesigner Include="Properties\" />
-    <None Include="Properties\Ubiqiutous.settings">
+    <None Include="Properties\Ubiquitous.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
-      <LastGenOutput>Ubiqiutous.Designer.cs</LastGenOutput>
+      <LastGenOutput>Ubiquitous.Designer.cs</LastGenOutput>
     </None>
     <Content Include="Content\twitchemoticons.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>

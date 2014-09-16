@@ -104,7 +104,7 @@ namespace UB.ViewModel
                     ?? (_exitApplication = new RelayCommand(
                                           () =>
                                           {
-                                              Properties.Ubiqiutous.Default.Save();
+                                              Properties.Ubiquitous.Default.Save();
                                               _dataService.Stop();
 
                                               Application.Current.Shutdown();

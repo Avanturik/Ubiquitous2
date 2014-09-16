@@ -30,22 +30,26 @@ namespace UB.Model
         {
             settingsDataService = ServiceLocator.Current.GetInstance<SettingsDataService>();
             random = new Random();
-            ChatChannels = new ObservableCollection<dynamic>();
-            ChatChannels.Add(new { ChatName = "AllChats", ChannelName = "#allchats", ChatIconURL = Icons.MainIcon });
-
-            Task.Factory.StartNew(() => startWebServer());
-            Task.Factory.StartNew(() => StartAllChats());
+            Start();
         }
 
         public WebServer WebServer { get; set; }
 
         private void startWebServer()
         {
-            if (Ubiqiutous.Default.WebServerPort == 0 && Ubiqiutous.Default.WebServerPort > 65535)
+            if (Ubiquitous.Default.WebServerPort == 0 && Ubiquitous.Default.WebServerPort > 65535)
                 return;
 
-            WebServer = new WebServer(Ubiqiutous.Default.WebServerPort);
+            WebServer = new WebServer(Ubiquitous.Default.WebServerPort);
 
+        }
+        public void Start()
+        {
+            ChatChannels = new ObservableCollection<dynamic>();
+            ChatChannels.Add(new { ChatName = "AllChats", ChannelName = "#allchats", ChatIconURL = Icons.MainIcon });
+
+            Task.Factory.StartNew(() => startWebServer());
+            Task.Factory.StartNew(() => StartAllChats());
         }
         private void stopWebServer()
         {
@@ -53,6 +57,11 @@ namespace UB.Model
         }
         public List<IChat> Chats
         {
+            set
+            {
+                if( chats != value)
+                    chats = value;
+            }
             get
             {
                 if( chats == null )
@@ -257,6 +266,9 @@ namespace UB.Model
         {
             stopWebServer();
             StopAllChats();
+            ChatChannels.Clear();
+            Chats.Clear();
+            Chats = null;
         }
 
 
