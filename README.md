@@ -5,7 +5,7 @@ Multichat. (C#, MVVM, WPF)
 
 PC:
 
-![alt tag](http://i.imgur.com/n3ESq6F.png)
+![alt tag](http://i.imgur.com/cMC1ixE.png)
 
 
 Phone:
