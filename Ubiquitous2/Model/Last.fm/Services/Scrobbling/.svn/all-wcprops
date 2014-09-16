@@ -1,0 +1,83 @@
+K 25
+svn:wc:ra_dav:version-url
+V 46
+/svn/!svn/ver/74/trunk/lastfm-sharp/Scrobbling
+END
+BadAuthenticationDetailsException.cs
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/!svn/ver/74/trunk/lastfm-sharp/Scrobbling/BadAuthenticationDetailsException.cs
+END
+NowplayingTrack.cs
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/svn/!svn/ver/74/trunk/lastfm-sharp/Scrobbling/NowplayingTrack.cs
+END
+Connection.cs
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/svn/!svn/ver/74/trunk/lastfm-sharp/Scrobbling/Connection.cs
+END
+ScrobbleMode.cs
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/svn/!svn/ver/74/trunk/lastfm-sharp/Scrobbling/ScrobbleMode.cs
+END
+Entry.cs
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/svn/!svn/ver/74/trunk/lastfm-sharp/Scrobbling/Entry.cs
+END
+ScrobblingException.cs
+K 25
+svn:wc:ra_dav:version-url
+V 69
+/svn/!svn/ver/74/trunk/lastfm-sharp/Scrobbling/ScrobblingException.cs
+END
+BannedClientException.cs
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/svn/!svn/ver/74/trunk/lastfm-sharp/Scrobbling/BannedClientException.cs
+END
+ScrobbleManager.cs
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/svn/!svn/ver/74/trunk/lastfm-sharp/Scrobbling/ScrobbleManager.cs
+END
+AuthenticationFailureException.cs
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/svn/!svn/ver/74/trunk/lastfm-sharp/Scrobbling/AuthenticationFailureException.cs
+END
+PlaybackSource.cs
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/svn/!svn/ver/74/trunk/lastfm-sharp/Scrobbling/PlaybackSource.cs
+END
+Request.cs
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/svn/!svn/ver/74/trunk/lastfm-sharp/Scrobbling/Request.cs
+END
+BadSessionException.cs
+K 25
+svn:wc:ra_dav:version-url
+V 69
+/svn/!svn/ver/74/trunk/lastfm-sharp/Scrobbling/BadSessionException.cs
+END
+WrongTimeException.cs
+K 25
+svn:wc:ra_dav:version-url
+V 68
+/svn/!svn/ver/74/trunk/lastfm-sharp/Scrobbling/WrongTimeException.cs
+END

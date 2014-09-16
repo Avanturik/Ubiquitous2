@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Drawing;
 
 namespace UB.Model
 {
@@ -32,6 +33,9 @@ namespace UB.Model
         public ChatUser ChatUser { get; set; }
     }
 
-
+    public class MusicTickerEventArgs : EventArgs
+    {
+        public MusicTrackInfo TrackInfo { get; set; }
+    }
 }
 

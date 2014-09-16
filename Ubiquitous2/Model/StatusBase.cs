@@ -9,9 +9,9 @@ using GalaSoft.MvvmLight;
 
 namespace UB.Model
 {
-    public class ChatStatusBase : NotifyPropertyChangeBase, IChatStatus
+    public class StatusBase : NotifyPropertyChangeBase, IChatStatus
     {
-        public ChatStatusBase()
+        public StatusBase()
         {
             ResetToDefault();
         }

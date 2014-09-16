@@ -30,7 +30,7 @@ namespace UB.Model
 
         public IRCChatBase( IRCLoginInfo info )
         {
-            Status = new ChatStatusBase();
+            Status = new StatusBase();
 
             loginInfo = info;
 
@@ -334,7 +334,7 @@ namespace UB.Model
         }
 
 
-        public ChatStatusBase Status
+        public StatusBase Status
         {
             get;
             set;

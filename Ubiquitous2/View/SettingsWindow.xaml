@@ -3,11 +3,15 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:fluent="clr-namespace:Fluent;assembly=Fluent"
         xmlns:local="clr-namespace:UB"
+        xmlns:Interactivity="clr-namespace:UB.Interactivity"
         xmlns:Devart="clr-namespace:Devart.Controls"
+        xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
         xmlns:View="clr-namespace:UB.View"
         xmlns:ViewModel="clr-namespace:UB.ViewModel"
-        xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" mc:Ignorable="d" x:Class="UB.SettingsWindow"
-        xmlns:Settings="clr-namespace:UB.Properties"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+        mc:Ignorable="d" 
+        x:Class="UB.SettingsWindow"
+        xmlns:Properties="clr-namespace:UB.Properties"
         SnapsToDevicePixels="True"
         UseLayoutRounding="True"
         Topmost="True"
@@ -16,9 +20,11 @@
     <Window.DataContext>
         <Binding Path="Settings" Source="{StaticResource Locator}"/>
     </Window.DataContext>
-    
+    <Window.Resources>
+        <Properties:Ubiquitous x:Key="Settings"/>
+    </Window.Resources>
     <Grid>
-        <fluent:BackstageTabControl SelectedIndex="0" Background="#FF323232" Style="{DynamicResource SettingsStyle}">
+        <fluent:BackstageTabControl SelectedIndex="1" Background="#FF323232" Style="{DynamicResource SettingsStyle}">
             <fluent:BackstageTabItem Header="Chat">
                 <Grid>
                     <ItemsControl ItemsSource="{Binding Chats}"
@@ -52,27 +58,41 @@
 
             </fluent:BackstageTabItem>
             <fluent:BackstageTabItem Header="Music ticker">
-                <DockPanel>
-                    <TextBlock><Run Text="Enable checkbox and scrobbling authentication"/></TextBlock>
-                </DockPanel>
+                <Grid>
+                    <Label Content="Enter Last.fm credentials to display current music track" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="10,9,0,0"/>
+                    <Label Content="Username:" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="10,71,0,0" />
+                    <TextBox Text="{Binding Source={x:Static Properties:Ubiquitous.Default}, Path=LastFMUserName,Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="76,71,0,0" Width="165" Height="25" />
+                    <Label Content="Password:" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="10,107,0,0" />
+
+                    <PasswordBox Name="LastFMPassword" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="76,107,0,0" Width="165" Height="25">
+                        <i:Interaction.Triggers>
+                            <i:EventTrigger EventName="PasswordChanged">
+                                <i:InvokeCommandAction Command="{Binding LastFMPasswordChanged}" CommandParameter="{Binding ElementName=LastFMPassword}"/>
+                            </i:EventTrigger>
+                        </i:Interaction.Triggers>
+                    </PasswordBox>
+
+                    <CheckBox CommandParameter="{Binding RelativeSource={RelativeSource Self}, Path=IsChecked}" Command="{Binding SwitchMusicTicker}" IsChecked="{Binding Source={x:Static Properties:Ubiquitous.Default}, Path=IsMusicTickerEnabled,Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Left" VerticalAlignment="Top" RenderTransformOrigin="1.846,9.385" Margin="15,41,0,0" />
+                    <Label Content="Enable" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="37,34,0,0" />
+                </Grid>
             </fluent:BackstageTabItem>
             <fluent:BackstageTabItem Header="Theme">
-                    <ScrollViewer Template="{DynamicResource ScrollStyle}">
-                        <VirtualizingStackPanel Orientation="Vertical">
-                            <RadioButton Command="{Binding SelectTheme}" CommandParameter="Main" Style="{DynamicResource ThemeRadioButton}" GroupName="ThemeButtons" IsChecked="True">
-                                <StackPanel Orientation="Horizontal">
-                                    <TextBlock Width="100" VerticalAlignment="Center" Margin="0,0,8,0">Main</TextBlock>
-                                    <Image Width="150" Source="/Ubiquitous2;component/Resources/MainThemeThumbnail.png"/>
-                                </StackPanel>
-                            </RadioButton>
-                            <RadioButton Command="{Binding SelectTheme}" CommandParameter="Simple" Style="{DynamicResource ThemeRadioButton}" GroupName="ThemeButtons">
-                                <StackPanel Orientation="Horizontal">
+                <ScrollViewer Template="{DynamicResource ScrollStyle}">
+                    <VirtualizingStackPanel Orientation="Vertical">
+                        <RadioButton Command="{Binding SelectTheme}" CommandParameter="Main" Style="{DynamicResource ThemeRadioButton}" GroupName="ThemeButtons" IsChecked="True">
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Width="100" VerticalAlignment="Center" Margin="0,0,8,0">Main</TextBlock>
+                                <Image Width="150" Source="/Ubiquitous2;component/Resources/MainThemeThumbnail.png"/>
+                            </StackPanel>
+                        </RadioButton>
+                        <RadioButton Command="{Binding SelectTheme}" CommandParameter="Simple" Style="{DynamicResource ThemeRadioButton}" GroupName="ThemeButtons">
+                            <StackPanel Orientation="Horizontal">
                                 <TextBlock Width="100" VerticalAlignment="Center" Margin="0,0,8,0">Simple</TextBlock>
                                 <Image Width="150" Source="/Ubiquitous2;component/Resources/SimpleThemeThumbnail.png"/>
-                                </StackPanel>
-                            </RadioButton>
-                        </VirtualizingStackPanel>
-                    </ScrollViewer>
+                            </StackPanel>
+                        </RadioButton>
+                    </VirtualizingStackPanel>
+                </ScrollViewer>
             </fluent:BackstageTabItem>
             <fluent:BackstageTabItem Header="Web server">
                 <DockPanel>

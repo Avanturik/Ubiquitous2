@@ -1,0 +1,443 @@
+K 25
+svn:wc:ra_dav:version-url
+V 44
+/svn/!svn/ver/74/trunk/lastfm-sharp/Services
+END
+AuthenticatedUser.cs
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/svn/!svn/ver/74/trunk/lastfm-sharp/Services/AuthenticatedUser.cs
+END
+Venue.cs
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/svn/!svn/ver/74/trunk/lastfm-sharp/Services/Venue.cs
+END
+WeeklyChart.cs
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/svn/!svn/ver/74/trunk/lastfm-sharp/Services/WeeklyChart.cs
+END
+LibraryAlbum.cs
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/svn/!svn/ver/74/trunk/lastfm-sharp/Services/LibraryAlbum.cs
+END
+TrackSearch.cs
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/svn/!svn/ver/74/trunk/lastfm-sharp/Services/TrackSearch.cs
+END
+LibraryArtist.cs
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/svn/!svn/ver/74/trunk/lastfm-sharp/Services/LibraryArtist.cs
+END
+Tasteometer.cs
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/svn/!svn/ver/74/trunk/lastfm-sharp/Services/Tasteometer.cs
+END
+Pages.cs
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/svn/!svn/ver/74/trunk/lastfm-sharp/Services/Pages.cs
+END
+InvalidPageException.cs
+K 25
+svn:wc:ra_dav:version-url
+V 68
+/svn/!svn/ver/74/trunk/lastfm-sharp/Services/InvalidPageException.cs
+END
+Track.cs
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/svn/!svn/ver/74/trunk/lastfm-sharp/Services/Track.cs
+END
+Search.cs
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/svn/!svn/ver/74/trunk/lastfm-sharp/Services/Search.cs
+END
+IHasURL.cs
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/svn/!svn/ver/74/trunk/lastfm-sharp/Services/IHasURL.cs
+END
+Tag.cs
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/svn/!svn/ver/74/trunk/lastfm-sharp/Services/Tag.cs
+END
+LibraryTracks.cs
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/svn/!svn/ver/74/trunk/lastfm-sharp/Services/LibraryTracks.cs
+END
+LibraryArtists.cs
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/svn/!svn/ver/74/trunk/lastfm-sharp/Services/LibraryArtists.cs
+END
+LibraryItem.cs
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/svn/!svn/ver/74/trunk/lastfm-sharp/Services/LibraryItem.cs
+END
+WeeklyChartTimeSpan.cs
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/svn/!svn/ver/74/trunk/lastfm-sharp/Services/WeeklyChartTimeSpan.cs
+END
+AlbumWiki.cs
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/svn/!svn/ver/74/trunk/lastfm-sharp/Services/AlbumWiki.cs
+END
+WeeklyTrackChartItem.cs
+K 25
+svn:wc:ra_dav:version-url
+V 68
+/svn/!svn/ver/74/trunk/lastfm-sharp/Services/WeeklyTrackChartItem.cs
+END
+TopTrack.cs
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/svn/!svn/ver/74/trunk/lastfm-sharp/Services/TopTrack.cs
+END
+WeeklyArtistChartItem.cs
+K 25
+svn:wc:ra_dav:version-url
+V 69
+/svn/!svn/ver/74/trunk/lastfm-sharp/Services/WeeklyArtistChartItem.cs
+END
+TopArtist.cs
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/svn/!svn/ver/74/trunk/lastfm-sharp/Services/TopArtist.cs
+END
+IHasWeeklyAlbumCharts.cs
+K 25
+svn:wc:ra_dav:version-url
+V 69
+/svn/!svn/ver/74/trunk/lastfm-sharp/Services/IHasWeeklyAlbumCharts.cs
+END
+ArtistSearch.cs
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/svn/!svn/ver/74/trunk/lastfm-sharp/Services/ArtistSearch.cs
+END
+IShareable.cs
+K 25
+svn:wc:ra_dav:version-url
+V 58
+/svn/!svn/ver/74/trunk/lastfm-sharp/Services/IShareable.cs
+END
+Global.cs
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/svn/!svn/ver/74/trunk/lastfm-sharp/Services/Global.cs
+END
+Playlist.cs
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/svn/!svn/ver/74/trunk/lastfm-sharp/Services/Playlist.cs
+END
+WeeklyChartItem.cs
+K 25
+svn:wc:ra_dav:version-url
+V 63
+/svn/!svn/ver/74/trunk/lastfm-sharp/Services/WeeklyChartItem.cs
+END
+WeeklyAlbumChart.cs
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/svn/!svn/ver/74/trunk/lastfm-sharp/Services/WeeklyAlbumChart.cs
+END
+Wiki.cs
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/svn/!svn/ver/74/trunk/lastfm-sharp/Services/Wiki.cs
+END
+Recipients.cs
+K 25
+svn:wc:ra_dav:version-url
+V 58
+/svn/!svn/ver/74/trunk/lastfm-sharp/Services/Recipients.cs
+END
+Artist.cs
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/svn/!svn/ver/74/trunk/lastfm-sharp/Services/Artist.cs
+END
+ImageSize.cs
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/svn/!svn/ver/74/trunk/lastfm-sharp/Services/ImageSize.cs
+END
+ServiceException.cs
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/svn/!svn/ver/74/trunk/lastfm-sharp/Services/ServiceException.cs
+END
+ITaggable.cs
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/svn/!svn/ver/74/trunk/lastfm-sharp/Services/ITaggable.cs
+END
+XSPF.cs
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/svn/!svn/ver/74/trunk/lastfm-sharp/Services/XSPF.cs
+END
+TopItem.cs
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/svn/!svn/ver/74/trunk/lastfm-sharp/Services/TopItem.cs
+END
+Period.cs
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/svn/!svn/ver/74/trunk/lastfm-sharp/Services/Period.cs
+END
+AlbumSearch.cs
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/svn/!svn/ver/74/trunk/lastfm-sharp/Services/AlbumSearch.cs
+END
+IHasImage.cs
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/svn/!svn/ver/74/trunk/lastfm-sharp/Services/IHasImage.cs
+END
+TagCollection.cs
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/svn/!svn/ver/74/trunk/lastfm-sharp/Services/TagCollection.cs
+END
+TopFan.cs
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/svn/!svn/ver/74/trunk/lastfm-sharp/Services/TopFan.cs
+END
+Request.cs
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/svn/!svn/ver/74/trunk/lastfm-sharp/Services/Request.cs
+END
+LibraryTrack.cs
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/svn/!svn/ver/74/trunk/lastfm-sharp/Services/LibraryTrack.cs
+END
+RecommendedArtists.cs
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/svn/!svn/ver/74/trunk/lastfm-sharp/Services/RecommendedArtists.cs
+END
+AlbumImageSize.cs
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/svn/!svn/ver/74/trunk/lastfm-sharp/Services/AlbumImageSize.cs
+END
+AuthenticationRequiredException.cs
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/svn/!svn/ver/74/trunk/lastfm-sharp/Services/AuthenticationRequiredException.cs
+END
+VenuePastEvents.cs
+K 25
+svn:wc:ra_dav:version-url
+V 63
+/svn/!svn/ver/74/trunk/lastfm-sharp/Services/VenuePastEvents.cs
+END
+ArtistBio.cs
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/svn/!svn/ver/74/trunk/lastfm-sharp/Services/ArtistBio.cs
+END
+Album.cs
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/svn/!svn/ver/74/trunk/lastfm-sharp/Services/Album.cs
+END
+TagSearch.cs
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/svn/!svn/ver/74/trunk/lastfm-sharp/Services/TagSearch.cs
+END
+IHasWeeklyArtistCharts.cs
+K 25
+svn:wc:ra_dav:version-url
+V 70
+/svn/!svn/ver/74/trunk/lastfm-sharp/Services/IHasWeeklyArtistCharts.cs
+END
+Gender.cs
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/svn/!svn/ver/74/trunk/lastfm-sharp/Services/Gender.cs
+END
+GroupMembers.cs
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/svn/!svn/ver/74/trunk/lastfm-sharp/Services/GroupMembers.cs
+END
+SiteLanguage.cs
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/svn/!svn/ver/74/trunk/lastfm-sharp/Services/SiteLanguage.cs
+END
+LibraryAlbums.cs
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/svn/!svn/ver/74/trunk/lastfm-sharp/Services/LibraryAlbums.cs
+END
+EventAttendance.cs
+K 25
+svn:wc:ra_dav:version-url
+V 63
+/svn/!svn/ver/74/trunk/lastfm-sharp/Services/EventAttendance.cs
+END
+Base.cs
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/svn/!svn/ver/74/trunk/lastfm-sharp/Services/Base.cs
+END
+User.cs
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/svn/!svn/ver/74/trunk/lastfm-sharp/Services/User.cs
+END
+Event.cs
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/svn/!svn/ver/74/trunk/lastfm-sharp/Services/Event.cs
+END
+WeeklyAlbumChartItem.cs
+K 25
+svn:wc:ra_dav:version-url
+V 68
+/svn/!svn/ver/74/trunk/lastfm-sharp/Services/WeeklyAlbumChartItem.cs
+END
+TopAlbum.cs
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/svn/!svn/ver/74/trunk/lastfm-sharp/Services/TopAlbum.cs
+END
+TrackWiki.cs
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/svn/!svn/ver/74/trunk/lastfm-sharp/Services/TrackWiki.cs
+END
+Group.cs
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/svn/!svn/ver/74/trunk/lastfm-sharp/Services/Group.cs
+END
+PastEvents.cs
+K 25
+svn:wc:ra_dav:version-url
+V 58
+/svn/!svn/ver/74/trunk/lastfm-sharp/Services/PastEvents.cs
+END
+TopTag.cs
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/svn/!svn/ver/74/trunk/lastfm-sharp/Services/TopTag.cs
+END
+IHasWeeklyTrackCharts.cs
+K 25
+svn:wc:ra_dav:version-url
+V 69
+/svn/!svn/ver/74/trunk/lastfm-sharp/Services/IHasWeeklyTrackCharts.cs
+END
+Country.cs
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/svn/!svn/ver/74/trunk/lastfm-sharp/Services/Country.cs
+END
+Library.cs
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/svn/!svn/ver/74/trunk/lastfm-sharp/Services/Library.cs
+END
+RecommendedEvents.cs
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/svn/!svn/ver/74/trunk/lastfm-sharp/Services/RecommendedEvents.cs
+END
+WeeklyTrackChart.cs
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/svn/!svn/ver/74/trunk/lastfm-sharp/Services/WeeklyTrackChart.cs
+END
+VenueSearch.cs
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/svn/!svn/ver/74/trunk/lastfm-sharp/Services/VenueSearch.cs
+END
+WeeklyArtistChart.cs
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/svn/!svn/ver/74/trunk/lastfm-sharp/Services/WeeklyArtistChart.cs
+END

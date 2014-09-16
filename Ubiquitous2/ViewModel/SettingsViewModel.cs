@@ -2,11 +2,15 @@
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Windows;
+using System.Windows.Controls;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
 using GalaSoft.MvvmLight.Ioc;
+using Microsoft.Practices.ServiceLocation;
 using UB.Model;
 using UB.Properties;
+using UB.Utils;
+using UB.View;
 
 namespace UB.ViewModel
 {
@@ -18,11 +22,13 @@ namespace UB.ViewModel
     /// </summary>
     public class SettingsViewModel : ViewModelBase
     {
+        private MusicTickerWindow tickerWindow;
         private ISettingsDataService settingsDataService;
-
+        private ICurrentTrackDataService currentTrackDataService;
         [PreferredConstructor]
         public SettingsViewModel( SettingsDataService dataService )
         {
+            currentTrackDataService = ServiceLocator.Current.GetInstance<ICurrentTrackDataService>();
             WebServerPort = Ubiquitous.Default.WebServerPort;
 
             settingsDataService = dataService;
@@ -32,9 +38,41 @@ namespace UB.ViewModel
                 {
                     Chats.Add(new SettingsChatItemViewModel(chatConfig));
                 }
-            });                         
+            });            
         }
 
+        private RelayCommand<bool> _switchMusicTicker;
+
+        /// <summary>
+        /// Gets the SwitchMusicTicker.
+        /// </summary>
+        public RelayCommand<bool> SwitchMusicTicker
+        {
+            get
+            {
+                return _switchMusicTicker
+                    ?? (_switchMusicTicker = new RelayCommand<bool>(
+                                          (enable) =>
+                                          {
+                                              if( currentTrackDataService != null )
+                                              {
+                                                  if (enable) 
+                                                  {
+                                                      currentTrackDataService.Start();
+                                                      tickerWindow = new MusicTickerWindow();
+                                                      tickerWindow.Show();
+                                                  }
+                                                      
+                                                  else
+                                                  { 
+                                                      currentTrackDataService.Stop();
+                                                      if (tickerWindow != null)
+                                                          tickerWindow.Close();
+                                                  }
+                                              }
+                                          }));
+            }
+        }
 
         private RelayCommand<string> _selectTheme;
 
@@ -166,6 +204,26 @@ namespace UB.ViewModel
                 RaisePropertyChanging(ChatsPropertyName);
                 _chats = value;
                 RaisePropertyChanged(ChatsPropertyName);
+            }
+        
+        }
+
+
+        private RelayCommand<PasswordBox> _lastFMPasswordChanged;
+
+        /// <summary>
+        /// Gets the LastFMPasswordChanged.
+        /// </summary>
+        public RelayCommand<PasswordBox> LastFMPasswordChanged
+        {
+            get
+            {
+                return _lastFMPasswordChanged
+                    ?? (_lastFMPasswordChanged = new RelayCommand<PasswordBox>(
+                                          (box) =>
+                                          {
+                                              Properties.Ubiquitous.Default.LastFMPassword = box.Password;
+                                          }));
             }
         }
 

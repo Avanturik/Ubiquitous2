@@ -45,13 +45,15 @@ namespace UB.ViewModel
                 SimpleIoc.Default.Register<IChatDataService, ChatDataService>();
                 SimpleIoc.Default.Register<IImageDataSource, ImageCacheDataService>();
             }
+            SimpleIoc.Default.Register<ICurrentTrackDataService, CurrentTrackDataService>();
+            SimpleIoc.Default.Register<MusicTickerViewModel>();
             SimpleIoc.Default.Register<StatusViewModel>();
             SimpleIoc.Default.Register<SettingsFieldViewModel>();
             SimpleIoc.Default.Register<SettingsChatItemViewModel>();
-            SimpleIoc.Default.Register<MainViewModel>();
             SimpleIoc.Default.Register<SettingsViewModel>();
             SimpleIoc.Default.Register<ChatMessageViewModel>();
             SimpleIoc.Default.Register<ChatBoxViewModel>();
+            SimpleIoc.Default.Register<MainViewModel>();
         }
 
         /// <summary>
@@ -158,6 +160,17 @@ namespace UB.ViewModel
         /// </summary>
         public static void Cleanup()
         {
+        }
+
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance",
+    "CA1822:MarkMembersAsStatic",
+    Justification = "This non-static member is needed for data binding purposes.")]
+        public MusicTickerViewModel MusicTicker
+        {
+            get
+            {
+                return ServiceLocator.Current.GetInstance<MusicTickerViewModel>();
+            }
         }
 
 

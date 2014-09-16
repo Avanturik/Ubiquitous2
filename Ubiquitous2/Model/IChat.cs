@@ -23,7 +23,7 @@ namespace UB.Model
         List<string> ChatChannels { get; set; }
         void DownloadEmoticons(String url);
         ChatConfig Config {get;set;}
-        ChatStatusBase Status { get; set; }
+        StatusBase Status { get; set; }
         Dictionary<string, ChatUser> Users { get; set; }
         string NickName { get; set; }
     }

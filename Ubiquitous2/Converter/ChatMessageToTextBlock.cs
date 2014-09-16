@@ -66,6 +66,8 @@ namespace UB.Converter
                                         Hyperlink link = new Hyperlink(new Run(node.Attributes["href"].Value));
                                         url = node.Attributes["href"].Value;
                                         link.IsEnabled = true;
+                                        if (!url.Contains("://"))
+                                            url = "http://" + url;
                                         link.NavigateUri = new Uri(url);
                                         link.Focusable = false;
                                         link.RequestNavigate += (sender, e) =>

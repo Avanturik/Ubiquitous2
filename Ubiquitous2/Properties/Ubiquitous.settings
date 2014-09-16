@@ -14,8 +14,17 @@
     <Setting Name="Config" Provider="PortableSettingsProvider" Type="UB.Model.ConfigSections" Scope="User">
       <Value Profile="(Default)" />
     </Setting>
-    <Setting Name="WebServerPort" Type="System.Int32" Scope="User">
+    <Setting Name="WebServerPort" Provider="PortableSettingsProvider" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">8080</Value>
+    </Setting>
+    <Setting Name="LastFMUserName" Provider="PortableSettingsProvider" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="LastFMPassword" Provider="PortableSettingsProvider" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="IsMusicTickerEnabled" Provider="PortableSettingsProvider" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
     </Setting>
   </Settings>
 </SettingsFile>
