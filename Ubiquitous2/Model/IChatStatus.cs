@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -16,7 +17,7 @@ namespace UB.Model
         bool IsConnecting { get; set; }
         bool IsConnected { get; set; }
         bool IsJoined { get; set; }
-        List<ToolTip> ToolTips { get; set; }
+        ObservableCollection<ToolTip> ToolTips { get; set; }
         int ViewersCount { get; set; }
     }
 }

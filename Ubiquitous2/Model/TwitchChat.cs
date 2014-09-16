@@ -6,6 +6,8 @@ using System.Collections.Generic;
 using Newtonsoft.Json.Linq;
 using System.Threading.Tasks;
 using System.Linq;
+using System.Collections.ObjectModel;
+using GalaSoft.MvvmLight.Threading;
 
 namespace UB.Model
 {
@@ -22,7 +24,6 @@ namespace UB.Model
         private static List<Emoticon> sharedEmoticons = new List<Emoticon>();
         private static bool isFallbackEmoticons = false;
         private static bool isWebEmoticons = false;
-        private List<ToolTip> toolTips = new List<ToolTip>();
 
         private List<WebPoller> counterWebPollers = new List<WebPoller>();
 
@@ -46,7 +47,7 @@ namespace UB.Model
             this.ChatUserJoined += TwitchChat_ChatUserJoined;
             this.ChatUserLeft += TwitchChat_ChatUserLeft;
 
-            Status.ToolTips = toolTips;
+            Status.ToolTips = new ObservableCollection<ToolTip>();
         }
 
         void TwitchChat_ChatUserLeft(object sender, ChatUserEventArgs e)
@@ -67,7 +68,10 @@ namespace UB.Model
         }
         void stopCounterPoller( string channelName )
         {
-            toolTips.RemoveAll(t => t.Header == channelName);
+            var removeTooltip = Status.ToolTips.FirstOrDefault(t => t.Header == channelName);
+            if (removeTooltip != null)
+                Status.ToolTips.Remove(removeTooltip);
+
             var poller = counterWebPollers.FirstOrDefault(p => p.Id == channelName);
             poller.Stop();
             counterWebPollers.Remove(poller);
@@ -97,8 +101,13 @@ namespace UB.Model
                     Uri = new Uri(String.Format(@"http://api.twitch.tv/kraken/streams/{0}?on_site=1", e.ChatUser.Channel.Replace("#", ""))),
                 };
 
-                toolTips.RemoveAll(t => t.Header == poller.Id);
-                toolTips.Add( new ToolTip(poller.Id, ""));
+                var removeTooltip = Status.ToolTips.FirstOrDefault(t => t.Header == poller.Id);
+                if( removeTooltip != null)
+                    Status.ToolTips.Remove(removeTooltip);
+
+                DispatcherHelper.CheckBeginInvokeOnUI(() => {
+                    Status.ToolTips.Add(new ToolTip(poller.Id, ""));                
+                });
 
                 poller.ReadStream = (stream) =>
                 {
@@ -114,7 +123,7 @@ namespace UB.Model
                             viewers += streamInfo.viewers;
                     }
                     Status.ViewersCount = viewers;
-                    var tooltip = toolTips.FirstOrDefault(t => t.Header == poller.Id);
+                    var tooltip = Status.ToolTips.FirstOrDefault(t => t.Header == poller.Id);
                     tooltip.Text = viewers.ToString();
 
                 };

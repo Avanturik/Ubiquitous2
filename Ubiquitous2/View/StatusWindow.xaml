@@ -41,7 +41,7 @@
                     <DataTemplate>
                         <Grid MinWidth="32"  Margin="0" HorizontalAlignment="Center" VerticalAlignment="Center" Opacity="0.9">
                             <Grid.ToolTip>
-                                <ToolTip Background="{x:Null}" BorderBrush="{x:Null}" Foreground="#FF5D5D5D">
+                                <ToolTip HasDropShadow="False" Placement="Top" Background="{x:Null}" BorderBrush="{x:Null}" Foreground="#FF5D5D5D">
                                     <Border Padding="5" BorderThickness="1" BorderBrush="#FFFFBC2B" CornerRadius="10" Background="#CC000000">
                                         <ItemsControl Focusable="False" ItemsSource="{Binding Status.ToolTips}">
                                             <ItemsControl.ItemTemplate>

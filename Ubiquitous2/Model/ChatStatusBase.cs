@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using System.Text;
@@ -312,13 +313,13 @@ namespace UB.Model
         /// </summary>
         public const string ToolTipsPropertyName = "ToolTips";
 
-        private List<ToolTip> _toolTips = new List<ToolTip>();
+        private ObservableCollection<ToolTip> _toolTips = new ObservableCollection<ToolTip>();
 
         /// <summary>
         /// Sets and gets the ToolTips property.
         /// Changes to that property's value raise the PropertyChanged event. 
         /// </summary>
-        public List<ToolTip> ToolTips
+        public ObservableCollection<ToolTip> ToolTips
         {
             get
             {
