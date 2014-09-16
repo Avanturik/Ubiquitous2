@@ -18,6 +18,6 @@ Music ticker:
 ![alt tag](http://i.imgur.com/7w2qiSA.png)
 
 
-Livestream viewers counter:
+Livestream viewers counter and tooltip with details:
 
 ![alt tag](http://i.imgur.com/8S319Wh.png)
