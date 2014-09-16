@@ -108,6 +108,9 @@ namespace UB.Model
                             .With(x => x.stream);
 
                         var tooltip = Status.ToolTips.FirstOrDefault(t => t.Header == webPoller.Id);
+                        if (tooltip == null)
+                            return;
+
                         if (streamInfo != null)
                         {
                             viewers += streamInfo.viewers;

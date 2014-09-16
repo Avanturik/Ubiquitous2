@@ -1,0 +1,52 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+                    xmlns:ubview="clr-namespace:UB.View"
+                    xmlns:ubviewmodel="clr-namespace:UB.ViewModel"
+                    xmlns:Interactivity="clr-namespace:UB.Interactivity"
+                    xmlns:Converter="clr-namespace:UB.Converter"
+                    xmlns:dc="clr-namespace:Devart.Controls"            
+                    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+                    xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+                    mc:Ignorable="d" 
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+
+
+    <Converter:BoolToScrollBarVisibility x:Key="boolToScrollVisibility"></Converter:BoolToScrollBarVisibility>
+    <Style x:Key="ChatBoxStyle" TargetType="{x:Type UserControl}">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type UserControl}">
+                    <Grid Margin="5" Background="#FF1E1E1E">              
+                        <ItemsControl Focusable="False" ItemsSource="{Binding Messages}" Padding="0" Margin="0,0,-4,0">
+                            <ItemsControl.Template>
+                                <ControlTemplate>
+                                    <ScrollViewer VerticalScrollBarVisibility="{Binding IsScrollBarVisible, Converter={StaticResource boolToScrollVisibility}}" Focusable="False" d:DesignHeight="200" d:DesignWidth="500"  Template="{DynamicResource ScrollStyle}" CanContentScroll="True">
+                                            <i:Interaction.Triggers>
+                                            <Interactivity:DataEventTrigger EventName="MessageAdded" d:EventName="">
+                                                <Interactivity:AutoScrollAction Duration="100" EnableAutoScroll="{Binding EnableAutoScroll}"/>
+                                            </Interactivity:DataEventTrigger>
+                                            <Interactivity:DataEventTrigger EventName="MessageSent" d:EventName="">
+                                                <Interactivity:AutoScrollAction Duration="100" EnableAutoScroll="True"/>
+                                            </Interactivity:DataEventTrigger>
+                                        </i:Interaction.Triggers>
+                                        <ItemsPresenter />
+                                    </ScrollViewer>
+                                </ControlTemplate>
+                            </ItemsControl.Template>
+                            <ItemsControl.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <dc:SmoothPanel TrackTopMost="false" VirtualizingPanel.CacheLength="5" VirtualizingPanel.CacheLengthUnit="Page" Margin="0,0,-2,0">
+                                            <dc:SmoothPanel.Templates>
+                                                <dc:SmoothPanelTemplate ViewModel="{x:Type ubviewmodel:ChatMessageViewModel}" View="{x:Type ubview:ChatMessageView}" />
+                                            </dc:SmoothPanel.Templates>
+                                        </dc:SmoothPanel>
+                                </ItemsPanelTemplate>
+                            </ItemsControl.ItemsPanel>
+                        </ItemsControl>
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+</ResourceDictionary>

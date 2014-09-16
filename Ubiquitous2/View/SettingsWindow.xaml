@@ -11,12 +11,12 @@
         SnapsToDevicePixels="True"
         UseLayoutRounding="True"
         Topmost="True"
-        Title="SettingsWindow" Icon="..\ubiquitous smile.ico" MinWidth="400" Width="500" Height="300" d:DesignHeight="297" WindowStartupLocation="CenterOwner">
+        Title="SettingsWindow" Icon="..\ubiquitous smile.ico" MinWidth="400" Width="426" Height="339" WindowStartupLocation="CenterOwner">
 
     <Window.DataContext>
         <Binding Path="Settings" Source="{StaticResource Locator}"/>
     </Window.DataContext>
-
+    
     <Grid>
         <fluent:BackstageTabControl SelectedIndex="0" Background="#FF323232" Style="{DynamicResource SettingsStyle}">
             <fluent:BackstageTabItem Header="Chat">
@@ -57,9 +57,22 @@
                 </DockPanel>
             </fluent:BackstageTabItem>
             <fluent:BackstageTabItem Header="Theme">
-                <DockPanel>
-                    <TextBlock><Run Text="Theme list with thumbnails"/></TextBlock>
-                </DockPanel>
+                    <ScrollViewer Template="{DynamicResource ScrollStyle}">
+                        <VirtualizingStackPanel Orientation="Vertical">
+                            <RadioButton Command="{Binding SelectTheme}" CommandParameter="Main" Style="{DynamicResource ThemeRadioButton}" GroupName="ThemeButtons" IsChecked="True">
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Width="100" VerticalAlignment="Center" Margin="0,0,8,0">Main</TextBlock>
+                                    <Image Width="150" Source="/Ubiquitous2;component/Resources/MainThemeThumbnail.png"/>
+                                </StackPanel>
+                            </RadioButton>
+                            <RadioButton Command="{Binding SelectTheme}" CommandParameter="Simple" Style="{DynamicResource ThemeRadioButton}" GroupName="ThemeButtons">
+                                <StackPanel Orientation="Horizontal">
+                                <TextBlock Width="100" VerticalAlignment="Center" Margin="0,0,8,0">Simple</TextBlock>
+                                <Image Width="150" Source="/Ubiquitous2;component/Resources/SimpleThemeThumbnail.png"/>
+                                </StackPanel>
+                            </RadioButton>
+                        </VirtualizingStackPanel>
+                    </ScrollViewer>
             </fluent:BackstageTabItem>
             <fluent:BackstageTabItem Header="Web server">
                 <DockPanel>

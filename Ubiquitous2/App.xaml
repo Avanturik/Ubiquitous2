@@ -14,8 +14,6 @@
     	<ResourceDictionary>
     		<ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="Skins/Main/Skin.xaml"/>
-                <!--<ResourceDictionary Source="Skins/Main/Settings.xaml"/>
-                <ResourceDictionary Source="Skins/Main/ScrollViewer.xaml"/>-->
             </ResourceDictionary.MergedDictionaries>
     		<!--Global View Model Locator-->
     		<vm:ViewModelLocator x:Key="Locator"

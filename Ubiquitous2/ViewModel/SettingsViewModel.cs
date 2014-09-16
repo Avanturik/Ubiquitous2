@@ -35,6 +35,29 @@ namespace UB.ViewModel
             });                         
         }
 
+
+        private RelayCommand<string> _selectTheme;
+
+        /// <summary>
+        /// Gets the SelectTheme.
+        /// </summary>
+        public RelayCommand<string> SelectTheme
+        {
+            get
+            {
+                return _selectTheme
+                    ?? (_selectTheme = new RelayCommand<string>(
+                                          (themeName) =>
+                                          {
+                                              Application.Current.Resources.MergedDictionaries.Clear();
+                                              Application.Current.Resources.MergedDictionaries.Add(new ResourceDictionary()
+                                              {
+                                                  Source = new Uri("/Ubiquitous2;component/Skins/" + themeName + "/Skin.xaml", UriKind.RelativeOrAbsolute)
+                                              });
+                                          }));
+            }
+        }
+
         /// <summary>
         /// The <see cref="WebServerPort" /> property's name.
         /// </summary>

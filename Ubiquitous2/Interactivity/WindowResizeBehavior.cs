@@ -22,11 +22,28 @@ namespace UB.Interactivity
             if (window == null)
                 return;
 
-            window.SourceInitialized +=window_SourceInitialized;
+            if (!window.IsLoaded)
+                window.SourceInitialized += window_SourceInitialized;
+            else
+                Initialize(window);
         }
-        void window_SourceInitialized(object sender, EventArgs e)
+
+
+        void window_SourceUpdated(object sender, System.Windows.Data.DataTransferEventArgs e)
         {
-            var hwndSource = (HwndSource)PresentationSource.FromVisual((Visual)sender);
+              Initialize(sender);
+        }
+        protected override void OnDetaching()
+        {
+            window.SourceInitialized -= window_SourceInitialized;
+        }
+        void Initialize(object obj)
+        {
+            var hwndSource = (HwndSource)PresentationSource.FromVisual((Visual)obj);
+
+            if (TopLeftGrip == null || TopGrip == null || TopRightGrip == null || RightGrip == null || BottomRightGrip == null || BottomGrip == null || BottomLeftGrip == null || LeftGrip == null)
+                return;
+
             windowResizer = new WindowResizer(window,
                 hwndSource,
                new WindowBorder(BorderPosition.TopLeft, TopLeftGrip),
@@ -37,6 +54,11 @@ namespace UB.Interactivity
                new WindowBorder(BorderPosition.Bottom, BottomGrip),
                new WindowBorder(BorderPosition.BottomLeft, BottomLeftGrip),
                new WindowBorder(BorderPosition.Left, LeftGrip));
+
+        }
+        void window_SourceInitialized(object sender, EventArgs e)
+        {
+            Initialize(sender);
         }
 
         /// <summary>
