@@ -210,7 +210,7 @@ namespace UB.Model
     {
         protected int port = 0;
         TcpListener listener;
-        bool is_active = true;
+        bool is_active = false;
 
         public HttpServer(object port)
         {
@@ -245,7 +245,10 @@ namespace UB.Model
                 return;
             }
             if( !is_active )
+            {
+                is_active = true;
                 Task.Factory.StartNew(() => Listen());
+            }
             
         }
 

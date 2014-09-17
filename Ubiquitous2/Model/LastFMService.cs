@@ -85,6 +85,8 @@ namespace UB.Model
         {
             lock(startStopLock)
             {
+                Status.IsLoggedIn = false; 
+
                 if( pollTimer != null )
                     pollTimer.Change(Timeout.Infinite, Timeout.Infinite);
                 if( Status != null)
@@ -132,7 +134,7 @@ namespace UB.Model
         private bool authenticate()
         {
             
-            if (_session != null && _session.Authenticated)
+            if (_session != null && Status.IsLoggedIn )
                 return true;
 
             if (Config == null)
@@ -181,7 +183,9 @@ namespace UB.Model
         public void Restart()
         {
             Status.ResetToDefault();
+
             Stop();
+
             Start();
         }
 
