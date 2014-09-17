@@ -24,11 +24,14 @@ namespace UB.Model
         private object pollLock = new object();
         private object startStopLock = new object();
         private Track _currentTrack;
-        public LastFMService()
+
+        public LastFMService(ServiceConfig config)
         {
+            Config = config;
             Status = new StatusBase();
             pollTimer = new Timer(new TimerCallback(pollTimer_Tick), null, Timeout.Infinite, Timeout.Infinite);
             MusicTrackInfo = new MusicTrackInfo();
+
         }
         private void pollTimer_Tick(object o)
         {
@@ -52,6 +55,7 @@ namespace UB.Model
             {
                 if( Config == null )
                 {
+
                     Log.WriteError("LastFM can't start without config!");
                     return false;
                 }
@@ -60,10 +64,16 @@ namespace UB.Model
                     && !Status.IsLoginFailed)
                     return false;
 
+                MusicTrackInfo.Album = "Connecting to last.fm...";
+                MusicTrackInfo.Artist = "";
+                MusicTrackInfo.Title = "";
+                MusicTrackInfo.ImageURL = null;
+
                 Status.IsStarting = true;
                 Status.IsConnecting = true;
                 if (!authenticate())
                 {
+                    MusicTrackInfo.Album = "Authentication failure!";
                     Log.WriteError("Couldn't authenticate on Last.fm. Check credentials!");
                     Status.ResetToDefault();
                     Status.IsLoginFailed = true;
@@ -85,8 +95,8 @@ namespace UB.Model
         {
             lock(startStopLock)
             {
-                Status.IsLoggedIn = false; 
-
+                Status.IsLoggedIn = false;
+                _currentTrack = null;
                 if( pollTimer != null )
                     pollTimer.Change(Timeout.Infinite, Timeout.Infinite);
                 if( Status != null)

@@ -114,6 +114,9 @@
     <Reference Include="System.Xaml">
       <RequiredTargetFramework>4.0</RequiredTargetFramework>
     </Reference>
+    <Reference Include="WebSocket4Net">
+      <HintPath>..\packages\WebSocket4Net.0.10\lib\net45\WebSocket4Net.dll</HintPath>
+    </Reference>
     <Reference Include="WindowsBase" />
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
@@ -157,6 +160,7 @@
     <Compile Include="Interactivity\WindowBorder.cs" />
     <Compile Include="Interactivity\WindowResizeBehavior.cs" />
     <Compile Include="Interactivity\WindowResizer.cs" />
+    <Compile Include="Model\GamingLiveChat.cs" />
     <Compile Include="Model\GeneralDataService.cs" />
     <Compile Include="Model\IGeneralDataService.cs" />
     <Compile Include="Model\IService.cs" />
@@ -287,6 +291,7 @@
     </Compile>
     <Compile Include="Model\WebPoller.cs" />
     <Compile Include="Model\WebServerService.cs" />
+    <Compile Include="Model\WebSocket\WebSocketBase.cs" />
     <Compile Include="Properties\PortableSettingsProvider.cs" />
     <Compile Include="Model\TwitchChat.cs" />
     <Compile Include="Properties\Ubiquitous.cs" />
@@ -491,6 +496,13 @@
     <Resource Include="Resources\webserver.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Resource>
+    <Resource Include="Resources\gaminglive.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+    <None Include="Resources\favicon.ico" />
+    <Resource Include="Resources\gaminglivedark.ico">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
     <Content Include="web\css\ubiquitous.css">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
@@ -516,9 +528,6 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="web\js\json2html.js">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="web\favicon.ico">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Resource Include="Resources\ubiquitous smile.ico">
@@ -678,6 +687,7 @@
       <Install>false</Install>
     </BootstrapperPackage>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>cmd /c cd "$(TargetDir)"&gt;nul &amp; for /d %25%25d in (??,??-????) do if exist %25%25d rmdir /s /q %25%25d&gt;nul &amp; echo 0

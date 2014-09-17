@@ -13,11 +13,14 @@ namespace UB.Model
         //Chat titles
         public static string ChatTitleNormalTwitch = "Twitch.tv";
         public static string ChatTitleEventTwitch = "Twitch.tv(event)";
+        public static string ChatTitleGamingLive = "Gaminglive.tv";
 
         //Service titles
         public static string ServiceTitleMusicTicker = "Music ticker";
         public static string ServiceTitleWebServer = "Web server";
 
+
+        //Default service settings
         public static List<ServiceConfig> DefaultServiceSettings
         {
             get
@@ -48,6 +51,8 @@ namespace UB.Model
                 };
             }
         }
+
+        // Default chat settings
         public static List<ChatConfig> DefaultChatSettings
         {
             get
@@ -77,26 +82,34 @@ namespace UB.Model
                             new ConfigField() {  Name = "Channels", Label = "Channels", DataType = "Text", IsVisible = true, Value = "riotgames" },
                             new ConfigField() {  Name = "OAuthToken", Label = "OAuth token", DataType = "Text", IsVisible = false, Value = String.Empty },
                         }
+                    },
+                    new ChatConfig()
+                    {
+                        ChatName = ChatTitleGamingLive,
+                        IconURL = Icons.GamingLiveIconDark,
+                        Enabled = false,
+                        Parameters = new List<ConfigField>() {
+                            new ConfigField() {  Name = "Username", Label = "Username", DataType = "Text", IsVisible = true, Value = String.Empty },
+                            new ConfigField() {  Name = "Password", Label = "Password", DataType = "Password", IsVisible = true, Value = String.Empty },
+                            new ConfigField() {  Name = "Channels", Label = "Channels", DataType = "Text", IsVisible = true, Value = String.Empty },
+                            new ConfigField() {  Name = "AuthToken", Label = "AuthToken", DataType = "Text", IsVisible = false, Value = String.Empty },
+                        }
                     }
                 };
             }
         }
+        // Service factory
         public static Dictionary<String, Func<ServiceConfig, IService>> ServiceFactory = new Dictionary<String, Func<ServiceConfig, IService>>()
         {
-            //Normal twitch IRC channel
-            {ServiceTitleMusicTicker, (config)=>
-                                            {
-                                                return new LastFMService()
-                                                {
-                                                    Config = config,
-                                                };
-                                            }},
-            {ServiceTitleWebServer, (config)=>
-                                            {
-                                                return new WebServerService(config);
-                                            }},
+            //Last.fm - music ticker
+            {ServiceTitleMusicTicker, (config)=> { return new LastFMService(config); }},
+            //Built-in web server
+            {ServiceTitleWebServer, (config)=> { return new WebServerService(config); }},
+            //TODO: OBS support
 
         };
+
+        //Chat factory
         public static Dictionary<String, Func<ChatConfig, IChat>> ChatFactory = new Dictionary<String, Func<ChatConfig, IChat>>()
         {
             //Normal twitch IRC channel
@@ -119,7 +132,16 @@ namespace UB.Model
                                                 twitchChatEvent.LoginInfo.HostName = "199.9.252.26";
                                                 twitchChatEvent.LoginInfo.Port = 80;
                                                 return twitchChatEvent;
-                                            } },
+                                            }},
+            //GamingLive.tv
+            {ChatTitleGamingLive, (config)=>
+                                            {
+                                                return new GamingLiveChat(config)
+                                                {
+                                                    IconURL = Icons.GamingLiveIcon,
+                                                };
+                                             }},
+
         };
     }
 }

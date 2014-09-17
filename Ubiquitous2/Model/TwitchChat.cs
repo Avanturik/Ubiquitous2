@@ -171,7 +171,7 @@ namespace UB.Model
                 isOAuthTokenRenewed = false;
             }
 
-            LoginInfo.Channels = Config.Parameters.StringArrayValue("Channels");
+            LoginInfo.Channels = Config.Parameters.StringArrayValue("Channels").Select(chan => chan.ToLower()).ToArray();
             LoginInfo.UserName = userName;
             LoginInfo.Password = password;
             LoginInfo.RealName = userName;

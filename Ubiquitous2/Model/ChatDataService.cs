@@ -106,7 +106,10 @@ namespace UB.Model
 
         public IChat GetChat( String chatName )
         {
-            return Chats.FirstOrDefault(chat => chat.ChatName.Equals(chatName, StringComparison.InvariantCultureIgnoreCase));
+            if (chatName == null)
+                return null;
+
+            return Chats.FirstOrDefault(chat => chat != null && chat.ChatName.Equals(chatName, StringComparison.InvariantCultureIgnoreCase));
         }
         public void StopAllChats()
         {
