@@ -8,35 +8,48 @@ using Microsoft.Practices.ServiceLocation;
 namespace UB.Model
 {
     public class GeneralDataService : IGeneralDataService
-    {
-        private List<IService> services { get; set; }
+    {        
         private SettingsDataService settingsDataService { get; set; }
         
 
         public GeneralDataService()
         {
             settingsDataService = ServiceLocator.Current.GetInstance<SettingsDataService>();
+            Start();
         }
 
         public List<IService> Services
         {
-            set
+            get;
+            set;
+        }
+
+
+        public void Start()
+        {
+            if (Services == null)
             {
-                if (services != value)
-                    services = value;
-            }
-            get
-            {
-                if (services == null)
+                settingsDataService.GetServiceSettings((configs) =>
                 {
-                    services = new List<IService>();
-                    settingsDataService.GetServiceSettings((configs) =>
+                    Services = configs.Select(config => SettingsRegistry.ServiceFactory[config.ServiceName](config)).ToList();
+                });
+
+                if( Services != null )
+                {
+                    foreach( var service in Services )
                     {
-                       services = configs.Select(config => SettingsRegistry.ServiceFactory[config.ServiceName](config)).ToList();
-                    });
+                        if( service.Config.Enabled )
+                        {
+                            Task.Factory.StartNew(() => service.Start());
+                        }
+                    }
                 }
-                return services;
             }
+        }
+
+        public void Stop()
+        {
+           
         }
     }
 }

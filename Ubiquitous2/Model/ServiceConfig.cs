@@ -140,6 +140,12 @@ namespace UB.Model
             }
         }
 
+        public object GetParameterValue(string name)
+        {
+            var searchParameter = Parameters.FirstOrDefault(parameter => parameter.Name.Equals(name, StringComparison.InvariantCultureIgnoreCase));
+            return searchParameter.Value;
+        }
+
         public override bool Equals(object o)
         {
             bool result = false;

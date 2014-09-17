@@ -88,7 +88,7 @@ namespace UB.Design
 
 
 
-        public WebServer WebServer
+        public WebServerService WebServer
         {
             get;
             set;

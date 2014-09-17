@@ -1,6 +1,9 @@
 ﻿using GalaSoft.MvvmLight;
+using GalaSoft.MvvmLight.Ioc;
 using UB.Model;
 using UB.Utils;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace UB.ViewModel
 {
@@ -12,25 +15,56 @@ namespace UB.ViewModel
     /// </summary>
     public class MusicTickerViewModel : ViewModelBase
     {
-        private IService _dataService;
+        private GeneralDataService _dataService;
+        private IService _lastFmService;
         /// <summary>
         /// Initializes a new instance of the MusicTickerViewModel class.
         /// </summary>
-        public MusicTickerViewModel( IService dataService )
+        [PreferredConstructor]
+        public MusicTickerViewModel( GeneralDataService dataService)
         {
             _dataService = dataService;
-            
             initialize();
         }
         private void initialize()
         {
-            if (!_dataService.Status.IsLoggedIn && !_dataService.Status.IsLoginFailed)
-                _dataService.Start();
-
-            _dataService.GetData((dataObject) =>
+            _lastFmService = _dataService.Services.FirstOrDefault(service => service.Config.ServiceName == SettingsRegistry.ServiceTitleMusicTicker);
+            _lastFmService.GetData((dataObject) =>
             {
                 CurrentTrack = dataObject as MusicTrackInfo;
             });
+            Config = _lastFmService.Config;
+        }
+
+        /// <summary>
+        /// The <see cref="Config" /> property's name.
+        /// </summary>
+        public const string ConfigPropertyName = "Config";
+
+        private ServiceConfig _config = null;
+
+        /// <summary>
+        /// Sets and gets the Config property.
+        /// Changes to that property's value raise the PropertyChanged event. 
+        /// </summary>
+        public ServiceConfig Config
+        {
+            get
+            {
+                return _config;
+            }
+
+            set
+            {
+                if (_config == value)
+                {
+                    return;
+                }
+
+                RaisePropertyChanging(ConfigPropertyName);
+                _config = value;
+                RaisePropertyChanged(ConfigPropertyName);
+            }
         }
 
         /// <summary>

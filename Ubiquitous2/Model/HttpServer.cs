@@ -208,13 +208,14 @@ namespace UB.Model
 
     public abstract class HttpServer
     {
-        protected int port;
+        protected int port = 0;
         TcpListener listener;
         bool is_active = true;
 
-        public HttpServer(int port)
+        public HttpServer(object port)
         {
-            this.port = port;
+            if( port != null )
+                int.TryParse(port.ToString(), out this.port);
         }
 
         public void Listen()
@@ -236,11 +237,25 @@ namespace UB.Model
                 Log.WriteError("Web server unable to start! {0}", e.Message);
             }
         }
-
-        public void Stop()
+        public void StartHttpServer()
         {
-            is_active = false;
-            listener.Stop();
+            if (this.port <=0 || this.port > 65535)
+            {
+                Log.WriteError("Invalid port specified for web server");
+                return;
+            }
+            if( !is_active )
+                Task.Factory.StartNew(() => Listen());
+            
+        }
+
+        public void StopHttpServer()
+        {
+            if( is_active )
+            {
+                is_active = false;
+                listener.Stop();
+            }
         }
 
         public abstract void HandleGETRequest(HttpProcessor p);

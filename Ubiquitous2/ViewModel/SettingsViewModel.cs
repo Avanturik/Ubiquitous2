@@ -23,13 +23,10 @@ namespace UB.ViewModel
     /// </summary>
     public class SettingsViewModel : ViewModelBase
     {
-        private MusicTickerWindow tickerWindow;
         private ISettingsDataService settingsDataService;
         [PreferredConstructor]
-        public SettingsViewModel( SettingsDataService dataService, IGeneralDataService generalDataService )
+        public SettingsViewModel(SettingsDataService dataService, GeneralDataService generalDataService)
         {
-            WebServerPort = Ubiquitous.Default.WebServerPort;
-
             settingsDataService = dataService;
 
             settingsDataService.GetChatSettings((list) => {
@@ -68,86 +65,6 @@ namespace UB.ViewModel
             }
         }
 
-        /// <summary>
-        /// The <see cref="WebServerPort" /> property's name.
-        /// </summary>
-        public const string WebServerPortPropertyName = "WebServerPort";
-
-        private int _webServerPort = 8080;
-
-        /// <summary>
-        /// Sets and gets the WebServerPort property.
-        /// Changes to that property's value raise the PropertyChanged event. 
-        /// </summary>
-        public int WebServerPort
-        {
-            get
-            {
-                return _webServerPort;
-            }
-
-            set
-            {
-                if (_webServerPort == value)
-                {
-                    return;
-                }
-                RaisePropertyChanging(WebServerPortPropertyName);
-                _webServerPort = value;
-                Ubiquitous.Default.WebServerPort = value;
-                LocalWebURL = "http://localhost:" + _webServerPort;
-                RaisePropertyChanged(WebServerPortPropertyName);
-            }
-        }
-
-        /// <summary>
-        /// The <see cref="LocalWebURL" /> property's name.
-        /// </summary>
-        public const string LocalWebURLPropertyName = "LocalWebURL";
-
-        private string _localWebURL = "http://localhost:8080";
-
-        /// <summary>
-        /// Sets and gets the LocalWebURL property.
-        /// Changes to that property's value raise the PropertyChanged event. 
-        /// </summary>
-        public string LocalWebURL
-        {
-            get
-            {
-                return _localWebURL;
-            }
-
-            set
-            {
-                if (_localWebURL == value)
-                {
-                    return;
-                }
-
-                RaisePropertyChanging(LocalWebURLPropertyName);
-                _localWebURL = value;
-                RaisePropertyChanged(LocalWebURLPropertyName);
-            }
-        }
-
-        private RelayCommand _openLocalHost;
-
-        /// <summary>
-        /// Gets the OpenLocalHost.
-        /// </summary>
-        public RelayCommand OpenLocalHost
-        {
-            get
-            {
-                return _openLocalHost
-                    ?? (_openLocalHost = new RelayCommand(
-                                          () =>
-                                          {
-                                              Process.Start(LocalWebURL);
-                                          }));
-            }
-        }
 
         /// <summary>
         /// The <see cref="ServiceItemViewModels" /> property's name.

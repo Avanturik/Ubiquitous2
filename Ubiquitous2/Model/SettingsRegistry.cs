@@ -11,11 +11,12 @@ namespace UB.Model
         private static Random random = new Random();
 
         //Chat titles
-        private const string chatTitleNormalTwitch = "Twitch.tv";
-        private const string chatTitleEventTwitch = "Twitch.tv(event)";
+        public static string ChatTitleNormalTwitch = "Twitch.tv";
+        public static string ChatTitleEventTwitch = "Twitch.tv(event)";
 
         //Service titles
-        private const string serviceTitleMusicTicker = "Music ticker";
+        public static string ServiceTitleMusicTicker = "Music ticker";
+        public static string ServiceTitleWebServer = "Web server";
 
         public static List<ServiceConfig> DefaultServiceSettings
         {
@@ -25,12 +26,23 @@ namespace UB.Model
                 {
                     new ServiceConfig()
                     {
-                        ServiceName = serviceTitleMusicTicker,
+                        ServiceName = ServiceTitleMusicTicker,
                         IconURL = Icons.LastFMIcon,
                         Enabled = false,
                         Parameters = new List<ConfigField>() {
                             new ConfigField("Username", "Username", "Text", true, ""),
-                            new ConfigField("Password", "Password", "Password", true, "")
+                            new ConfigField("Password", "Password", "Password", true, ""),
+                            new ConfigField("Info", "Enter your last.fm credentials and enable scrobbling in music player", "Info", true, null),
+                        }
+                    },
+                    new ServiceConfig()
+                    {
+                        ServiceName = ServiceTitleWebServer,
+                        IconURL = Icons.WebServerIcon,
+                        Enabled = true,
+                        Parameters = new List<ConfigField>() {
+                            new ConfigField("Port", "TCP port", "Text", true, "8080"),
+                            new ConfigField("Info", "Read chat anywhere via browser.", "Info", true, null),
                         }
                     }
                 };
@@ -44,7 +56,7 @@ namespace UB.Model
                 {
                     new ChatConfig()
                     {
-                        ChatName = chatTitleNormalTwitch,
+                        ChatName = ChatTitleNormalTwitch,
                         IconURL = Icons.TwitchIcon,
                         Enabled = false,
                         Parameters = new List<ConfigField>() {
@@ -56,7 +68,7 @@ namespace UB.Model
                     },
                     new ChatConfig()
                     {
-                        ChatName = chatTitleEventTwitch,
+                        ChatName = ChatTitleEventTwitch,
                         IconURL = Icons.TwitchEventIcon,
                         Enabled = false,
                         Parameters = new List<ConfigField>() {
@@ -72,31 +84,36 @@ namespace UB.Model
         public static Dictionary<String, Func<ServiceConfig, IService>> ServiceFactory = new Dictionary<String, Func<ServiceConfig, IService>>()
         {
             //Normal twitch IRC channel
-            {serviceTitleMusicTicker, (config)=>
+            {ServiceTitleMusicTicker, (config)=>
                                             {
                                                 return new LastFMService()
                                                 {
                                                     Config = config,
                                                 };
                                             }},
+            {ServiceTitleWebServer, (config)=>
+                                            {
+                                                return new WebServerService(config);
+                                            }},
+
         };
         public static Dictionary<String, Func<ChatConfig, IChat>> ChatFactory = new Dictionary<String, Func<ChatConfig, IChat>>()
         {
             //Normal twitch IRC channel
-            {chatTitleNormalTwitch, (config)=>
+            {ChatTitleNormalTwitch, (config)=>
                                             {
                                                 return new TwitchChat(config)
                                                 {
-                                                    ChatName = chatTitleNormalTwitch,
+                                                    ChatName = ChatTitleNormalTwitch,
                                                     IconURL = Icons.TwitchIcon,
                                                 };
                                             }},
             //Twitch's Event channel. e.g. #riotgames                                            
-            {chatTitleEventTwitch, (config)=>
+            {ChatTitleEventTwitch, (config)=>
                                             {
                                                 var twitchChatEvent = new TwitchChat(config)
                                                 {
-                                                    ChatName = chatTitleEventTwitch,
+                                                    ChatName = ChatTitleEventTwitch,
                                                     IconURL = Icons.TwitchEventIcon,
                                                 };
                                                 twitchChatEvent.LoginInfo.HostName = "199.9.252.26";

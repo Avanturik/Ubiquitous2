@@ -12,7 +12,7 @@ using System.Linq;
 
 namespace UB.Model
 {
-    public class LastFMService : IService
+    public class LastFMService : NotifyPropertyChangeBase, IService
     {
 
         private Timer pollTimer;
@@ -28,7 +28,7 @@ namespace UB.Model
         {
             Status = new StatusBase();
             pollTimer = new Timer(new TimerCallback(pollTimer_Tick), null, Timeout.Infinite, Timeout.Infinite);
-
+            MusicTrackInfo = new MusicTrackInfo();
         }
         private void pollTimer_Tick(object o)
         {
@@ -55,7 +55,9 @@ namespace UB.Model
                     Log.WriteError("LastFM can't start without config!");
                     return false;
                 }
-                if (Status.IsStarting)
+                if (Status.IsStarting 
+                    && !Status.IsLoggedIn 
+                    && !Status.IsLoginFailed)
                     return false;
 
                 Status.IsStarting = true;
@@ -83,8 +85,10 @@ namespace UB.Model
         {
             lock(startStopLock)
             {
-                pollTimer.Change(Timeout.Infinite, Timeout.Infinite);
-                Status.ResetToDefault();
+                if( pollTimer != null )
+                    pollTimer.Change(Timeout.Infinite, Timeout.Infinite);
+                if( Status != null)
+                    Status.ResetToDefault();
                 return true;
             }
         }
@@ -109,19 +113,22 @@ namespace UB.Model
                 else if (artist != null)
                     imageUrl = artist.GetImageURL(ImageSize.Large);
 
-                musicTrackInfo = new MusicTrackInfo(){
-                            Album = (album == null ? "" : album.Title),
-                            Artist = (artist == null ? "" : artist.Name),
-                            ImageURL = imageUrl,
-                            Title = track.Title 
-                        };
+                MusicTrackInfo.Album = (album == null ? "" : album.Title);
+                MusicTrackInfo.Artist = (artist == null ? "" : artist.Name);
+                MusicTrackInfo.ImageURL = imageUrl;
+                MusicTrackInfo.Title = track.Title; 
+
+            }
+            else if( track == null )
+            {
+                MusicTrackInfo.Album = "Unknown album";
+                MusicTrackInfo.Artist = "Unknown artist";
+                MusicTrackInfo.Title = "Unknown title";
             }
             _currentTrack = track;
 
         }
         
-        private MusicTrackInfo musicTrackInfo { get; set; }
-
         private bool authenticate()
         {
             
@@ -186,7 +193,12 @@ namespace UB.Model
 
         public void GetData(Action<object> callback)
         {
-            callback(musicTrackInfo);
+            if( !Status.IsLoggedIn)
+            {
+                MusicTrackInfo.Album = "Connecting to last.fm...";
+            }
+
+            callback(MusicTrackInfo);
         }
 
 
@@ -195,6 +207,39 @@ namespace UB.Model
             get;
             set;
         }
+
+        /// <summary>
+        /// The <see cref="MusicTrackInfo" /> property's name.
+        /// </summary>
+        public const string MusicTrackInfoPropertyName = "MusicTrackInfo";
+
+        private MusicTrackInfo _musicTrackInfo = null;
+
+        /// <summary>
+        /// Sets and gets the MusicTrackInfo property.
+        /// Changes to that property's value raise the PropertyChanged event. 
+        /// </summary>
+        public MusicTrackInfo MusicTrackInfo
+        {
+            get
+            {
+                return _musicTrackInfo;
+            }
+
+            set
+            {
+                if (_musicTrackInfo == value)
+                {
+                    return;
+                }
+
+                RaisePropertyChanging(MusicTrackInfoPropertyName);
+                _musicTrackInfo = value;
+                RaisePropertyChanged(MusicTrackInfoPropertyName);
+            }
+        }
+
+
     }
 
 

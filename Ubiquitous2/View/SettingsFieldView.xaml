@@ -6,13 +6,14 @@
              xmlns:Interactivity="clr-namespace:UB.Interactivity"
              xmlns:viewModel="clr-namespace:UB.ViewModel"
              mc:Ignorable="d"                          
-             d:DesignHeight="30" d:DesignWidth="229" Style="{DynamicResource SettingsFieldStyle}" 
-             Height="30"
+             d:DesignHeight="64" d:DesignWidth="229" Style="{DynamicResource SettingsFieldStyle}" 
+             MinHeight="30"
+             MaxHeight="200"
              Name="userControl"
              Background="{DynamicResource {x:Static SystemColors.ControlBrushKey}}"
              >
     <d:UserControl.DataContext>
-        <viewModel:SettingsFieldViewModel LabelText="Lorem:" DataType="Text" Text="Ipsum" />
+        <viewModel:SettingsFieldViewModel LabelText="Ipsum Ipsum Ipsum Ipsum Ipsum Ipsum Ipsum Ipsum Ipsum Ipsum Ipsum Ipsum Ipsum" DataType="Info" Text="Ipsum Ipsum Ipsum Ipsum Ipsum Ipsum Ipsum Ipsum Ipsum Ipsum Ipsum Ipsum Ipsum " />
     </d:UserControl.DataContext>
 
     <UserControl.Resources>
@@ -25,7 +26,7 @@
             <Setter Property="MaxWidth" Value="300"/>
         </Style>
         <Style TargetType="{x:Type Label}">
-            <Setter Property="Margin" Value="0,-3,0,0"/>
+            <Setter Property="Margin" Value="0,0,0,0"/>
             <Setter Property="MinWidth" Value="100"/>
             <Setter Property="HorizontalAlignment" Value="Right"/>
             <Setter Property="VerticalContentAlignment" Value="Center"/>
@@ -38,12 +39,10 @@
                     <Setter Property="Template">
                         <Setter.Value>
                             <ControlTemplate>
-                                <Border>
-                                    <DockPanel>
-                                        <Label Content="{Binding LabelText, Mode=OneWay}" />
-                                        <PasswordBox Interactivity:PasswordBoxAssistant.BoundPassword="{Binding Path=Text, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-                                    </DockPanel>
-                                </Border>
+                                <DockPanel VerticalAlignment="Top">
+                                    <Label Content="{Binding LabelText, Mode=OneWay}" HorizontalAlignment="Left" />
+                                    <PasswordBox Interactivity:PasswordBoxAssistant.BoundPassword="{Binding Path=Text, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                                </DockPanel>
                             </ControlTemplate>
                         </Setter.Value>
                     </Setter>
@@ -52,12 +51,19 @@
                     <Setter Property="Template">
                         <Setter.Value>
                             <ControlTemplate>
-                                <Border>
-                                    <DockPanel>
-                                        <Label Content="{Binding LabelText, Mode=OneWay}"/>
-                                        <TextBox Text="{Binding Text,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"/>
-                                    </DockPanel>
-                                </Border>
+                                <DockPanel VerticalAlignment="Top">
+                                    <Label Content="{Binding LabelText, Mode=OneWay}" HorizontalAlignment="Left"/>
+                                    <TextBox Text="{Binding Text,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"/>
+                                </DockPanel>
+                            </ControlTemplate>
+                        </Setter.Value>
+                    </Setter>
+                </DataTrigger>
+                <DataTrigger Binding="{Binding DataType, Mode=OneWay}" Value="Info">
+                    <Setter Property="Template">
+                        <Setter.Value>
+                            <ControlTemplate>
+                                    <TextBlock  Margin="5" TextWrapping="Wrap" Text="{Binding LabelText, Mode=OneWay}" VerticalAlignment="Top"/>
                             </ControlTemplate>
                         </Setter.Value>
                     </Setter>

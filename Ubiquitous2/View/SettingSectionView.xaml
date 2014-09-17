@@ -8,9 +8,11 @@
              xmlns:ViewModel="clr-namespace:UB.ViewModel"
              xmlns:View="clr-namespace:UB.View"
              xmlns:gif="http://wpfanimatedgif.codeplex.com"
-             DataContext="{Binding Source={StaticResource Locator},Path=SettingsChatItem}"
+             DataContext="{Binding Source={StaticResource Locator},Path=SettingsSection}"
              mc:Ignorable="d"
              Focusable="False"
+             MinWidth="30"
+             MaxWidth="1000"
              d:DesignHeight="31.433" d:DesignWidth="184.566">
 
     <UserControl.Resources>
@@ -42,7 +44,7 @@
                     <Image Visibility="{Binding IsLoaderVisible, Converter={StaticResource boolToVisibilityConverter}}" Width="16" Height="16" gif:ImageBehavior.AnimatedSource="/Ubiquitous2;component/Resources/loader.gif" gif:ImageBehavior.RepeatBehavior="Forever" Margin="0,0,0,-4" />
             </TextBlock>
                     
-            <Expander HorizontalAlignment="Left" HorizontalContentAlignment="Left" Padding="10"  IsExpanded="{Binding Expanded}" Style="{DynamicResource ExpanderStyle}" VerticalAlignment="Top">
+            <Expander Margin="5"  HorizontalAlignment="Left" HorizontalContentAlignment="Left"  Padding="0"  IsExpanded="{Binding Expanded}" Style="{DynamicResource ExpanderStyle}" VerticalAlignment="Top">
                 <ItemsControl ItemsSource="{Binding SettingsFields}"
                       Padding="0"
                       Margin="0,0,20,0"

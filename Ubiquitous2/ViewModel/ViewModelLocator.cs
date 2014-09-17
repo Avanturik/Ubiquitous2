@@ -45,12 +45,12 @@ namespace UB.ViewModel
                 SimpleIoc.Default.Register<IChatDataService, ChatDataService>();
                 SimpleIoc.Default.Register<IImageDataSource, ImageCacheDataService>();
             }
-            SimpleIoc.Default.Register<IGeneralDataService, GeneralDataService>();
-            SimpleIoc.Default.Register<IService, LastFMService>();
+            SimpleIoc.Default.Register<GeneralDataService>();
+            //SimpleIoc.Default.Register<LastFMService>();
             SimpleIoc.Default.Register<MusicTickerViewModel>();
             SimpleIoc.Default.Register<StatusViewModel>();
             SimpleIoc.Default.Register<SettingsFieldViewModel>();
-            SimpleIoc.Default.Register<SettingsChatItemViewModel>();
+            SimpleIoc.Default.Register<SettingsSectionViewModel>();
             SimpleIoc.Default.Register<SettingsViewModel>();
             SimpleIoc.Default.Register<ChatMessageViewModel>();
             SimpleIoc.Default.Register<ChatBoxViewModel>();
@@ -121,11 +121,11 @@ namespace UB.ViewModel
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance",
             "CA1822:MarkMembersAsStatic",
             Justification = "This non-static member is needed for data binding purposes.")]
-        public SettingsChatItemViewModel SettingsChatItem
+        public SettingsSectionViewModel SettingsSection
         {
             get
             {
-                return ServiceLocator.Current.GetInstance<SettingsChatItemViewModel>();
+                return ServiceLocator.Current.GetInstance<SettingsSectionViewModel>();
             }
         }
 

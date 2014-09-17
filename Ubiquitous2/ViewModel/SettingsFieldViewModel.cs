@@ -29,15 +29,14 @@ namespace UB.ViewModel
         {
             _configField = configField;
             _labelText = configField.Label;
+            _dataType = configField.DataType;
             switch (configField.DataType.ToLower())
             {
                 case "text":
-                    _text = (String)configField.Value;
-                    _dataType = "Text";
+                    _text = (string)configField.Value;
                     break;
                 case "password":
-                    _text = (String)configField.Value;
-                    _dataType = "Password";
+                    _text = (string)configField.Value;
                     break;
             }
 

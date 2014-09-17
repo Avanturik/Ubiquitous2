@@ -19,7 +19,6 @@ namespace UB.Model
         void SendMessage(ChatMessage message);
         void Stop();
         void Start();
-        WebServer WebServer { get; set; }
         Action<IChat> ChatStatusHandler { get; set; }
     }
 

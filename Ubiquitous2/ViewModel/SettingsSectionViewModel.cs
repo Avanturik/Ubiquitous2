@@ -7,14 +7,28 @@ using System.Threading.Tasks;
 using Devart.Controls;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
+using GalaSoft.MvvmLight.Ioc;
 using UB.Model;
+using UB.Utils;
 
 namespace UB.ViewModel
 {
     public class SettingsSectionViewModel : ViewModelBase, IHeightMeasurer
     {
         private IService _service;
+
         public SettingsSectionViewModel(IService service)
+        {
+            Initialize(service);
+        }
+        [PreferredConstructor]
+        public SettingsSectionViewModel()
+        {
+
+        }
+
+
+        private void Initialize (IService service)
         {
             _service = service;
             _enabled = _service.Config.Enabled;
@@ -25,20 +39,7 @@ namespace UB.ViewModel
             {
                 if (parameter.IsVisible)
                     SettingsFields.Add(new SettingsFieldViewModel(parameter));
-            }
-
-            //chatDataService = ServiceLocator.Current.GetInstance<IChatDataService>();
-            //chatConfig = config;
-            //_enabled = config.Enabled;
-            //_chatName = config.ChatName;
-            //_chatIconURL = config.IconURL ?? _chatIconURL;
-            //foreach (var param in config.Parameters)
-            //{
-            //    if (param.IsVisible)
-            //        SettingsFields.Add(
-            //            new SettingsFieldViewModel(param)
-            //        );
-            //}        
+            } 
         }
 
         /// <summary>
@@ -146,15 +147,13 @@ namespace UB.ViewModel
                     ?? (_restart = new RelayCommand(
                                           () =>
                                           {
-                                              Task.Factory.StartNew(() =>
-                                              {
-                                                  if (this.Enabled)
-                                                  {
-                                                      this.Enabled = false;
-                                                      this.Enabled = true;
-                                                  }
-
-                                              });
+                                              IsLoaderVisible = true;
+                                                if (this.Enabled)
+                                                {
+                                                    this.Enabled = false;
+                                                    this.Enabled = true;
+                                                }
+                                              IsLoaderVisible = false;
                                           }));
             }
         }
@@ -266,16 +265,18 @@ namespace UB.ViewModel
 
                 RaisePropertyChanging(EnabledPropertyName);
                 _enabled = value;
-                IsLoaderVisible = true;
+                UI.Dispatch(() => IsLoaderVisible = true);
+                
+
                 if (_service.Config != null)
                     _service.Config.Enabled = _enabled;
 
                 if (_enabled)
-                    _service.Stop();
+                    Task.Factory.StartNew(() => _service.Start());
                 else
-                    _service.Start();
+                    Task.Factory.StartNew(() => _service.Stop());
 
-                IsLoaderVisible = false;
+                UI.Dispatch(() => IsLoaderVisible = false);
                 RaisePropertyChanged(EnabledPropertyName);
             }
         }

@@ -286,7 +286,7 @@
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="Model\WebPoller.cs" />
-    <Compile Include="Model\WebServer.cs" />
+    <Compile Include="Model\WebServerService.cs" />
     <Compile Include="Properties\PortableSettingsProvider.cs" />
     <Compile Include="Model\TwitchChat.cs" />
     <Compile Include="Properties\Ubiquitous.cs" />
@@ -486,6 +486,9 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Resource>
     <Resource Include="Resources\lastfm.ico">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resources\webserver.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Resource>
     <Content Include="web\css\ubiquitous.css">

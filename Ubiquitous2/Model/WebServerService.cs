@@ -6,14 +6,15 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 
+
 namespace UB.Model
 {
-    public class WebServer : HttpServer
+    public class WebServerService : HttpServer, IService
     {
         private const string webContentFolder = @"web\";
-        public WebServer(int httpPort) : base(httpPort)
+        public WebServerService(ServiceConfig config) : base(config.GetParameterValue("Port")) 
         {
-            Task.Factory.StartNew(() => Listen());
+            Config = config;
         }
         private readonly HashSet<KeyValuePair<string, string>> ContentTypes = new HashSet<KeyValuePair<string, string>> {
                 new KeyValuePair<string,string>(".png", "image/png"),
@@ -111,6 +112,47 @@ namespace UB.Model
 
         public override void HandlePOSTRequest(HttpProcessor p, System.IO.StreamReader inputData)
         {
+        }
+        
+        public bool Stop()
+        {
+            base.StopHttpServer();
+            return false;
+        }
+
+        public void Restart()
+        {
+            this.Stop();
+            this.Stop();
+        }
+
+        public Action AfterStart
+        {
+            get;
+            set;
+        }
+
+        public ServiceConfig Config
+        {
+            get;
+            set;
+        }
+
+        public StatusBase Status
+        {
+            get;
+            set;
+        }
+
+        public void GetData(Action<object> callback)
+        {
+            callback(this);
+        }
+
+        public bool Start()
+        {
+            base.StartHttpServer();
+            return true;
         }
     }
 }

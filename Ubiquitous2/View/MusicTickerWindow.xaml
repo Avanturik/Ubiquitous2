@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:ignore="http://www.ignore.com"
         mc:Ignorable="d ignore"
-         xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity" 
+        xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity" 
         xmlns:il="clr-namespace:Microsoft.Expression.Interactivity.Layout;assembly=Microsoft.Expression.Interactions"
         xmlns:Interactivity="clr-namespace:UB.Interactivity"
         xmlns:Devart="clr-namespace:Devart.Controls"
@@ -19,14 +19,19 @@
         Title="Ubiquitous 2.0 - Music ticker"
         Topmost="True"
         Icon="..\ubiquitous smile.ico"
-        DataContext="{Binding Source={StaticResource Locator},Path=MusicTicker.CurrentTrack}" 
-        SizeToContent="WidthAndHeight" HorizontalAlignment="Center" VerticalAlignment="Center" Padding="0" Foreground="#FFDEDEDE" MinWidth="250" Height="64" d:DesignHeight="84.186">
+        DataContext="{Binding Source={StaticResource Locator},Path=MusicTicker}" 
+        Visibility="{Binding Source={StaticResource Locator},Path=MusicTicker.Config.Enabled, Converter={StaticResource boolToVisibilityConverter}}"
+        HorizontalAlignment="Center" VerticalAlignment="Center" Padding="0" Foreground="#FFDEDEDE" Width="300" Height="64" d:DesignHeight="84.186">
+
+    <Window.Resources>
+        <BooleanToVisibilityConverter x:Key="boolToVisibilityConverter"></BooleanToVisibilityConverter>
+    </Window.Resources>
 
     <i:Interaction.Behaviors>
         <Interactivity:DragWindow/>
     </i:Interaction.Behaviors>
 
-    <Grid>
+    <Grid Margin="0,0,0,0">
         <Grid.RowDefinitions>
             <RowDefinition Height="64"/>
         </Grid.RowDefinitions>
@@ -34,11 +39,26 @@
             <ColumnDefinition Width="64"/>
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
-        <Image Margin="5" Width="64" Source="{Binding ImageURL}" Grid.Column="0" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+        <Grid.Background>
+            <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                <GradientStop Color="#FF343434" Offset="0"/>
+                <GradientStop Color="#FF1D1D1D" Offset="1"/>
+            </LinearGradientBrush>
+        </Grid.Background>
+        <DockPanel>
+            <DockPanel.Background>
+                <RadialGradientBrush>
+                    <GradientStop Color="#FF2E2E2E" Offset="1"/>
+                    <GradientStop Color="#FF4D4D4D" Offset="0.184"/>
+                </RadialGradientBrush>
+            </DockPanel.Background>
+            <Image Margin="5" Width="64" Source="{Binding CurrentTrack.ImageURL}" Grid.Column="0" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+        </DockPanel>
+
         <StackPanel Margin="5" Grid.Row="0" Grid.Column="1">
-            <TextBlock Text="{Binding Album}" Grid.ColumnSpan="2" Grid.RowSpan="2" VerticalAlignment="Top"/>
-            <TextBlock Text="{Binding Artist}" Grid.ColumnSpan="2" Grid.RowSpan="2" VerticalAlignment="Top"/>
-            <TextBlock Text="{Binding Title}" Grid.ColumnSpan="2" Grid.RowSpan="2" VerticalAlignment="Top"/>
+            <TextBlock Text="{Binding CurrentTrack.Album}" Grid.ColumnSpan="2" Grid.RowSpan="2" VerticalAlignment="Top"/>
+            <TextBlock Text="{Binding CurrentTrack.Artist}" Grid.ColumnSpan="2" Grid.RowSpan="2" VerticalAlignment="Top"/>
+            <TextBlock Text="{Binding CurrentTrack.Title}" Grid.ColumnSpan="2" Grid.RowSpan="2" VerticalAlignment="Top"/>
         </StackPanel>
     </Grid>
 </Window>

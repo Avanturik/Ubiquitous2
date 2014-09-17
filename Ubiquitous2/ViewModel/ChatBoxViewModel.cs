@@ -21,6 +21,7 @@ namespace UB.ViewModel
         public event EventHandler<EventArgs> MessageAdded;
         public event EventHandler<EventArgs> MessageSent;
         IChatDataService _dataService;
+        GeneralDataService _generalDataService;
         /// <summary>
         /// Initializes a new instance of the ChatBoxViewModel class.
         /// </summary>
@@ -30,9 +31,10 @@ namespace UB.ViewModel
         }
 
         [PreferredConstructor]
-        public ChatBoxViewModel(IChatDataService dataService)
+        public ChatBoxViewModel(IChatDataService dataService, GeneralDataService generalDataService)
         {
             _dataService = dataService;
+            _generalDataService = generalDataService;
             Initialize();
         }
 
@@ -73,42 +75,51 @@ namespace UB.ViewModel
                 AddMessages(messages);
             });
 
-            _dataService.WebServer.GetUserHandler = (uri,httpProcessor) =>
+            if (_generalDataService.Services == null)
+                _generalDataService.Start();
+            var webServerService = _generalDataService.Services.FirstOrDefault( service => service.Config.ServiceName == SettingsRegistry.ServiceTitleWebServer);
+            if( webServerService != null )
             {
-                if (uri.LocalPath.Equals("/messages.json", StringComparison.InvariantCultureIgnoreCase))
-                {
-                    var parameters = HttpUtility.ParseQueryString(uri.Query);
-                    var lastMessageId = parameters["id"];
-                    ChatMessage[] messages = null;
-                    
-                    ChatMessageViewModel previousMessage = Messages.FirstOrDefault(m => lastMessageId != null && m.Message.Id.ToString().Equals(lastMessageId.ToString(),StringComparison.InvariantCultureIgnoreCase));
-                    if (previousMessage == null )
-                        lastMessageId = null;
-
-                    if ( lastMessageId == null)
+                webServerService.GetData( (obj) => {
+                    var webServer = obj as WebServerService;
+                    webServer.GetUserHandler = (uri,httpProcessor) =>
                     {
-                        var messageNumber = 10;
-                        messages = Messages.Skip(Math.Max(0, Messages.Count() - messageNumber)).Take(messageNumber).Select(m => m.Message).ToArray();
-                    }
-                    else
-                    {
-                        var guid = lastMessageId.ToString();
-                        var skipCount = Messages.IndexOf( previousMessage )+1;
-
-                        messages = Messages.Skip(skipCount).Select(m => m.Message).ToArray();
-                    }
-                    if( messages != null )
-                    {
-                        Json.SerializeToStream(messages, (stream) =>
+                        if (uri.LocalPath.Equals("/messages.json", StringComparison.InvariantCultureIgnoreCase))
                         {
-                            _dataService.WebServer.SendJsonToClient(stream,httpProcessor);
-                        });
-                    }
-                    return true;
-                }
+                            var parameters = HttpUtility.ParseQueryString(uri.Query);
+                            var lastMessageId = parameters["id"];
+                            ChatMessage[] messages = null;
+                    
+                            ChatMessageViewModel previousMessage = Messages.FirstOrDefault(m => lastMessageId != null && m.Message.Id.ToString().Equals(lastMessageId.ToString(),StringComparison.InvariantCultureIgnoreCase));
+                            if (previousMessage == null )
+                                lastMessageId = null;
 
-                return false;
-            };
+                            if ( lastMessageId == null)
+                            {
+                                var messageNumber = 10;
+                                messages = Messages.Skip(Math.Max(0, Messages.Count() - messageNumber)).Take(messageNumber).Select(m => m.Message).ToArray();
+                            }
+                            else
+                            {
+                                var guid = lastMessageId.ToString();
+                                var skipCount = Messages.IndexOf( previousMessage )+1;
+
+                                messages = Messages.Skip(skipCount).Select(m => m.Message).ToArray();
+                            }
+                            if( messages != null )
+                            {
+                                Json.SerializeToStream(messages, (stream) =>
+                                {
+                                    webServer.SendJsonToClient(stream,httpProcessor);
+                                });
+                            }
+                            return true;
+                        }
+
+                        return false;
+                    };
+                });
+            }
         }
         private void AddMessages(ChatMessage[] messages)
         {

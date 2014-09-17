@@ -26,22 +26,30 @@ namespace UB.ViewModel
     public class MainViewModel : ViewModelBase
     {
         private readonly IChatDataService _dataService;
+        private readonly GeneralDataService _generalDataService;
         private StatusWindow statusWindow = new StatusWindow();
+        private MusicTickerWindow musicWindow;
         /// <summary>
         /// Initializes a new instance of the MainViewModel class.
         /// </summary>
         [PreferredConstructor]
-        public MainViewModel(IChatDataService dataService)
+        public MainViewModel(IChatDataService dataService, GeneralDataService generalDataService)
         {
             _dataService = dataService;
+            _generalDataService = generalDataService;
             Initialize();
         }
         public void Initialize()
         {
+            _generalDataService.Start();
+
             ChannelList = _dataService.ChatChannels;
             SelectedChatChannel = ChannelList[0];
 
-            statusWindow.Show();
+            musicWindow = new MusicTickerWindow();
+
+            statusWindow.Visibility = Visibility.Visible;
+            //musicWindow.Visibility = Visibility.Visible;
 
             MessengerInstance.Register<ChatMessage>(this, "SetChannel", (message) =>
             {
