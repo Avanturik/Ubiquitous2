@@ -17,10 +17,15 @@ namespace UB.Model
         public GamingLiveChat(ChatConfig config)
         {
             Config = config;
+            ContentParsers = new List<Action<ChatMessage, IChat>>();
             ChatChannels = new List<string>();
             Emoticons = new List<Emoticon>();
             Status = new StatusBase();
             Users = new Dictionary<string, ChatUser>();
+
+            ContentParsers.Add(MessageParser.ParseURLs);
+            ContentParsers.Add(MessageParser.ParseSimpleImageTags);
+
             Enabled = Config.Enabled;
         }
         public string ChatName
@@ -74,17 +79,35 @@ namespace UB.Model
                 gamingLiveChannel.ReadMessage = ReadMessage;
                 gamingLiveChannel.LeaveCallback = (glChannel) => {
                     gamingLiveChannels.RemoveAll(item => item.ChannelName == glChannel.ChannelName);
+                    ChatChannels.RemoveAll(chan => chan.Equals(glChannel.ChannelName, StringComparison.InvariantCultureIgnoreCase));
+                    if (RemoveChannel != null)
+                        RemoveChannel(gamingLiveChannel.ChannelName, this);
                 };
                 
                 gamingLiveChannel.Join((glChannel) => {
+                    Status.IsConnected = true;
                     gamingLiveChannels.Add(glChannel);
+                    if (glChannel.ChannelName.Equals("#" + NickName, StringComparison.InvariantCultureIgnoreCase))
+                        Status.IsLoggedIn = true;
+
+                    ChatChannels.RemoveAll(chan => chan.Equals(glChannel.ChannelName, StringComparison.InvariantCultureIgnoreCase));
+                    ChatChannels.Add((glChannel.ChannelName));
+                    if (AddChannel != null)
+                        AddChannel(gamingLiveChannel.ChannelName, this);
+
                 }, NickName, channel, (String)Config.GetParameterValue("AuthToken"));
             }
         }
         private void ReadMessage( ChatMessage message )
         {
             if (MessageReceived != null)
+            {
+                if (ContentParsers != null)
+                    ContentParsers.ForEach(parser => parser(message, this));
+
                 MessageReceived(this, new ChatServiceEventArgs() { Message = message });
+
+            }
         }
         
         private bool Login()
@@ -249,7 +272,6 @@ namespace UB.Model
     {
 
         private WebSocketBase webSocket;
-        private Action<GamingLiveChannel> joinCallback;
         private IChat _chat;
         public GamingLiveChannel(IChat chat)
         {
@@ -281,6 +303,7 @@ namespace UB.Model
         }
         private void ReadRawMessage(string rawMessage)
         {
+            Log.WriteInfo("GamingLive raw message:{0}", rawMessage);
             if( !String.IsNullOrWhiteSpace(rawMessage))
             {
                 var json = JToken.Parse(rawMessage);

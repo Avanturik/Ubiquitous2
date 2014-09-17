@@ -140,7 +140,7 @@ namespace UB.Model
                         messageQueue.Clear();
                     }
                 }
-            }, null, 0, 1500);
+            }, null, 0, 500);
             Chats.ForEach(chat => {
                 chat.MessageReceived += chat_MessageReceived;
                 chat.AddChannel = (channel, fromChat) =>

@@ -7,10 +7,12 @@ using System.Threading.Tasks;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Documents;
+using System.Windows.Media.Animation;
 using GalaSoft.MvvmLight.Threading;
 using HtmlAgilityPack;
 using Microsoft.Practices.ServiceLocation;
 using UB.Model;
+using WpfAnimatedGif;
 
 namespace UB.Converter
 {
@@ -48,11 +50,18 @@ namespace UB.Converter
                                 switch (node.OriginalName.ToLower())
                                 {
                                     case "img":
-                                        int width;
-                                        int height;
-                                        url = node.Attributes["src"].Value;
-                                        int.TryParse(node.Attributes["width"].Value, out width);
-                                        int.TryParse(node.Attributes["height"].Value, out height);
+                                        int width = 0;
+                                        int height = 0;
+                                        url = "http://localhost/";
+                                        if( node.Attributes["src"] != null)
+                                            url = node.Attributes["src"].Value;
+
+                                        if (node.Attributes["width"] != null)
+                                            int.TryParse(node.Attributes["width"].Value, out width);
+
+                                        if (node.Attributes["height"] != null)
+                                            int.TryParse(node.Attributes["height"].Value, out height);
+
                                         width = width <= 0 ? 16 : width;
                                         height = height <= 0 ? 16 : height;
                                         

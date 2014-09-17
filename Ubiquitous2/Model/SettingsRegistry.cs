@@ -138,6 +138,7 @@ namespace UB.Model
                                             {
                                                 return new GamingLiveChat(config)
                                                 {
+                                                    ChatName = ChatTitleGamingLive,
                                                     IconURL = Icons.GamingLiveIcon,
                                                 };
                                              }},

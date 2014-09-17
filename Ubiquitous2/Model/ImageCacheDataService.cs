@@ -5,9 +5,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Controls;
+using System.Windows.Media.Animation;
 using System.Windows.Media.Imaging;
 using GalaSoft.MvvmLight.Threading;
 using UB.Utils;
+using WpfAnimatedGif;
 
 namespace UB.Model
 {
@@ -17,7 +19,6 @@ namespace UB.Model
         private object getLock = new object();
 
         private Dictionary<String, BitmapImage> bitmapImageCache = new Dictionary<string, BitmapImage>();
-        //private List<Image> imageCache = new List<Image>();
         
         public void GetImage(Uri uri, int width, int height, Action<Image> callback)
         {
@@ -26,11 +27,23 @@ namespace UB.Model
                 
                 if (!bitmapImageCache.ContainsKey(uri.AbsoluteUri))
                 {
-                    //imageCache.Add(new Image() { Width = width, Height = height });
                     bitmapImageCache.Add(uri.AbsoluteUri, new BitmapImage(uri));
                 }
                 Image image = new Image() { Width = width, Height = height };
-                image.Source = bitmapImageCache[uri.AbsoluteUri];
+                if (uri.OriginalString.ToLower().Contains(".gif"))
+                {
+                    image.Source = bitmapImageCache[uri.AbsoluteUri];
+                    //ImageBehavior.SetRepeatBehavior(image, RepeatBehavior.Forever);
+                    //using (var webClient = new WebClientBase())
+                    //{
+                    //    var frame = BitmapFrame.Create(webClient.DownloadToStream(uri.AbsoluteUri), BitmapCreateOptions.None, BitmapCacheOption.OnLoad);
+                    //    ImageBehavior.SetAnimatedSource(image, frame);
+                    //}
+                }
+                else
+                {
+                    image.Source = bitmapImageCache[uri.AbsoluteUri];
+                }
                 UI.Dispatch(() => callback(image));
             }
         }
