@@ -39,10 +39,10 @@ namespace UB.ViewModel
                 }
             });
 
-            var serviceList = generalDataService.Services.Select(service => new SettingsServiceItemViewModel(service));
-            foreach( IService service in serviceList)
+            var serviceList = generalDataService.Services.Select(service => new SettingsSectionViewModel(service));
+            foreach( var service in serviceList)
             {
-                ServiceItemViewModels.Add(new SettingsServiceItemViewModel(service));
+                ServiceItemViewModels.Add(service);
             }
         }
 
@@ -154,13 +154,13 @@ namespace UB.ViewModel
         /// </summary>
         public const string ServiceItemViewModelsPropertyName = "ServiceItemViewModels";
 
-        private ObservableCollection<SettingsServiceItemViewModel> _serviceItemViewModels = new ObservableCollection<SettingsServiceItemViewModel>();
+        private ObservableCollection<SettingsSectionViewModel> _serviceItemViewModels = new ObservableCollection<SettingsSectionViewModel>();
 
         /// <summary>
         /// Sets and gets the ServiceItemViewModels property.
         /// Changes to that property's value raise the PropertyChanged event. 
         /// </summary>
-        public ObservableCollection<SettingsServiceItemViewModel> ServiceItemViewModels
+        public ObservableCollection<SettingsSectionViewModel> ServiceItemViewModels
         {
             get
             {
@@ -210,25 +210,6 @@ namespace UB.ViewModel
                 RaisePropertyChanged(ChatsPropertyName);
             }
         
-        }
-
-
-        private RelayCommand<PasswordBox> _lastFMPasswordChanged;
-
-        /// <summary>
-        /// Gets the LastFMPasswordChanged.
-        /// </summary>
-        public RelayCommand<PasswordBox> LastFMPasswordChanged
-        {
-            get
-            {
-                return _lastFMPasswordChanged
-                    ?? (_lastFMPasswordChanged = new RelayCommand<PasswordBox>(
-                                          (box) =>
-                                          {
-                                              Properties.Ubiquitous.Default.LastFMPassword = box.Password;
-                                          }));
-            }
         }
 
         public bool? Show()

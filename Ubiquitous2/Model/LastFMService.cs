@@ -65,12 +65,16 @@ namespace UB.Model
                     Log.WriteError("Couldn't authenticate on Last.fm. Check credentials!");
                     Status.ResetToDefault();
                     Status.IsLoginFailed = true;
+                    if (AfterStart != null)
+                        AfterStart();
                     return false;
                 }
                 pollTimer.Change(0, Timeout.Infinite);
                 Status.IsStarting = false;
                 Status.IsLoggedIn = true;
                 Status.IsConnected = true;
+                if (AfterStart != null)
+                    AfterStart();
                 return true;
             }
 
@@ -183,6 +187,13 @@ namespace UB.Model
         public void GetData(Action<object> callback)
         {
             callback(musicTrackInfo);
+        }
+
+
+        public Action AfterStart
+        {
+            get;
+            set;
         }
     }
 

@@ -304,7 +304,7 @@
     <Compile Include="Utils\UI.cs" />
     <Compile Include="ViewModel\ChatStatusItemViewModel.cs" />
     <Compile Include="ViewModel\MusicTickerViewModel.cs" />
-    <Compile Include="ViewModel\SettingsServiceItemViewModel.cs" />
+    <Compile Include="ViewModel\SettingsSectionViewModel.cs" />
     <Compile Include="ViewModel\StatusViewModel.cs" />
     <Compile Include="View\ChatStatusItemView.xaml.cs">
       <DependentUpon>ChatStatusItemView.xaml</DependentUpon>

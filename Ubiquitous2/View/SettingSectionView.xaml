@@ -35,10 +35,10 @@
             <StackPanel Orientation="Vertical" HorizontalAlignment="Left">
                 <TextBlock Padding="5" Margin="1">
 					<CheckBox Margin="0,-3" IsChecked="{Binding Enabled}"/>
-					<Image Margin="0,-5" Width="16" Source="{Binding ChatIconURL}"/>
-					<TextBlock Text="{Binding ChatName}"></TextBlock>
+					<Image Margin="0,-5" Width="16" Source="{Binding IconURL}"/>
+					<TextBlock Text="{Binding Name}"></TextBlock>
 					<TextBlock><Hyperlink Command="{Binding ToggleEdit}"><TextBlock Text="{Binding EditLinkTitle}"/></Hyperlink></TextBlock>
-                    <TextBlock><Hyperlink Command="{Binding RestartChat}"><TextBlock>restart</TextBlock></Hyperlink></TextBlock>
+                    <TextBlock><Hyperlink Command="{Binding Restart}"><TextBlock>restart</TextBlock></Hyperlink></TextBlock>
                     <Image Visibility="{Binding IsLoaderVisible, Converter={StaticResource boolToVisibilityConverter}}" Width="16" Height="16" gif:ImageBehavior.AnimatedSource="/Ubiquitous2;component/Resources/loader.gif" gif:ImageBehavior.RepeatBehavior="Forever" Margin="0,0,0,-4" />
             </TextBlock>
                     

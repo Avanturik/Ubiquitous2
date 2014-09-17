@@ -11,12 +11,22 @@ using UB.Model;
 
 namespace UB.ViewModel
 {
-    public class SettingsServiceItemViewModel : ViewModelBase, IHeightMeasurer
+    public class SettingsSectionViewModel : ViewModelBase, IHeightMeasurer
     {
         private IService _service;
-        public SettingsServiceItemViewModel(IService service)
+        public SettingsSectionViewModel(IService service)
         {
             _service = service;
+            _enabled = _service.Config.Enabled;
+            _name = _service.Config.ServiceName;
+            _iconURL = service.Config.IconURL;
+
+            foreach( var parameter in service.Config.Parameters )
+            {
+                if (parameter.IsVisible)
+                    SettingsFields.Add(new SettingsFieldViewModel(parameter));
+            }
+
             //chatDataService = ServiceLocator.Current.GetInstance<IChatDataService>();
             //chatConfig = config;
             //_enabled = config.Enabled;
@@ -32,33 +42,33 @@ namespace UB.ViewModel
         }
 
         /// <summary>
-        /// The <see cref="ServiceName" /> property's name.
+        /// The <see cref="Name" /> property's name.
         /// </summary>
-        public const string ServiceNamePropertyName = "ServiceName";
+        public const string NamePropertyName = "ServiceName";
 
-        private String _serviceName = "LoremIpsum";
+        private String _name = "LoremIpsum";
 
         /// <summary>
         /// Sets and gets the ChatName property.
         /// Changes to that property's value raise the PropertyChanged event. 
         /// </summary>
-        public String ServiceName
+        public String Name
         {
             get
             {
-                return _serviceName;
+                return _name;
             }
 
             set
             {
-                if (_serviceName == value)
+                if (_name == value)
                 {
                     return;
                 }
 
-                RaisePropertyChanging(ServiceNamePropertyName);
-                _serviceName = value;
-                RaisePropertyChanged(ServiceNamePropertyName);
+                RaisePropertyChanging(NamePropertyName);
+                _name = value;
+                RaisePropertyChanged(NamePropertyName);
             }
         }
         /// <summary>
@@ -123,17 +133,17 @@ namespace UB.ViewModel
             }
         }
 
-        private RelayCommand _restartChat;
+        private RelayCommand _restart;
 
         /// <summary>
         /// Gets the RestartChat.
         /// </summary>
-        public RelayCommand RestartChat
+        public RelayCommand Restart
         {
             get
             {
-                return _restartChat
-                    ?? (_restartChat = new RelayCommand(
+                return _restart
+                    ?? (_restart = new RelayCommand(
                                           () =>
                                           {
                                               Task.Factory.StartNew(() =>
@@ -302,33 +312,33 @@ namespace UB.ViewModel
         }
 
         /// <summary>
-        /// The <see cref="ChatIconURL" /> property's name.
+        /// The <see cref="IconURL" /> property's name.
         /// </summary>
-        public const string ChatIconURLPropertyName = "ChatIconURL";
+        public const string IconURLPropertyName = "IconURL";
 
-        private string _chatIconURL = Icons.MainIcon;
+        private string _iconURL = Icons.MainIcon;
 
         /// <summary>
         /// Sets and gets the ChatIconURL property.
         /// Changes to that property's value raise the PropertyChanged event. 
         /// </summary>
-        public string ChatIconURL
+        public string IconURL
         {
             get
             {
-                return _chatIconURL;
+                return _iconURL;
             }
 
             set
             {
-                if (_chatIconURL == value)
+                if (_iconURL == value)
                 {
                     return;
                 }
 
-                RaisePropertyChanging(ChatIconURLPropertyName);
-                _chatIconURL = value;
-                RaisePropertyChanged(ChatIconURLPropertyName);
+                RaisePropertyChanging(IconURLPropertyName);
+                _iconURL = value;
+                RaisePropertyChanged(IconURLPropertyName);
             }
         }
 

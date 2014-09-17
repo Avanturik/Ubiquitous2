@@ -15,7 +15,6 @@ namespace UB.Model
 
         public GeneralDataService()
         {
-            Services = new List<IService>();
             settingsDataService = ServiceLocator.Current.GetInstance<SettingsDataService>();
         }
 

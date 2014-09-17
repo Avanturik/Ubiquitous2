@@ -11,6 +11,7 @@ namespace UB.Model
         bool Start();
         bool Stop();
         void Restart();
+        Action AfterStart { get; set; }
         ServiceConfig Config { get; set; }
         StatusBase Status { get; set; }
         void GetData(Action<object> callback);

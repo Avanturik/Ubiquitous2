@@ -30,7 +30,7 @@ namespace UB.Model
                         Enabled = false,
                         Parameters = new List<ConfigField>() {
                             new ConfigField("Username", "Username", "Text", true, ""),
-                            new ConfigField("Password", "Username", "Password", true, "")
+                            new ConfigField("Password", "Password", "Password", true, "")
                         }
                     }
                 };
@@ -72,7 +72,7 @@ namespace UB.Model
         public static Dictionary<String, Func<ServiceConfig, IService>> ServiceFactory = new Dictionary<String, Func<ServiceConfig, IService>>()
         {
             //Normal twitch IRC channel
-            {chatTitleNormalTwitch, (config)=>
+            {serviceTitleMusicTicker, (config)=>
                                             {
                                                 return new LastFMService()
                                                 {

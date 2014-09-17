@@ -24,7 +24,7 @@
         <Properties:Ubiquitous x:Key="Settings"/>
     </Window.Resources>
     <Grid>
-        <fluent:BackstageTabControl SelectedIndex="1" Background="#FF323232" Style="{DynamicResource SettingsStyle}">
+        <fluent:BackstageTabControl SelectedIndex="0" Background="#FF323232" Style="{DynamicResource SettingsStyle}">
             <fluent:BackstageTabItem Header="Chat">
                 <Grid>
                     <ItemsControl ItemsSource="{Binding Chats}"
@@ -80,7 +80,7 @@
                             <ItemsPanelTemplate>
                                 <Devart:SmoothPanel TrackTopMost="True" Margin="0" Background="{DynamicResource {x:Static SystemColors.ControlBrushKey}}">
                                     <Devart:SmoothPanel.Templates>
-                                        <Devart:SmoothPanelTemplate ViewModel="{x:Type ViewModel:SettingsServiceItemViewModel}" View="{x:Type View:SettingsSectionView}" />
+                                        <Devart:SmoothPanelTemplate ViewModel="{x:Type ViewModel:SettingsSectionViewModel}" View="{x:Type View:SettingsSectionView}" />
                                     </Devart:SmoothPanel.Templates>
                                 </Devart:SmoothPanel>
                             </ItemsPanelTemplate>
