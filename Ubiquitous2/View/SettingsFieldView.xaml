@@ -6,7 +6,7 @@
              xmlns:Interactivity="clr-namespace:UB.Interactivity"
              xmlns:viewModel="clr-namespace:UB.ViewModel"
              mc:Ignorable="d"                          
-             d:DesignHeight="64" d:DesignWidth="229" Style="{DynamicResource SettingsFieldStyle}" 
+             d:DesignHeight="64" d:DesignWidth="208" Style="{DynamicResource SettingsFieldStyle}" 
              MinHeight="30"
              MaxHeight="200"
              Name="userControl"

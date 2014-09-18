@@ -286,9 +286,9 @@ namespace UB.Model
                     {
                         var streamInfo = this.With(x => (HitboxChannelStats)webPoller.LastValue)
                             .With(x => x.livestream)
-                            .With(x => x.FirstOrDefault(livestream => livestream.media_name.Equals(channel, StringComparison.InvariantCultureIgnoreCase)));
+                            .With(x => x.FirstOrDefault(livestream => livestream.media_name.Equals(webPoller.Id.Replace("#",""), StringComparison.InvariantCultureIgnoreCase)));
 
-                        var tooltip = Status.ToolTips.FirstOrDefault(t => t.Header == webPoller.Id);
+                        var tooltip = Status.ToolTips.FirstOrDefault(t => t.Header.Equals(webPoller.Id));
                         if (tooltip == null)
                             return;
 

@@ -29,7 +29,6 @@
                 <Grid>
                     <ItemsControl ItemsSource="{Binding Chats}"
 					Padding="0"
-					HorizontalAlignment="Left"
 					HorizontalContentAlignment="Left"
 					VirtualizingPanel.IsVirtualizing="True"
                     ScrollViewer.VerticalScrollBarVisibility="Auto"
@@ -60,8 +59,6 @@
                 <Grid>
                     <ItemsControl ItemsSource="{Binding ServiceItemViewModels}"
 					Padding="0"
-					HorizontalAlignment="Left"
-					HorizontalContentAlignment="Left"
 					VirtualizingPanel.IsVirtualizing="True"
                     ScrollViewer.VerticalScrollBarVisibility="Auto"
                     ScrollViewer.CanContentScroll="True"
