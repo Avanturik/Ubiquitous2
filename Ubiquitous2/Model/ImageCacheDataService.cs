@@ -27,7 +27,11 @@ namespace UB.Model
                 
                 if (!bitmapImageCache.ContainsKey(uri.AbsoluteUri))
                 {
-                    bitmapImageCache.Add(uri.AbsoluteUri, new BitmapImage(uri));
+                    var bitmap = new BitmapImage(uri);
+                    if (bitmap == null)
+                        return;
+
+                    bitmapImageCache.Add(uri.AbsoluteUri, bitmap);
                 }
                 Image image = new Image() { Width = width, Height = height };
                 if (uri.OriginalString.ToLower().Contains(".gif"))

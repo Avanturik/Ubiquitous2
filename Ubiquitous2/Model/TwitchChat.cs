@@ -314,12 +314,12 @@ namespace UB.Model
                     }
                     if (list.Count > 0)
                     {
+                        sharedEmoticons = list.ToList();
+                        Emoticons = sharedEmoticons;
                         if (isFallbackEmoticons)
                             isWebEmoticons = true;
 
                         isFallbackEmoticons = true;
-                        sharedEmoticons = list.ToList();
-                        Emoticons = sharedEmoticons;
                     }
                 }
             }
@@ -331,22 +331,8 @@ namespace UB.Model
                 .With(x => x.Value<string>("chat_oauth_token"));
 
             if ( oauthToken != null )
-            {
-                var oauthField = new ConfigField()
-                {
-                    DataType = "Text",
-                    IsVisible = false,
-                    Label = "OAuth token",
-                    Name = "OAuthToken",
-                    Value = oauthToken
-                };
+                Config.SetParameterValue("OAuthToken", oauthToken);
 
-                var existingOAuthField = Config.Parameters.FirstOrDefault( fld => fld.Name == oauthField.Name);
-                if (existingOAuthField != null)
-                    existingOAuthField = oauthField;
-                else
-                    Config.Parameters.Add(oauthField);
-            }
             return oauthToken;
         }
 

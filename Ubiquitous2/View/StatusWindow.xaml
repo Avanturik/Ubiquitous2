@@ -12,7 +12,7 @@
         AllowsTransparency="True"        
         ResizeMode="NoResize"
         Background="{x:Null}"
-        Title="Ubiquitous 2.0 - Viewers counter"
+        Title="Viewers counter"
         Topmost="True"
         Icon="..\ubiquitous smile.ico"
         DataContext="{Binding Source={StaticResource Locator},Path=Status}" 

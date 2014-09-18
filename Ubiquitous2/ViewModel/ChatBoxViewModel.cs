@@ -212,8 +212,6 @@ namespace UB.ViewModel
                 RaisePropertyChanging(EnableAutoScrollPropertyName);
                 _enableAutoScroll = value;
                 IsScrollBarVisible = !_enableAutoScroll;
-                Log.WriteInfo("Scrollbar visible = {0}", IsScrollBarVisible);
-
                 RaisePropertyChanged(EnableAutoScrollPropertyName);
             }
         }
