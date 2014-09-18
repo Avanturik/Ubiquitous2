@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using UB.Utils;
 using WebSocket4Net;
 
 namespace UB.Model
@@ -122,9 +123,9 @@ namespace UB.Model
                 }
             }
         }
-        public void Send(ChatMessage message)
+        public void Send(string message)
         {
-            socket.Send(message.Text);
+            socket.Send(message);
         }
         void socket_Opened(object sender, EventArgs e)
         {

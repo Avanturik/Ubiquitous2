@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using UB.Utils;
 
@@ -13,6 +14,8 @@ namespace UB.Model
         public event EventHandler<ChatServiceEventArgs> MessageReceived;
         private WebClientBase loginWebClient = new WebClientBase();
         private List<GamingLiveChannel> gamingLiveChannels = new List<GamingLiveChannel>();
+        private object counterLock = new object();
+        private List<WebPoller> counterWebPollers = new List<WebPoller>();
 
         public GamingLiveChat(ChatConfig config)
         {
@@ -67,6 +70,13 @@ namespace UB.Model
             }
             return false;
         }
+        void StopCounterPoller(string channelName)
+        {
+            UI.Dispatch(() => Status.ToolTips.RemoveAll(t => t.Header == channelName));
+            var poller = counterWebPollers.FirstOrDefault(p => p.Id == channelName);
+            poller.Stop();
+            counterWebPollers.Remove(poller);
+        }
         private void JoinChannels()
         {
             var channels = Config.Parameters.StringArrayValue("Channels").Select(chan => "#" + chan.ToLower().Replace("#","")).ToArray();
@@ -78,6 +88,7 @@ namespace UB.Model
                 var gamingLiveChannel = new GamingLiveChannel(this);
                 gamingLiveChannel.ReadMessage = ReadMessage;
                 gamingLiveChannel.LeaveCallback = (glChannel) => {
+                    StopCounterPoller(glChannel.ChannelName);
                     gamingLiveChannels.RemoveAll(item => item.ChannelName == glChannel.ChannelName);
                     ChatChannels.RemoveAll(chan => chan.Equals(glChannel.ChannelName, StringComparison.InvariantCultureIgnoreCase));
                     if (RemoveChannel != null)
@@ -88,12 +99,14 @@ namespace UB.Model
                     Status.IsConnected = true;
                     gamingLiveChannels.Add(glChannel);
                     if (glChannel.ChannelName.Equals("#" + NickName, StringComparison.InvariantCultureIgnoreCase))
-                        Status.IsLoggedIn = true;
+                        Status.IsLoggedIn = true;                   
 
                     ChatChannels.RemoveAll(chan => chan.Equals(glChannel.ChannelName, StringComparison.InvariantCultureIgnoreCase));
                     ChatChannels.Add((glChannel.ChannelName));
                     if (AddChannel != null)
                         AddChannel(gamingLiveChannel.ChannelName, this);
+
+                    WatchChannelStats(gamingLiveChannel.ChannelName);
 
                 }, NickName, channel, (String)Config.GetParameterValue("AuthToken"));
             }
@@ -195,7 +208,11 @@ namespace UB.Model
         }
         public bool Stop()
         {
-            gamingLiveChannels.ForEach(chan => chan.Leave());
+
+            gamingLiveChannels.ForEach(chan => {
+                StopCounterPoller(chan.ChannelName);
+                chan.Leave(); 
+            });
             Status.ResetToDefault();
             return true;
         }
@@ -212,6 +229,54 @@ namespace UB.Model
                 Task.Factory.StartNew(() => gamingLiveChannel.SendMessage(message));
 
             return true;
+        }
+
+        public void WatchChannelStats(string channel)
+        {
+            var poller = new WebPoller()
+            {
+                Id = channel,
+                Uri = new Uri(String.Format(@"http://api.gaminglive.tv/channels/{0}", channel.Replace("#", ""))),
+            };
+
+            UI.Dispatch(() => Status.ToolTips.RemoveAll(t => t.Header == poller.Id));
+            UI.Dispatch(() => Status.ToolTips.Add(new ToolTip(poller.Id, "")));
+
+            poller.ReadStream = (stream) =>
+            {
+                lock (counterLock)
+                {
+                    var channelInfo = Json.DeserializeStream<GamingLiveChannelStats>(stream);
+                    poller.LastValue = channelInfo;
+                    var viewers = 0;
+                    foreach (var webPoller in counterWebPollers)
+                    {
+                        var streamInfo = this.With(x => (GamingLiveChannelStats)webPoller.LastValue)
+                            .With(x => x.state);
+
+                        var tooltip = Status.ToolTips.FirstOrDefault(t => t.Header == webPoller.Id);
+                        if (tooltip == null)
+                            return;
+
+                        if (streamInfo != null)
+                        {
+                            viewers += streamInfo.viewers;
+                            tooltip.Text = streamInfo.viewers.ToString();
+                            tooltip.Number = streamInfo.viewers;
+                        }
+                        else
+                        {
+                            tooltip.Text = "0";
+                            tooltip.Number = 0;
+                        }
+
+                    }
+                    UI.Dispatch(() => Status.ViewersCount = viewers);
+                }
+            };
+            poller.Start();
+
+            counterWebPollers.Add(poller);
         }
 
         public Dictionary<string, ChatUser> Users
@@ -335,8 +400,43 @@ namespace UB.Model
         public Action<GamingLiveChannel> LeaveCallback { get; set; }
         public Action<ChatMessage> ReadMessage { get; set; }
         public void SendMessage( ChatMessage message )
-        {
-            webSocket.Send(message);
+        {            
+            dynamic jsonMessage = new { message = message.Text, color = "orange" };
+            webSocket.Send(JsonConvert.SerializeObject(jsonMessage));
         }
     }
+    #region Gaminglive json classes
+    public class GamingLiveGame
+    {
+        public string id { get; set; }
+        public string name { get; set; }
+        public string miniImg { get; set; }
+        public string largeImg { get; set; }
+    }
+
+    public class GamingLiveStream
+    {
+        public string rootUrl { get; set; }
+        public List<string> qualities { get; set; }
+    }
+
+    public class GamingLiveState
+    {
+        public int viewers { get; set; }
+        public string thumbnailUrl { get; set; }
+        public GamingLiveStream stream { get; set; }
+    }
+
+    public class GamingLiveChannelStats
+    {
+        public string slug { get; set; }
+        public string name { get; set; }
+        public string owner { get; set; }
+        public string offlineImg { get; set; }
+        public GamingLiveGame game { get; set; }
+        public GamingLiveState state { get; set; }
+        public int views { get; set; }
+        public int followers { get; set; }
+    }
+    #endregion
 }
