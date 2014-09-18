@@ -53,19 +53,15 @@ namespace UB.Model
             if (!bitmapImageCache.ContainsKey(uri.AbsoluteUri))
             {
                 var bitmap = new BitmapImage();
-                using (var webClient = new WebClientBase())
-                using( var stream = webClient.DownloadToStream(uri.AbsoluteUri))
-                {                    
-                    
-                    bitmap.BeginInit();
-                    bitmap.CacheOption = BitmapCacheOption.OnLoad;
-                    bitmap.CreateOptions = BitmapCreateOptions.None;
-                    bitmap.UriCachePolicy = new HttpRequestCachePolicy(HttpCacheAgeControl.MaxAge, new TimeSpan(0), new TimeSpan(0));
-                    bitmap.UriSource = uri;
-                    bitmap.EndInit();
 
-                    bitmapImageCache.Add(uri.AbsoluteUri, bitmap);
-                }
+                bitmap.BeginInit();
+                bitmap.CacheOption = BitmapCacheOption.OnLoad;
+                bitmap.CreateOptions = BitmapCreateOptions.None;
+                bitmap.UriCachePolicy = new HttpRequestCachePolicy(HttpCacheAgeControl.MaxAge, new TimeSpan(0), new TimeSpan(0));
+                bitmap.UriSource = uri;
+                bitmap.EndInit();
+
+                bitmapImageCache.Add(uri.AbsoluteUri, bitmap);
             }
             callback(bitmapImageCache[uri.AbsoluteUri]);
         }
