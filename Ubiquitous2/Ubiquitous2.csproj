@@ -160,8 +160,10 @@
     <Compile Include="Interactivity\WindowBorder.cs" />
     <Compile Include="Interactivity\WindowResizeBehavior.cs" />
     <Compile Include="Interactivity\WindowResizer.cs" />
+    <Compile Include="Model\ChatBase.cs" />
     <Compile Include="Model\GamingLiveChat.cs" />
     <Compile Include="Model\GeneralDataService.cs" />
+    <Compile Include="Model\HitboxChat.cs" />
     <Compile Include="Model\IGeneralDataService.cs" />
     <Compile Include="Model\IService.cs" />
     <Compile Include="Model\ServiceConfig.cs" />
@@ -499,8 +501,14 @@
     <Resource Include="Resources\gaminglive.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Resource>
+    <Content Include="Content\hitboxemoticons.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <None Include="Resources\favicon.ico" />
     <Resource Include="Resources\gaminglivedark.ico">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resources\hitbox.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Resource>
     <Content Include="web\css\ubiquitous.css">

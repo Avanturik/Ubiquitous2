@@ -18,8 +18,8 @@ namespace UB.Model
         private bool isOAuthTokenRenewed = false;
         private bool isAnonymous = false;
         private WebClientBase webClient = new WebClientBase();
-        private object iconParseLock = new object();
         private static List<Emoticon> sharedEmoticons = new List<Emoticon>();
+        private object iconParseLock = new object();
         private static bool isFallbackEmoticons = false;
         private static bool isWebEmoticons = false;
         private object counterLock = new object();

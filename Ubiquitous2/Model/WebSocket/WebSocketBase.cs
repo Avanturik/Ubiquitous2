@@ -15,7 +15,7 @@ namespace UB.Model
         public WebSocketBase()
         {
             Port = "80";
-            PingInterval = 30000;
+            PingInterval = 25000;
         }
         public List<KeyValuePair<string, string>> Cookies
         {
@@ -121,6 +121,10 @@ namespace UB.Model
                         socket.EnableAutoSendPing = true;
                     }
                 }
+            }
+            get
+            {
+                return socket.AutoSendPingInterval;
             }
         }
         public void Send(string message)

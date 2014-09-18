@@ -32,7 +32,6 @@
 					HorizontalAlignment="Left"
 					HorizontalContentAlignment="Left"
 					VirtualizingPanel.IsVirtualizing="True"
-					VirtualizingPanel.VirtualizationMode="Recycling" 
                     ScrollViewer.VerticalScrollBarVisibility="Auto"
                     ScrollViewer.CanContentScroll="True"
                     Background="#FF494949">
@@ -64,7 +63,6 @@
 					HorizontalAlignment="Left"
 					HorizontalContentAlignment="Left"
 					VirtualizingPanel.IsVirtualizing="True"
-					VirtualizingPanel.VirtualizationMode="Recycling" 
                     ScrollViewer.VerticalScrollBarVisibility="Auto"
                     ScrollViewer.CanContentScroll="True"
                     Background="#FF494949">

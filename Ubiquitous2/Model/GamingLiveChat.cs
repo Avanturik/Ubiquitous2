@@ -373,7 +373,6 @@ namespace UB.Model
         }
         private void ReadRawMessage(string rawMessage)
         {
-            Log.WriteInfo("GamingLive raw message:{0}", rawMessage);
             if( !String.IsNullOrWhiteSpace(rawMessage))
             {
                 var json = JToken.Parse(rawMessage);

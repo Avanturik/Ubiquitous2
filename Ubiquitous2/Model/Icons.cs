@@ -15,5 +15,6 @@ namespace UB.Model
         public static string WebServerIcon = @"/Ubiquitous2;component/Resources/webserver.png";
         public static string GamingLiveIcon = @"/Ubiquitous2;component/Resources/gaminglive.png";
         public static string GamingLiveIconDark = @"/Ubiquitous2;component/Resources/gaminglivedark.ico";
+        public static string HitboxIcon = @"/Ubiquitous2;component/Resources/hitbox.png";
     }
 }

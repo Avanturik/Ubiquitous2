@@ -27,6 +27,7 @@ namespace UB.Model
 
         }
         public Uri Uri { get; set; }
+        public List<string> ExactWords { get; set; }
         public string Pattern { get; set; }
         public string ExactWord { get;set; }
         public int Width { get; set; }

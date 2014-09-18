@@ -70,31 +70,44 @@ namespace UB.Converter
                                         width = width <= 0 ? 16 : width;
                                         height = height <= 0 ? 16 : height;
 
-                                        dataService.GetImage(new Uri(url), width, height, (image) =>
+                                        Uri imageUri;
+                                        if( Uri.TryCreate(url, UriKind.RelativeOrAbsolute, out imageUri) )
                                         {
-                                            image.Focusable = false;
-                                            image.MouseEnter += (o,e) => {
-                                                var img = e.Source as Image;
-                                                if (ImageBehavior.GetAnimatedSource(img) == ImageBehavior.AnimatedSourceProperty.DefaultMetadata.DefaultValue)
-                                                {
-                                                    ImageBehavior.SetRepeatBehavior(img, RepeatBehavior.Forever);
-                                                    ImageBehavior.SetAutoStart(img, true);
-                                                    ImageBehavior.SetAnimatedSource(img, img.Source);
-                                                }
-                                            };
-                                            textBlock.Inlines.Add(image);
-                                        }, (image) => {
-                                            if (url.ToLower().Contains(".gif"))
+                                            dataService.GetImage(new Uri(url), width, height, (image) =>
                                             {
-                                                var img = image;
-                                                if (ImageBehavior.GetAnimatedSource(img) == ImageBehavior.AnimatedSourceProperty.DefaultMetadata.DefaultValue)
+                                                image.Focusable = false;
+                                                image.MouseEnter += (o, e) =>
                                                 {
-                                                    ImageBehavior.SetRepeatBehavior(img, RepeatBehavior.Forever);
-                                                    ImageBehavior.SetAutoStart(img, true);
-                                                    ImageBehavior.SetAnimatedSource(img, img.Source);
+                                                    var img = e.Source as Image;
+                                                    if (ImageBehavior.GetAnimatedSource(img) == ImageBehavior.AnimatedSourceProperty.DefaultMetadata.DefaultValue)
+                                                    {
+                                                        ImageBehavior.SetRepeatBehavior(img, RepeatBehavior.Forever);
+                                                        ImageBehavior.SetAutoStart(img, true);
+                                                        ImageBehavior.SetAnimatedSource(img, img.Source);
+                                                    }
+                                                };
+                                                textBlock.Inlines.Add(image);
+                                            }, (image) =>
+                                            {
+                                                if (url.ToLower().Contains(".gif"))
+                                                {
+                                                    var img = image;
+                                                    if (ImageBehavior.GetAnimatedSource(img) == ImageBehavior.AnimatedSourceProperty.DefaultMetadata.DefaultValue)
+                                                    {
+                                                        ImageBehavior.SetRepeatBehavior(img, RepeatBehavior.Forever);
+                                                        ImageBehavior.SetAutoStart(img, true);
+                                                        ImageBehavior.SetAnimatedSource(img, img.Source);
+                                                    }
                                                 }
-                                            }                                        
-                                        });
+                                            });
+                                        }
+                                        else
+                                        {
+                                            Log.WriteError("Converter got invalid Url:{0}", url);
+                                            textBlock.Inlines.Add(url);
+                                        }
+                                        
+
                                         break;
                                     case "a":
                                         Hyperlink link = new Hyperlink(new Run(node.Attributes["href"].Value));
@@ -102,13 +115,23 @@ namespace UB.Converter
                                         link.IsEnabled = true;
                                         if (!url.Contains("://"))
                                             url = "http://" + url;
-                                        link.NavigateUri = new Uri(url);
-                                        link.Focusable = false;
-                                        link.RequestNavigate += (sender, e) =>
+                                        Uri linkUri;
+                                        
+                                        if( Uri.TryCreate(url, UriKind.RelativeOrAbsolute, out linkUri) )
                                         {
-                                            Process.Start(e.Uri.ToString());
-                                        };
-                                        textBlock.Inlines.Add(link);
+                                            link.NavigateUri = new Uri(url);
+                                            link.Focusable = false;
+                                            link.RequestNavigate += (sender, e) =>
+                                            {
+                                                Process.Start(e.Uri.ToString());
+                                            };
+                                            textBlock.Inlines.Add(link);
+                                        }
+                                        else
+                                        {
+                                            Log.WriteError("Can't parse url: {0}", url);
+                                            textBlock.Inlines.Add(url);
+                                        }
                                         break;
                                 }
                                 break;

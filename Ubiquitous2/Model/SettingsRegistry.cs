@@ -14,6 +14,7 @@ namespace UB.Model
         public static string ChatTitleNormalTwitch = "Twitch.tv";
         public static string ChatTitleEventTwitch = "Twitch.tv(event)";
         public static string ChatTitleGamingLive = "Gaminglive.tv";
+        public static string ChatTitleHitBox = "Hitbox.tv";
 
         //Service titles
         public static string ServiceTitleMusicTicker = "Music ticker";
@@ -59,6 +60,7 @@ namespace UB.Model
             {
                 return new List<ChatConfig>()
                 {
+                    //Twitch
                     new ChatConfig()
                     {
                         ChatName = ChatTitleNormalTwitch,
@@ -69,8 +71,11 @@ namespace UB.Model
                             new ConfigField() {  Name = "Password", Label = "Password", DataType = "Password", IsVisible = true, Value = "blah" },
                             new ConfigField() {  Name = "Channels", Label = "Channels", DataType = "Text", IsVisible = true, Value = "goodguygarry,nightblue3,herdyn,#starladder1, mushisgosu" },
                             new ConfigField() {  Name = "OAuthToken", Label = "OAuth token", DataType = "Text", IsVisible = false, Value = String.Empty },
+                            new ConfigField("Info", "Enter justinfan<anydigits> and fill channels to get readonly access", "Info", true, null),
+                            new ConfigField("Info", "Channels is comma separated list. Hashtag is optional. e.g: #xedoc, ipsum, #lorem", "Info", true, null),
                         }
                     },
+                    //Twitch events
                     new ChatConfig()
                     {
                         ChatName = ChatTitleEventTwitch,
@@ -81,8 +86,11 @@ namespace UB.Model
                             new ConfigField() {  Name = "Password", Label = "Password", DataType = "Password", IsVisible = true, Value = "blah" },
                             new ConfigField() {  Name = "Channels", Label = "Channels", DataType = "Text", IsVisible = true, Value = "riotgames" },
                             new ConfigField() {  Name = "OAuthToken", Label = "OAuth token", DataType = "Text", IsVisible = false, Value = String.Empty },
+                            new ConfigField("Info", "Enter justinfan<anydigits> and fill channels to get readonly access", "Info", true, null),
+                            new ConfigField("Info", "Channels is comma separated list. Hashtag is optional. e.g: #xedoc, ipsum, #lorem", "Info", true, null),
                         }
                     },
+                    //Gaminglive.tv
                     new ChatConfig()
                     {
                         ChatName = ChatTitleGamingLive,
@@ -93,8 +101,25 @@ namespace UB.Model
                             new ConfigField() {  Name = "Password", Label = "Password", DataType = "Password", IsVisible = true, Value = String.Empty },
                             new ConfigField() {  Name = "Channels", Label = "Channels", DataType = "Text", IsVisible = true, Value = String.Empty },
                             new ConfigField() {  Name = "AuthToken", Label = "AuthToken", DataType = "Text", IsVisible = false, Value = String.Empty },
+                            new ConfigField("Info", "This chat require to login to read messages", "Info", true, null),
+                            new ConfigField("Info", "Channels is comma separated list. Hashtag is optional. e.g: #xedoc, ipsum, #lorem", "Info", true, null),
                         }
-                    }
+                    },
+                    //Hitbox.tv
+                    new ChatConfig()
+                    {
+                        ChatName = ChatTitleHitBox,
+                        IconURL = Icons.HitboxIcon,
+                        Enabled = false,
+                        Parameters = new List<ConfigField>() {
+                            new ConfigField() {  Name = "Username", Label = "Username", DataType = "Text", IsVisible = true, Value = "UnknownSoldier" },
+                            new ConfigField() {  Name = "Password", Label = "Password", DataType = "Password", IsVisible = true, Value = String.Empty },
+                            new ConfigField() {  Name = "Channels", Label = "Channels", DataType = "Text", IsVisible = true, Value = String.Empty },
+                            new ConfigField() {  Name = "AuthToken", Label = "AuthToken", DataType = "Text", IsVisible = false, Value = String.Empty },
+                            new ConfigField("Info", "Leave username and password empty and fill channels if you need readonly access", "Info", true, null),
+                            new ConfigField("Info", "Channels is comma separated list. Hashtag is optional. e.g: #xedoc, ipsum, #lorem", "Info", true, null),
+                        }
+                    },
                 };
             }
         }
@@ -140,6 +165,15 @@ namespace UB.Model
                                                 {
                                                     ChatName = ChatTitleGamingLive,
                                                     IconURL = Icons.GamingLiveIcon,
+                                                };
+                                             }},
+            //Hitbox.tv
+            {ChatTitleHitBox, (config)=>
+                                            {
+                                                return new HitboxChat(config)
+                                                {
+                                                    ChatName = ChatTitleHitBox,
+                                                    IconURL = Icons.HitboxIcon,
                                                 };
                                              }},
 

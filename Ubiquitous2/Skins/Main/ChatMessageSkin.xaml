@@ -37,9 +37,6 @@
                         </Style>
                     </ControlTemplate.Resources>
                     <Border Focusable="False" CornerRadius="10" Margin="1,0,1,5" BorderThickness="0,0,1,1" Padding="3,0,3,8">
-                        <Border.CacheMode>
-                            <BitmapCache/>
-                        </Border.CacheMode>
                         <Border.Background>
                             <LinearGradientBrush EndPoint="200,165.008" MappingMode="Absolute" StartPoint="80,0">
                                 <GradientStop Color="#FF4D4D4D" Offset="1"/>
