@@ -11,13 +11,28 @@ namespace UB.Model
 {
     public class MessageParser
     {
+        public static void RemoveRedundantTags( ChatMessage message, IChat chat)
+        {
+            string regex = @"</*div[^>]*>";
+            message.Text = Regex.Replace(message.Text, regex, "");
+        }
         public static void ParseURLs( ChatMessage message, IChat chat )
         {
             message.Text = Html.ConvertUrlsToLinks(message.Text);
         }
+        public static void ParseImageUrlsAsImages( ChatMessage message, IChat chat )
+        {
+            ParseSimpleImageTags(message, chat, false);
+        }
         public static void ParseSimpleImageTags( ChatMessage message, IChat chat )
         {
+            ParseSimpleImageTags(message, chat, true);
+        }
+        public static void ParseSimpleImageTags(ChatMessage message, IChat chat, bool isInsideTag = true)
+        {
             string regex = @"(<((https?:)?\/\/?[^'""<>]+?\.(jpg|jpeg|gif|png)).*?>)";
+            if( !isInsideTag )
+                regex = @"(((https?:)?\/\/?[^'""<>]+?\.(jpg|jpeg|gif|png)).*)";
             Regex r = new Regex(regex, RegexOptions.IgnoreCase);
             var matches = r.Matches(message.Text);
             using( var webClient = new WebClientBase())
@@ -29,26 +44,9 @@ namespace UB.Model
                         string url = match.Groups[2].Value;
                         try
                         {
-
-                            Image image = Image.FromStream(webClient.DownloadToStream(url));
-                            if (image != null)
-                            {
-                                var width = image.Width;
-                                var height = image.Height;
-                                if (width > 256)
-                                {
-                                    height = height * 256 / width;
-                                    width = 256;
-                                }
-
-                                if (height > 256)
-                                {
-                                    width  = width * 256 / height;
-                                    height = 256;
-                                }
-
-                                message.Text = r.Replace(message.Text, @"<img width=""" + width + @""" height=""" + height + @""" src=""$2""/>").Replace("href=\"www", "href=\"http://www");
-                            }
+                            ImageInfo.GetWebImageSize(url, (imageSize) => {
+                                message.Text = r.Replace(message.Text, @"<img width=""" + imageSize.Width + @""" height=""" + imageSize.Height + @""" src=""$2""/>").Replace("href=\"www", "href=\"http://www");
+                            });
                         }
                         catch { }
                     }

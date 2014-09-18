@@ -67,8 +67,8 @@ namespace UB.Converter
                                         if (node.Attributes["height"] != null)
                                             int.TryParse(node.Attributes["height"].Value, out height);
 
-                                        width = width <= 0 ? 16 : width;
-                                        height = height <= 0 ? 16 : height;
+                                        width = width == 0 ? 64 : width;
+                                        height = height == 0 ? 64 : height;
 
                                         Uri imageUri;
                                         if( Uri.TryCreate(url, UriKind.Absolute, out imageUri) )
@@ -76,16 +76,6 @@ namespace UB.Converter
                                             dataService.GetImage(imageUri, width, height, (image) =>
                                             {
                                                 image.Focusable = false;
-                                                image.MouseEnter += (o, e) =>
-                                                {
-                                                    var img = e.Source as Image;
-                                                    if (ImageBehavior.GetAnimatedSource(img) == ImageBehavior.AnimatedSourceProperty.DefaultMetadata.DefaultValue)
-                                                    {
-                                                        ImageBehavior.SetRepeatBehavior(img, RepeatBehavior.Forever);
-                                                        ImageBehavior.SetAutoStart(img, true);
-                                                        ImageBehavior.SetAnimatedSource(img, img.Source);
-                                                    }
-                                                };
                                                 textBlock.Inlines.Add(image);
                                             }, (image) =>
                                             {
@@ -98,6 +88,16 @@ namespace UB.Converter
                                                         ImageBehavior.SetAutoStart(img, true);
                                                         ImageBehavior.SetAnimatedSource(img, img.Source);
                                                     }
+                                                    img.MouseEnter += (o, e) =>
+                                                    {
+                                                        var source = e.Source as Image;
+                                                        if (ImageBehavior.GetAnimatedSource(source) == ImageBehavior.AnimatedSourceProperty.DefaultMetadata.DefaultValue)
+                                                        {
+                                                            ImageBehavior.SetRepeatBehavior(source, RepeatBehavior.Forever);
+                                                            ImageBehavior.SetAutoStart(source, true);
+                                                            ImageBehavior.SetAnimatedSource(source, source.Source);
+                                                        }
+                                                    };
                                                 }
                                             });
                                         }

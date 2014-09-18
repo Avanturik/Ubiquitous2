@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Net.Cache;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Controls;
@@ -24,6 +25,13 @@ namespace UB.Model
         {
             lock (getLock)
             {
+                if( width ==0 || height == 0)
+                {
+                    ImageInfo.GetWebImageSize(uri.AbsoluteUri, (size) => {
+                        width = size.Width;
+                        height = size.Height;
+                    });
+                }
                 GetImageSource(uri, width, height, (imageSource) =>
                 {
                     Image image = new Image() { Width = width, Height = height };
@@ -44,10 +52,20 @@ namespace UB.Model
         {
             if (!bitmapImageCache.ContainsKey(uri.AbsoluteUri))
             {
-                var bitmap = new BitmapImage(uri);
-                if (bitmap == null)
-                    return;
-                bitmapImageCache.Add(uri.AbsoluteUri, bitmap);
+                var bitmap = new BitmapImage();
+                using (var webClient = new WebClientBase())
+                using( var stream = webClient.DownloadToStream(uri.AbsoluteUri))
+                {                    
+                    
+                    bitmap.BeginInit();
+                    bitmap.CacheOption = BitmapCacheOption.OnLoad;
+                    bitmap.CreateOptions = BitmapCreateOptions.None;
+                    bitmap.UriCachePolicy = new HttpRequestCachePolicy(HttpCacheAgeControl.MaxAge, new TimeSpan(0), new TimeSpan(0));
+                    bitmap.UriSource = uri;
+                    bitmap.EndInit();
+
+                    bitmapImageCache.Add(uri.AbsoluteUri, bitmap);
+                }
             }
             callback(bitmapImageCache[uri.AbsoluteUri]);
         }

@@ -34,6 +34,8 @@ namespace UB.Model
             Status = new StatusBase();
             Users = new Dictionary<string, ChatUser>();
 
+            //ContentParsers.Add(MessageParser.ParseImageUrlsAsImages);
+            ContentParsers.Add(MessageParser.RemoveRedundantTags);
             ContentParsers.Add(MessageParser.ParseURLs);
             ContentParsers.Add(MessageParser.ParseSpaceSeparatedEmoticons);
 
@@ -341,6 +343,11 @@ namespace UB.Model
                 hitboxChannel.ReadMessage = ReadMessage;
                 hitboxChannel.LeaveCallback = (hbChannel) =>
                 {
+                    if (!Status.IsStopping)
+                    {
+                        Restart();
+                    }
+
                     StopCounterPoller(hbChannel.ChannelName);
                     hitboxChannels.RemoveAll(item => item.ChannelName == hbChannel.ChannelName);
                     ChatChannels.RemoveAll(chan => chan.Equals(hbChannel.ChannelName, StringComparison.InvariantCultureIgnoreCase));
@@ -388,7 +395,7 @@ namespace UB.Model
 
                 if (jsonEmoticons == null)
                 {
-                    Log.WriteError("Unable to get Twitch.tv emoticons!");
+                    Log.WriteError("Unable to get Hitbox.tv emoticons!");
                     return;
                 }
                 else
@@ -445,14 +452,10 @@ namespace UB.Model
         private WebSocketBase webSocket;
         private HitboxChat _chat;
         private Random random = new Random();
-        private Timer pingTimer;
         private bool isAnonymous = false;
         public HitboxChannel(HitboxChat chat)
         {
             _chat = chat;
-            pingTimer = new Timer((obj) => {
-                webSocket.Send("2::");
-            }, null, Timeout.Infinite, Timeout.Infinite);
         }
        
         private void GetRandomIP(string[] hosts, int port, Action<string> callback)
@@ -518,7 +521,6 @@ namespace UB.Model
             webSocket.Origin = "http://www.hitbox.tv";
             webSocket.ConnectHandler = () =>
             {
-                //pingTimer.Change(webSocket.PingInterval, webSocket.PingInterval);
                 SendCredentials(nickName, channel, authToken);
 
                 if (callback != null)

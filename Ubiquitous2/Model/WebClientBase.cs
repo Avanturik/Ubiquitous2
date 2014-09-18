@@ -85,20 +85,25 @@ namespace UB.Model
                 }
                 return String.Empty;
             }
-            public Stream DownloadToStream(String url)
+            public Stream DownloadToStream(String url, bool cache = false)
             {
                 try
                 {
                     lock (downloadLock)
                     {
                         var request = GetWebRequest(new Uri(url));
+                        if( cache )
+                        {
+                            request.CachePolicy = new HttpRequestCachePolicy(HttpRequestCacheLevel.CacheIfAvailable);
+                        }
                         var response = GetWebResponse(request);
+
                         return response.GetResponseStream();
                     }
                 }
                 catch
                 {
-
+                    Log.WriteError("Download error {0}", url);
                 }
                 return null;
             }
