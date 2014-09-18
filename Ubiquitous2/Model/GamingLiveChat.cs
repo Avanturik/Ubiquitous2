@@ -74,8 +74,11 @@ namespace UB.Model
         {
             UI.Dispatch(() => Status.ToolTips.RemoveAll(t => t.Header == channelName));
             var poller = counterWebPollers.FirstOrDefault(p => p.Id == channelName);
-            poller.Stop();
-            counterWebPollers.Remove(poller);
+            if( poller != null)
+            {
+                poller.Stop();
+                counterWebPollers.Remove(poller);
+            }
         }
         private void JoinChannels()
         {
@@ -208,7 +211,6 @@ namespace UB.Model
         }
         public bool Stop()
         {
-
             gamingLiveChannels.ForEach(chan => {
                 StopCounterPoller(chan.ChannelName);
                 chan.Leave(); 
@@ -226,7 +228,10 @@ namespace UB.Model
         {
             var gamingLiveChannel = gamingLiveChannels.FirstOrDefault(channel => channel.ChannelName.Equals(message.Channel, StringComparison.InvariantCultureIgnoreCase));
             if (gamingLiveChannel != null)
+            {
                 Task.Factory.StartNew(() => gamingLiveChannel.SendMessage(message));
+            }
+                
 
             return true;
         }
@@ -249,7 +254,7 @@ namespace UB.Model
                     var channelInfo = Json.DeserializeStream<GamingLiveChannelStats>(stream);
                     poller.LastValue = channelInfo;
                     var viewers = 0;
-                    foreach (var webPoller in counterWebPollers)
+                    foreach (var webPoller in counterWebPollers.ToList())
                     {
                         var streamInfo = this.With(x => (GamingLiveChannelStats)webPoller.LastValue)
                             .With(x => x.state);

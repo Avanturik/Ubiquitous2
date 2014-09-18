@@ -3,15 +3,20 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Documents;
+using System.Windows.Media;
 using System.Windows.Media.Animation;
+using System.Windows.Media.Imaging;
+using System.Windows.Threading;
 using GalaSoft.MvvmLight.Threading;
 using HtmlAgilityPack;
 using Microsoft.Practices.ServiceLocation;
 using UB.Model;
+using UB.Utils;
 using WpfAnimatedGif;
 
 namespace UB.Converter
@@ -64,11 +69,31 @@ namespace UB.Converter
 
                                         width = width <= 0 ? 16 : width;
                                         height = height <= 0 ? 16 : height;
-                                        
+
                                         dataService.GetImage(new Uri(url), width, height, (image) =>
                                         {
                                             image.Focusable = false;
+                                            image.MouseEnter += (o,e) => {
+                                                var img = e.Source as Image;
+                                                if (ImageBehavior.GetAnimatedSource(img) == ImageBehavior.AnimatedSourceProperty.DefaultMetadata.DefaultValue)
+                                                {
+                                                    ImageBehavior.SetRepeatBehavior(img, RepeatBehavior.Forever);
+                                                    ImageBehavior.SetAutoStart(img, true);
+                                                    ImageBehavior.SetAnimatedSource(img, img.Source);
+                                                }
+                                            };
                                             textBlock.Inlines.Add(image);
+                                        }, (image) => {
+                                            if (url.ToLower().Contains(".gif"))
+                                            {
+                                                var img = image;
+                                                if (ImageBehavior.GetAnimatedSource(img) == ImageBehavior.AnimatedSourceProperty.DefaultMetadata.DefaultValue)
+                                                {
+                                                    ImageBehavior.SetRepeatBehavior(img, RepeatBehavior.Forever);
+                                                    ImageBehavior.SetAutoStart(img, true);
+                                                    ImageBehavior.SetAnimatedSource(img, img.Source);
+                                                }
+                                            }                                        
                                         });
                                         break;
                                     case "a":

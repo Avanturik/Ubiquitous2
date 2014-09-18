@@ -56,7 +56,7 @@ namespace UB.Converter
                                     dataService.GetImage(new Uri(url), width, height, (image) =>
                                     {
                                         paragraph.Inlines.Add(image);
-                                    });
+                                    }, (img) => { });
                                     break;
                                 case "a":
                                     Hyperlink link = new Hyperlink(new Run(node.Attributes["href"].Value));

@@ -105,7 +105,7 @@ namespace UB.Model
                         var channelInfo = Json.DeserializeStream<TwitchChannelInfo>(stream);
                         poller.LastValue = channelInfo;
                         var viewers = 0;
-                        foreach (var webPoller in counterWebPollers)
+                        foreach (var webPoller in counterWebPollers.ToList())
                         {
                             var streamInfo = this.With(x => (TwitchChannelInfo)webPoller.LastValue)
                                 .With(x => x.stream);
@@ -260,7 +260,7 @@ namespace UB.Model
         }
         public override bool Stop()
         {
-            foreach( var poller in counterWebPollers )
+            foreach( var poller in counterWebPollers.ToList() )
             {
                 poller.Stop();
             }

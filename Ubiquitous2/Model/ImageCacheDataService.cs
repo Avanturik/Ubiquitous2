@@ -19,37 +19,37 @@ namespace UB.Model
         private object getLock = new object();
 
         private Dictionary<String, BitmapImage> bitmapImageCache = new Dictionary<string, BitmapImage>();
-        
-        public void GetImage(Uri uri, int width, int height, Action<Image> callback)
-        {
-            lock(getLock)
-            {
-                
-                if (!bitmapImageCache.ContainsKey(uri.AbsoluteUri))
-                {
-                    var bitmap = new BitmapImage(uri);
-                    if (bitmap == null)
-                        return;
 
-                    bitmapImageCache.Add(uri.AbsoluteUri, bitmap);
-                }
-                Image image = new Image() { Width = width, Height = height };
-                if (uri.OriginalString.ToLower().Contains(".gif"))
+        public void GetImage(Uri uri, int width, int height, Action<Image> callback, Action<Image> downloadComplete)
+        {
+            lock (getLock)
+            {
+                GetImageSource(uri, width, height, (imageSource) =>
                 {
-                    image.Source = bitmapImageCache[uri.AbsoluteUri];
-                    //ImageBehavior.SetRepeatBehavior(image, RepeatBehavior.Forever);
-                    //using (var webClient = new WebClientBase())
-                    //{
-                    //    var frame = BitmapFrame.Create(webClient.DownloadToStream(uri.AbsoluteUri), BitmapCreateOptions.None, BitmapCacheOption.OnLoad);
-                    //    ImageBehavior.SetAnimatedSource(image, frame);
-                    //}
-                }
-                else
-                {
-                    image.Source = bitmapImageCache[uri.AbsoluteUri];
-                }
-                UI.Dispatch(() => callback(image));
+                    Image image = new Image() { Width = width, Height = height };
+                    image.Source = imageSource;
+                    imageSource.DownloadCompleted += (o, e) =>
+                    {
+                        var handler = downloadComplete;
+                        if (downloadComplete != null)
+                            downloadComplete(image);
+                    };
+                    UI.Dispatch(() => callback(image));
+                });
             }
+        }
+
+
+        public void GetImageSource(Uri uri, int width, int height, Action<BitmapImage> callback)
+        {
+            if (!bitmapImageCache.ContainsKey(uri.AbsoluteUri))
+            {
+                var bitmap = new BitmapImage(uri);
+                if (bitmap == null)
+                    return;
+                bitmapImageCache.Add(uri.AbsoluteUri, bitmap);
+            }
+            callback(bitmapImageCache[uri.AbsoluteUri]);
         }
     }
 }

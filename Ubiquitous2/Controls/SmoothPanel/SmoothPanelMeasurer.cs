@@ -295,7 +295,6 @@ namespace Devart.Controls
             /// </summary>
             private void GetFirstItem()
             {
-                _lastItemIndex = Math.Max(_lastItemIndex, _items.Count-1);
                 double bottomHeight = 0;
                 for (int i = _lastItemIndex; i >= 0; i--)
                 {

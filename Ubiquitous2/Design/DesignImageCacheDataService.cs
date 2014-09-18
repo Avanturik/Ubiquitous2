@@ -19,8 +19,8 @@ namespace UB.Design
 
         private Dictionary<String, BitmapImage> bitmapImageCache = new Dictionary<string, BitmapImage>();
         private List<Image> imageCache = new List<Image>();
-        
-        public void GetImage(Uri uri, int width, int height, Action<Image> callback)
+
+        public void GetImage(Uri uri, int width, int height, Action<Image> callback, Action<Image> downloadComplete)
         {
             var trace = new StackTrace(true);
             var frame = trace.GetFrame(0);
@@ -34,6 +34,12 @@ namespace UB.Design
             return;
 
 
+        }
+
+
+        public void GetImageSource(Uri uri, int width, int height, Action<BitmapImage> callback)
+        {
+            
         }
     }
 }

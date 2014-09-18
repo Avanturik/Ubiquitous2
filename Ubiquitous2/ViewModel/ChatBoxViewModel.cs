@@ -147,10 +147,6 @@ namespace UB.ViewModel
 
                 });
             }
-            GC.Collect();
-            GC.WaitForPendingFinalizers();
-            GC.Collect();
-
         }
 
         /// <summary>
