@@ -71,9 +71,9 @@ namespace UB.Converter
                                         height = height <= 0 ? 16 : height;
 
                                         Uri imageUri;
-                                        if( Uri.TryCreate(url, UriKind.RelativeOrAbsolute, out imageUri) )
+                                        if( Uri.TryCreate(url, UriKind.Absolute, out imageUri) )
                                         {
-                                            dataService.GetImage(new Uri(url), width, height, (image) =>
+                                            dataService.GetImage(imageUri, width, height, (image) =>
                                             {
                                                 image.Focusable = false;
                                                 image.MouseEnter += (o, e) =>
@@ -117,9 +117,9 @@ namespace UB.Converter
                                             url = "http://" + url;
                                         Uri linkUri;
                                         
-                                        if( Uri.TryCreate(url, UriKind.RelativeOrAbsolute, out linkUri) )
+                                        if( Uri.TryCreate(url, UriKind.Absolute, out linkUri) )
                                         {
-                                            link.NavigateUri = new Uri(url);
+                                            link.NavigateUri = linkUri;
                                             link.Focusable = false;
                                             link.RequestNavigate += (sender, e) =>
                                             {

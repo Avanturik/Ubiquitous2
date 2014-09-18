@@ -35,7 +35,7 @@ namespace UB.Model
             Users = new Dictionary<string, ChatUser>();
 
             ContentParsers.Add(MessageParser.ParseURLs);
-            ContentParsers.Add(MessageParser.ParseSimpleImageTags);
+            ContentParsers.Add(MessageParser.ParseSpaceSeparatedEmoticons);
 
             Enabled = Config.Enabled;
         }
@@ -400,16 +400,28 @@ namespace UB.Model
 
                     if( dictionary == null )
                         return;
-
+                    var defaultWidth = 24;
+                    var defaultHeight = 24;
                     foreach( KeyValuePair<string, string[]> pair in dictionary )
                     {
-                        Uri uri;
-
-                        if( Uri.TryCreate( pair.Value[0], UriKind.Absolute, out uri) )
+                        var smileUrl = "http://edge.sf.hitbox.tv" + pair.Value[0];
+                        if( pair.Value.Length > 0 )
                         {
-                            list.Add(new Emoticon(null, null,16,16) {
-                                ExactWords = new List<string>() { pair.Key, pair.Value[1] },
-                                Uri = uri,
+                            list.Add(new Emoticon(null, smileUrl, defaultWidth, defaultHeight)
+                            {
+                                ExactWord = pair.Key,
+                            });
+
+                            if (pair.Value.Length > 1)
+                            list.Add(new Emoticon(null, smileUrl, defaultWidth, defaultHeight)
+                            {
+                                ExactWord = pair.Value[1],
+                            });
+
+                            if (pair.Value.Length > 2 && !pair.Value[1].Equals(pair.Value[2]))
+                            list.Add(new Emoticon(null, smileUrl, defaultWidth, defaultHeight)
+                            {
+                                ExactWord = pair.Value[2],
                             });
                         }
                     }
@@ -498,7 +510,7 @@ namespace UB.Model
         public void Join(Action<HitboxChannel> callback, string nickName, string channel, string authToken)
         {
 
-            if( String.IsNullOrWhiteSpace(channel) || String.IsNullOrWhiteSpace(authToken) )
+            if( String.IsNullOrWhiteSpace(channel) )
                 return;
 
             ChannelName = "#" + channel.Replace("#", "");
@@ -506,7 +518,7 @@ namespace UB.Model
             webSocket.Origin = "http://www.hitbox.tv";
             webSocket.ConnectHandler = () =>
             {
-                pingTimer.Change(webSocket.PingInterval, webSocket.PingInterval);
+                //pingTimer.Change(webSocket.PingInterval, webSocket.PingInterval);
                 SendCredentials(nickName, channel, authToken);
 
                 if (callback != null)
@@ -515,6 +527,7 @@ namespace UB.Model
             
             webSocket.DisconnectHandler = () =>
             {
+                Log.WriteError("Hitbox disconnected");
                 if (LeaveCallback != null)
                     LeaveCallback(this);
             };
@@ -574,12 +587,18 @@ namespace UB.Model
         }
         private void ReadRawMessage(string rawMessage)
         {
+            if( rawMessage.Equals("2::"))
+            {
+                webSocket.Send("2::");
+                return;
+            }
+
             if( !String.IsNullOrWhiteSpace(rawMessage) && rawMessage.Contains("chatMsg"))
             {
                 var json = Re.GetSubString(rawMessage, @".*args"":\[""(.*?)""\]}$");
                 if( json == null )
                     return;
-                dynamic msg = this.With(x => JToken.Parse(json.Replace(@"\""", @"""")))
+                dynamic msg = this.With(x => JToken.Parse(json.Replace(@"\""", @"""").Replace(@"\\",@"\")))
                     .With(x => x.Value<dynamic>("params"));
 
                 if( msg == null)

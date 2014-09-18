@@ -116,6 +116,11 @@ namespace UB.Model
         }
         private void ReadMessage( ChatMessage message )
         {
+            //Ignore bot messages
+            if( message.FromUserName.Equals("Alicebot",StringComparison.InvariantCultureIgnoreCase))
+            {
+                return;
+            }
             if (MessageReceived != null)
             {
                 if (ContentParsers != null)

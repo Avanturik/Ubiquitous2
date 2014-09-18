@@ -82,5 +82,30 @@ namespace UB.Model
                 }
             }
         }
+        public static void ParseSpaceSeparatedEmoticons(ChatMessage message, IChat chat)
+        {
+            if (chat == null || chat.Emoticons == null)
+                return;
+            var emoticons = chat.Emoticons.ToList();
+            bool containsNonAlpha = Regex.IsMatch(message.Text, @"\W");
+            
+            HashSet<string> words = null;
+
+            if (containsNonAlpha)
+                words = new HashSet<string>(Regex.Split(message.Text, @"\s").Where(s => s != String.Empty));
+            else
+                words = new HashSet<string>(new string[] { message.Text });
+
+
+            foreach (var emoticon in emoticons)
+            {
+                if ((words != null || !containsNonAlpha) && emoticon.ExactWord != null)
+                {
+                    if (words.Contains(emoticon.ExactWord))
+                        message.Text = message.Text.Replace(emoticon.ExactWord, emoticon.HtmlCode);
+                }
+            }
+        }
+
     }
 }

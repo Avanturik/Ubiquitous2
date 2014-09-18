@@ -25,7 +25,12 @@ namespace UB.Utils
 
         public static bool IsMatch(string input,string pattern)
         {
-            return Regex.IsMatch(input, pattern);
+            if (input != null)
+                return Regex.IsMatch(input, pattern);
+            else if (pattern == null)
+                return true;
+            else
+                return false;
         }
 
     }

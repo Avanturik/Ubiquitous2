@@ -17,17 +17,22 @@ namespace UB.Model
 
             if (!Re.IsMatch(pattern, @"\W"))
                 ExactWord = pattern;
-            else
+            else if( pattern != null )
                 Pattern = pattern;
 
             Width = width;
             Height = height;
-            HtmlCode = Html.CreateImageTag(url, width, height);
-            Uri = new Uri(url);
+
+
+            Uri uri;
+            if (Uri.TryCreate(url, UriKind.RelativeOrAbsolute, out uri))
+            {
+                HtmlCode = Html.CreateImageTag(url, width, height);
+                Uri = uri;
+            }
 
         }
         public Uri Uri { get; set; }
-        public List<string> ExactWords { get; set; }
         public string Pattern { get; set; }
         public string ExactWord { get;set; }
         public int Width { get; set; }
