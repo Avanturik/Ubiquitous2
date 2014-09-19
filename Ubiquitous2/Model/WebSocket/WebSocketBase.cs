@@ -41,7 +41,8 @@ namespace UB.Model
         {
             try
             {
-                socket.Close();
+                if( socket.State == WebSocketState.Open)
+                    socket.Close();
             }
             catch{}
         }
@@ -88,6 +89,8 @@ namespace UB.Model
 
         void socket_Error(object sender, SuperSocket.ClientEngine.ErrorEventArgs e)
         {
+            Log.WriteError("WebSocket error {0}", e.Exception.Message);
+
             if (DisconnectHandler != null)
                 DisconnectHandler();
         }

@@ -9,14 +9,16 @@ using UB.Utils;
 
 namespace UB.Model
 {
+    //nick=__$anonymous&authToken=__$anonymous
     class GamingLiveChat : IChat
     {
         public event EventHandler<ChatServiceEventArgs> MessageReceived;
         private WebClientBase loginWebClient = new WebClientBase();
         private List<GamingLiveChannel> gamingLiveChannels = new List<GamingLiveChannel>();
         private object counterLock = new object();
+        private object channelsLock = new object();
         private List<WebPoller> counterWebPollers = new List<WebPoller>();
-
+        private bool isAnonymous = false;
         public GamingLiveChat(ChatConfig config)
         {
             Config = config;
@@ -57,7 +59,8 @@ namespace UB.Model
 
         public bool Start()
         {
-            if( Status.IsStarting || Status.IsConnected || Status.IsLoggedIn || Config == null)
+            Log.WriteInfo("Starting Gaminglive.tv chat");
+            if (Status.IsStarting || Status.IsConnected || Status.IsLoggedIn || Config == null)
             {
                 return true;
             }
@@ -82,17 +85,37 @@ namespace UB.Model
         }
         private void JoinChannels()
         {
+
+
             var channels = Config.Parameters.StringArrayValue("Channels").Select(chan => "#" + chan.ToLower().Replace("#","")).ToArray();
-            if( !channels.Contains( "#" + NickName.ToLower()))
-                channels = channels.Union(new String[] { NickName.ToLower() }).ToArray();
+
+
+            if (NickName != null && !NickName.Equals("__$anonymous", StringComparison.InvariantCultureIgnoreCase))
+            {
+                if (!channels.Contains("#" + NickName.ToLower()))
+                    channels = channels.Union(new String[] { NickName.ToLower() }).ToArray();
+            }
+
+
 
             foreach( var channel in channels )
             {
+
+                if (Status.IsStopping)
+                    return;
+
+                Log.WriteInfo("Joining {0}@gaminglive", channel);
+                lock (channelsLock)
+                    gamingLiveChannels.RemoveAll(chan => chan.ChannelName.Equals(channel, StringComparison.InvariantCultureIgnoreCase));
+
                 var gamingLiveChannel = new GamingLiveChannel(this);
                 gamingLiveChannel.ReadMessage = ReadMessage;
                 gamingLiveChannel.LeaveCallback = (glChannel) => {
                     StopCounterPoller(glChannel.ChannelName);
-                    gamingLiveChannels.RemoveAll(item => item.ChannelName == glChannel.ChannelName);
+                    
+                    lock(channelsLock)
+                        gamingLiveChannels.RemoveAll(item => item.ChannelName == glChannel.ChannelName);
+                    ChatChannels.RemoveAll(chan => chan == null);
                     ChatChannels.RemoveAll(chan => chan.Equals(glChannel.ChannelName, StringComparison.InvariantCultureIgnoreCase));
                     if (RemoveChannel != null)
                         RemoveChannel(gamingLiveChannel.ChannelName, this);
@@ -102,11 +125,15 @@ namespace UB.Model
                 };
                 if( !gamingLiveChannels.Any(c => c.ChannelName == channel ))
                 gamingLiveChannel.Join((glChannel) => {
+                    if (Status.IsStopping)
+                        return;
                     Status.IsConnected = true;
-                    gamingLiveChannels.Add(glChannel);
+                    lock(channelsLock)
+                        gamingLiveChannels.Add(glChannel);
                     if (glChannel.ChannelName.Equals("#" + NickName, StringComparison.InvariantCultureIgnoreCase))
-                        Status.IsLoggedIn = true;                   
+                        Status.IsLoggedIn = true;
 
+                    ChatChannels.RemoveAll(chan => chan == null);
                     ChatChannels.RemoveAll(chan => chan.Equals(glChannel.ChannelName, StringComparison.InvariantCultureIgnoreCase));
                     ChatChannels.Add((glChannel.ChannelName));
                     if (AddChannel != null)
@@ -161,8 +188,8 @@ namespace UB.Model
 
             if( String.IsNullOrWhiteSpace(userName) || String.IsNullOrWhiteSpace(password))
             {
-                Log.WriteError("Unable to login to Gaminglive.tv. Please set correct credentials!");
-                return false;
+                isAnonymous = true;
+                return true;
             }
             NickName = userName;
             
@@ -187,7 +214,9 @@ namespace UB.Model
         public bool LoginWithToken()
         {
             var authToken = (string)Config.GetParameterValue("AuthToken");
-            if( String.IsNullOrWhiteSpace( authToken ))
+            var userName = Config.GetParameterValue("Username") as string;
+
+            if (String.IsNullOrWhiteSpace(authToken) || String.IsNullOrWhiteSpace(userName))
                 return false;
 
             SetCommonHeaders();
@@ -218,18 +247,29 @@ namespace UB.Model
         }
         public bool Stop()
         {
-            gamingLiveChannels.ForEach(chan => {
-                StopCounterPoller(chan.ChannelName);
-                chan.Leave(); 
-            });
+            Log.WriteInfo("Stopping Gaminglive.tv chat");
+
+            if (Status.IsStopping)
+                return false;
+
+            lock(channelsLock)
+                gamingLiveChannels.ForEach(chan => {
+                    StopCounterPoller(chan.ChannelName);
+                    chan.Leave(); 
+                });
+            ChatChannels.Clear();
             Status.ResetToDefault();
             return true;
         }
 
         public bool Restart()
         {
+            if (Status.IsStopping || Status.IsStarting)
+                return false;
+
             Stop();
             Start();
+            Status.ResetToDefault();
             return true;
         }
 
@@ -268,7 +308,7 @@ namespace UB.Model
                         var streamInfo = this.With(x => (GamingLiveChannelStats)webPoller.LastValue)
                             .With(x => x.state);
 
-                        var tooltip = Status.ToolTips.FirstOrDefault(t => t.Header == webPoller.Id);
+                        var tooltip = Status.ToolTips.ToList().FirstOrDefault(t => t.Header == webPoller.Id);
                         if (tooltip == null)
                             return;
 
@@ -290,6 +330,7 @@ namespace UB.Model
             };
             poller.Start();
 
+            counterWebPollers.RemoveAll(p => p.Id == poller.Id);
             counterWebPollers.Add(poller);
         }
 
@@ -352,15 +393,22 @@ namespace UB.Model
 
         private WebSocketBase webSocket;
         private IChat _chat;
+        bool isAnonymous = false;
         public GamingLiveChannel(IChat chat)
         {
             _chat = chat;
         }
         public void Join(Action<GamingLiveChannel> callback, string nickName, string channel, string authToken)
         {
-            if( String.IsNullOrWhiteSpace(channel) || String.IsNullOrWhiteSpace(authToken) )
-                return;
+            isAnonymous = nickName == null || nickName.Equals("__$anonymous",StringComparison.InvariantCultureIgnoreCase) 
+                || String.IsNullOrWhiteSpace(nickName) 
+                || String.IsNullOrWhiteSpace(authToken);
 
+            if( isAnonymous )
+            {
+                nickName = "__$anonymous";
+                authToken = "__$anonymous";
+            }
             ChannelName = "#" + channel.Replace("#", "");
             webSocket = new WebSocketBase();
             webSocket.Host = "54.76.144.150";
@@ -382,6 +430,7 @@ namespace UB.Model
         }
         private void ReadRawMessage(string rawMessage)
         {
+            Log.WriteInfo("gaminglive raw message: {0}", rawMessage);
             if( !String.IsNullOrWhiteSpace(rawMessage))
             {
                 var json = JToken.Parse(rawMessage);
@@ -413,7 +462,9 @@ namespace UB.Model
         public Action<GamingLiveChannel> LeaveCallback { get; set; }
         public Action<ChatMessage> ReadMessage { get; set; }
         public void SendMessage( ChatMessage message )
-        {            
+        {
+            if (isAnonymous)
+                return;
             dynamic jsonMessage = new { message = message.Text, color = "orange" };
             webSocket.Send(JsonConvert.SerializeObject(jsonMessage));
         }

@@ -46,7 +46,9 @@ namespace UB.Model
                         Enabled = true,
                         Parameters = new List<ConfigField>() {
                             new ConfigField("Port", "TCP port", "Text", true, "8080"),
-                            new ConfigField("Info", "Read chat anywhere via browser.", "Info", true, null),
+                            new ConfigField("Info1", "Read chat anywhere via browser.", "Info", true, null),
+                            new ConfigField("Info2", "Port must not be in use by other apps", "Info", true, null),
+                            new ConfigField("Info3", "URL e.g: http://192.168.0.123:8080/","Info", true, null),
                         }
                     }
                 };
@@ -101,7 +103,7 @@ namespace UB.Model
                             new ConfigField() {  Name = "Password", Label = "Password", DataType = "Password", IsVisible = true, Value = String.Empty },
                             new ConfigField() {  Name = "Channels", Label = "Channels", DataType = "Text", IsVisible = true, Value = String.Empty },
                             new ConfigField() {  Name = "AuthToken", Label = "AuthToken", DataType = "Text", IsVisible = false, Value = String.Empty },
-                            new ConfigField("Info", "This chat require to login to read messages", "Info", true, null),
+                            new ConfigField("Info", "Fill channels and leave username and password empty if you need readonly access.", "Info", true, null),
                             new ConfigField("Info", "Channels is comma separated list. Hashtag is optional. e.g: #xedoc, ipsum, #lorem", "Info", true, null),
                         }
                     },

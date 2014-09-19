@@ -15,13 +15,25 @@ namespace UB.Model
         private WebClientBase wc;
         private object lockWebClient = new object();
         private Timer timer;
+        private bool gotError = false;
         public WebPoller()
         {
             Interval = 30000;
             wc = new WebClientBase();
-            
             Cookies = wc.Cookies;
             timer = new Timer(poll, this, Timeout.Infinite, Timeout.Infinite);
+            wc.ErrorHandler = (error) => {
+                Log.WriteError(error);
+                timer.Change(Interval * 2, Interval * 2);
+                gotError = true;
+            };
+            wc.SuccessHandler = () => {
+                if( gotError)
+                {
+                    timer.Change(Interval, Interval );
+                    gotError = false;
+                }
+            };
         }
         public void Start()
         {

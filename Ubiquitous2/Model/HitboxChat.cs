@@ -24,6 +24,9 @@ namespace UB.Model
         private object iconParseLock = new object();
         private bool isFallbackEmoticons = false;
         private bool isWebEmoticons = false;
+        private object channelsLock = new object();
+        private object pollerLock = new object();
+        private object toolTipLock = new object();
 
         public HitboxChat(ChatConfig config)
         {
@@ -68,6 +71,8 @@ namespace UB.Model
 
         public bool Start()
         {
+            Log.WriteInfo("Starting Hitbox.tv chat");
+
             if (Status.IsStarting || Status.IsConnected || Status.IsLoggedIn || Config == null)
             {
                 return true;
@@ -87,18 +92,27 @@ namespace UB.Model
 
         public bool Stop()
         {
+            Log.WriteInfo("Stopping Hitbox.tv chat");
+
             Status.IsStopping = true;
-            hitboxChannels.ForEach(chan =>
+            lock( channelsLock )
             {
-                StopCounterPoller(chan.ChannelName);
-                chan.Leave();
-            });
+                hitboxChannels.ForEach(chan =>
+                {
+                    StopCounterPoller(chan.ChannelName);
+                    chan.Leave();
+                });
+            }
+            ChatChannels.Clear();
             Status.ResetToDefault();
             return true;
         }
 
         public bool Restart()
         {
+            if (Status.IsStopping || Status.IsStarting )
+                return false;
+
             Status.ResetToDefault();
             Stop();
             Start();
@@ -267,8 +281,14 @@ namespace UB.Model
                 Uri = new Uri(String.Format(@"http://api.hitbox.tv/media/live/{0}", channel.Replace("#", ""))),
             };
 
-            UI.Dispatch(() => Status.ToolTips.RemoveAll(t => t.Header == poller.Id));
-            UI.Dispatch(() => Status.ToolTips.Add(new ToolTip(poller.Id, "")));
+            UI.Dispatch(() => { 
+                lock(toolTipLock)
+                    Status.ToolTips.RemoveAll(t => t.Header == poller.Id);
+            });
+            UI.Dispatch(() => {
+                lock (toolTipLock)
+                    Status.ToolTips.Add(new ToolTip(poller.Id, ""));
+            });
 
             poller.ReadStream = (stream) =>
             {
@@ -283,20 +303,23 @@ namespace UB.Model
                             .With(x => x.livestream)
                             .With(x => x.FirstOrDefault(livestream => livestream.media_name.Equals(webPoller.Id.Replace("#",""), StringComparison.InvariantCultureIgnoreCase)));
 
-                        var tooltip = Status.ToolTips.FirstOrDefault(t => t.Header.Equals(webPoller.Id));
-                        if (tooltip == null)
-                            return;
+                        lock(toolTipLock)
+                        {
+                            var tooltip = Status.ToolTips.FirstOrDefault(t => t.Header.Equals(webPoller.Id));
+                            if (tooltip == null)
+                                return;
 
-                        if (streamInfo != null)
-                        {
-                            viewers += streamInfo.media_views;
-                            tooltip.Text = streamInfo.media_views.ToString();
-                            tooltip.Number = streamInfo.media_views;
-                        }
-                        else
-                        {
-                            tooltip.Text = "0";
-                            tooltip.Number = 0;
+                            if (streamInfo != null)
+                            {
+                                viewers += streamInfo.media_views;
+                                tooltip.Text = streamInfo.media_views.ToString();
+                                tooltip.Number = streamInfo.media_views;
+                            }
+                            else
+                            {
+                                tooltip.Text = "0";
+                                tooltip.Number = 0;
+                            }
                         }
 
                     }
@@ -304,12 +327,19 @@ namespace UB.Model
                 }
             };
             poller.Start();
-
-            counterWebPollers.Add(poller);
+            
+            lock( pollerLock )
+            {
+                counterWebPollers.RemoveAll(p => p.Id == poller.Id);
+                counterWebPollers.Add(poller);
+            }
         }
         void StopCounterPoller(string channelName)
         {
-            UI.Dispatch(() => Status.ToolTips.RemoveAll(t => t.Header == channelName));
+            UI.Dispatch(() => {
+                lock (toolTipLock)
+                    Status.ToolTips.RemoveAll(t => t.Header == channelName);
+            } );
             var poller = counterWebPollers.FirstOrDefault(p => p.Id == channelName);
             if (poller != null)
             {
@@ -319,6 +349,10 @@ namespace UB.Model
         }
         private void JoinChannels()
         {
+
+            if (Status.IsStopping)
+                return;
+
             var channels = Config.Parameters.StringArrayValue("Channels").Select(chan => "#" + chan.ToLower().Replace("#", "")).ToArray();
 
             if (NickName != null && !NickName.Equals("UnknownSoldier", StringComparison.InvariantCultureIgnoreCase))
@@ -337,14 +371,16 @@ namespace UB.Model
                 hitboxChannel.LeaveCallback = (hbChannel) =>
                 {
                     StopCounterPoller(hbChannel.ChannelName);
-                    hitboxChannels.RemoveAll(item => item.ChannelName == hbChannel.ChannelName);
+                    lock(channelsLock)
+                        hitboxChannels.RemoveAll(item => item.ChannelName == hbChannel.ChannelName);
+
+                    ChatChannels.RemoveAll(chan => chan == null);
                     ChatChannels.RemoveAll(chan => chan.Equals(hbChannel.ChannelName, StringComparison.InvariantCultureIgnoreCase));
                     if (RemoveChannel != null)
                         RemoveChannel(hitboxChannel.ChannelName, this);
 
-                    if (!Status.IsStopping)
+                    if (!Status.IsStarting)
                     {
-                        Status.ResetToDefault();
                         Restart();
                         return;
                     }
@@ -352,9 +388,14 @@ namespace UB.Model
                 if( !hitboxChannels.Any(c => c.ChannelName == channel))
                 hitboxChannel.Join((hbChannel) =>
                 {
+                    if (Status.IsStopping)
+                        return;
+
                     Status.IsConnected = true;
                     Status.IsLoggedIn = true;
-                    hitboxChannels.Add(hbChannel);
+                    lock(channelsLock)
+                        hitboxChannels.Add(hbChannel);
+
                     ChatChannels.RemoveAll(chan => chan.Equals(hbChannel.ChannelName, StringComparison.InvariantCultureIgnoreCase));
                     ChatChannels.Add((hbChannel.ChannelName));
                     if (AddChannel != null)
@@ -446,12 +487,15 @@ namespace UB.Model
         private HitboxChat _chat;
         private Random random = new Random();
         private bool isAnonymous = false;
+
         public HitboxChannel(HitboxChat chat)
         {
             _chat = chat;
             HitboxChannelStatus = new StatusBase();
         }
         public StatusBase HitboxChannelStatus { get; set; }
+        public string NickName { get; set; }
+        public string AuthToken { get; set; }
         private void GetRandomIP(string[] hosts, int port, Action<string> callback)
         {
             List<string> resultList = new List<string>();
@@ -490,6 +534,7 @@ namespace UB.Model
             if (resultList.Count() <= 0)
             {
                 Log.WriteError("All hitbox servers are down.");
+                Thread.Sleep(5000);
                 callback(null);
                 return;
             }
@@ -509,13 +554,15 @@ namespace UB.Model
 
             if( String.IsNullOrWhiteSpace(channel) )
                 return;
-
+            NickName = nickName;
+            AuthToken = authToken;
             ChannelName = "#" + channel.Replace("#", "");
             webSocket = new WebSocketBase();
+            webSocket.PingInterval = 3000;
             webSocket.Origin = "http://www.hitbox.tv";
             webSocket.ConnectHandler = () =>
             {
-                SendCredentials(nickName, channel, authToken);
+                SendCredentials(NickName, channel, authToken);
 
                 if (callback != null)
                     callback(this);
@@ -584,7 +631,6 @@ namespace UB.Model
         }
         private void ReadRawMessage(string rawMessage)
         {
-            Log.WriteInfo("Hitbox raw message: {0}", rawMessage);
             const string jsonArgsRe = @".*args"":\[""(.*?)""\]}$";
 
             if (rawMessage.Equals("1::"))
@@ -635,6 +681,7 @@ namespace UB.Model
                         default:
                             break;
                     }
+                    SendCredentials(NickName, ChannelName, AuthToken);
                 }
                 else if (!String.IsNullOrWhiteSpace(rawMessage) && rawMessage.Contains("chatMsg"))
                 {
@@ -663,6 +710,7 @@ namespace UB.Model
         public string ChannelName { get; set; }
         public void Leave()
         {
+            Log.WriteInfo("Hitobx leaving {0}", ChannelName);
             webSocket.Disconnect();
         }
         

@@ -30,7 +30,6 @@ namespace UB.Model
                  {ContentType.UrlEncoded, "application/x-www-form-urlencoded"},
                  {ContentType.Multipart, "multipart/form-data"},
             };
-
             public WebClientBase()
             {
 
@@ -43,8 +42,14 @@ namespace UB.Model
                 ServicePointManager.Expect100Continue = false;
                 ServicePointManager.UseNagleAlgorithm = false;
                 KeepAlive = true;
-            }
+                ErrorHandler = (error) => {
+                    Log.WriteError(error);
+                };
 
+                SuccessHandler = () => { };
+            }
+            public Action<string> ErrorHandler { get; set; }
+            public Action SuccessHandler { get; set; }
             public bool KeepAlive { get; set; }
 
             protected override WebRequest GetWebRequest(Uri address)
@@ -76,12 +81,13 @@ namespace UB.Model
                 {
                     lock (downloadLock)
                     {
+                        SuccessHandler();
                         return DownloadString(new Uri(url));
                     }
                 }
                 catch
                 {
-
+                    ErrorHandler(String.Format("Error downloading {0}", url));
                 }
                 return String.Empty;
             }
@@ -97,13 +103,14 @@ namespace UB.Model
                             request.CachePolicy = new HttpRequestCachePolicy(HttpRequestCacheLevel.CacheIfAvailable);
                         }
                         var response = GetWebResponse(request);
-
+                        
+                        SuccessHandler();
                         return response.GetResponseStream();
                     }
                 }
                 catch
                 {
-                    Log.WriteError("Download error {0}", url);
+                    ErrorHandler(String.Format("Error downloading {0} to stream", url));
                 }
                 return null;
             }
@@ -116,11 +123,12 @@ namespace UB.Model
                     lock (downloadLock)
                     {
                         result = UploadString(url, args);
+                        SuccessHandler();
                     }
                 }
                 catch
                 {
-
+                    ErrorHandler(String.Format("Error uploading to {0}", url));
                 }
                 return result;
             }
