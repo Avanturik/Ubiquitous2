@@ -458,24 +458,16 @@ namespace UB.Model
                     foreach( KeyValuePair<string, string[]> pair in dictionary )
                     {
                         var smileUrl = "http://edge.sf.hitbox.tv" + pair.Value[0];
-                        if( pair.Value.Length > 0 )
+                        if( pair.Value.Length >= 3 )
                         {
-                            list.Add(new Emoticon(null, smileUrl, defaultWidth, defaultHeight)
+                            foreach (var word in new string[] { pair.Key, pair.Value[1], pair.Value[2] })
                             {
-                                ExactWord = pair.Key,
-                            });
-
-                            if (pair.Value.Length > 1)
-                            list.Add(new Emoticon(null, smileUrl, defaultWidth, defaultHeight)
-                            {
-                                ExactWord = pair.Value[1],
-                            });
-
-                            if (pair.Value.Length > 2 && !pair.Value[1].Equals(pair.Value[2]))
-                            list.Add(new Emoticon(null, smileUrl, defaultWidth, defaultHeight)
-                            {
-                                ExactWord = pair.Value[2],
-                            });
+                                if( !list.Any( emoticon => emoticon.ExactWord.Equals(word,StringComparison.CurrentCultureIgnoreCase)))
+                                    list.Add(new Emoticon(null, smileUrl, defaultWidth, defaultHeight)
+                                    {
+                                        ExactWord = word,
+                                    });
+                            }
                         }
                     }
 

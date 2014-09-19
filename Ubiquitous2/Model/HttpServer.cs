@@ -237,8 +237,12 @@ namespace UB.Model
                 Log.WriteError("Web server unable to start! {0}", e.Message);
             }
         }
-        public void StartHttpServer()
+        public void StartHttpServer(ServiceConfig config)
         {
+            var textPort = (string)config.GetParameterValue("Port");
+
+            int.TryParse( textPort, out this.port);
+            
             if (this.port <=0 || this.port > 65535)
             {
                 Log.WriteError("Invalid port specified for web server");

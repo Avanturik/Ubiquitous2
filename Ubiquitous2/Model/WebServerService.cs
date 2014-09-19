@@ -123,7 +123,7 @@ namespace UB.Model
         public void Restart()
         {
             this.Stop();
-            this.Stop();
+            this.Start();
         }
 
         public Action AfterStart
@@ -151,7 +151,7 @@ namespace UB.Model
 
         public bool Start()
         {
-            base.StartHttpServer();
+            base.StartHttpServer(Config);
             return true;
         }
     }
