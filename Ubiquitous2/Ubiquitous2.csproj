@@ -140,7 +140,6 @@
     <Compile Include="Controls\SmoothPanel\SmoothPanelTemplate.cs" />
     <Compile Include="Controls\SmoothPanel\SmoothPanelViewCache.cs" />
     <Compile Include="Converter\BoolToScrollBarVisibility.cs" />
-    <Compile Include="Converter\ChatMessageToFlowDocument.cs" />
     <Compile Include="Converter\ChatMessageToTextBlock.cs" />
     <Compile Include="Design\DesignDataService.cs" />
     <Compile Include="Design\DesignSettingsDataService.cs" />

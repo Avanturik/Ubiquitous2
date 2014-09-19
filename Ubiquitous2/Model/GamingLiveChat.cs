@@ -80,7 +80,8 @@ namespace UB.Model
             if( poller != null)
             {
                 poller.Stop();
-                counterWebPollers.Remove(poller);
+                lock(counterLock)
+                    counterWebPollers.Remove(poller);
             }
         }
         private void JoinChannels()
@@ -146,11 +147,6 @@ namespace UB.Model
         }
         private void ReadMessage( ChatMessage message )
         {
-            //Ignore bot messages
-            if( message.FromUserName.Equals("Alicebot",StringComparison.InvariantCultureIgnoreCase))
-            {
-                return;
-            }
             if (MessageReceived != null)
             {
                 if (ContentParsers != null)
@@ -330,8 +326,11 @@ namespace UB.Model
             };
             poller.Start();
 
-            counterWebPollers.RemoveAll(p => p.Id == poller.Id);
-            counterWebPollers.Add(poller);
+            lock(counterLock)
+            {
+                counterWebPollers.RemoveAll(p => p.Id == poller.Id);
+                counterWebPollers.Add(poller);
+            }
         }
 
         public Dictionary<string, ChatUser> Users
@@ -436,6 +435,9 @@ namespace UB.Model
                 var json = JToken.Parse(rawMessage);
                 var nickName = (string)json.Value<dynamic>("user").nick;
                 var text = json.Value<string>("message");
+                var memberType = json.Value<string>("mtype");
+                if (memberType != null && memberType.Equals("BOT", StringComparison.InvariantCultureIgnoreCase))
+                    return;
 
                 if (String.IsNullOrWhiteSpace(nickName) || String.IsNullOrWhiteSpace(text))
                     return;

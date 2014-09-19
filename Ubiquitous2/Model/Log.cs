@@ -11,28 +11,28 @@ namespace UB.Model
     {
         public static void WriteError(String message)
         {
-            Debug.Print("Error: {0}", message);
+            Debug.Print("[{1}] Error: {0}", message, DateTime.Now.ToLongTimeString());
         }
         public static void WriteWarning(String message)
         {
-            Debug.Print("Warning: {0}",message);
+            Debug.Print("[{1}] Warning: {0}", message, DateTime.Now.ToLongTimeString());
         }
         public static void WriteInfo(String message)
         {
-            Debug.Print("Info: {0}",message);
+            Debug.Print("[{1}] Info: {0}", message, DateTime.Now.ToLongTimeString());
         }
 
         public static void WriteError(String format, params object[] args)
         {
-            Debug.Print("Error: " + format, args);
+            Debug.Print("[" + DateTime.Now.ToLongTimeString() + "] Error: " + format, args);
         }
         public static void WriteWarning(String format, params object[] args)
         {
-            Debug.Print("Warning: " + format, args);
+            Debug.Print("[" + DateTime.Now.ToLongTimeString() + "] Warning: " + format, args);
         }
         public static void WriteInfo(String format, params object[] args)
         {
-            Debug.Print("Info: " + format, args);
+            Debug.Print("[" + DateTime.Now.ToLongTimeString() + "] Info: " + format, args );
         }
 
     }

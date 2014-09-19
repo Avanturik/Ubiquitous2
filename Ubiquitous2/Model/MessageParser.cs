@@ -13,7 +13,7 @@ namespace UB.Model
     {
         public static void RemoveRedundantTags( ChatMessage message, IChat chat)
         {
-            string regex = @"</*div[^>]*>";
+            string regex = @"</*(div|iframe)[^>]*>";
             message.Text = Regex.Replace(message.Text, regex, "");
         }
         public static void ParseURLs( ChatMessage message, IChat chat )

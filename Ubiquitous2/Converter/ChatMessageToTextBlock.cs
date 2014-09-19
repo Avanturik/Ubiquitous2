@@ -88,14 +88,17 @@ namespace UB.Converter
                                                         ImageBehavior.SetAutoStart(img, true);
                                                         ImageBehavior.SetAnimatedSource(img, img.Source);
                                                     }
-                                                    img.MouseEnter += (o, e) =>
+                                                    img.IsVisibleChanged += (o, e) =>
                                                     {
-                                                        var source = e.Source as Image;
-                                                        if (ImageBehavior.GetAnimatedSource(source) == ImageBehavior.AnimatedSourceProperty.DefaultMetadata.DefaultValue)
+                                                        if( (bool)e.NewValue)
                                                         {
-                                                            ImageBehavior.SetRepeatBehavior(source, RepeatBehavior.Forever);
-                                                            ImageBehavior.SetAutoStart(source, true);
-                                                            ImageBehavior.SetAnimatedSource(source, source.Source);
+                                                            var source = o as Image;
+                                                            if (ImageBehavior.GetAnimatedSource(source) == ImageBehavior.AnimatedSourceProperty.DefaultMetadata.DefaultValue)
+                                                            {
+                                                                ImageBehavior.SetRepeatBehavior(source, RepeatBehavior.Forever);
+                                                                ImageBehavior.SetAutoStart(source, true);
+                                                                ImageBehavior.SetAnimatedSource(source, source.Source);
+                                                            }
                                                         }
                                                     };
                                                 }

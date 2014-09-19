@@ -71,10 +71,24 @@ namespace UB.Model
                     "",
                     Cookies,
                     null,
-                    null,
+                    "Mozilla/5.0 (Windows NT 6.0; WOW64; rv:14.0) Gecko/20100101 Firefox/14.0.1",
                     String.IsNullOrWhiteSpace(Origin) ? "http://" + Host : Origin,
                     WebSocketVersion.DraftHybi10
                     );
+                
+                if (socket != null)
+                {
+                    if (PingInterval == 0)
+                    {
+                        socket.AutoSendPingInterval = 0;
+                        socket.EnableAutoSendPing = false;
+                    }
+                    else
+                    {
+                        socket.AutoSendPingInterval = PingInterval;
+                        socket.EnableAutoSendPing = true;
+                    }
+                }
                 socket.Opened += new EventHandler(socket_Opened);
                 socket.MessageReceived += new EventHandler<MessageReceivedEventArgs>(socket_MessageReceived);
                 socket.Closed += new EventHandler(socket_Closed);
@@ -109,26 +123,8 @@ namespace UB.Model
 
         public int PingInterval
         {
-            set
-            {
-                if (socket != null)
-                {
-                    if (value <= 0)
-                    {
-                        socket.AutoSendPingInterval = 0;
-                        socket.EnableAutoSendPing = false;
-                    }
-                    else
-                    {
-                        socket.AutoSendPingInterval = value;
-                        socket.EnableAutoSendPing = true;
-                    }
-                }
-            }
-            get
-            {
-                return socket.AutoSendPingInterval;
-            }
+            get;
+            set;
         }
         public void Send(string message)
         {

@@ -266,8 +266,20 @@ namespace UB.Model
         {
             if (MessageReceived != null)
             {
+                var original = message.Text;
+                Log.WriteInfo("Original string:{0}", message.Text);
                 if (ContentParsers != null)
-                    ContentParsers.ForEach(parser => parser(message, this));
+                {
+                    var number = 1;
+                    ContentParsers.ForEach(parser =>
+                    {
+
+                        parser(message, this);
+                        if( original != message.Text)
+                            Log.WriteInfo("After paresing with {0}: {1}", number, message.Text);
+                        number++;
+                    });
+                }
 
                 MessageReceived(this, new ChatServiceEventArgs() { Message = message });
 
@@ -558,7 +570,7 @@ namespace UB.Model
             AuthToken = authToken;
             ChannelName = "#" + channel.Replace("#", "");
             webSocket = new WebSocketBase();
-            webSocket.PingInterval = 3000;
+            webSocket.PingInterval = 0;
             webSocket.Origin = "http://www.hitbox.tv";
             webSocket.ConnectHandler = () =>
             {
@@ -570,7 +582,7 @@ namespace UB.Model
             
             webSocket.DisconnectHandler = () =>
             {
-                Log.WriteError("Hitbox disconnected");
+                Log.WriteError("Hitbox disconnected {0}", ChannelName);
                 if (LeaveCallback != null)
                     LeaveCallback(this);
             };
@@ -639,6 +651,7 @@ namespace UB.Model
             }
             else if (rawMessage.Equals("2::"))
             {
+                Thread.Sleep(random.Next(100, 1000));
                 webSocket.Send("2::");
                 return;
             }
