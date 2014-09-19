@@ -87,8 +87,9 @@ namespace UB.ViewModel
                     ?? (_selectTheme = new RelayCommand<string>(
                                           (themeName) =>
                                           {
+                                              CurrentTheme = null;
+                                              Theme.SwitchTheme(themeName);
                                               CurrentTheme = themeName;
-                                              UI.Dispatch(() => Theme.SwitchTheme(themeName));
                                           }));
             }
         }
