@@ -100,7 +100,12 @@ namespace UB.Model
                 if ((words != null || !containsNonAlpha) && emoticon.ExactWord != null)
                 {
                     if (words.Contains(emoticon.ExactWord))
+                    {
                         message.Text = message.Text.Replace(emoticon.ExactWord, emoticon.HtmlCode);
+                        if (emoticon.ExactWord == ":/" || emoticon.ExactWord == "://")
+                            break;
+                    }
+
                 }
             }
         }
