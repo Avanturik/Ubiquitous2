@@ -99,6 +99,7 @@ namespace UB.Model
 
         public bool Restart()
         {
+            Status.ResetToDefault();
             Stop();
             Start();
             return true;
@@ -106,6 +107,9 @@ namespace UB.Model
 
         public bool SendMessage(ChatMessage message)
         {
+            if (isAnonymous)
+                return false;
+
             var hitBoxChannel = hitboxChannels.FirstOrDefault(channel => channel.ChannelName.Equals(message.Channel, StringComparison.InvariantCultureIgnoreCase));
             if (hitBoxChannel != null)
             {
@@ -170,7 +174,6 @@ namespace UB.Model
 
         private bool Login()
         {
-            var authToken = Config.GetParameterValue("AuthToken") as string;
             if (!LoginWithToken())
             {
                 if (!LoginWithUsername())
@@ -180,7 +183,6 @@ namespace UB.Model
                 }
                 else
                 {
-                    Status.IsLoggedIn = true;
                     return true;
                 }
             }
@@ -192,28 +194,19 @@ namespace UB.Model
 
         public bool LoginWithToken()
         {
-            return false;
             var authToken = (string)Config.GetParameterValue("AuthToken");
-            if (String.IsNullOrWhiteSpace(authToken))
+            var userName = Config.GetParameterValue("Username") as string;
+           
+            if (String.IsNullOrWhiteSpace(authToken) || String.IsNullOrWhiteSpace(userName))
                 return false;
 
-            SetCommonHeaders();
-            loginWebClient.Headers["Auth-Token"] = authToken;
+            NickName = userName;
 
-            var response = this.With(x => loginWebClient.Download("https://api.gaminglive.tv/auth/me"))
-                                .With(x => JToken.Parse(x));
-
-            if (response == null)
-                return false;
-
-            var isOk = response.Value<bool>("ok");
-            NickName = (string)response.Value<dynamic>("user").login;
-
-            if (isOk && !String.IsNullOrWhiteSpace(NickName))
-            {
+            var test = this.With(x => Json.DeserializeUrl<dynamic>(String.Format("https://www.hitbox.tv/api/teams/codex?authToken={0}",authToken)));
+            if (test.teams != null)
                 return true;
-            }
 
+            
             Config.SetParameterValue("AuthToken", String.Empty);
             return false;
         }
@@ -343,25 +336,25 @@ namespace UB.Model
                 hitboxChannel.ReadMessage = ReadMessage;
                 hitboxChannel.LeaveCallback = (hbChannel) =>
                 {
-                    if (!Status.IsStopping)
-                    {
-                        Restart();
-                    }
-
                     StopCounterPoller(hbChannel.ChannelName);
                     hitboxChannels.RemoveAll(item => item.ChannelName == hbChannel.ChannelName);
                     ChatChannels.RemoveAll(chan => chan.Equals(hbChannel.ChannelName, StringComparison.InvariantCultureIgnoreCase));
                     if (RemoveChannel != null)
                         RemoveChannel(hitboxChannel.ChannelName, this);
-                };
 
+                    if (!Status.IsStopping)
+                    {
+                        Status.ResetToDefault();
+                        Restart();
+                        return;
+                    }
+                };
+                if( !hitboxChannels.Any(c => c.ChannelName == channel))
                 hitboxChannel.Join((hbChannel) =>
                 {
                     Status.IsConnected = true;
+                    Status.IsLoggedIn = true;
                     hitboxChannels.Add(hbChannel);
-                    if (hbChannel.ChannelName.Equals("#" + NickName, StringComparison.InvariantCultureIgnoreCase))
-                        Status.IsLoggedIn = true;
-
                     ChatChannels.RemoveAll(chan => chan.Equals(hbChannel.ChannelName, StringComparison.InvariantCultureIgnoreCase));
                     ChatChannels.Add((hbChannel.ChannelName));
                     if (AddChannel != null)
@@ -456,8 +449,9 @@ namespace UB.Model
         public HitboxChannel(HitboxChat chat)
         {
             _chat = chat;
+            HitboxChannelStatus = new StatusBase();
         }
-       
+        public StatusBase HitboxChannelStatus { get; set; }
         private void GetRandomIP(string[] hosts, int port, Action<string> callback)
         {
             List<string> resultList = new List<string>();
@@ -562,6 +556,7 @@ namespace UB.Model
         }
         private void Connect()
         {
+            HitboxChannelStatus.ResetToDefault();
             var servers = Json.DeserializeUrl<HitboxServer[]>("https://www.hitbox.tv/api/chat/servers?redis=true");
             if (servers == null)
                 return;
@@ -589,41 +584,81 @@ namespace UB.Model
         }
         private void ReadRawMessage(string rawMessage)
         {
-            if( rawMessage.Equals("2::"))
+            Log.WriteInfo("Hitbox raw message: {0}", rawMessage);
+            const string jsonArgsRe = @".*args"":\[""(.*?)""\]}$";
+
+            if (rawMessage.Equals("1::"))
+            {
+                HitboxChannelStatus.IsConnected = true;
+            }
+            else if (rawMessage.Equals("2::"))
             {
                 webSocket.Send("2::");
                 return;
             }
-
-            if( !String.IsNullOrWhiteSpace(rawMessage) && rawMessage.Contains("chatMsg"))
+            
+            if( rawMessage.Contains( @":""message"))
             {
-                var json = Re.GetSubString(rawMessage, @".*args"":\[""(.*?)""\]}$");
-                if( json == null )
+                var json = Re.GetSubString(rawMessage, jsonArgsRe);
+                if (json == null)
                     return;
-                dynamic msg = this.With(x => JToken.Parse(json.Replace(@"\""", @"""").Replace(@"\\",@"\")))
+
+                dynamic msg = this.With(x => JToken.Parse(json.Replace(@"\""", @"""").Replace(@"\\", @"\")))
                     .With(x => x.Value<dynamic>("params"));
 
-                if( msg == null)
+                if (msg == null)
                     return;
 
-                var nickName = (string)msg.name;
-                var text = (string)msg.text;
-
-                if (String.IsNullOrWhiteSpace(nickName) || String.IsNullOrWhiteSpace(text))
-                    return;
-
-                if (ReadMessage != null)
-                    ReadMessage(new ChatMessage()
+                if (rawMessage.Contains(@":\""loginMsg"))
+                {
+                    var role = (string)msg.role;
+                    switch( role.ToLower() )
                     {
-                        Channel = ChannelName,
-                        ChatIconURL = _chat.IconURL,
-                        ChatName = _chat.ChatName,
-                        FromUserName = nickName,
-                        HighlyImportant = false,
-                        IsSentByMe = false,
-                        Text = text
-                    });
+                        case "guest":
+                            if (!isAnonymous)
+                            {
+                                HitboxChannelStatus.IsLoggedIn = false;
+                                HitboxChannelStatus.IsLoginFailed = true;
+                            }
+                            else
+                            {
+                                HitboxChannelStatus.IsLoginFailed = false;
+                                HitboxChannelStatus.IsLoggedIn = true;
+                            }
+                            break;
+                        case "admin":
+                            {
+                                HitboxChannelStatus.IsLoggedIn = true;
+                                HitboxChannelStatus.IsLoginFailed = false;
+                            }
+                            break;
+                        default:
+                            break;
+                    }
+                }
+                else if (!String.IsNullOrWhiteSpace(rawMessage) && rawMessage.Contains("chatMsg"))
+                {
+                    var nickName = (string)msg.name;
+                    var text = (string)msg.text;
+
+                    if (String.IsNullOrWhiteSpace(nickName) || String.IsNullOrWhiteSpace(text))
+                        return;
+
+                    if (ReadMessage != null)
+                        ReadMessage(new ChatMessage()
+                        {
+                            Channel = ChannelName,
+                            ChatIconURL = _chat.IconURL,
+                            ChatName = _chat.ChatName,
+                            FromUserName = nickName,
+                            HighlyImportant = false,
+                            IsSentByMe = false,
+                            Text = text
+                        });
+                }
+
             }
+            
         }
         public string ChannelName { get; set; }
         public void Leave()

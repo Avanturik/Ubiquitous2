@@ -96,8 +96,11 @@ namespace UB.Model
                     ChatChannels.RemoveAll(chan => chan.Equals(glChannel.ChannelName, StringComparison.InvariantCultureIgnoreCase));
                     if (RemoveChannel != null)
                         RemoveChannel(gamingLiveChannel.ChannelName, this);
+
+                    if (!Status.IsStopping)
+                        Restart();
                 };
-                
+                if( !gamingLiveChannels.Any(c => c.ChannelName == channel ))
                 gamingLiveChannel.Join((glChannel) => {
                     Status.IsConnected = true;
                     gamingLiveChannels.Add(glChannel);
@@ -133,7 +136,6 @@ namespace UB.Model
         
         private bool Login()
         {
-            var authToken = Config.GetParameterValue("AuthToken") as string;
             if( !LoginWithToken())
             {
                 if (!LoginWithUsername())
@@ -226,6 +228,8 @@ namespace UB.Model
 
         public bool Restart()
         {
+            Stop();
+            Start();
             return true;
         }
 
