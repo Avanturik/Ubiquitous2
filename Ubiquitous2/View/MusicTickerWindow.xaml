@@ -26,8 +26,9 @@
     <Window.Resources>
         <BooleanToVisibilityConverter x:Key="boolToVisibilityConverter"></BooleanToVisibilityConverter>
     </Window.Resources>
-
+    
     <i:Interaction.Behaviors>
+        <Interactivity:WindowPersistentLocationBehavior WindowName="MusicTickerWindow"/>
         <Interactivity:DragWindow/>
     </i:Interaction.Behaviors>
 

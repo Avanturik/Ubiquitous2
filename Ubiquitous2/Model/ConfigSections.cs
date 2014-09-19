@@ -16,5 +16,7 @@ namespace UB.Model
         public List<ChatConfig> ChatConfigs { get; set; }
         [XmlElement]
         public List<ServiceConfig> ServiceConfigs { get; set; }
+        [XmlElement]
+        public List<WindowSettings> WindowConfigs { get; set; }
     }
 }

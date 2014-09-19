@@ -18,8 +18,9 @@
         DataContext="{Binding Source={StaticResource Locator},Path=Status}" 
         SizeToContent="WidthAndHeight" HorizontalAlignment="Center" VerticalAlignment="Center" MaxHeight="32" Padding="0">
     <i:Interaction.Behaviors>
+        <Interactivity:WindowPersistentLocationBehavior WindowName="StatusWindow"/>
         <Interactivity:DragWindow/>
-    </i:Interaction.Behaviors>     
+    </i:Interaction.Behaviors> 
     
     <Window.Resources>
         <LinearGradientBrush x:Key="OnlineGradient" EndPoint="0.5,1" StartPoint="0.5,0">

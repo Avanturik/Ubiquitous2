@@ -72,6 +72,7 @@ namespace UB.ViewModel
                     ?? (_changeState = new RelayCommand(
                                           () =>
                                           {
+
                                               if( Application.Current.MainWindow.WindowState == WindowState.Normal ||
                                                   Application.Current.MainWindow.WindowState == WindowState.Minimized)
                                               statusWindow.WindowState = Application.Current.MainWindow.WindowState;   

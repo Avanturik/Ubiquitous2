@@ -24,6 +24,7 @@
         Padding="0" Icon="/Ubiquitous2;component/Resources/ubiquitous smile.ico"
         >
         <i:Interaction.Behaviors>
+            <Interactivity:WindowPersistentLocationBehavior WindowName="MainWindow"/>
             <Interactivity:ClickThroughBehavior EnableMouseTransparency="{Binding EnableMouseTransparency}"/>
         </i:Interaction.Behaviors>
         <i:Interaction.Triggers>

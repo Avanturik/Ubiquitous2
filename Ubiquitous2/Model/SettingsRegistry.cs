@@ -125,6 +125,19 @@ namespace UB.Model
                 };
             }
         }
+        // Default chat settings
+        public static List<WindowSettings> DefaultWindowConfigs
+        {
+            get
+            {
+                return new List<WindowSettings>()
+                {
+
+                };
+            }
+        }
+
+       
         // Service factory
         public static Dictionary<String, Func<ServiceConfig, IService>> ServiceFactory = new Dictionary<String, Func<ServiceConfig, IService>>()
         {

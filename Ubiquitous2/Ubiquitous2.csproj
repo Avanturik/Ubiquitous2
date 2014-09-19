@@ -153,6 +153,7 @@
     <Compile Include="Interactivity\DragThumbBehavior.cs" />
     <Compile Include="Interactivity\DragBehavior.cs" />
     <Compile Include="Interactivity\PasswordBoxAssistant.cs" />
+    <Compile Include="Interactivity\WindowPersistentLocationBehavior.cs" />
     <Compile Include="Interactivity\RichTextBoxAttached.cs" />
     <Compile Include="Interactivity\ScrollViewerAttached.cs" />
     <Compile Include="Interactivity\TextBlockAttached.cs" />
@@ -293,6 +294,7 @@
     <Compile Include="Model\WebPoller.cs" />
     <Compile Include="Model\WebServerService.cs" />
     <Compile Include="Model\WebSocket\WebSocketBase.cs" />
+    <Compile Include="Model\WindowPlacement.cs" />
     <Compile Include="Properties\PortableSettingsProvider.cs" />
     <Compile Include="Model\TwitchChat.cs" />
     <Compile Include="Properties\Ubiquitous.cs" />
@@ -309,6 +311,7 @@
     <Compile Include="Utils\Net.cs" />
     <Compile Include="Utils\Time.cs" />
     <Compile Include="Utils\UI.cs" />
+    <Compile Include="Utils\Window.cs" />
     <Compile Include="ViewModel\ChatStatusItemViewModel.cs" />
     <Compile Include="ViewModel\MusicTickerViewModel.cs" />
     <Compile Include="ViewModel\SettingsSectionViewModel.cs" />

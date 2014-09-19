@@ -27,6 +27,15 @@ namespace UB.Model
 
             InitializeChatSettings();
             InitializeServiceSettings();
+            InitializeWindowSettings();
+        }
+        private void InitializeWindowSettings()
+        {
+            if (Ubiquitous.Default.Config.WindowConfigs == null)
+            {
+                Ubiquitous.Default.Config.WindowConfigs = SettingsRegistry.DefaultWindowConfigs.ToList();
+                Ubiquitous.Default.Save();
+            }
         }
         private void InitializeServiceSettings()
         {
