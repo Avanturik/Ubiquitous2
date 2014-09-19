@@ -28,7 +28,7 @@ namespace UB.ViewModel
         public SettingsViewModel(SettingsDataService dataService, GeneralDataService generalDataService)
         {
             settingsDataService = dataService;
-
+            CurrentTheme = Ubiquitous.Default.Config.AppConfig.ThemeName;
             settingsDataService.GetChatSettings((list) => {
                 foreach( ChatConfig chatConfig in list )
                 {
@@ -40,6 +40,37 @@ namespace UB.ViewModel
             foreach( var service in serviceList)
             {
                 ServiceItemViewModels.Add(service);
+            }
+        }
+
+        /// <summary>
+        /// The <see cref="CurrentTheme" /> property's name.
+        /// </summary>
+        public const string CurrentThemePropertyName = "CurrentTheme";
+
+        private string _currentTheme = null;
+
+        /// <summary>
+        /// Sets and gets the CurrentTheme property.
+        /// Changes to that property's value raise the PropertyChanged event. 
+        /// </summary>
+        public string CurrentTheme
+        {
+            get
+            {
+                return _currentTheme;
+            }
+
+            set
+            {
+                if (_currentTheme == value)
+                {
+                    return;
+                }
+
+                RaisePropertyChanging(CurrentThemePropertyName);
+                _currentTheme = value;
+                RaisePropertyChanged(CurrentThemePropertyName);
             }
         }
 
@@ -56,11 +87,8 @@ namespace UB.ViewModel
                     ?? (_selectTheme = new RelayCommand<string>(
                                           (themeName) =>
                                           {
-                                              Application.Current.Resources.MergedDictionaries.Clear();
-                                              Application.Current.Resources.MergedDictionaries.Add(new ResourceDictionary()
-                                              {
-                                                  Source = new Uri("/Ubiquitous2;component/Skins/" + themeName + "/Skin.xaml", UriKind.RelativeOrAbsolute)
-                                              });
+                                              CurrentTheme = themeName;
+                                              UI.Dispatch(() => Theme.SwitchTheme(themeName));
                                           }));
             }
         }

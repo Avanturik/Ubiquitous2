@@ -9,7 +9,7 @@
         xmlns:UBViewModel="clr-namespace:UB.ViewModel"
         xmlns:ComponentModel="clr-namespace:System.ComponentModel;assembly=WindowsBase"
         WindowStyle="None"
-        AllowsTransparency="True"        
+        AllowsTransparency="False"        
         ResizeMode="NoResize"
         Background="{x:Null}"
         Title="Viewers counter"
@@ -41,7 +41,7 @@
             <ItemsControl Focusable="False" ItemsSource="{Binding ChatsView}" Padding="0" Margin="0,0,0,0">
             <ItemsControl.ItemTemplate>
                     <DataTemplate>
-                        <Grid MinWidth="32"  Margin="0" HorizontalAlignment="Center" VerticalAlignment="Center" Opacity="0.9">
+                        <Grid MinWidth="32"  Margin="0,0,0,-6" HorizontalAlignment="Center" VerticalAlignment="Center" Opacity="0.9">
                             <Grid.ToolTip>
                                 <ToolTip HasDropShadow="False" Placement="Top" Background="{x:Null}" BorderBrush="{x:Null}" Foreground="#FFCBCBCB" StaysOpen="True">
                                     <ToolTip.Resources>

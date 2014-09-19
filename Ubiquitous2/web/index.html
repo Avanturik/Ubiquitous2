@@ -3,7 +3,7 @@
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
     <head>
         <meta charset="utf-8" />
-        <link href="css/ubiquitous.css" rel="stylesheet" type="text/css" />
+        <link href="css/main.css" rel="stylesheet" type="text/css" id="theme"/>
         <title>Ubiquitous 2.0</title>
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="default" />
@@ -18,6 +18,7 @@
 
         <script type="text/javascript">
             var lastMessageId = "";
+            var currentThemeName = "main";
             try {
                 $(document).ready(function () {
                     var interval = 1000;
@@ -29,6 +30,22 @@
                         //});
                         try
                         {
+                            $.ajax({
+                                url: "/settings.json",
+                                cache: false,
+                                success : function(json) {
+                                    if (!(json instanceof Object))
+                                        json = JSON.parse(json);
+                                        
+                                    var themeName = json.ThemeName.toLowerCase();
+                                    if( currentThemeName != themeName )
+                                    {
+                                        $('#theme').attr('href', 'css/' + themeName + '.css');
+                                        currentThemeName = themeName;
+                                    }
+                                },
+                                timeout : 3000,
+                            });
                             $.ajax({
                                 url: "/messages.json" + (lastMessageId == "" ? "" : "?id=" + lastMessageId),
                                 cache: false,

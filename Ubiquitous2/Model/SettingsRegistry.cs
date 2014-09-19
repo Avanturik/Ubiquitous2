@@ -125,6 +125,16 @@ namespace UB.Model
                 };
             }
         }
+        public static AppConfig DefaultAppSettings
+        {
+            get
+            {
+                return new AppConfig()
+                {
+                    ThemeName = "Main",
+                };
+            }
+        }
         // Default chat settings
         public static List<WindowSettings> DefaultWindowConfigs
         {

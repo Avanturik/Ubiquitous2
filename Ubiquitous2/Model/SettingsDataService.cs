@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using UB.Properties;
+using UB.Utils;
 
 namespace UB.Model
 {
@@ -28,6 +29,15 @@ namespace UB.Model
             InitializeChatSettings();
             InitializeServiceSettings();
             InitializeWindowSettings();
+            InitializeAppSettings();
+        }
+        private void InitializeAppSettings()
+        {
+            if( Ubiquitous.Default.Config.AppConfig == null )
+            {
+                Ubiquitous.Default.Config.AppConfig = SettingsRegistry.DefaultAppSettings;               
+            }
+            Theme.SwitchTheme(Ubiquitous.Default.Config.AppConfig.ThemeName);
         }
         private void InitializeWindowSettings()
         {

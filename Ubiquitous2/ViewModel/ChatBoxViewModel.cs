@@ -7,6 +7,7 @@ using GalaSoft.MvvmLight.Threading;
 using System.Linq;
 using UB.Model;
 using UB.Utils;
+using UB.Properties;
 
 namespace UB.ViewModel
 {
@@ -113,6 +114,14 @@ namespace UB.ViewModel
                                     webServer.SendJsonToClient(stream,httpProcessor);
                                 });
                             }
+                            return true;
+                        }
+                        else if (uri.LocalPath.Equals("/settings.json",StringComparison.InvariantCultureIgnoreCase))
+                        {
+                            Json.SerializeToStream(Ubiquitous.Default.Config.AppConfig, (stream) =>
+                                {
+                                    webServer.SendJsonToClient(stream,httpProcessor);
+                                });
                             return true;
                         }
 

@@ -17,8 +17,10 @@
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type UserControl}">
-                    <Grid Margin="10" Background="#FF1E1E1E">              
-                        <ItemsControl Focusable="False" ItemsSource="{Binding Messages}" Padding="0" Margin="0">
+                    <Grid Margin="0,0,-4,0" Background="#FF1E1E1E">    
+                        <Border Padding="8">
+                            
+                            <ItemsControl Focusable="False" ItemsSource="{Binding Messages}" Padding="0" Margin="0">
                             <ItemsControl.Template>
                                 <ControlTemplate>
                                     <ScrollViewer VerticalScrollBarVisibility="{Binding IsScrollBarVisible, Converter={StaticResource boolToScrollVisibility}}" Focusable="False" d:DesignHeight="200" d:DesignWidth="500"  Template="{DynamicResource ScrollStyle}" CanContentScroll="True">
@@ -36,7 +38,7 @@
                             </ItemsControl.Template>
                             <ItemsControl.ItemsPanel>
                                 <ItemsPanelTemplate>
-                                    <dc:SmoothPanel TrackTopMost="false" VirtualizingPanel.CacheLength="5" VirtualizingPanel.CacheLengthUnit="Page" Margin="0,0,-2,0">
+                                    <dc:SmoothPanel TrackTopMost="false" VirtualizingPanel.CacheLength="5" VirtualizingPanel.CacheLengthUnit="Page">
                                             <dc:SmoothPanel.Templates>
                                                 <dc:SmoothPanelTemplate ViewModel="{x:Type ubviewmodel:ChatMessageViewModel}" View="{x:Type ubview:ChatMessageView}" />
                                             </dc:SmoothPanel.Templates>
@@ -44,6 +46,7 @@
                                 </ItemsPanelTemplate>
                             </ItemsControl.ItemsPanel>
                         </ItemsControl>
+                        </Border>
                     </Grid>
                 </ControlTemplate>
             </Setter.Value>

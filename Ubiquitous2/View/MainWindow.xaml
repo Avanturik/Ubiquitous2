@@ -9,19 +9,17 @@
         x:Class="UB.MainWindow"        
         mc:Ignorable="d ignore"
         UseLayoutRounding="True"
-        Height="{Binding Source={x:Static Settings:Ubiquitous.Default}, Path=MainWindowHeight,Mode=TwoWay}"
-        Width="{Binding Source={x:Static Settings:Ubiquitous.Default}, Path=MainWindowWidth,Mode=TwoWay}"
         Title="Ubiquitous 2.0"   
         Style="{DynamicResource MainWindowStyle}"
         xmlns:Interactivity="clr-namespace:UB.Interactivity"
         WindowStyle="None"
         Topmost="True"
-        AllowsTransparency="True"        
+        AllowsTransparency="False"        
         DataContext="{Binding Source={StaticResource Locator},Path=Main}" 
         Background="{x:Null}" 
-        ResizeMode="CanResizeWithGrip"
+        ResizeMode="NoResize"
         Margin="0" 
-        Padding="0" Icon="/Ubiquitous2;component/Resources/ubiquitous smile.ico"
+        Padding="0" Icon="/Ubiquitous2;component/Resources/ubiquitous smile.ico" d:DesignWidth="275" d:DesignHeight="394"
         >
         <i:Interaction.Behaviors>
             <Interactivity:WindowPersistentLocationBehavior WindowName="MainWindow"/>

@@ -8,6 +8,7 @@
         xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
         xmlns:View="clr-namespace:UB.View"
         xmlns:ViewModel="clr-namespace:UB.ViewModel"
+        xmlns:Converter="clr-namespace:UB.Converter"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
         mc:Ignorable="d" 
         x:Class="UB.SettingsWindow"
@@ -15,13 +16,14 @@
         SnapsToDevicePixels="True"
         UseLayoutRounding="True"
         Topmost="True"
-        Title="SettingsWindow" Icon="..\ubiquitous smile.ico" MinWidth="400" Width="426" Height="339" WindowStartupLocation="CenterOwner">
+        Title="SettingsWindow" Icon="..\ubiquitous smile.ico" MinWidth="400" Width="426" Height="339" WindowStartupLocation="Manual">
 
     <Window.DataContext>
         <Binding Path="Settings" Source="{StaticResource Locator}"/>
     </Window.DataContext>
     <Window.Resources>
         <Properties:Ubiquitous x:Key="Settings"/>
+        <Converter:StringToIsChecked x:Key="stringToIsCheckedConverter"/>
     </Window.Resources>
     <Grid>
         <fluent:BackstageTabControl SelectedIndex="0" Background="#FF323232" Style="{DynamicResource SettingsStyle}">
@@ -87,13 +89,13 @@
             <fluent:BackstageTabItem Header="Theme">
                 <ScrollViewer Template="{DynamicResource ScrollStyle}">
                     <VirtualizingStackPanel Orientation="Vertical">
-                        <RadioButton Command="{Binding SelectTheme}" CommandParameter="Main" Style="{DynamicResource ThemeRadioButton}" GroupName="ThemeButtons" IsChecked="True">
+                        <RadioButton Command="{Binding SelectTheme}" CommandParameter="Main" Style="{DynamicResource ThemeRadioButton}" GroupName="ThemeButtons" IsChecked="{Binding CurrentTheme, Converter={StaticResource stringToIsCheckedConverter}, ConverterParameter=Main}">
                             <StackPanel Orientation="Horizontal">
                                 <TextBlock Width="100" VerticalAlignment="Center" Margin="0,0,8,0">Main</TextBlock>
                                 <Image Width="150" Source="/Ubiquitous2;component/Resources/MainThemeThumbnail.png"/>
                             </StackPanel>
                         </RadioButton>
-                        <RadioButton Command="{Binding SelectTheme}" CommandParameter="Simple" Style="{DynamicResource ThemeRadioButton}" GroupName="ThemeButtons">
+                        <RadioButton Command="{Binding SelectTheme}" CommandParameter="Simple" Style="{DynamicResource ThemeRadioButton}" GroupName="ThemeButtons" IsChecked="{Binding CurrentTheme, Converter={StaticResource stringToIsCheckedConverter}, ConverterParameter=Simple}">
                             <StackPanel Orientation="Horizontal">
                                 <TextBlock Width="100" VerticalAlignment="Center" Margin="0,0,8,0">Simple</TextBlock>
                                 <Image Width="150" Source="/Ubiquitous2;component/Resources/SimpleThemeThumbnail.png"/>

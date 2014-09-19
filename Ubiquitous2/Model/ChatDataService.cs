@@ -121,7 +121,8 @@ namespace UB.Model
                 var index = i;
                 stopTasks[i] = Task.Factory.StartNew(() =>
                 {
-                    stopChats[i].Stop();
+                    if( i < stopChats.Count )
+                        stopChats[i].Stop();
                 });
                 Thread.Sleep(16);
             }

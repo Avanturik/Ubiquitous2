@@ -13,7 +13,7 @@
         xmlns:UBViewModel="clr-namespace:UB.ViewModel"
         xmlns:ComponentModel="clr-namespace:System.ComponentModel;assembly=WindowsBase"
         WindowStyle="None"
-        AllowsTransparency="True"        
+        AllowsTransparency="False"        
         ResizeMode="NoResize"
         Background="#FF3E3E42"
         Title="Music ticker"
@@ -26,7 +26,7 @@
     <Window.Resources>
         <BooleanToVisibilityConverter x:Key="boolToVisibilityConverter"></BooleanToVisibilityConverter>
     </Window.Resources>
-    
+
     <i:Interaction.Behaviors>
         <Interactivity:WindowPersistentLocationBehavior WindowName="MusicTickerWindow"/>
         <Interactivity:DragWindow/>
@@ -46,17 +46,11 @@
                 <GradientStop Color="#FF1D1D1D" Offset="1"/>
             </LinearGradientBrush>
         </Grid.Background>
-        <DockPanel>
-            <DockPanel.Background>
-                <RadialGradientBrush>
-                    <GradientStop Color="#FF2E2E2E" Offset="1"/>
-                    <GradientStop Color="#FF4D4D4D" Offset="0.184"/>
-                </RadialGradientBrush>
-            </DockPanel.Background>
-            <Image Margin="5" Width="64" Source="{Binding CurrentTrack.ImageURL}" Grid.Column="0" HorizontalAlignment="Center" VerticalAlignment="Top"/>
+        <DockPanel Background="#FF252525">
+            <Image Margin="5" Width="64" Source="{Binding CurrentTrack.ImageURL}" Grid.Column="0" HorizontalAlignment="Center" VerticalAlignment="Center"/>
         </DockPanel>
 
-        <StackPanel Margin="5" Grid.Row="0" Grid.Column="1">
+        <StackPanel Margin="5" Grid.Row="0" Grid.Column="1" VerticalAlignment="Center">
             <TextBlock Text="{Binding CurrentTrack.Album}" Grid.ColumnSpan="2" Grid.RowSpan="2" VerticalAlignment="Top"/>
             <TextBlock Text="{Binding CurrentTrack.Artist}" Grid.ColumnSpan="2" Grid.RowSpan="2" VerticalAlignment="Top"/>
             <TextBlock Text="{Binding CurrentTrack.Title}" Grid.ColumnSpan="2" Grid.RowSpan="2" VerticalAlignment="Top"/>

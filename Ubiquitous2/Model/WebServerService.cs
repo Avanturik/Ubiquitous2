@@ -11,6 +11,7 @@ namespace UB.Model
 {
     public class WebServerService : HttpServer, IService
     {
+        private object lockSend = new object();
         private const string webContentFolder = @"web\";
         public WebServerService(ServiceConfig config) : base(config.GetParameterValue("Port")) 
         {
@@ -82,9 +83,11 @@ namespace UB.Model
             if (stream != null)
             {
                 httpProcessor.OutputStream.AutoFlush = true;
-                httpProcessor.WriteSuccess(contentType);
-
-                stream.CopyTo(httpProcessor.OutputStream.BaseStream);
+                lock( lockSend )
+                {
+                    httpProcessor.WriteSuccess(contentType);
+                    stream.CopyTo(httpProcessor.OutputStream.BaseStream);
+                }
                 return true;
             }
             return false;
@@ -92,9 +95,12 @@ namespace UB.Model
 
         public void SendJsonToClient(Stream jsonStream, HttpProcessor httpProcessor)
         {
-            httpProcessor.OutputStream.AutoFlush = true;
-            httpProcessor.WriteSuccess("application/json");
-            jsonStream.CopyTo(httpProcessor.OutputStream.BaseStream);
+            lock( lockSend )
+            {
+                httpProcessor.OutputStream.AutoFlush = true;
+                httpProcessor.WriteSuccess("application/json");
+                jsonStream.CopyTo(httpProcessor.OutputStream.BaseStream);
+            }
         }
         private FileStream GetFile( string relativePath )
         {

@@ -106,6 +106,7 @@ namespace UB.Model
         }
         private void poll()
         {
+
             if (!_session.Authenticated)
                 return;
 
@@ -121,12 +122,29 @@ namespace UB.Model
                 string imageUrl = null;
 
                 if (album != null)
-                    imageUrl = album.GetImageURL(AlbumImageSize.Large);
+                {
+                    foreach (var size in new AlbumImageSize[] { AlbumImageSize.Large, AlbumImageSize.Medium, AlbumImageSize.Small })
+                    {
+                        imageUrl = album.GetImageURL(size);
+                        if (imageUrl != null)
+                            break;
+                    }
+                }
                 else if (artist != null)
-                    imageUrl = artist.GetImageURL(ImageSize.Large);
+                {
+                    foreach (var size in new ImageSize[] { ImageSize.Large, ImageSize.Medium, ImageSize.Small })
+                    {
+                        imageUrl = artist.GetImageURL(size);
+                        if (imageUrl != null)
+                            break;
+                    }
+                }
 
-                MusicTrackInfo.Album = (album == null ? "" : album.Title);
-                MusicTrackInfo.Artist = (artist == null ? "" : artist.Name);
+                if (String.IsNullOrWhiteSpace(imageUrl))
+                    imageUrl = Icons.MainHeadsetIcon;
+
+                MusicTrackInfo.Album = (album == null ? "Unknown album" : album.Title);
+                MusicTrackInfo.Artist = (artist == null ? "Unknown artist" : artist.Name);
                 MusicTrackInfo.ImageURL = imageUrl;
                 MusicTrackInfo.Title = track.Title; 
 

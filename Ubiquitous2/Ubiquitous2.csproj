@@ -141,6 +141,7 @@
     <Compile Include="Controls\SmoothPanel\SmoothPanelViewCache.cs" />
     <Compile Include="Converter\BoolToScrollBarVisibility.cs" />
     <Compile Include="Converter\ChatMessageToTextBlock.cs" />
+    <Compile Include="Converter\StringToIsChecked.cs" />
     <Compile Include="Design\DesignDataService.cs" />
     <Compile Include="Design\DesignSettingsDataService.cs" />
     <Compile Include="Design\DesignImageCacheDataService.cs" />
@@ -160,6 +161,7 @@
     <Compile Include="Interactivity\WindowBorder.cs" />
     <Compile Include="Interactivity\WindowResizeBehavior.cs" />
     <Compile Include="Interactivity\WindowResizer.cs" />
+    <Compile Include="Model\AppConfig.cs" />
     <Compile Include="Model\ChatBase.cs" />
     <Compile Include="Model\GamingLiveChat.cs" />
     <Compile Include="Model\GeneralDataService.cs" />
@@ -309,6 +311,7 @@
     <Compile Include="Utils\Image.cs" />
     <Compile Include="Utils\Json.cs" />
     <Compile Include="Utils\Net.cs" />
+    <Compile Include="Utils\Theme.cs" />
     <Compile Include="Utils\Time.cs" />
     <Compile Include="Utils\UI.cs" />
     <Compile Include="Utils\Window.cs" />
@@ -514,7 +517,13 @@
     <Resource Include="Resources\hitbox.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Resource>
-    <Content Include="web\css\ubiquitous.css">
+    <Resource Include="Resources\ubiheadset.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+    <Content Include="web\css\simple.css">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="web\css\main.css">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="web\drop-shadow.svg">
