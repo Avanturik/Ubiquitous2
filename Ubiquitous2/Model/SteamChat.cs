@@ -236,7 +236,7 @@ namespace UB.Model
         {
             messageFormatString = String.IsNullOrWhiteSpace(messageFormatString) ? message.FormatString : messageFormatString;
             message.FormatString = messageFormatString;
-            foreach( var friend in friends)
+            foreach( var friend in friends.ToList())
             {
                 if (whiteList.Count > 0 && !whiteList.Contains(friend.Value.nickname))
                     continue;

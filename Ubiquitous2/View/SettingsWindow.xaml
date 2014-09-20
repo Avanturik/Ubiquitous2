@@ -17,7 +17,9 @@
         UseLayoutRounding="True"
         Topmost="True"
         Title="SettingsWindow" Icon="..\ubiquitous smile.ico" MinWidth="400" Width="426" Height="339" WindowStartupLocation="Manual">
-
+    <i:Interaction.Behaviors>
+        <Interactivity:WindowPersistentLocationBehavior WindowName="SettingsWindow"/>
+    </i:Interaction.Behaviors>
     <Window.DataContext>
         <Binding Path="Settings" Source="{StaticResource Locator}"/>
     </Window.DataContext>
