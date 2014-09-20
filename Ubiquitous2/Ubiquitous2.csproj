@@ -289,6 +289,8 @@
     <Compile Include="Model\IRC\IRCLoginInfo.cs" />
     <Compile Include="Model\ISettingsDataService.cs" />
     <Compile Include="Model\LoginInfoBase.cs" />
+    <Compile Include="Model\SteamChat.cs" />
+    <Compile Include="Model\Steam\SteamApi.cs" />
     <Compile Include="Model\ToolTip.cs" />
     <Compile Include="Model\WebClientBase.cs">
       <SubType>Component</SubType>
@@ -319,6 +321,7 @@
     <Compile Include="ViewModel\MusicTickerViewModel.cs" />
     <Compile Include="ViewModel\SettingsSectionViewModel.cs" />
     <Compile Include="ViewModel\StatusViewModel.cs" />
+    <Compile Include="ViewModel\SteamGuardViewModel.cs" />
     <Compile Include="View\ChatStatusItemView.xaml.cs">
       <DependentUpon>ChatStatusItemView.xaml</DependentUpon>
     </Compile>
@@ -352,6 +355,9 @@
     </Compile>
     <Compile Include="View\StatusWindow.xaml.cs">
       <DependentUpon>StatusWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\SteamGuardWindow.xaml.cs">
+      <DependentUpon>SteamGuardWindow.xaml</DependentUpon>
     </Compile>
     <Page Include="Controls\ResizableBorder.xaml">
       <SubType>Designer</SubType>
@@ -465,6 +471,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="View\SteamGuardWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs">
@@ -518,6 +528,9 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Resource>
     <Resource Include="Resources\ubiheadset.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resources\steam.ico">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Resource>
     <Content Include="web\css\simple.css">

@@ -15,6 +15,7 @@ namespace UB.Model
         public static string ChatTitleEventTwitch = "Twitch.tv(event)";
         public static string ChatTitleGamingLive = "Gaminglive.tv";
         public static string ChatTitleHitBox = "Hitbox.tv";
+        public static string ChatTitleSteam = "Steam";
 
         //Service titles
         public static string ServiceTitleMusicTicker = "Music ticker";
@@ -122,6 +123,23 @@ namespace UB.Model
                             new ConfigField("Info2", "Channels is comma separated list. Hashtag is optional. e.g: #xedoc, ipsum, #lorem", "Info", true, null),
                         }
                     },
+                    //Steam
+                    new ChatConfig()
+                    {
+                        ChatName = ChatTitleSteam,
+                        IconURL = Icons.SteamIcon,
+                        Enabled = false,
+                        Parameters = new List<ConfigField>() {
+                            new ConfigField("InfoTop", "Chat in fullscreen mode via Steam overlay", "Info", true, null),
+                            new ConfigField() {  Name = "Username", Label = "Bot username", DataType = "Text", IsVisible = true, Value = "UnknownSoldier" },
+                            new ConfigField() {  Name = "Password", Label = "Bot password", DataType = "Password", IsVisible = true, Value = String.Empty },
+                            new ConfigField() {  Name = "AdminNickName", Label = "Main acc nickname", DataType = "Text", IsVisible = true, Value = String.Empty },
+                            new ConfigField() {  Name = "AuthToken", Label = "AuthToken", DataType = "Text", IsVisible = false, Value = String.Empty },
+                            new ConfigField("Info1", "Create additional Steam account for bot and add you main account to his friends ", "Info", true, null),
+                            new ConfigField("Info2", "Please pay attention that nickname and username could be different", "Info", true, null),
+                            new ConfigField("Info3", "If Steam Guard window will popup - enter a code from email", "Info", true, null),
+                        }
+                    },
                 };
             }
         }
@@ -199,6 +217,15 @@ namespace UB.Model
                                                 {
                                                     ChatName = ChatTitleHitBox,
                                                     IconURL = Icons.HitboxIcon,
+                                                };
+                                             }},
+            //Steam
+            {ChatTitleSteam, (config)=>
+                                            {
+                                                return new SteamChat(config)
+                                                {
+                                                    ChatName = ChatTitleSteam,
+                                                    IconURL = Icons.SteamIcon,
                                                 };
                                              }},
 

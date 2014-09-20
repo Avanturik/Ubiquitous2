@@ -11,7 +11,7 @@ namespace UB.Model
 {
     [Serializable]
     [XmlRoot(ElementName="ChatConfig")]
-    public class ChatConfig
+    public class ChatConfig : NotifyPropertyChangeBase
     {
         [XmlAttribute]
         public String ChatName { get; set; }
@@ -19,6 +19,37 @@ namespace UB.Model
         public String IconURL { get; set; }
         [XmlAttribute]
         public bool Enabled { get; set; }
+        [XmlAttribute]
+        /// <summary>
+        /// The <see cref="HideViewersCounter" /> property's name.
+        /// </summary>
+        public const string HideViewersCounterPropertyName = "HideViewersCounter";
+
+        private bool _hideViewersCounter = false;
+
+        /// <summary>
+        /// Sets and gets the HideViewersCounter property.
+        /// Changes to that property's value raise the PropertyChanged event. 
+        /// </summary>
+        public bool HideViewersCounter
+        {
+            get
+            {
+                return _hideViewersCounter;
+            }
+
+            set
+            {
+                if (_hideViewersCounter == value)
+                {
+                    return;
+                }
+
+                RaisePropertyChanging(HideViewersCounterPropertyName);
+                _hideViewersCounter = value;
+                RaisePropertyChanged(HideViewersCounterPropertyName);
+            }
+        }
         [XmlArray]
         public List<ConfigField> Parameters { get; set; }
 
@@ -62,6 +93,7 @@ namespace UB.Model
                 ChatName = this.ChatName,
                 Enabled = this.Enabled,
                 IconURL = this.IconURL,
+                HideViewersCounter = this.HideViewersCounter,
                 Parameters = new List<ConfigField>()
             };
             foreach( var param in this.Parameters.ToList() )

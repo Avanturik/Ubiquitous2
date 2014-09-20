@@ -45,6 +45,7 @@ namespace UB.ViewModel
                 SimpleIoc.Default.Register<IChatDataService, ChatDataService>();
                 SimpleIoc.Default.Register<IImageDataSource, ImageCacheDataService>();
             }
+            SimpleIoc.Default.Register<SteamGuardViewModel>();
             SimpleIoc.Default.Register<GeneralDataService>();
             //SimpleIoc.Default.Register<LastFMService>();
             SimpleIoc.Default.Register<MusicTickerViewModel>();
@@ -173,6 +174,18 @@ namespace UB.ViewModel
                 return ServiceLocator.Current.GetInstance<MusicTickerViewModel>();
             }
         }
+
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance",
+    "CA1822:MarkMembersAsStatic",
+    Justification = "This non-static member is needed for data binding purposes.")]
+        public SteamGuardViewModel SteamGuard
+        {
+            get
+            {
+                return ServiceLocator.Current.GetInstance<SteamGuardViewModel>();
+            }
+        }
+
 
 
     }

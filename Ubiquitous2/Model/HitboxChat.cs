@@ -483,6 +483,27 @@ namespace UB.Model
             }
         }
 
+
+
+        public Func<string, object> RequestData
+        {
+            get
+            {
+                throw new NotImplementedException();
+            }
+            set
+            {
+                throw new NotImplementedException();
+            }
+        }
+
+
+        public bool HideViewersCounter
+        {
+            get;
+            set;
+
+        }
     }
 
     public class HitboxChannel

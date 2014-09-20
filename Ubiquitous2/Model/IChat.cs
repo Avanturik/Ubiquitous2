@@ -12,6 +12,7 @@ namespace UB.Model
         String ChatName { get; set; }
         String IconURL { get; set; }
         string NickName { get; set; }
+        bool HideViewersCounter { get; set; }
         
         bool Enabled { get; set; }
         bool Start();
@@ -23,11 +24,14 @@ namespace UB.Model
         List<string> ChatChannels { get; set; }
         Action<string, IChat> AddChannel { get; set; }
         Action<string, IChat> RemoveChannel { get; set; }
+        Func<string, object> RequestData { get; set; }
 
         List<Action<ChatMessage, IChat>> ContentParsers {get;set;}
         List<Emoticon> Emoticons { get; set; }
         void DownloadEmoticons(String url);
         ChatConfig Config {get;set;}
         StatusBase Status { get; set; }        
+
+
     }
 }

@@ -29,6 +29,7 @@ namespace UB.ViewModel
         private readonly GeneralDataService _generalDataService;
         private StatusWindow statusWindow = new StatusWindow();
         private MusicTickerWindow musicWindow;
+        private SteamGuardWindow steamGuardWindow;
         /// <summary>
         /// Initializes a new instance of the MainViewModel class.
         /// </summary>
@@ -58,6 +59,19 @@ namespace UB.ViewModel
                     channel.ChannelName == message.Channel) ?? ChannelList[0];
 
             });
+
+            var steamChat = _dataService.GetChat(SettingsRegistry.ChatTitleSteam);
+            if( steamChat != null )
+            {
+                steamChat.RequestData = (what) => {
+                    if (what.Equals("SteamGuardCode", StringComparison.InvariantCultureIgnoreCase))
+                    {
+                        steamGuardWindow = new SteamGuardWindow();
+                        steamGuardWindow.ShowDialog();
+                    }
+                    return null;
+                };
+            }
         }
         private RelayCommand _changeState;
 

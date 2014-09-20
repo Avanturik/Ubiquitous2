@@ -36,6 +36,9 @@ namespace UB.Utils
                     var index = i;
                     portTestTasks[i] = Task.Factory.StartNew(() =>
                     {
+                        if (index >= hosts.AddressList.Count())
+                            return;
+
                         var host = hosts.AddressList[index];
                         hosts.AddressList[index] = null;
                         Socket sock = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
