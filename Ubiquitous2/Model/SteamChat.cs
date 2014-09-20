@@ -13,6 +13,7 @@ namespace UB.Model
     {
         CancellationTokenSource cts = new CancellationTokenSource();
         CancellationToken ct;
+        private Dictionary<string,string> nickNames = new Dictionary<string,string>();
         private string mainAccountId = null;
 
         public SteamChat( ChatConfig config) : base()
@@ -53,35 +54,31 @@ namespace UB.Model
 
         void SteamChat_NewMessage(object sender, SteamAPISession.SteamEvent e)
         {
-            if( MessageReceived != null )
+            if( MessageReceived != null && e.update != null && e.update.origin != null )
             {
-                if (String.IsNullOrWhiteSpace(e.update.nick))
+                if( !nickNames.ContainsKey(e.update.origin))
                 {
-                    if( String.IsNullOrWhiteSpace(mainAccountId) )
-                    {
-                        SteamAPISession.User ui = GetUserInfo(e.update.origin);
-                        e.update.nick = ui.nickname;
-                        if( e.update.nick.Equals(NickName,StringComparison.InvariantCultureIgnoreCase))
-                        {
-                            mainAccountId = e.update.origin;
-                        }
-                    }
+                    SteamAPISession.User ui = GetUserInfo(e.update.origin);
+                    nickNames.Add(e.update.origin, ui.nickname);
                 }
-                //TODO implement list of allowed nicknames
-                if( e.update.origin.Equals(mainAccountId))
+
+                var nickname = nickNames[e.update.origin];
+                if( !String.IsNullOrWhiteSpace(nickname) )
+                {
                     MessageReceived(this, new ChatServiceEventArgs()
                     {
                         Message = new ChatMessage()
                         {
-                            Channel = "#" + e.update.nick,
+                            Channel = "#" + nickname,
                             ChatIconURL = this.IconURL,
                             ChatName = this.ChatName,
-                            FromUserName = e.update.nick,
+                            FromUserName = nickname,
                             HighlyImportant = false,
-                            IsSentByMe = e.update.nick.Equals(NickName, StringComparison.InvariantCultureIgnoreCase),
-                            Text = e.update.message,                       
+                            IsSentByMe = true,
+                            Text = e.update.message,
                         }
-                    });
+                    });                
+                }
             }
         }
 
@@ -185,9 +182,6 @@ namespace UB.Model
                 return true;
             }
             Status.IsStarting = true;
-
-            NickName = Config.GetParameterValue("AdminNickName") as string;
-
             if (Login())
             {
                 Status.IsConnecting = true;
@@ -205,6 +199,8 @@ namespace UB.Model
             if (ct != null)
                 cts.Cancel();
 
+            nickNames.Clear();
+
             if (Status.IsStopping)
                 return false;
 
@@ -221,6 +217,7 @@ namespace UB.Model
 
         public bool SendMessage(ChatMessage message)
         {
+
             return false;
         }
 

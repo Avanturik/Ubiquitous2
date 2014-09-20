@@ -77,6 +77,9 @@ namespace UB.Model
         public object GetParameterValue(string name)
         {
             var searchParameter = Parameters.FirstOrDefault(parameter => parameter.Name.Equals(name, StringComparison.InvariantCultureIgnoreCase));
+            if (searchParameter == null)
+                return null;
+
             return searchParameter.Value;
         }
         public void SetParameterValue(string name, object value)
