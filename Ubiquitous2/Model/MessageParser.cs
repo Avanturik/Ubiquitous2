@@ -11,6 +11,17 @@ namespace UB.Model
 {
     public class MessageParser
     {
+        public static string HtmlToPlainText( string message)
+        {
+            string result = message;
+            result = Regex.Replace(result, @"<img.*src=""(.*?)"".*?\/>", "$1");
+            result = Regex.Replace(result, @"<a[^>]*>(.*?)<\/a>", "$1");
+            result = Regex.Replace(result, @"<a.*href=""(.*?)"".*>", "$1");
+            result = Regex.Replace(result, @"<http.*?>", "$1");
+            result = Regex.Replace(result, @"<[^>]*>", "");
+
+            return result;
+        }
         public static void RemoveRedundantTags( ChatMessage message, IChat chat)
         {
             string regex = @"</*(div|iframe)[^>]*>";

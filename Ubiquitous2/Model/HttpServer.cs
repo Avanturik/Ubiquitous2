@@ -239,7 +239,7 @@ namespace UB.Model
         }
         public void StartHttpServer(ServiceConfig config)
         {
-            var textPort = (string)config.GetParameterValue("Port");
+            var textPort = config.GetParameterValue("Port") as string;
 
             int.TryParse( textPort, out this.port);
             

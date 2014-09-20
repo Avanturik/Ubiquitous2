@@ -14,7 +14,11 @@ namespace UB.ViewModel
     {
 
         private RelayCommand<Window> _cancelCommand;
-
+        private SteamChat steamChat;
+        public SteamGuardViewModel( IChatDataService dataService)
+        {
+            steamChat = (SteamChat)dataService.Chats.FirstOrDefault(chat => chat.ChatName.Equals(SettingsRegistry.ChatTitleSteam));
+        }
         /// <summary>
         /// Gets the CancelCommand.
         /// </summary>
@@ -24,7 +28,10 @@ namespace UB.ViewModel
             {
                 return _cancelCommand
                     ?? (_cancelCommand = new RelayCommand<Window>((window) => {
-                        Code = String.Empty;
+
+                        if (steamChat != null)
+                            steamChat.SteamGuardKey = "Cancel";
+
                         window.Close();
                     }));
             }
@@ -46,11 +53,8 @@ namespace UB.ViewModel
                     {
                         if (!String.IsNullOrWhiteSpace(Code))
                         {
-                            var steamChatConfig = Ubiquitous.Default.Config.ChatConfigs.FirstOrDefault(chat => chat.ChatName == SettingsRegistry.ChatTitleSteam);
-                            if (steamChatConfig != null)
-                            {
-                                steamChatConfig.SetParameterValue("AuthToken", Code);
-                            }
+                            if (steamChat != null)
+                                steamChat.SteamGuardKey = Code;
 
                             window.Close();
                         }

@@ -14,6 +14,7 @@ using UB.Utils;
 using UB.View;
 using System.Windows;
 using System.Web;
+using System.Threading.Tasks;
 
 namespace UB.ViewModel
 {
@@ -38,6 +39,7 @@ namespace UB.ViewModel
         {
             _dataService = dataService;
             _generalDataService = generalDataService;
+            steamGuardWindow = new SteamGuardWindow();
             Initialize();
         }
         public void Initialize()
@@ -66,8 +68,11 @@ namespace UB.ViewModel
                 steamChat.RequestData = (what) => {
                     if (what.Equals("SteamGuardCode", StringComparison.InvariantCultureIgnoreCase))
                     {
-                        steamGuardWindow = new SteamGuardWindow();
-                        steamGuardWindow.ShowDialog();
+                        UI.Dispatch( () =>
+                        {
+                                var steamGuardWindow = new SteamGuardWindow();
+                                steamGuardWindow.Show();
+                        });
                     }
                     return null;
                 };

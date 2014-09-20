@@ -208,7 +208,7 @@ namespace UB.Model
 
         public bool LoginWithToken()
         {
-            var authToken = (string)Config.GetParameterValue("AuthToken");
+            var authToken = Config.GetParameterValue("AuthToken") as string;
             var userName = Config.GetParameterValue("Username") as string;
            
             if (String.IsNullOrWhiteSpace(authToken) || String.IsNullOrWhiteSpace(userName))

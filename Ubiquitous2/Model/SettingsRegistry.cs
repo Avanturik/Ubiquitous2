@@ -133,9 +133,14 @@ namespace UB.Model
                             new ConfigField("InfoTop", "Chat in fullscreen mode via Steam overlay", "Info", true, null),
                             new ConfigField() {  Name = "Username", Label = "Bot username", DataType = "Text", IsVisible = true, Value = "UnknownSoldier" },
                             new ConfigField() {  Name = "Password", Label = "Bot password", DataType = "Password", IsVisible = true, Value = String.Empty },
+                            new ConfigField() {  Name = "Whitelist", Label = "Whiltelist", DataType = "Text", IsVisible = true, Value = String.Empty },
+                            new ConfigField("Info0", "Whitelist - comma separated nicknames list. Bot will redirect messages to all his friends if you leave it empty", "Info", true, null),
+                            new ConfigField() {  Name = "MessageFormat", Label = "Message format", DataType = "Text", IsVisible = true, Value = "%from@%chatname: %text" },
+                            new ConfigField("Info4", "Message format variables: %text - text, %from - from name, %to - to name, %chatname - chat name %time - timestamp", "Info", true, null),
                             new ConfigField() {  Name = "AuthToken", Label = "AuthToken", DataType = "Text", IsVisible = false, Value = String.Empty },
-                            new ConfigField("Info1", "Create additional Steam account for bot and add you main account to his friends ", "Info", true, null),
+                            new ConfigField("Info1", "Usage: create additional Steam account for bot and add you main account to his friends ", "Info", true, null),
                             new ConfigField("Info3", "If Steam Guard window will popup - enter a code from email", "Info", true, null),
+
                         }
                     },
                 };

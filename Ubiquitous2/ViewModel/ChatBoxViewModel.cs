@@ -8,6 +8,7 @@ using System.Linq;
 using UB.Model;
 using UB.Utils;
 using UB.Properties;
+using System.Threading.Tasks;
 
 namespace UB.ViewModel
 {
@@ -21,6 +22,7 @@ namespace UB.ViewModel
     {
         public event EventHandler<EventArgs> MessageAdded;
         public event EventHandler<EventArgs> MessageSent;
+        private object lockReadMessages = new object();
         IChatDataService _dataService;
         GeneralDataService _generalDataService;
         /// <summary>
@@ -73,7 +75,11 @@ namespace UB.ViewModel
             });
 
             _dataService.ReadMessages((messages,error) => {
-                AddMessages(messages);
+                lock(lockReadMessages)
+                {
+                    AddMessages(messages);
+                }
+
             });
 
             if (_generalDataService.Services == null)

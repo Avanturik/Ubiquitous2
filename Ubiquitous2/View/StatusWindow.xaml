@@ -46,7 +46,7 @@
                                 <Style>
                                     <Style.Triggers>
                                         <DataTrigger Binding="{Binding HideViewersCounter}" Value="True">
-                                            <Setter Property="Grid.Visibility" Value="Hidden"/>
+                                            <Setter Property="Grid.Visibility" Value="Collapsed"/>
                                         </DataTrigger>
                                     </Style.Triggers>
                                 </Style>

@@ -23,6 +23,7 @@ namespace UB.Model
         private Action<ChatMessage[], Exception> readChatCallback;
         private List<ChatConfig> chatConfigs;
         private List<IChat> chats;
+        private SteamChat steamChat;
         //Disposable
         private Timer receiveTimer;
 
@@ -130,6 +131,7 @@ namespace UB.Model
         }
         public void StartAllChats()
         {
+            steamChat = (SteamChat)GetChat(SettingsRegistry.ChatTitleSteam);
             //Accumulate messages and update ViewModel periodically
             receiveTimer = new Timer((obj) =>
             {
@@ -137,7 +139,14 @@ namespace UB.Model
                 {
                     lock (messageQueueLock)
                     {
+                        var messageList = messageQueue.ToList();
                         readChatCallback(messageQueue.ToArray(), null);
+                        Task.Factory.StartNew(() =>
+                        {
+                            if (steamChat != null && steamChat.Enabled)
+                                messageList.ForEach(message => steamChat.SendMessage(message));
+                        });
+
                         messageQueue.Clear();
                     }
                 }

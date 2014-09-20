@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using UB.SteamApi;
 using UB.Properties;
 using System.Threading;
+using UB.Utils;
 
 namespace UB.Model
 {
@@ -13,9 +14,9 @@ namespace UB.Model
     {
         CancellationTokenSource cts = new CancellationTokenSource();
         CancellationToken ct;
-        private Dictionary<string,string> nickNames = new Dictionary<string,string>();
-        private string mainAccountId = null;
-
+        private Dictionary<string,User> friends = new Dictionary<string,User>();
+        private string messageFormatString;
+        private HashSet<string> whiteList;
         public SteamChat( ChatConfig config) : base()
         {
             Config = config;
@@ -33,6 +34,13 @@ namespace UB.Model
 
             Enabled = Config.Enabled;
             HideViewersCounter = true;
+
+            whiteList = new HashSet<string>();
+            foreach( var nick in Config.Parameters.StringArrayValue("Whitelist").Select(chan => chan.ToLower()).ToList())
+            {
+                whiteList.Add(nick);
+            }
+            messageFormatString = config.GetParameterValue("MessageFormat") as string;
         }
 
         #region SteamAPI events
@@ -49,20 +57,24 @@ namespace UB.Model
 
         void SteamChat_FriendStateChange(object sender, SteamAPISession.SteamEvent e)
         {
+            AddFriendToCache(e.update.origin);
             Log.WriteInfo("Steam user status changed {0}", e.update.nick);
         }
-
+        void AddFriendToCache( string origin )
+        {
+            if (!friends.ContainsKey(origin))
+            {
+                User friend = GetUserInfo(origin);
+                friends.Add(origin, friend);
+            }
+        }
         void SteamChat_NewMessage(object sender, SteamAPISession.SteamEvent e)
         {
             if( MessageReceived != null && e.update != null && e.update.origin != null )
             {
-                if( !nickNames.ContainsKey(e.update.origin))
-                {
-                    SteamAPISession.User ui = GetUserInfo(e.update.origin);
-                    nickNames.Add(e.update.origin, ui.nickname);
-                }
+                AddFriendToCache(e.update.origin);
 
-                var nickname = nickNames[e.update.origin];
+                var nickname = friends[e.update.origin].nickname;
                 if( !String.IsNullOrWhiteSpace(nickname) )
                 {
                     MessageReceived(this, new ChatServiceEventArgs()
@@ -85,6 +97,11 @@ namespace UB.Model
         void SteamChat_Logon(object sender, SteamAPISession.SteamEvent e)
         {
             Log.WriteInfo("Steam logged in");
+            var friendList = GetFriends();
+            foreach( var friend in friendList )
+            {
+                AddFriendToCache(friend.steamid);
+            }
             Status.IsLoggedIn = true;
         }
         #endregion
@@ -199,7 +216,7 @@ namespace UB.Model
             if (ct != null)
                 cts.Cancel();
 
-            nickNames.Clear();
+            friends.Clear();
 
             if (Status.IsStopping)
                 return false;
@@ -217,7 +234,15 @@ namespace UB.Model
 
         public bool SendMessage(ChatMessage message)
         {
-
+            messageFormatString = String.IsNullOrWhiteSpace(messageFormatString) ? message.FormatString : messageFormatString;
+            message.FormatString = messageFormatString;
+            foreach( var friend in friends)
+            {
+                if (whiteList.Count > 0 && !whiteList.Contains(friend.Value.nickname))
+                    continue;
+                
+                base.SendMessage(friend.Value, MessageParser.HtmlToPlainText( message.FormattedText));
+            }
             return false;
         }
 

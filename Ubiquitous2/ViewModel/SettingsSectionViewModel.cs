@@ -87,7 +87,7 @@ namespace UB.ViewModel
         {
             get
             {
-                return SettingsFields.Count * 30 + 20;
+                return SettingsFields.Count * 30 + 30;
             }
 
             set

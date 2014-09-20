@@ -12,6 +12,8 @@ using System.Security.Cryptography;
 using System.Security.Cryptography.X509Certificates;
 using System.Net.Security;
 using System.Diagnostics;
+using System.Threading;
+using UB.Model;
 
 namespace UB.SteamApi
 {
@@ -25,6 +27,7 @@ namespace UB.SteamApi
         private String umqid;
         private String steamid;
         private int message = 0;
+        private object loginLock = new object();
         public LoginStatus loginStatus = LoginStatus.LoginFailed;
         public event EventHandler<SteamEvent> Logon;
         public event EventHandler<SteamEvent> NewMessage;
@@ -261,103 +264,107 @@ namespace UB.SteamApi
         }
         public String RSALogin(string username, string password)
         {
-            var data = new NameValueCollection();
-            data.Add("username", username);
-
-            String response = Fetch("https://steamcommunity.com/login/getrsakey", "POST", data, null, false);
-
-            JObject json = JObject.Parse(response);
-            //GetRsaKey rsaJSON = JsonConvert.DeserializeObject<GetRsaKey>(response);
-
-
-            // Validate
-            if ((bool)json["success"] != true)
+            Log.WriteInfo("RSALogin called");
+            lock(loginLock)
             {
-                return null;
-            }
-
-            //RSA Encryption
-            RSACryptoServiceProvider rsa = new RSACryptoServiceProvider();
-            RSAParameters rsaParameters = new RSAParameters();
-
-            rsaParameters.Exponent = HexToByte((String)json["publickey_exp"]);
-            rsaParameters.Modulus = HexToByte((String)json["publickey_mod"] );
-
-            rsa.ImportParameters(rsaParameters);
-
-            byte[] bytePassword = Encoding.ASCII.GetBytes(password);
-            byte[] encodedPassword = rsa.Encrypt(bytePassword, false);
-            string encryptedBase64Password = Convert.ToBase64String(encodedPassword);
-
-            JToken token = null;
-            JObject loginJson = null;
-            //CookieCollection cookies;
-            string steamGuardText = "";
-            string steamGuardId = "";
-            do
-            {
-                Debug.Print("SteamWeb: Logging In...");
-                
-                bool steamGuard = loginJson != null && (bool)loginJson["emailauth_needed"] == true;
-
-                string time = (String)json["timestamp"];
-
-                data = new NameValueCollection();
-                data.Add("password", encryptedBase64Password);
+                var data = new NameValueCollection();
                 data.Add("username", username);
 
-                data.Add("captcha_gid", "");
-                data.Add("captcha_text", "");
-                // Captcha end
+                String response = Fetch("https://steamcommunity.com/login/getrsakey", "POST", data, null, false);
 
-                // SteamGuard
-                if (steamGuard)
+                JObject json = JObject.Parse(response);
+                //GetRsaKey rsaJSON = JsonConvert.DeserializeObject<GetRsaKey>(response);
+
+
+                // Validate
+                if ((bool)json["success"] != true)
                 {
-                    OnSteamGuard(new SteamEvent());
-                    if (!String.IsNullOrEmpty(SteamGuardKey))
+                    return null;
+                }
+
+                //RSA Encryption
+                RSACryptoServiceProvider rsa = new RSACryptoServiceProvider();
+                RSAParameters rsaParameters = new RSAParameters();
+
+                rsaParameters.Exponent = HexToByte((String)json["publickey_exp"]);
+                rsaParameters.Modulus = HexToByte((String)json["publickey_mod"]);
+
+                rsa.ImportParameters(rsaParameters);
+
+                byte[] bytePassword = Encoding.ASCII.GetBytes(password);
+                byte[] encodedPassword = rsa.Encrypt(bytePassword, false);
+                string encryptedBase64Password = Convert.ToBase64String(encodedPassword);
+
+                JToken token = null;
+                JObject loginJson = null;
+                //CookieCollection cookies;
+                string steamGuardText = "";
+                string steamGuardId = "";
+                do
+                {
+                    Debug.Print("SteamWeb: Logging In...");
+
+                    bool steamGuard = loginJson != null && (bool)loginJson["emailauth_needed"] == true;
+
+                    string time = (String)json["timestamp"];
+
+                    data = new NameValueCollection();
+                    data.Add("password", encryptedBase64Password);
+                    data.Add("username", username);
+
+                    data.Add("captcha_gid", "");
+                    data.Add("captcha_text", "");
+                    // Captcha end
+
+                    // SteamGuard
+                    if (steamGuard  )
                     {
+                        OnSteamGuard(new SteamEvent());
+                        while( String.IsNullOrWhiteSpace(SteamGuardKey))
+                        {
+                            if (SteamGuardKey.Equals("Cancel"))
+                                return null;
+
+                            Thread.Sleep(16);
+                        }
                         steamGuardText = Uri.EscapeDataString(SteamGuardKey);
                         steamGuardId = (String)loginJson["emailsteamid"];
                     }
-                    else
-                    {
-                        continue;
-                    }
+                    data.Add("emailauth", steamGuardText);
+                    data.Add("emailsteamid", steamGuardId);
+                    // SteamGuard end
+
+                    data.Add("oauth_client_id", "DE45CD61");
+                    data.Add("oauth_scope", "read_profile write_profile read_client write_client");
+
+                    data.Add("rsatimestamp", time);
+
+                    HttpWebResponse webResponse = Request("https://steamcommunity.com/mobilelogin/dologin/", "POST", data, null, false);
+
+                    StreamReader reader = new StreamReader(webResponse.GetResponseStream());
+                    string response2 = reader.ReadToEnd();
+
+                    token = JToken.Parse(response2);
+
+                    if (!String.IsNullOrEmpty(response2))
+                        loginJson = JObject.Parse(response2);
+
+                    //cookies = webResponse.Cookies;
+
+                    if (loginJson == null)
+                        break;
+
+
+                } while (loginJson["emailauth_needed"] != null && (bool)loginJson["emailauth_needed"] == true);
+
+                if (loginJson["oauth"] != null)
+                {
+                    JObject oauth = JObject.Parse((String)loginJson["oauth"]);
+                    Token = (String)oauth["oauth_token"];
                 }
+                return Token;
 
-                data.Add("emailauth", steamGuardText);
-                data.Add("emailsteamid", steamGuardId);                             
-                // SteamGuard end
-
-                data.Add("oauth_client_id", "DE45CD61");
-                data.Add("oauth_scope", "read_profile write_profile read_client write_client");
-
-                data.Add("rsatimestamp", time);
-
-                HttpWebResponse webResponse = Request("https://steamcommunity.com/mobilelogin/dologin/", "POST", data, null, false);
-
-                StreamReader reader = new StreamReader(webResponse.GetResponseStream());
-                string response2 = reader.ReadToEnd();
-
-                token = JToken.Parse(response2);
-
-                if (!String.IsNullOrEmpty(response2))
-                    loginJson = JObject.Parse(response2);
-
-                //cookies = webResponse.Cookies;
-
-                if (loginJson == null)
-                    break;
-
-                
-            } while ( loginJson["emailauth_needed"] != null && (bool)loginJson["emailauth_needed"] == true);
-
-            if( loginJson["oauth"] != null )
-            {
-                JObject oauth = JObject.Parse((String)loginJson["oauth"]);
-                Token = (String)oauth["oauth_token"];
             }
-            return Token;
 
         }
         public String Token

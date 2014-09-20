@@ -67,14 +67,16 @@ namespace UB.Model
                     }
                     else
                     {
-                        //Remove unused and add new settings
-                        savedConfig.Parameters.RemoveAll(item => !serviceConfig.Parameters.Any(s => s.Name == item.Name && s.DataType == item.DataType));
-
-                        serviceConfig.Parameters.ForEach(item =>
+                        var backupParameters = savedConfig.Parameters.ToList();
+                        savedConfig.Parameters.Clear();
+                        foreach( var parameter in serviceConfig.Parameters.ToList() )
                         {
-                            if (!savedConfig.Parameters.Any(s => s.Name == item.Name))
-                                savedConfig.Parameters.Add(item);
-                        });
+                            if( backupParameters.Any( p => p.Name.Equals(parameter.Name,StringComparison.InvariantCulture)))
+                            {
+                                parameter.Value = backupParameters.FirstOrDefault(p => p.Name.Equals(parameter.Name, StringComparison.InvariantCulture)).Value;
+                            }
+                            savedConfig.Parameters.Add(parameter);
+                        }
                     }
                 }
 
@@ -99,14 +101,16 @@ namespace UB.Model
                     }
                     else
                     {
-                        //Remove unused and add new settings
-                        savedConfig.Parameters.RemoveAll(item => !chatConfig.Parameters.Any(s => s.Name == item.Name && s.DataType == item.DataType ));
-
-                        chatConfig.Parameters.ForEach(item =>
+                        var backupParameters = savedConfig.Parameters.ToList();
+                        savedConfig.Parameters.Clear();
+                        foreach (var parameter in chatConfig.Parameters.ToList())
                         {
-                            if( !savedConfig.Parameters.Any( s => s.Name == item.Name ))
-                                savedConfig.Parameters.Add(item);
-                        });
+                            if (backupParameters.Any(p => p.Name.Equals(parameter.Name, StringComparison.InvariantCulture)))
+                            {
+                                parameter.Value = backupParameters.FirstOrDefault(p => p.Name.Equals(parameter.Name, StringComparison.InvariantCulture)).Value;
+                            }
+                            savedConfig.Parameters.Add(parameter);
+                        }
                     }
                 }
 
