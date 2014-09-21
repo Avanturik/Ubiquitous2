@@ -15,13 +15,13 @@ namespace UB.ViewModel
     /// </summary>
     public class MusicTickerViewModel : ViewModelBase
     {
-        private GeneralDataService _dataService;
+        private IGeneralDataService _dataService;
         private IService _lastFmService;
         /// <summary>
         /// Initializes a new instance of the MusicTickerViewModel class.
         /// </summary>
         [PreferredConstructor]
-        public MusicTickerViewModel( GeneralDataService dataService)
+        public MusicTickerViewModel( IGeneralDataService dataService)
         {
             _dataService = dataService;
             initialize();

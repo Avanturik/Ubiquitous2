@@ -25,7 +25,7 @@ namespace UB.ViewModel
     {
         private ISettingsDataService settingsDataService;
         [PreferredConstructor]
-        public SettingsViewModel(SettingsDataService dataService, GeneralDataService generalDataService)
+        public SettingsViewModel(SettingsDataService dataService, IGeneralDataService generalDataService)
         {
             settingsDataService = dataService;
             CurrentTheme = Ubiquitous.Default.Config.AppConfig.ThemeName;

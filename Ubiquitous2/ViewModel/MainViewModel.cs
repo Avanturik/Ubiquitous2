@@ -27,7 +27,7 @@ namespace UB.ViewModel
     public class MainViewModel : ViewModelBase
     {
         private readonly IChatDataService _dataService;
-        private readonly GeneralDataService _generalDataService;
+        private readonly IGeneralDataService _generalDataService;
         private StatusWindow statusWindow = new StatusWindow();
         private MusicTickerWindow musicWindow;
         private SteamGuardWindow steamGuardWindow;
@@ -35,7 +35,7 @@ namespace UB.ViewModel
         /// Initializes a new instance of the MainViewModel class.
         /// </summary>
         [PreferredConstructor]
-        public MainViewModel(IChatDataService dataService, GeneralDataService generalDataService)
+        public MainViewModel(IChatDataService dataService, IGeneralDataService generalDataService)
         {
             _dataService = dataService;
             _generalDataService = generalDataService;
