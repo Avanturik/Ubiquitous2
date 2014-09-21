@@ -7,9 +7,9 @@
     <sys:Double x:Key="{x:Static SystemParameters.VerticalScrollBarThumbHeightKey}">12</sys:Double>
     <sys:Double x:Key="{x:Static SystemParameters.VerticalScrollBarButtonHeightKey}">100</sys:Double>
 
-    <SolidColorBrush x:Key="ScrollBarColor" Color="#FF787878"/>
+    <SolidColorBrush x:Key="ScrollBarColor" Color="#FF464646"/>
     <SolidColorBrush x:Key="RBMouseOverColor" Color="#FFA0A0A0"/>
-    <SolidColorBrush x:Key="RBNormalColor" Color="#FF787878"/>
+    <SolidColorBrush x:Key="RBNormalColor" Color="#FF474747"/>
 
     <Style x:Key="ScrollBarLineButtonStyle" TargetType="{x:Type RepeatButton}">
         <Setter Property="OverridesDefaultStyle" Value="True"/>
