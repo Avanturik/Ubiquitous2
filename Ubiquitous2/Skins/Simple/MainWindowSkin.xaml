@@ -19,7 +19,7 @@
                 <Setter Property="Opacity" Value="1"/>
             </Trigger>
             <Trigger Property="IsMouseOver" Value="False">
-                <Setter Property="Opacity" Value="0.7"/>
+                <Setter Property="Opacity" Value="0.3"/>
             </Trigger>
         </Style.Triggers>
     </Style>
@@ -33,7 +33,7 @@
     </Style>
     <Style x:Key="OverlayHyperlink"  TargetType="{x:Type Hyperlink}">
         <Setter Property="TextDecorations" Value="None"/>
-        <Setter Property="Foreground" Value="LightGray"/>
+        <Setter Property="Foreground" Value="#FF474747"/>
         <Style.Triggers>
             <Trigger Property="IsMouseOver" Value="True">
                 <Setter Property="Foreground" Value="White"/>
@@ -62,7 +62,7 @@
                         </Grid.ColumnDefinitions>
 
                         <Grid Grid.RowSpan="3" Grid.ColumnSpan="3" Margin="5">
-                            <Border Panel.ZIndex="-5" Background="#FF1E1E1E" CornerRadius="10,10,10,10" BorderBrush="#FF165B1D" BorderThickness="1" Margin="0">
+                            <Border Panel.ZIndex="-5" Background="#FF1E1E1E" CornerRadius="0" BorderBrush="#FF165B1D" BorderThickness="1" Margin="0">
                                 <!--<Border.Style>
                                     <Style>
                                         <Style.Triggers>
@@ -92,8 +92,7 @@
                                         </i:Interaction.Behaviors>
  
                                         <DockPanel HorizontalAlignment="Stretch" VerticalAlignment="Center">
-
-                                            <TextBlock DockPanel.Dock="Right" HorizontalAlignment="Right" VerticalAlignment="Center">
+                                                <TextBlock DockPanel.Dock="Right" HorizontalAlignment="Right" VerticalAlignment="Center">
                                                 <Hyperlink Style="{StaticResource OverlayHyperlink}" Focusable="False" Command="{Binding ExitApplication}">
                                                     <Image Style="{StaticResource TopBarIcon}" DockPanel.Dock="Right" Width="11" Source="/Ubiquitous2;component/Resources/close.ico" HorizontalAlignment="Right" VerticalAlignment="Center">
                                                     </Image>
@@ -140,13 +139,13 @@
                         </Grid>
 
 
-                        <Border Name="topLeft" Style="{StaticResource WindowBorder}" CornerRadius="10"/>
+                        <Border Name="topLeft" Style="{StaticResource WindowBorder}"/>
                         <Border Name="top" Style="{StaticResource WindowBorder}" Grid.Column="1" Padding="0" Margin="-7,0" />
-                        <Border Name="topRight" Style="{StaticResource WindowBorder}" CornerRadius="10" Grid.Column="2" />
+                        <Border Name="topRight" Style="{StaticResource WindowBorder}" Grid.Column="2" />
                         <Border Name="right" Style="{StaticResource WindowBorder}" Grid.Row="1" Grid.Column="2" Margin="0,-7" />
-                        <Border Name="bottomRight" Style="{StaticResource WindowBorder}" Grid.Row="2" Grid.Column="2" CornerRadius="10" />
+                        <Border Name="bottomRight" Style="{StaticResource WindowBorder}" Grid.Row="2" Grid.Column="2"  />
                         <Border Name="bottom" Style="{StaticResource WindowBorder}" Grid.Row="2" Grid.Column="1" Margin="-7,0" />
-                        <Border Name="bottomLeft" Style="{StaticResource WindowBorder}" Grid.Row="2" CornerRadius="10" />
+                        <Border Name="bottomLeft" Style="{StaticResource WindowBorder}" Grid.Row="2" />
                         <Border Name="left" Style="{StaticResource WindowBorder}" Grid.Row="1" Margin="0,-7" />
 
                         <i:Interaction.Behaviors>
