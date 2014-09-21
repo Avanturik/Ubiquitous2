@@ -38,15 +38,16 @@ namespace UB.ViewModel
                 SimpleIoc.Default.Register<SettingsDataService, Design.DesignSettingsDataService>();
                 SimpleIoc.Default.Register<IChatDataService, Design.DesignDataService>();
                 SimpleIoc.Default.Register<IImageDataSource, Design.DesignImageCacheDataService>();
+                SimpleIoc.Default.Register<IGeneralDataService, Design.GeneralDataServiceDesign>();
             }
             else
             {
                 SimpleIoc.Default.Register<SettingsDataService, SettingsDataService>();
                 SimpleIoc.Default.Register<IChatDataService, ChatDataService>();
                 SimpleIoc.Default.Register<IImageDataSource, ImageCacheDataService>();
+                SimpleIoc.Default.Register<IGeneralDataService, GeneralDataService>();
             }
             SimpleIoc.Default.Register<SteamGuardViewModel>();
-            SimpleIoc.Default.Register<GeneralDataService>();
             //SimpleIoc.Default.Register<LastFMService>();
             SimpleIoc.Default.Register<MusicTickerViewModel>();
             SimpleIoc.Default.Register<StatusViewModel>();

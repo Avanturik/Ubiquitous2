@@ -145,6 +145,7 @@
     <Compile Include="Design\DesignDataService.cs" />
     <Compile Include="Design\DesignSettingsDataService.cs" />
     <Compile Include="Design\DesignImageCacheDataService.cs" />
+    <Compile Include="Design\GeneralDataServiceDesign.cs" />
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="Interactivity\AutoScrollAction.cs" />
     <Compile Include="Interactivity\BindingListener.cs" />

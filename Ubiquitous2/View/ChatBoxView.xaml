@@ -7,7 +7,5 @@
              UseLayoutRounding="True"
              DataContext="{Binding Path=ChatBox, Source={StaticResource Locator}}"              
              Focusable="False"             
-             Style="{DynamicResource ChatBoxStyle}"
-             d:DesignHeight="300" 
-             d:DesignWidth="300">    
-</UserControl>
+             Style="{DynamicResource ChatBoxStyle}" 
+             d:DesignWidth="300" Height="336"/>

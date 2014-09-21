@@ -24,7 +24,7 @@ namespace UB.ViewModel
         public event EventHandler<EventArgs> MessageSent;
         private object lockReadMessages = new object();
         IChatDataService _dataService;
-        GeneralDataService _generalDataService;
+        IGeneralDataService _generalDataService;
         /// <summary>
         /// Initializes a new instance of the ChatBoxViewModel class.
         /// </summary>
@@ -34,7 +34,7 @@ namespace UB.ViewModel
         }
 
         [PreferredConstructor]
-        public ChatBoxViewModel(IChatDataService dataService, GeneralDataService generalDataService)
+        public ChatBoxViewModel(IChatDataService dataService, IGeneralDataService generalDataService)
         {
             _dataService = dataService;
             _generalDataService = generalDataService;
@@ -57,11 +57,23 @@ namespace UB.ViewModel
                         item.ChatIconURL = Icons.MainIcon;
                         item.Text += " http://asdf.com";
                         item.Text = Html.ConvertUrlsToLinks(item.Text);
-                        item.Text += @" " + Html.CreateImageTag(@"http://static-cdn.jtvnw.net/jtv_user_pictures/chansub-global-emoticon-ebf60cd72f7aa600-24x18.png",24,18);
+                        item.Text += @" " + Html.CreateImageTag(@"http://static-cdn.jtvnw.net/jtv_user_pictures/chansub-global-emoticon-ebf60cd72f7aa600-24x18.png", 24, 18);
                         Messages.Add(new ChatMessageViewModel(item));
 
                     });
             }
+
+            if (IsInDesignMode)
+                return;
+
+            _dataService.ReadMessages((messages, error) =>
+            {
+                lock (lockReadMessages)
+                {
+                    AddMessages(messages);
+                }
+
+            });
 
             MessengerInstance.Register<bool>(this, "MessageSent", msg =>
                 {
@@ -74,13 +86,6 @@ namespace UB.ViewModel
                 EnableAutoScroll = msg;
             });
 
-            _dataService.ReadMessages((messages,error) => {
-                lock(lockReadMessages)
-                {
-                    AddMessages(messages);
-                }
-
-            });
 
             if (_generalDataService.Services == null)
                 _generalDataService.Start();

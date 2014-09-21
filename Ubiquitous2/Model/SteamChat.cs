@@ -70,6 +70,7 @@ namespace UB.Model
         }
         void SteamChat_NewMessage(object sender, SteamAPISession.SteamEvent e)
         {
+            //TODO implement send to current chat
             if( MessageReceived != null && e.update != null && e.update.origin != null )
             {
                 AddFriendToCache(e.update.origin);
