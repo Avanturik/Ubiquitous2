@@ -18,6 +18,7 @@
         Background="#FF3E3E42"
         Title="Music ticker"
         Topmost="True"
+        UseLayoutRounding="True"
         Icon="..\ubiquitous smile.ico"
         DataContext="{Binding Source={StaticResource Locator},Path=MusicTicker}" 
         Visibility="{Binding Source={StaticResource Locator},Path=MusicTicker.Config.Enabled, Converter={StaticResource boolToVisibilityConverter}}"

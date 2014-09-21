@@ -5,6 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:Interactivity="clr-namespace:UB.Interactivity"
              xmlns:viewModel="clr-namespace:UB.ViewModel"
+             UseLayoutRounding="True"
              mc:Ignorable="d"                          
              d:DesignHeight="64" d:DesignWidth="208" Style="{DynamicResource SettingsFieldStyle}" 
              MinHeight="30"

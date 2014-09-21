@@ -8,6 +8,7 @@
         xmlns:il="clr-namespace:Microsoft.Expression.Interactivity.Layout;assembly=Microsoft.Expression.Interactions"
         xmlns:Interactivity="clr-namespace:UB.Interactivity"
         mc:Ignorable="d ignore"
+        UseLayoutRounding="True"
         Background="{x:Null}"
         DataContext="{Binding}">
     

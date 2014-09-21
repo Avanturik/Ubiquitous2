@@ -15,6 +15,7 @@
         Title="Viewers counter"
         Topmost="True"
         Icon="..\ubiquitous smile.ico"
+        UseLayoutRounding="True"
         DataContext="{Binding Source={StaticResource Locator},Path=Status}" 
         SizeToContent="WidthAndHeight" HorizontalAlignment="Center" VerticalAlignment="Center" MaxHeight="32" Padding="0">
     <i:Interaction.Behaviors>

@@ -10,6 +10,7 @@
              xmlns:gif="http://wpfanimatedgif.codeplex.com"
              DataContext="{Binding Source={StaticResource Locator},Path=SettingsSection}"
              mc:Ignorable="d"
+             UseLayoutRounding="True"
              Focusable="False"
              MinWidth="30"
              MaxWidth="1000"
