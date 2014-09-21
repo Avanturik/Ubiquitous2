@@ -8,4 +8,4 @@
              DataContext="{Binding Path=ChatBox, Source={StaticResource Locator}}"              
              Focusable="False"             
              Style="{DynamicResource ChatBoxStyle}" 
-             d:DesignWidth="300"/>
+             d:DesignWidth="300" d:DesignHeight="400"/>
