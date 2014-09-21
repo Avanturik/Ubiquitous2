@@ -17,7 +17,7 @@ namespace UB.Model
             result = Regex.Replace(result, @"<img.*src=""(.*?)"".*?\/>", "$1");
             result = Regex.Replace(result, @"<a[^>]*>(.*?)<\/a>", "$1");
             result = Regex.Replace(result, @"<a.*href=""(.*?)"".*>", "$1");
-            result = Regex.Replace(result, @"<http.*?>", "$1");
+            result = Regex.Replace(result, @"<(http.*?)>", "$1");
             result = Regex.Replace(result, @"<[^>]*>", "");
 
             return result;

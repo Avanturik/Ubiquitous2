@@ -124,25 +124,31 @@ namespace UB.Model
                     if (!Status.IsStopping)
                         Restart();
                 };
-                if( !gamingLiveChannels.Any(c => c.ChannelName == channel ))
-                gamingLiveChannel.Join((glChannel) => {
-                    if (Status.IsStopping)
-                        return;
-                    Status.IsConnected = true;
-                    lock(channelsLock)
-                        gamingLiveChannels.Add(glChannel);
-                    if (glChannel.ChannelName.Equals("#" + NickName, StringComparison.InvariantCultureIgnoreCase))
-                        Status.IsLoggedIn = true;
+                lock(channelsLock)
+                {
 
-                    ChatChannels.RemoveAll(chan => chan == null);
-                    ChatChannels.RemoveAll(chan => chan.Equals(glChannel.ChannelName, StringComparison.InvariantCultureIgnoreCase));
-                    ChatChannels.Add((glChannel.ChannelName));
-                    if (AddChannel != null)
-                        AddChannel(gamingLiveChannel.ChannelName, this);
+                    if( !gamingLiveChannels.Any(c => c.ChannelName == channel ))
+                    {
+                        gamingLiveChannel.Join((glChannel) => {
+                            if (Status.IsStopping)
+                                return;
+                            Status.IsConnected = true;
+                            lock(channelsLock)
+                                gamingLiveChannels.Add(glChannel);
+                            if (glChannel.ChannelName.Equals("#" + NickName, StringComparison.InvariantCultureIgnoreCase))
+                                Status.IsLoggedIn = true;
 
-                    WatchChannelStats(gamingLiveChannel.ChannelName);
+                            ChatChannels.RemoveAll(chan => chan == null);
+                            ChatChannels.RemoveAll(chan => chan.Equals(glChannel.ChannelName, StringComparison.InvariantCultureIgnoreCase));
+                            ChatChannels.Add((glChannel.ChannelName));
+                            if (AddChannel != null)
+                                AddChannel(gamingLiveChannel.ChannelName, this);
 
-                }, NickName, channel, (String)Config.GetParameterValue("AuthToken"));
+                            WatchChannelStats(gamingLiveChannel.ChannelName);
+
+                        }, NickName, channel, (String)Config.GetParameterValue("AuthToken"));
+                    }
+                }
             }
         }
         private void ReadMessage( ChatMessage message )
@@ -432,6 +438,7 @@ namespace UB.Model
             ChannelName = "#" + channel.Replace("#", "");
             webSocket = new WebSocketBase();
             webSocket.Host = "54.76.144.150";
+            webSocket.PingInterval = 0;
             webSocket.Origin = "http://www.gaminglive.tv";
             webSocket.Path = String.Format("/chat/{0}?nick={1}&authToken={2}", ChannelName.Replace("#",""), nickName, authToken );
             webSocket.ConnectHandler = () =>
