@@ -14,7 +14,7 @@
         xmlns:Interactivity="clr-namespace:UB.Interactivity"
         WindowStyle="None"
         Topmost="True"
-        AllowsTransparency="False"        
+        AllowsTransparency="True"        
         DataContext="{Binding Source={StaticResource Locator},Path=Main}" 
         Background="{x:Null}" 
         ResizeMode="NoResize"

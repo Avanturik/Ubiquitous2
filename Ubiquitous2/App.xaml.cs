@@ -1,6 +1,7 @@
 ﻿using System.Configuration;
 using System.Diagnostics;
 using System.Windows;
+using System.Windows.Interop;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
 using GalaSoft.MvvmLight.Threading;
@@ -23,6 +24,8 @@ namespace UB
                     typeof(Timeline),
                     new FrameworkPropertyMetadata { DefaultValue = 20 });
 
+            
+            //RenderOptions.ProcessRenderMode = RenderMode.SoftwareOnly; 
         }
 
     }
