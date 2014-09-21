@@ -24,11 +24,12 @@
         </Style.Triggers>
     </Style>
     <Style x:Key="WindowBorder" TargetType="{x:Type Border}">
-        <Setter Property="Visibility" Value="{Binding IsOverlayVisible, Converter={StaticResource boolToVisibilityConverter}}"/>
+        <!--<Setter Property="Visibility" Value="{Binding IsOverlayVisible, Converter={StaticResource boolToVisibilityConverter}}"/>-->
         <Setter Property="Panel.ZIndex" Value="-1"/>
-        <Setter Property="BorderBrush" Value="#FF1F3E1D"/>
+        <Setter Property="Opacity" Value="0.01"/>
+        <Setter Property="BorderBrush" Value="#FF1E1E1E"/>
         <Setter Property="BorderThickness" Value="0"/>
-        <Setter Property="Background" Value="#FF1F3E1D"/>
+        <Setter Property="Background" Value="#FF1E1E1E"/>
     </Style>
     <Style x:Key="OverlayHyperlink"  TargetType="{x:Type Hyperlink}">
         <Setter Property="TextDecorations" Value="None"/>
@@ -42,10 +43,13 @@
     </Style>
     <Style x:Key="MainWindowStyle" TargetType="{x:Type Window}">
         <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.WindowTextBrushKey}}"/>
+        <Setter Property="Background" Value="#FF1E1E1E"/>
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type Window}">
-                    <Grid>
+                    <Border BorderThickness="1" BorderBrush="#FF323232" >
+
+                        <Grid Background="#FF1E1E1E" Margin="0">
                         <Grid.RowDefinitions>
                             <RowDefinition Height="15" />
                             <RowDefinition Height="*" />
@@ -58,8 +62,8 @@
                         </Grid.ColumnDefinitions>
 
                         <Grid Grid.RowSpan="3" Grid.ColumnSpan="3" Margin="5">
-                            <Border Panel.ZIndex="-5" Background="Black" CornerRadius="10,10,10,10" BorderBrush="#FF165B1D" BorderThickness="1" Margin="0">
-                                <Border.Style>
+                            <Border Panel.ZIndex="-5" Background="#FF1E1E1E" CornerRadius="10,10,10,10" BorderBrush="#FF165B1D" BorderThickness="1" Margin="0">
+                                <!--<Border.Style>
                                     <Style>
                                         <Style.Triggers>
                                             <DataTrigger Binding="{Binding IsOverlayVisible}" Value="True">
@@ -72,7 +76,7 @@
 
                                         </Style.Triggers>
                                     </Style>
-                                </Border.Style>
+                                </Border.Style>-->
 
                             </Border>
                             <DockPanel Focusable="False" d:DesignHeight="300" d:DesignWidth="500">
@@ -82,38 +86,29 @@
                                         <RowDefinition/>
                                         <RowDefinition Height="Auto"/>
                                     </Grid.RowDefinitions>
-                                    <Border CornerRadius="10,10,0,0" Focusable="False" Grid.Row="0" Padding="5" VerticalAlignment="Top" HorizontalAlignment="Stretch" Panel.ZIndex="1" Visibility="{Binding IsOverlayVisible, Converter={StaticResource boolToVisibilityConverter}}">
+                                    <Border Background="#FF1E1E1E" BorderThickness="0" CornerRadius="0" Focusable="False" Grid.Row="0" Padding="1" VerticalAlignment="Top" HorizontalAlignment="Stretch" Panel.ZIndex="1">
                                         <i:Interaction.Behaviors>
                                             <Interactivity:DragThumb/>
                                         </i:Interaction.Behaviors>
-                                        <Border.Background>
-                                            <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
-                                                <GradientStop Color="#FF252525" Offset="0.465"/>
-                                                <GradientStop Color="#FF175B14" Offset="0.971"/>
-                                                <GradientStop Color="#FF175B14"/>
-                                            </LinearGradientBrush>
-                                        </Border.Background>
+ 
                                         <DockPanel HorizontalAlignment="Stretch" VerticalAlignment="Center">
-
-                                            <Image Style="{StaticResource TopBarIcon}" DockPanel.Dock="Left" Width="16" Source="/Ubiquitous2;component/Resources/ubiquitous smile.ico" HorizontalAlignment="Left" VerticalAlignment="Center">
-                                            </Image>
 
                                             <TextBlock DockPanel.Dock="Right" HorizontalAlignment="Right" VerticalAlignment="Center">
                                                 <Hyperlink Style="{StaticResource OverlayHyperlink}" Focusable="False" Command="{Binding ExitApplication}">
-                                                    <Image Style="{StaticResource TopBarIcon}" DockPanel.Dock="Right" Width="14" Source="/Ubiquitous2;component/Resources/close.ico" HorizontalAlignment="Right" VerticalAlignment="Center">
+                                                    <Image Style="{StaticResource TopBarIcon}" DockPanel.Dock="Right" Width="11" Source="/Ubiquitous2;component/Resources/close.ico" HorizontalAlignment="Right" VerticalAlignment="Center">
                                                     </Image>
                                                 </Hyperlink>
                                             </TextBlock>
                                             <TextBlock DockPanel.Dock="Right" HorizontalAlignment="Right" VerticalAlignment="Center">
                                                 <Hyperlink Style="{StaticResource OverlayHyperlink}" Focusable="False" Command="{Binding Minimize}">
-                                                    <Image Margin="0,0,14,0" Style="{StaticResource TopBarIcon}" DockPanel.Dock="Right" Width="14" Source="/Ubiquitous2;component/Resources/minimize.ico" HorizontalAlignment="Right" VerticalAlignment="Center">
+                                                    <Image Margin="0,0,14,0" Style="{StaticResource TopBarIcon}" DockPanel.Dock="Right" Width="11" Source="/Ubiquitous2;component/Resources/minimize.ico" HorizontalAlignment="Right" VerticalAlignment="Center">
                                                     </Image>
                                                 </Hyperlink>
                                             </TextBlock>
 
                                             <TextBlock DockPanel.Dock="Right" HorizontalAlignment="Right" VerticalAlignment="Center">
                                                 <Hyperlink Style="{StaticResource OverlayHyperlink}" Focusable="False" Command="{Binding ShowSettings}">
-                                                <Image Margin="0,0,14,0" Style="{StaticResource TopBarIcon}" DockPanel.Dock="Right" Width="14" Source="/Ubiquitous2;component/Resources/settings.ico" HorizontalAlignment="Right" VerticalAlignment="Center">
+                                                <Image Margin="0,0,14,0" Style="{StaticResource TopBarIcon}" DockPanel.Dock="Right" Width="12" Source="/Ubiquitous2;component/Resources/settings.ico" HorizontalAlignment="Right" VerticalAlignment="Center">
                                                     </Image>
                                             </Hyperlink>
 
@@ -124,7 +119,7 @@
                                     <View:ChatBoxView Focusable="False" Grid.Row="1" Margin="0,0,4,0" RenderTransformOrigin="1,0" OverridesDefaultStyle="True" Padding="0">
                                         <!--<MouseBinding Gesture="LeftClick" Command="{Binding ShowOverlay}"/>-->
                                     </View:ChatBoxView>
-                                    <Border CornerRadius="0,0,10,10" Focusable="False" Grid.Row="2" Padding="24,0,5,0" VerticalAlignment="Bottom" HorizontalAlignment="Stretch" Panel.ZIndex="1" Visibility="{Binding IsOverlayVisible, Converter={StaticResource boolToVisibilityConverter}}" BorderBrush="#FF165B1D" BorderThickness="1" Margin="0" Height="36">
+                                        <Border CornerRadius="0,0,10,10" Focusable="False" Grid.Row="2" Padding="24,0,5,0" VerticalAlignment="Bottom" HorizontalAlignment="Stretch" Panel.ZIndex="1" Visibility="{Binding IsOverlayVisible, Converter={StaticResource boolToVisibilityConverter}}" BorderBrush="#FF1E1E1E" BorderThickness="1" Margin="0" Height="36">
                                         <DockPanel Focusable="False" VerticalAlignment="Bottom" Background="Transparent" Margin="0">
                                             <ComboBox Focusable="False" Style="{DynamicResource ReplyComboStyle}" Name="replyCombo" ItemsSource="{Binding ChannelList}" SelectedItem="{Binding SelectedChatChannel}" ItemTemplate="{DynamicResource ReplyComboTemplate}" IsReadOnly="True" IsEditable="False" Margin="-18,1,61,6" VerticalAlignment="Stretch"/>
                                             <Border Focusable="False" CornerRadius="7" Background="#FF303030" Padding="6,0" Margin="-55,-24,1,-19" Height="22">
@@ -144,7 +139,7 @@
                             </DockPanel>
                         </Grid>
 
-                        
+
                         <Border Name="topLeft" Style="{StaticResource WindowBorder}" CornerRadius="10"/>
                         <Border Name="top" Style="{StaticResource WindowBorder}" Grid.Column="1" Padding="0" Margin="-7,0" />
                         <Border Name="topRight" Style="{StaticResource WindowBorder}" CornerRadius="10" Grid.Column="2" />
@@ -167,6 +162,7 @@
                         </i:Interaction.Behaviors>
 
                     </Grid>
+                    </Border>
                     <ControlTemplate.Triggers>
                         <DataTrigger Binding="{Binding SendTextEditMode}" Value="True">
                             <Setter TargetName="ReplyTextBox" Property="FocusManager.FocusedElement" Value="{Binding ElementName=ReplyTextBox}"/>

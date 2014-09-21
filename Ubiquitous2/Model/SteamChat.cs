@@ -58,6 +58,8 @@ namespace UB.Model
         void SteamChat_FriendStateChange(object sender, SteamAPISession.SteamEvent e)
         {
             AddFriendToCache(e.update.origin);
+            friends[e.update.origin].status = e.update.status;
+
             Log.WriteInfo("Steam user status changed {0}", e.update.nick);
         }
         void AddFriendToCache( string origin )
@@ -241,8 +243,8 @@ namespace UB.Model
             {
                 if (whiteList.Count > 0 && !whiteList.Contains(friend.Value.nickname))
                     continue;
-                
-                base.SendMessage(friend.Value, MessageParser.HtmlToPlainText( message.FormattedText));
+                if( friend.Value.status != UserStatus.Offline )
+                    base.SendMessage(friend.Value, MessageParser.HtmlToPlainText( message.FormattedText));
             }
             return false;
         }

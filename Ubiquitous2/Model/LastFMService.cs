@@ -151,9 +151,10 @@ namespace UB.Model
             }
             else if( track == null )
             {
-                MusicTrackInfo.Album = "Unknown album";
-                MusicTrackInfo.Artist = "Unknown artist";
-                MusicTrackInfo.Title = "Unknown title";
+                MusicTrackInfo.Album = "No scrobbling data";
+                MusicTrackInfo.Artist = "";
+                MusicTrackInfo.Title = "";
+                MusicTrackInfo.ImageURL = Icons.MainHeadsetIcon;
             }
             _currentTrack = track;
 
