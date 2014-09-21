@@ -24,7 +24,7 @@ namespace UB.Model
             TimeStamp = DateTime.Now.ToLongTimeString();
             UnixTimeStamp = Time.UnixTimestamp();
             HighlyImportant = false;
-            FormatString = "%from@%chatname: %text";
+            FormatString = "%from @%chatname: %text";
         }
         public String ChatName { get; set; }
         public string FormatString { get; set; }
@@ -42,7 +42,7 @@ namespace UB.Model
                     {"%text", this.OriginalText},
                     {"%from", this.FromUserName},
                     {"%to", String.Empty},
-                    {"%chatname", this.ChatName},
+                    {"%chatname", this.ChatName.ToLower()},
                     {"%time", this.TimeStamp}
                 };            
 
