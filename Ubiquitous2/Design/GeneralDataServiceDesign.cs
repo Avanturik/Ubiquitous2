@@ -93,7 +93,7 @@ namespace UB.Design
                 Album = "Lorem ipsum",
                 Artist = "Dolor sit amet",
                 Title = "Consectetur adipiscing elit, sed do eiusmod tempor",
-                ImageURL = Icons.MainHeadsetIcon,
+                ImageURL = Icons.DesignMainHeadsetIcon,
             });
         }
 
