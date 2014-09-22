@@ -127,7 +127,7 @@
                         <Popup AllowsTransparency="True" Focusable="False" IsOpen="{TemplateBinding IsDropDownOpen}" x:Name="Popup" Placement="Top" PopupAnimation="Fade">
                             <Grid MaxHeight="{TemplateBinding MaxDropDownHeight}" MinWidth="{TemplateBinding ActualWidth}" x:Name="DropDown" SnapsToDevicePixels="True">
                                 <Border x:Name="DropDownBorder" BorderBrush="#FF5D5D5D" BorderThickness="1" CornerRadius="0" Background="#FF303030" />
-                                <ScrollViewer Focusable="False" Margin="2" SnapsToDevicePixels="True" Foreground="#FFFFC042">
+                                <ScrollViewer Template="{DynamicResource ScrollStyle}" Focusable="False" Margin="2" SnapsToDevicePixels="True" Foreground="#FFFFC042">
                                     <StackPanel Focusable="False" KeyboardNavigation.DirectionalNavigation="Contained" IsItemsHost="True" TextBlock.Foreground="Black" />
                                 </ScrollViewer>
                             </Grid>
