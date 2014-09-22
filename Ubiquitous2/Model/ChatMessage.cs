@@ -42,7 +42,7 @@ namespace UB.Model
                     {"%text", this.OriginalText},
                     {"%from", this.FromUserName},
                     {"%to", String.Empty},
-                    {"%chatname", this.ChatName.ToLower()},
+                    {"%chatname", this.With( x => this.ChatName).With( x => x.ToLower())},
                     {"%time", this.TimeStamp}
                 };            
 
