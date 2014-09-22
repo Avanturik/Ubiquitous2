@@ -145,7 +145,14 @@ namespace UB.Model
             var searchParameter = Parameters.FirstOrDefault(parameter => parameter.Name.Equals(name, StringComparison.InvariantCultureIgnoreCase));
             return searchParameter.Value;
         }
+        
+        public void SetParameterValue(string name, object value)
+        {
+            var searchParameter = Parameters.FirstOrDefault(parameter => parameter.Name.Equals(name, StringComparison.InvariantCultureIgnoreCase));
+            if (searchParameter != null)
+                searchParameter.Value = value;
 
+        }
         public override bool Equals(object o)
         {
             bool result = false;

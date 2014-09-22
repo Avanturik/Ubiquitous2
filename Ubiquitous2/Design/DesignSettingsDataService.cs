@@ -46,5 +46,11 @@ namespace UB.Design
         {
             throw new NotImplementedException();
         }
+
+
+        public void GetAppSettings(Action<AppConfig> callback)
+        {
+            callback(new AppConfig());
+        }
     }
 }

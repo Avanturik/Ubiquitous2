@@ -29,7 +29,7 @@
         <Setter Property="Opacity" Value="0.01"/>
         <Setter Property="BorderBrush" Value="#FF1E1E1E"/>
         <Setter Property="BorderThickness" Value="0"/>
-        <Setter Property="Background" Value="#FF1E1E1E"/>
+
     </Style>
     <Style x:Key="OverlayHyperlink"  TargetType="{x:Type Hyperlink}">
         <Setter Property="TextDecorations" Value="None"/>
@@ -43,13 +43,12 @@
     </Style>
     <Style x:Key="MainWindowStyle" TargetType="{x:Type Window}">
         <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.WindowTextBrushKey}}"/>
-        <Setter Property="Background" Value="#FF1E1E1E"/>
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type Window}">
                     <Border BorderThickness="1" BorderBrush="#FF323232" >
 
-                        <Grid Background="#FF1E1E1E" Margin="0">
+                        <Grid Margin="0">
                         <Grid.RowDefinitions>
                             <RowDefinition Height="15" />
                             <RowDefinition Height="*" />
@@ -61,24 +60,8 @@
                             <ColumnDefinition Width="15" />
                         </Grid.ColumnDefinitions>
 
-                        <Grid Grid.RowSpan="3" Grid.ColumnSpan="3" Margin="5">
-                            <Border Panel.ZIndex="-5" Background="#FF1E1E1E" CornerRadius="0" BorderBrush="#FF165B1D" BorderThickness="1" Margin="0">
-                                <!--<Border.Style>
-                                    <Style>
-                                        <Style.Triggers>
-                                            <DataTrigger Binding="{Binding IsOverlayVisible}" Value="True">
-                                                <Setter Property="Border.Visibility" Value="Visible"/>
-                                            </DataTrigger>
-
-                                            <DataTrigger Binding="{Binding IsOverlayVisible}" Value="False">
-                                                <Setter Property="Border.Visibility" Value="Hidden"/>
-                                            </DataTrigger>
-
-                                        </Style.Triggers>
-                                    </Style>
-                                </Border.Style>-->
-
-                            </Border>
+                            <Rectangle Fill="#FF1E1E1E" Opacity="{Binding AppConfig.BackgroundOpacity}" Grid.RowSpan="3" Grid.ColumnSpan="3" />
+                            <Grid Grid.RowSpan="3" Grid.ColumnSpan="3" Margin="5">
                             <DockPanel Focusable="False" d:DesignHeight="300" d:DesignWidth="500">
                                 <Grid Focusable="False">
                                     <Grid.RowDefinitions>
@@ -86,7 +69,7 @@
                                         <RowDefinition/>
                                         <RowDefinition Height="Auto"/>
                                     </Grid.RowDefinitions>
-                                    <Border Background="#FF1E1E1E" BorderThickness="0" CornerRadius="0" Focusable="False" Grid.Row="0" Padding="1" VerticalAlignment="Top" HorizontalAlignment="Stretch" Panel.ZIndex="1">
+                                    <Border Background="#011E1E1E" BorderThickness="0" CornerRadius="0" Focusable="False" Grid.Row="0" Padding="1" VerticalAlignment="Top" HorizontalAlignment="Stretch" Panel.ZIndex="1">
                                         <i:Interaction.Behaviors>
                                             <Interactivity:DragThumb/>
                                         </i:Interaction.Behaviors>

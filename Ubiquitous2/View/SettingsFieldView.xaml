@@ -7,14 +7,14 @@
              xmlns:viewModel="clr-namespace:UB.ViewModel"
              UseLayoutRounding="True"
              mc:Ignorable="d"                          
-             d:DesignHeight="64" d:DesignWidth="208" Style="{DynamicResource SettingsFieldStyle}" 
+             d:DesignHeight="64" d:DesignWidth="541" Style="{DynamicResource SettingsFieldStyle}" 
              MinHeight="30"
              MaxHeight="200"
              Name="userControl"
              Background="{DynamicResource {x:Static SystemColors.ControlBrushKey}}"
              >
     <d:UserControl.DataContext>
-        <viewModel:SettingsFieldViewModel LabelText="Ipsum Ipsum Ipsum Ipsum Ipsum Ipsum Ipsum Ipsum Ipsum Ipsum Ipsum Ipsum Ipsum" DataType="Info" Text="Ipsum Ipsum Ipsum Ipsum Ipsum Ipsum Ipsum Ipsum Ipsum Ipsum Ipsum Ipsum Ipsum " />
+        <viewModel:SettingsFieldViewModel LabelText="Ipsum Ipsum Ipsum Ipsum Ipsum Ipsum Ipsum Ipsum Ipsum Ipsum Ipsum Ipsum Ipsum" DataType="FileSave" Text="Ipsum Ipsum Ipsum Ipsum Ipsum Ipsum Ipsum Ipsum Ipsum Ipsum Ipsum Ipsum Ipsum " />
     </d:UserControl.DataContext>
 
     <UserControl.Resources>
@@ -64,7 +64,37 @@
                     <Setter Property="Template">
                         <Setter.Value>
                             <ControlTemplate>
-                                    <TextBlock  Margin="5" TextWrapping="Wrap" Text="{Binding LabelText, Mode=OneWay}" VerticalAlignment="Top"/>
+                                <TextBlock  Margin="5" TextWrapping="Wrap" Text="{Binding LabelText, Mode=OneWay}" VerticalAlignment="Top"/>
+                            </ControlTemplate>
+                        </Setter.Value>
+                    </Setter>
+                </DataTrigger>
+                <DataTrigger Binding="{Binding DataType, Mode=OneWay}" Value="Bool">
+                    <Setter Property="Template">
+                        <Setter.Value>
+                            <ControlTemplate>
+                                <CheckBox Content="{Binding LabelText}" VerticalAlignment="Top" IsChecked="{Binding IsTrue}"/>
+                            </ControlTemplate>
+                        </Setter.Value>
+                    </Setter>
+                </DataTrigger>
+                <DataTrigger Binding="{Binding DataType, Mode=OneWay}" Value="Range">
+                    <Setter Property="Template">
+                        <Setter.Value>
+                            <ControlTemplate>
+                                <Slider VerticalAlignment="Top" Maximum="{Binding MaximumRange}" Minimum="{Binding MinimumRange}" ></Slider>
+                            </ControlTemplate>
+                        </Setter.Value>
+                    </Setter>
+                </DataTrigger>
+                <DataTrigger Binding="{Binding DataType, Mode=OneWay}" Value="FileSave">
+                    <Setter Property="Template">
+                        <Setter.Value>
+                            <ControlTemplate>
+                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Stretch" VerticalAlignment="Top">
+                                    <TextBox Text="{Binding Text,Mode=TwoWay}" VerticalAlignment="Top"/>
+                                    <Button Command="{Binding SaveFileDialog}" Margin="5,0,0,0" Padding="5,1,5,1" Content="..." VerticalAlignment="Top" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" HorizontalAlignment="Left"/>
+                                </StackPanel>
                             </ControlTemplate>
                         </Setter.Value>
                     </Setter>

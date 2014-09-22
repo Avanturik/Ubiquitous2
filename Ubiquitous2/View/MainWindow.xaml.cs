@@ -1,6 +1,7 @@
 ﻿using System.Windows;
 using UB.ViewModel;
-
+using UB.Properties;
+using System;
 namespace UB
 {
     /// <summary>
@@ -13,7 +14,10 @@ namespace UB
         /// </summary>
         public MainWindow()
         {
+            
             InitializeComponent();
+
+            this.AllowsTransparency = Ubiquitous.Default.Config.AppConfig.EnableTransparency;
             Closing += (s, e) => ViewModelLocator.Cleanup();
         }
     }

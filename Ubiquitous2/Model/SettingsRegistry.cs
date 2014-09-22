@@ -20,6 +20,7 @@ namespace UB.Model
         //Service titles
         public static string ServiceTitleMusicTicker = "Music ticker";
         public static string ServiceTitleWebServer = "Web server";
+        public static string ServiceTitleImageSaver = "Save chat to image";
 
 
         //Default service settings
@@ -51,7 +52,18 @@ namespace UB.Model
                             new ConfigField("Info2", "Port must not be in use by other apps", "Info", true, null),
                             new ConfigField("Info3", "URL e.g: http://192.168.0.123:8080/","Info", true, null),
                         }
+                    },
+                    new ServiceConfig()
+                    {
+                        ServiceName = ServiceTitleImageSaver,
+                        IconURL = Icons.PngIcon,
+                        Enabled = true,
+                        Parameters = new List<ConfigField>() {
+                            new ConfigField("Filename", "Path", "FileSave", true, @"c:\chat.png"),
+                            new ConfigField("Info0", "Save chat to image and use it as Image source in the OBS", "Info", true, null),
+                        }
                     }
+
                 };
             }
         }
@@ -144,8 +156,9 @@ namespace UB.Model
                         }
                     },
                 };
-            }
+            }        
         }
+
         public static AppConfig DefaultAppSettings
         {
             get
@@ -153,6 +166,10 @@ namespace UB.Model
                 return new AppConfig()
                 {
                     ThemeName = "Main",
+                    EnableTransparency = false,
+                    BackgroundOpacity = 0.8,
+                    MessageBackgroundOpacity = 0.01,
+                    Parameters = new List<ConfigField>(),
                 };
             }
         }
@@ -176,7 +193,12 @@ namespace UB.Model
             {ServiceTitleMusicTicker, (config)=> { return new LastFMService(config); }},
             //Built-in web server
             {ServiceTitleWebServer, (config)=> { return new WebServerService(config); }},
+            //Chat to image saver
+            {ServiceTitleImageSaver, (config)=> { return new ChatToImageService(config); }},
+            
+            
             //TODO: OBS support
+
 
         };
 

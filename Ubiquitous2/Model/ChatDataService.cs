@@ -18,7 +18,7 @@ namespace UB.Model
     {
         private List<ChatMessage> messageQueue = new List<ChatMessage>();
         private object messageQueueLock = new object();
-        private SettingsDataService settingsDataService;
+        private ISettingsDataService settingsDataService;
         private Random random;
         private Action<ChatMessage[], Exception> readChatCallback;
         private List<ChatConfig> chatConfigs;
@@ -29,7 +29,7 @@ namespace UB.Model
 
         public ChatDataService()
         {
-            settingsDataService = ServiceLocator.Current.GetInstance<SettingsDataService>();
+            settingsDataService = ServiceLocator.Current.GetInstance<ISettingsDataService>();
             random = new Random();
             Start();
         }

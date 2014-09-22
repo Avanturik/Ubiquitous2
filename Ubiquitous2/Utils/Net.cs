@@ -16,8 +16,6 @@ namespace UB.Utils
         }
         public static void TestTCPPort( String hostName, int portNumber, Action<IPHostEntry,Exception> callback, int timeoutMs = 2000 )
         {
-
-            ThreadPool.QueueUserWorkItem(f => {
                 IPHostEntry hosts = null;
                 try
                 {
@@ -62,7 +60,6 @@ namespace UB.Utils
 
                 hosts.AddressList = hosts.AddressList.Where(entry => entry != null).ToArray();
                 callback(hosts, null);
-            });
 
         }
     }

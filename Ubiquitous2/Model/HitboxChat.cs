@@ -71,14 +71,15 @@ namespace UB.Model
 
         public bool Start()
         {
-            Log.WriteInfo("Starting Hitbox.tv chat");
 
             if (Status.IsStarting || Status.IsConnected || Status.IsLoggedIn || Config == null)
             {
                 return true;
             }
+            
+            Log.WriteInfo("Starting Hitbox.tv chat");
+            Status.ResetToDefault();
             Status.IsStarting = true;
-
 
             if (Login())
             {
@@ -92,9 +93,17 @@ namespace UB.Model
 
         public bool Stop()
         {
+            if (!Enabled)
+                Status.ResetToDefault();
+
+            if (Status.IsStopping)
+                return false;
+
             Log.WriteInfo("Stopping Hitbox.tv chat");
 
             Status.IsStopping = true;
+            Status.IsStarting = false;
+
             lock( channelsLock )
             {
                 hitboxChannels.ForEach(chan =>
@@ -104,7 +113,6 @@ namespace UB.Model
                 });
             }
             ChatChannels.Clear();
-            Status.ResetToDefault();
             return true;
         }
 
@@ -391,7 +399,7 @@ namespace UB.Model
                     if (RemoveChannel != null)
                         RemoveChannel(hitboxChannel.ChannelName, this);
 
-                    if (!Status.IsStarting)
+                    if (!Status.IsStarting && !Status.IsStopping)
                     {
                         Restart();
                         return;
@@ -552,16 +560,22 @@ namespace UB.Model
                         });
 
                     });
-                Thread.Sleep(16);
+                Thread.Sleep(1);
             }
             Task.WaitAll(hostTestTasks, 3000);
 
             if (resultList.Count() <= 0)
             {
-                Log.WriteError("All hitbox servers are down.");
-                Thread.Sleep(5000);
-                callback(null);
-                return;
+                if( hosts.Count() > 0 )
+                {
+                    resultList.Add(hosts[0]);
+                }
+                else
+                {
+                    Log.WriteInfo("All hitbox servers are down!");
+                    callback(null);
+                    return;
+                }
             }
 
             var randomHost = resultList[random.Next(0, resultList.Count())];
@@ -736,7 +750,7 @@ namespace UB.Model
         public string ChannelName { get; set; }
         public void Leave()
         {
-            Log.WriteInfo("Hitobx leaving {0}", ChannelName);
+            Log.WriteInfo("Hitbox leaving {0}", ChannelName);
             webSocket.Disconnect();
         }
         

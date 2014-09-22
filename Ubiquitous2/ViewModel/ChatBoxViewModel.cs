@@ -23,8 +23,10 @@ namespace UB.ViewModel
         public event EventHandler<EventArgs> MessageAdded;
         public event EventHandler<EventArgs> MessageSent;
         private object lockReadMessages = new object();
+        private IService imageService;
         IChatDataService _dataService;
         IGeneralDataService _generalDataService;
+        ISettingsDataService _settingsDataService;
         /// <summary>
         /// Initializes a new instance of the ChatBoxViewModel class.
         /// </summary>
@@ -34,10 +36,11 @@ namespace UB.ViewModel
         }
 
         [PreferredConstructor]
-        public ChatBoxViewModel(IChatDataService dataService, IGeneralDataService generalDataService)
+        public ChatBoxViewModel(IChatDataService dataService, IGeneralDataService generalDataService, ISettingsDataService settingsDataService)
         {
             _dataService = dataService;
             _generalDataService = generalDataService;
+            _settingsDataService = settingsDataService;
             Initialize();
         }
 
@@ -63,8 +66,14 @@ namespace UB.ViewModel
                     });
             }
 
+
             if (IsInDesignMode)
                 return;
+
+            _settingsDataService.GetAppSettings((config) => {
+                AppConfig = config;
+            });
+
 
             _dataService.ReadMessages((messages, error) =>
             {
@@ -86,10 +95,18 @@ namespace UB.ViewModel
                 EnableAutoScroll = msg;
             });
 
-
             if (_generalDataService.Services == null)
                 _generalDataService.Start();
-            var webServerService = _generalDataService.Services.FirstOrDefault( service => service.Config.ServiceName == SettingsRegistry.ServiceTitleWebServer);
+
+            imageService = _generalDataService.GetService(SettingsRegistry.ServiceTitleImageSaver);
+
+            ChatToImageConfig = imageService.Config;
+            ChatToImagePath = ChatToImageConfig.GetParameterValue("Filename") as string;
+
+
+
+            var webServerService = _generalDataService.GetService(SettingsRegistry.ServiceTitleWebServer);
+
             if( webServerService != null )
             {
                 webServerService.GetData( (obj) => {
@@ -162,10 +179,17 @@ namespace UB.ViewModel
                             new ChatMessageViewModel(msg)
                         );
                     }
+
                     if (MessageAdded != null)
                         MessageAdded(this, EventArgs.Empty);
 
+                    if (ChatToImageConfig.Enabled)
+                    {
+                        IsMessageAdded = true;
+                        IsMessageAdded = false;
+                    }
                 });
+
             }
         }
 
@@ -200,6 +224,36 @@ namespace UB.ViewModel
             }
         }
 
+        /// <summary>
+        /// The <see cref="IsMessageAdded" /> property's name.
+        /// </summary>
+        public const string IsMessageAddedPropertyName = "IsMessageAdded";
+
+        private bool _isMessageAdded = false;
+
+        /// <summary>
+        /// Sets and gets the IsMessageAdded property.
+        /// Changes to that property's value raise the PropertyChanged event. 
+        /// </summary>
+        public bool IsMessageAdded
+        {
+            get
+            {
+                return _isMessageAdded;
+            }
+
+            set
+            {
+                if (_isMessageAdded == value)
+                {
+                    return;
+                }
+
+                RaisePropertyChanging(IsMessageAddedPropertyName);
+                _isMessageAdded = value;
+                RaisePropertyChanged(IsMessageAddedPropertyName);
+            }
+        }
 
         /// <summary>
         /// The <see cref="EnableAutoScroll" /> property's name.
@@ -262,6 +316,102 @@ namespace UB.ViewModel
                 RaisePropertyChanged(IsScrollBarVisiblePropertyName);
             }
         }
+
+        /// <summary>
+        /// The <see cref="ChatToImagePath" /> property's name.
+        /// </summary>
+        public const string ChatToImagePathPropertyName = "ChatToImagePath";
+
+        private string _chatToImagePath = null;
+
+        /// <summary>
+        /// Sets and gets the ChatToImagePath property.
+        /// Changes to that property's value raise the PropertyChanged event. 
+        /// </summary>
+        public string ChatToImagePath
+        {
+            get
+            {
+                return _chatToImagePath;
+            }
+
+            set
+            {
+                if (_chatToImagePath == value)
+                {
+                    return;
+                }
+
+                RaisePropertyChanging(ChatToImagePathPropertyName);
+                _chatToImagePath = value;
+                imageService.Config.SetParameterValue("Filename", _chatToImagePath);
+                RaisePropertyChanged(ChatToImagePathPropertyName);
+            }
+        }
+
+
+        /// <summary>
+        /// The <see cref="ChatToImageConfig" /> property's name.
+        /// </summary>
+        public const string ChatToImageConfigPropertyName = "ChatToImageConfig";
+
+        private ServiceConfig _chatToImageConfig = new ServiceConfig();
+
+        /// <summary>
+        /// Sets and gets the ChatToImageConfig property.
+        /// Changes to that property's value raise the PropertyChanged event. 
+        /// </summary>
+        public ServiceConfig ChatToImageConfig
+        {   
+            get
+            {
+                return _chatToImageConfig;
+            }
+
+            set
+            {
+                if (_chatToImageConfig == value)
+                {
+                    return;
+                }
+
+                RaisePropertyChanging(ChatToImageConfigPropertyName);
+                _chatToImageConfig = value;
+                RaisePropertyChanged(ChatToImageConfigPropertyName);
+            }
+        }
+
+        /// <summary>
+        /// The <see cref="AppConfig" /> property's name.
+        /// </summary>
+        public const string AppConfigPropertyName = "AppConfig";
+
+        private AppConfig _appConfig = new AppConfig();
+
+        /// <summary>
+        /// Sets and gets the AppConfig property.
+        /// Changes to that property's value raise the PropertyChanged event. 
+        /// </summary>
+        public AppConfig AppConfig
+        {
+            get
+            {
+                return _appConfig;
+            }
+
+            set
+            {
+                if (_appConfig == value)
+                {
+                    return;
+                }
+
+                RaisePropertyChanging(AppConfigPropertyName);
+                _appConfig = value;
+                RaisePropertyChanged(AppConfigPropertyName);
+            }
+        }
+
     }
 
 }

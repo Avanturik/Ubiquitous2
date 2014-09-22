@@ -9,6 +9,7 @@ namespace UB.Model
     public interface IGeneralDataService
     {
         List<IService> Services { get; set; }
+        IService GetService(string serviceName);
         void Start();
         void Stop();
     }

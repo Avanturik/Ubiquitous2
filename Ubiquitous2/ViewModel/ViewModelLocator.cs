@@ -35,14 +35,14 @@ namespace UB.ViewModel
 
             if (ViewModelBase.IsInDesignModeStatic)
             {
-                SimpleIoc.Default.Register<SettingsDataService, Design.DesignSettingsDataService>();
+                SimpleIoc.Default.Register<ISettingsDataService, Design.DesignSettingsDataService>();
                 SimpleIoc.Default.Register<IChatDataService, Design.DesignDataService>();
                 SimpleIoc.Default.Register<IImageDataSource, Design.DesignImageCacheDataService>();
                 SimpleIoc.Default.Register<IGeneralDataService, Design.GeneralDataServiceDesign>();
             }
             else
             {
-                SimpleIoc.Default.Register<SettingsDataService, SettingsDataService>();
+                SimpleIoc.Default.Register<ISettingsDataService, SettingsDataService>();
                 SimpleIoc.Default.Register<IChatDataService, ChatDataService>();
                 SimpleIoc.Default.Register<IImageDataSource, ImageCacheDataService>();
                 SimpleIoc.Default.Register<IGeneralDataService, GeneralDataService>();

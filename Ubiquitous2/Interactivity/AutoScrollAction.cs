@@ -51,7 +51,7 @@ namespace UB.Interactivity
             using (var timer = new Timer((obj) =>
             {
                 UI.Dispatch(() => InstantScrollToBottom());
-            }, this, 10, Timeout.Infinite)) { };
+            }, this, 16, Timeout.Infinite)) { };
         }
 
         protected void InstantScrollToBottom()

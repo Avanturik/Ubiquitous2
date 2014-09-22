@@ -28,6 +28,7 @@ namespace UB.ViewModel
     {
         private readonly IChatDataService _dataService;
         private readonly IGeneralDataService _generalDataService;
+        private readonly ISettingsDataService _settingsDataService;
         private StatusWindow statusWindow = new StatusWindow();
         private MusicTickerWindow musicWindow;
         private SteamGuardWindow steamGuardWindow;
@@ -35,12 +36,21 @@ namespace UB.ViewModel
         /// Initializes a new instance of the MainViewModel class.
         /// </summary>
         [PreferredConstructor]
-        public MainViewModel(IChatDataService dataService, IGeneralDataService generalDataService)
-        {
-            _dataService = dataService;
-            _generalDataService = generalDataService;
-            steamGuardWindow = new SteamGuardWindow();
-            Initialize();
+        public MainViewModel(IChatDataService dataService, IGeneralDataService generalDataService, ISettingsDataService settingsDataService)
+        {            
+            if( !IsWindowReopen )
+            {
+                _dataService = dataService;
+                _generalDataService = generalDataService;
+                _settingsDataService = settingsDataService;
+
+                _settingsDataService.GetAppSettings((config) => {
+                    AppConfig = config;
+                });
+
+                steamGuardWindow = new SteamGuardWindow();
+                Initialize();
+            }
         }
         public void Initialize()
         {
@@ -53,6 +63,13 @@ namespace UB.ViewModel
 
             statusWindow.Visibility = Visibility.Visible;
             //musicWindow.Visibility = Visibility.Visible;
+
+            MessengerInstance.Register<bool>(this, "ReopenMainWindow", (message) => { 
+                if( message )
+                {
+                    IsWindowReopen = true;
+                }
+            });
 
             MessengerInstance.Register<ChatMessage>(this, "SetChannel", (message) =>
             {
@@ -77,8 +94,43 @@ namespace UB.ViewModel
                     return null;
                 };
             }
+
+
         }
+
+        /// <summary>
+        /// The <see cref="IsWindowReopen" /> property's name.
+        /// </summary>
+        public const string IsWindowReopenPropertyName = "IsWindowReopen";
+
+        private bool _isWindowReopen = false;
+
+        /// <summary>
+        /// Sets and gets the IsWindowReopen property.
+        /// Changes to that property's value raise the PropertyChanged event. 
+        /// </summary>
+        public bool IsWindowReopen
+        {
+            get
+            {
+                return _isWindowReopen;
+            }
+
+            set
+            {
+                if (_isWindowReopen == value)
+                {
+                    return;
+                }
+
+                RaisePropertyChanging(IsWindowReopenPropertyName);
+                _isWindowReopen = value;
+                RaisePropertyChanged(IsWindowReopenPropertyName);
+            }
+        }
+
         private RelayCommand _changeState;
+
 
         /// <summary>
         /// Gets the ChangeState.
@@ -152,10 +204,14 @@ namespace UB.ViewModel
                     ?? (_exitApplication = new RelayCommand(
                                           () =>
                                           {
-                                              Properties.Ubiquitous.Default.Save();
-                                              _dataService.Stop();
+                                              if( !IsWindowReopen )
+                                              {
+                                                  Properties.Ubiquitous.Default.Save();
+                                                  _dataService.Stop();
 
-                                              Application.Current.Shutdown();
+                                                  Application.Current.Shutdown();
+                                              }
+                                              IsWindowReopen = false;
                                           }));
             }
         }
@@ -573,6 +629,37 @@ namespace UB.ViewModel
                 RaisePropertyChanging(EnableMouseTransparencyPropertyName);
                 _enableMouseTransparency = value;
                 RaisePropertyChanged(EnableMouseTransparencyPropertyName);
+            }
+        }
+
+        /// <summary>
+        /// The <see cref="AppConfig" /> property's name.
+        /// </summary>
+        public const string AppConfigPropertyName = "AppConfig";
+
+        private AppConfig _appConfig = new AppConfig();
+
+        /// <summary>
+        /// Sets and gets the AppConfig property.
+        /// Changes to that property's value raise the PropertyChanged event. 
+        /// </summary>
+        public AppConfig AppConfig
+        {
+            get
+            {
+                return _appConfig;
+            }
+
+            set
+            {
+                if (_appConfig == value)
+                {
+                    return;
+                }
+
+                RaisePropertyChanging(AppConfigPropertyName);
+                _appConfig = value;
+                RaisePropertyChanged(AppConfigPropertyName);
             }
         }
 

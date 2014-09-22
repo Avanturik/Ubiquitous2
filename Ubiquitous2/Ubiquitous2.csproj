@@ -123,6 +123,9 @@
     <Reference Include="WpfAnimatedGif">
       <HintPath>..\packages\WpfAnimatedGif.1.4.4\lib\net\WpfAnimatedGif.dll</HintPath>
     </Reference>
+    <Reference Include="WriteableBitmapEx.Wpf">
+      <HintPath>..\packages\WriteableBitmapEx.1.0.12.0\lib\net40\WriteableBitmapEx.Wpf.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <ApplicationDefinition Include="App.xaml">
@@ -154,6 +157,7 @@
     <Compile Include="Interactivity\DataEventTrigger.cs" />
     <Compile Include="Interactivity\DragThumbBehavior.cs" />
     <Compile Include="Interactivity\DragBehavior.cs" />
+    <Compile Include="Interactivity\ElementToPng.cs" />
     <Compile Include="Interactivity\PasswordBoxAssistant.cs" />
     <Compile Include="Interactivity\WindowPersistentLocationBehavior.cs" />
     <Compile Include="Interactivity\RichTextBoxAttached.cs" />
@@ -164,6 +168,7 @@
     <Compile Include="Interactivity\WindowResizer.cs" />
     <Compile Include="Model\AppConfig.cs" />
     <Compile Include="Model\ChatBase.cs" />
+    <Compile Include="Model\ChatToImageService.cs" />
     <Compile Include="Model\GamingLiveChat.cs" />
     <Compile Include="Model\GeneralDataService.cs" />
     <Compile Include="Model\HitboxChat.cs" />
@@ -532,6 +537,9 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Resource>
     <Resource Include="Resources\SimpleThemeThumbnail.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resources\png.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Resource>
     <Content Include="web\css\simple.css">

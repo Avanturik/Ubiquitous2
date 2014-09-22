@@ -26,9 +26,9 @@
     <Style x:Key="WindowBorder" TargetType="{x:Type Border}">
         <Setter Property="Visibility" Value="{Binding IsOverlayVisible, Converter={StaticResource boolToVisibilityConverter}}"/>
         <Setter Property="Panel.ZIndex" Value="-1"/>
-        <Setter Property="BorderBrush" Value="#FF1F3E1D"/>
+        <Setter Property="BorderBrush" Value="#011F3E1D"/>
         <Setter Property="BorderThickness" Value="0"/>
-        <Setter Property="Background" Value="#FF1F3E1D"/>
+        <Setter Property="Background" Value="#011F3E1D"/>
     </Style>
     <Style x:Key="OverlayHyperlink"  TargetType="{x:Type Hyperlink}">
         <Setter Property="TextDecorations" Value="None"/>
@@ -45,7 +45,7 @@
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type Window}">
-                    <Grid >
+                    <Grid>
                         <Grid.RowDefinitions>
                             <RowDefinition Height="15" />
                             <RowDefinition Height="*" />
@@ -56,9 +56,9 @@
                             <ColumnDefinition Width="*" />
                             <ColumnDefinition Width="15" />
                         </Grid.ColumnDefinitions>
-
+                        <Rectangle Panel.ZIndex="-10" Fill="Black" Opacity="{Binding AppConfig.BackgroundOpacity}" Grid.RowSpan="3" Grid.ColumnSpan="3" />
                         <Grid Grid.RowSpan="3" Grid.ColumnSpan="3" Margin="5">
-                            <Border Panel.ZIndex="-5" Background="Black" CornerRadius="10,10,10,10" BorderBrush="#FF165B1D" BorderThickness="1" Margin="0">
+                            <Border Panel.ZIndex="-5" Background="#01FFFFFF" CornerRadius="10,10,10,10" BorderBrush="#FF165B1D" BorderThickness="1" Margin="0">
                                 <Border.Style>
                                     <Style>
                                         <Style.Triggers>

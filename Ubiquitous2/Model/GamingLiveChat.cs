@@ -59,11 +59,14 @@ namespace UB.Model
 
         public bool Start()
         {
-            Log.WriteInfo("Starting Gaminglive.tv chat");
+
             if (Status.IsStarting || Status.IsConnected || Status.IsLoggedIn || Config == null)
             {
                 return true;
             }
+
+            Log.WriteInfo("Starting Gaminglive.tv chat");
+            Status.ResetToDefault();
             Status.IsStarting = true;
 
             if( Login() )
@@ -121,7 +124,7 @@ namespace UB.Model
                     if (RemoveChannel != null)
                         RemoveChannel(gamingLiveChannel.ChannelName, this);
 
-                    if (!Status.IsStopping)
+                    if (!Status.IsStarting && !Status.IsStopping)
                         Restart();
                 };
                 lock(channelsLock)
@@ -249,10 +252,15 @@ namespace UB.Model
         }
         public bool Stop()
         {
-            Log.WriteInfo("Stopping Gaminglive.tv chat");
+            if (!Enabled)
+                Status.ResetToDefault();
 
             if (Status.IsStopping)
                 return false;
+
+            Log.WriteInfo("Stopping Gaminglive.tv chat");
+            Status.IsStopping = true;
+            Status.IsStarting = false;
 
             lock(channelsLock)
                 gamingLiveChannels.ForEach(chan => {
@@ -260,7 +268,6 @@ namespace UB.Model
                     chan.Leave(); 
                 });
             ChatChannels.Clear();
-            Status.ResetToDefault();
             return true;
         }
 
@@ -486,6 +493,7 @@ namespace UB.Model
         public string ChannelName { get; set; }
         public void Leave()
         {
+            Log.WriteInfo("Gaminglive leaving {0}", ChannelName);
             webSocket.Disconnect();
         }
 

@@ -26,5 +26,11 @@ namespace UB.Design
         public void Stop()
         {
         }
+
+
+        public IService GetService(string serviceName)
+        {
+            return null;
+        }
     }
 }

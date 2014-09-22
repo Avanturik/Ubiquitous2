@@ -17,7 +17,8 @@
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type UserControl}">
-                    <Grid Margin="0,0,-4,0" Background="#FF1E1E1E">    
+                    <Grid Margin="0,0,0,0">
+                        <Rectangle Fill="#FF1E1E1E" Opacity="{Binding AppConfig.MessageBackgroundOpacity}"/>
                         <Border Padding="8" Margin="-7,-2,-10,-9">
                             
                             <ItemsControl Focusable="False" ItemsSource="{Binding Messages}" Padding="0" Margin="0">
@@ -38,7 +39,7 @@
                             </ItemsControl.Template>
                             <ItemsControl.ItemsPanel>
                                 <ItemsPanelTemplate>
-                                    <dc:SmoothPanel TrackTopMost="false" VirtualizingPanel.CacheLength="5" VirtualizingPanel.CacheLengthUnit="Page">
+                                        <dc:SmoothPanel VirtualizingPanel.VirtualizationMode="Recycling" TrackTopMost="false" VirtualizingPanel.CacheLength="5" VirtualizingPanel.CacheLengthUnit="Page">
                                             <dc:SmoothPanel.Templates>
                                                 <dc:SmoothPanelTemplate ViewModel="{x:Type ubviewmodel:ChatMessageViewModel}" View="{x:Type ubview:ChatMessageView}" />
                                             </dc:SmoothPanel.Templates>

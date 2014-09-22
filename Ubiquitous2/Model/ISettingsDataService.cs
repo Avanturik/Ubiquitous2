@@ -10,6 +10,7 @@ namespace UB.Model
     {
         void GetChatSettings(Action<List<ChatConfig>> callback);
         void GetServiceSettings(Action<List<ServiceConfig>> callback);
+        void GetAppSettings(Action<AppConfig> callback);
         void GetRandomChatSetting(Action<ChatConfig> callback);
         void GetRandomTextField(Action<ConfigField> callback);
     }

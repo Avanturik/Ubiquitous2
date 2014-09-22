@@ -25,7 +25,7 @@ namespace UB.ViewModel
     {
         private ISettingsDataService settingsDataService;
         [PreferredConstructor]
-        public SettingsViewModel(SettingsDataService dataService, IGeneralDataService generalDataService)
+        public SettingsViewModel(ISettingsDataService dataService, IGeneralDataService generalDataService)
         {
             settingsDataService = dataService;
             CurrentTheme = Ubiquitous.Default.Config.AppConfig.ThemeName;
@@ -41,6 +41,8 @@ namespace UB.ViewModel
             {
                 ServiceItemViewModels.Add(service);
             }
+
+            AppConfig = Ubiquitous.Default.Config.AppConfig;
         }
 
         /// <summary>
@@ -94,6 +96,88 @@ namespace UB.ViewModel
             }
         }
 
+        private RelayCommand _reopenMainWindow;
+
+        /// <summary>
+        /// Gets the ReopenMainWindow.
+        /// </summary>
+        public RelayCommand ReopenMainWindow
+        {
+            get
+            {
+                return _reopenMainWindow
+                    ?? (_reopenMainWindow = new RelayCommand(
+                                          () =>
+                                          {
+                                              MessengerInstance.Send<bool>(true, "ReopenMainWindow");
+                                              Application.Current.MainWindow.Close();
+                                              Application.Current.MainWindow = new MainWindow();
+                                              Application.Current.MainWindow.Show();
+                                          }));
+            }
+        }
+
+        /// <summary>
+        /// The <see cref="AppConfig" /> property's name.
+        /// </summary>
+        public const string AppConfigPropertyName = "AppConfig";
+
+        private AppConfig _appConfig = new AppConfig();
+
+        /// <summary>
+        /// Sets and gets the AppConfig property.
+        /// Changes to that property's value raise the PropertyChanged event. 
+        /// </summary>
+        public AppConfig AppConfig
+        {
+            get
+            {
+                return _appConfig;
+            }
+
+            set
+            {
+                if (_appConfig == value)
+                {
+                    return;
+                }
+
+                RaisePropertyChanging(AppConfigPropertyName);
+                _appConfig = value;
+                RaisePropertyChanged(AppConfigPropertyName);
+            }
+        }
+
+        /// <summary>
+        /// The <see cref="PersonalizationFields" /> property's name.
+        /// </summary>
+        public const string PersonalizationFieldsPropertyName = "PersonalizationFields";
+
+        private ObservableCollection<SettingsFieldViewModel> _personalizationFields = new ObservableCollection<SettingsFieldViewModel>();
+
+        /// <summary>
+        /// Sets and gets the PersonalizationFields property.
+        /// Changes to that property's value raise the PropertyChanged event. 
+        /// </summary>
+        public ObservableCollection<SettingsFieldViewModel> PersonalizationFields
+        {
+            get
+            {
+                return _personalizationFields;
+            }
+
+            set
+            {
+                if (_personalizationFields == value)
+                {
+                    return;
+                }
+
+                RaisePropertyChanging(PersonalizationFieldsPropertyName);
+                _personalizationFields = value;
+                RaisePropertyChanged(PersonalizationFieldsPropertyName);
+            }
+        }
 
         /// <summary>
         /// The <see cref="ServiceItemViewModels" /> property's name.
@@ -160,8 +244,7 @@ namespace UB.ViewModel
 
         public bool? Show()
         {
-            var settings = new SettingsWindow();
-            settings.Owner = Application.Current.MainWindow;
+            var settings = new SettingsWindow();            
             return settings.ShowDialog();
         }
     }

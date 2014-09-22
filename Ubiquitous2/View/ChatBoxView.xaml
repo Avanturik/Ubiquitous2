@@ -3,9 +3,17 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+             xmlns:Interactivity="clr-namespace:UB.Interactivity"
              mc:Ignorable="d" 
              UseLayoutRounding="True"
              DataContext="{Binding Path=ChatBox, Source={StaticResource Locator}}"              
              Focusable="False"             
              Style="{DynamicResource ChatBoxStyle}" 
-             d:DesignWidth="300" d:DesignHeight="400"/>
+             d:DesignWidth="300" d:DesignHeight="400">
+
+    <i:Interaction.Behaviors>
+        <Interactivity:ElementToPng FileName="{Binding ChatToImagePath}" DelayBefore="600" SaveOnDemand="True" SaveFlag="{Binding IsMessageAdded}"/>   
+    </i:Interaction.Behaviors>
+
+</UserControl>

@@ -16,11 +16,11 @@ namespace UB.ViewModel
     public class SettingsChatItemViewModel : ViewModelBase, IHeightMeasurer
     {
         private ChatConfig chatConfig;
-        private SettingsDataService _dataService;
+        private ISettingsDataService _dataService;
         private IChatDataService chatDataService;
 
         [PreferredConstructor]
-        public SettingsChatItemViewModel(SettingsDataService dataService)
+        public SettingsChatItemViewModel(ISettingsDataService dataService)
         {
             _dataService = dataService;
             _dataService.GetRandomChatSetting(

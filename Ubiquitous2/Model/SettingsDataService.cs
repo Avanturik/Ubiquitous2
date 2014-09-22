@@ -37,6 +37,9 @@ namespace UB.Model
             {
                 Ubiquitous.Default.Config.AppConfig = SettingsRegistry.DefaultAppSettings;               
             }
+            if (String.IsNullOrWhiteSpace(Ubiquitous.Default.Config.AppConfig.ThemeName))
+                Ubiquitous.Default.Config.AppConfig.ThemeName = "Main";
+
             Theme.SwitchTheme(Ubiquitous.Default.Config.AppConfig.ThemeName);
         }
         private void InitializeWindowSettings()
@@ -138,6 +141,12 @@ namespace UB.Model
             callback(
                  new ConfigField() { DataType = "Text", IsVisible = true, Label = "User name:", Name = "Username", Value = "loremuser" }
             );
+        }
+
+
+        public void GetAppSettings(Action<AppConfig> callback)
+        {
+            callback(Ubiquitous.Default.Config.AppConfig);
         }
     }
 }

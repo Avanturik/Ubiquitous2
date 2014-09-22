@@ -9,12 +9,12 @@ namespace UB.Model
 {
     public class GeneralDataService : IGeneralDataService
     {        
-        private SettingsDataService settingsDataService { get; set; }
+        private ISettingsDataService settingsDataService { get; set; }
         
 
         public GeneralDataService()
         {
-            settingsDataService = ServiceLocator.Current.GetInstance<SettingsDataService>();
+            settingsDataService = ServiceLocator.Current.GetInstance<ISettingsDataService>();
             Start();
         }
 
@@ -50,6 +50,12 @@ namespace UB.Model
         public void Stop()
         {
            
+        }
+
+
+        public IService GetService(string serviceName)
+        {
+            return Services.FirstOrDefault(s => s.Config.ServiceName.Equals(serviceName, StringComparison.InvariantCultureIgnoreCase));            
         }
     }
 }
