@@ -11,6 +11,7 @@
         xmlns:Devart="clr-namespace:Devart.Controls"
         xmlns:UBView="clr-namespace:UB.View"
         xmlns:UBViewModel="clr-namespace:UB.ViewModel"
+        xmlns:UBModel="clr-namespace:UB.Model"
         xmlns:ComponentModel="clr-namespace:System.ComponentModel;assembly=WindowsBase"
         WindowStyle="None"
         AllowsTransparency="False"        
@@ -22,7 +23,7 @@
         Icon="..\ubiquitous smile.ico"
         DataContext="{Binding Source={StaticResource Locator},Path=MusicTicker}" 
         Visibility="{Binding Source={StaticResource Locator},Path=MusicTicker.Config.Enabled, Converter={StaticResource boolToVisibilityConverter}}"
-        HorizontalAlignment="Center" VerticalAlignment="Center" Padding="0" Foreground="#FFDEDEDE" Width="300" Height="64" d:DesignHeight="84.186">
+        HorizontalAlignment="Center" VerticalAlignment="Center" Padding="0" Foreground="#FFDEDEDE" Width="300" Height="56" d:DesignHeight="84.186">
 
     <Window.Resources>
         <BooleanToVisibilityConverter x:Key="boolToVisibilityConverter"></BooleanToVisibilityConverter>
@@ -33,10 +34,7 @@
         <Interactivity:DragWindow/>
     </i:Interaction.Behaviors>
 
-    <Grid Margin="0,0,0,0">
-        <Grid.RowDefinitions>
-            <RowDefinition Height="64"/>
-        </Grid.RowDefinitions>
+    <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="64"/>
             <ColumnDefinition Width="*"/>
@@ -48,13 +46,21 @@
             </LinearGradientBrush>
         </Grid.Background>
         <DockPanel Background="#FF252525">
-            <Image Margin="5" Width="64" Source="{Binding CurrentTrack.ImageURL}" Grid.Column="0" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+            <Image Margin="0" Width="64" Source="{Binding CurrentTrack.ImageURL}" Grid.Column="0" HorizontalAlignment="Center" VerticalAlignment="Center"/>
         </DockPanel>
-
-        <StackPanel Margin="5" Grid.Row="0" Grid.Column="1" VerticalAlignment="Center">
-            <TextBlock Text="{Binding CurrentTrack.Album}" Grid.ColumnSpan="2" Grid.RowSpan="2" VerticalAlignment="Top"/>
-            <TextBlock Text="{Binding CurrentTrack.Artist}" Grid.ColumnSpan="2" Grid.RowSpan="2" VerticalAlignment="Top"/>
-            <TextBlock Text="{Binding CurrentTrack.Title}" Grid.ColumnSpan="2" Grid.RowSpan="2" VerticalAlignment="Top"/>
+        <Rectangle>
+            <Rectangle.Fill>
+                <RadialGradientBrush Center="0.5,-0.5" RadiusX="1.2" RadiusY="1.2" GradientOrigin="0,0">
+                    <GradientStop Color="#70000000" Offset="1"/>
+                    <GradientStop Color="#1CB0B0B0"/>
+                    <GradientStop Color="#41606060" Offset="0.537"/>
+                </RadialGradientBrush>
+            </Rectangle.Fill>
+        </Rectangle>
+        <StackPanel Grid.Row="0" Grid.Column="1" VerticalAlignment="Center" Height="56" Margin="5,0,0,0">
+            <TextBlock Text="{Binding CurrentTrack.Album}"   VerticalAlignment="Top"/>
+            <TextBlock Text="{Binding CurrentTrack.Artist}"   VerticalAlignment="Top"/>
+            <TextBlock Text="{Binding CurrentTrack.Title}"  VerticalAlignment="Top"/>
         </StackPanel>
     </Grid>
 </Window>
