@@ -85,9 +85,8 @@ namespace UB.Interactivity
 
                 if (String.IsNullOrWhiteSpace(FileName))
                     return;
-
-                using (Stream stm = File.Open(FileName,FileMode.Truncate, FileAccess.ReadWrite, FileShare.Delete))
-                {
+                using (Stream stm = File.Open(FileName,FileMode.OpenOrCreate, FileAccess.ReadWrite, FileShare.Delete))
+                {                   
                     png.Save(stm);
                 }
 
