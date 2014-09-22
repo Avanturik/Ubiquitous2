@@ -94,7 +94,10 @@ namespace UB.ViewModel
 
                                               if( Application.Current.MainWindow.WindowState == WindowState.Normal ||
                                                   Application.Current.MainWindow.WindowState == WindowState.Minimized)
-                                              statusWindow.WindowState = Application.Current.MainWindow.WindowState;   
+                                              {
+                                                  statusWindow.WindowState = Application.Current.MainWindow.WindowState;
+                                                  musicWindow.WindowState = Application.Current.MainWindow.WindowState;
+                                              }
                                           }));
             }
         }
