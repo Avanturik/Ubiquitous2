@@ -41,10 +41,14 @@ namespace UB.Interactivity
 
             }, null, Timeout.Infinite, Timeout.Infinite);
         }
+        protected override void OnDetaching()
+        {
+            saveTimer.Change(Timeout.Infinite, Timeout.Infinite);
+        }
         protected override void OnAttached()
         {
             visual = AssociatedObject as UIElement;
-            base.OnAttached();
+            
         }
 
         public void SaveVisualToPng()
@@ -85,10 +89,15 @@ namespace UB.Interactivity
 
                 if (String.IsNullOrWhiteSpace(FileName))
                     return;
-                using (Stream stm = File.Open(FileName,FileMode.OpenOrCreate, FileAccess.ReadWrite, FileShare.Delete))
-                {                   
-                    png.Save(stm);
+
+                try
+                {
+                    using (Stream stm = File.Open(FileName, FileMode.OpenOrCreate | FileMode.Truncate, FileAccess.ReadWrite, FileShare.Delete))
+                    {
+                        png.Save(stm);
+                    }
                 }
+                catch { }
 
             }
         }

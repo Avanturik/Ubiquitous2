@@ -27,6 +27,7 @@
         <Setter Property="Visibility" Value="{Binding IsOverlayVisible, Converter={StaticResource boolToVisibilityConverter}}"/>
         <Setter Property="Panel.ZIndex" Value="-1"/>
         <Setter Property="BorderBrush" Value="#011F3E1D"/>
+        <Setter Property="Opacity" Value="0.01"/>
         <Setter Property="BorderThickness" Value="0"/>
         <Setter Property="Background" Value="#011F3E1D"/>
     </Style>
@@ -56,7 +57,7 @@
                             <ColumnDefinition Width="*" />
                             <ColumnDefinition Width="15" />
                         </Grid.ColumnDefinitions>
-                        <Rectangle Panel.ZIndex="-10" Fill="Black" Opacity="{Binding AppConfig.BackgroundOpacity}" Grid.RowSpan="3" Grid.ColumnSpan="3" />
+                        <Rectangle Fill="#FF1E1E1E" Panel.ZIndex="-10" Opacity="{Binding AppConfig.BackgroundOpacity}" Grid.RowSpan="3" Grid.ColumnSpan="3" />
                         <Grid Grid.RowSpan="3" Grid.ColumnSpan="3" Margin="5">
                             <Border Panel.ZIndex="-5" Background="#01FFFFFF" CornerRadius="10,10,10,10" BorderBrush="#FF165B1D" BorderThickness="1" Margin="0">
                                 <Border.Style>

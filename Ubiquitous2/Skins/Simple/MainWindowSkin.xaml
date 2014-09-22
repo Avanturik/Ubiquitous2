@@ -29,6 +29,7 @@
         <Setter Property="Opacity" Value="0.01"/>
         <Setter Property="BorderBrush" Value="#FF1E1E1E"/>
         <Setter Property="BorderThickness" Value="0"/>
+        <Setter Property="Background" Value="#011F3E1D"/>
 
     </Style>
     <Style x:Key="OverlayHyperlink"  TargetType="{x:Type Hyperlink}">
@@ -60,7 +61,7 @@
                             <ColumnDefinition Width="15" />
                         </Grid.ColumnDefinitions>
 
-                            <Rectangle Fill="#FF1E1E1E" Opacity="{Binding AppConfig.BackgroundOpacity}" Grid.RowSpan="3" Grid.ColumnSpan="3" />
+                            <Rectangle Fill="#FF1E1E1E" Panel.ZIndex="-10" Opacity="{Binding AppConfig.BackgroundOpacity}" Grid.RowSpan="3" Grid.ColumnSpan="3" />
                             <Grid Grid.RowSpan="3" Grid.ColumnSpan="3" Margin="5">
                             <DockPanel Focusable="False" d:DesignHeight="300" d:DesignWidth="500">
                                 <Grid Focusable="False">
