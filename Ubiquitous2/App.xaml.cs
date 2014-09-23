@@ -8,6 +8,7 @@ using System.Windows.Media.Animation;
 using GalaSoft.MvvmLight.Threading;
 using UB.Model;
 using UB.Properties;
+using UB.Utils;
 
 namespace UB
 {
@@ -16,6 +17,9 @@ namespace UB
     /// </summary>
     public partial class App : Application
     {
+        public double ChatBoxWidth { get; set; }
+        public double ChatBoxHeight { get; set; }
+
         protected override void OnStartup(StartupEventArgs e)
         {
             Utils.Net.DemandTCPPermission();
@@ -26,7 +30,6 @@ namespace UB
                     new FrameworkPropertyMetadata { DefaultValue = 20 });
 
             WebRequest.DefaultWebProxy = null;
-
             //RenderOptions.ProcessRenderMode = RenderMode.SoftwareOnly; 
         }
 

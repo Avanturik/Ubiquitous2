@@ -45,8 +45,9 @@ namespace UB.Model
                 ErrorHandler = (error) => {
                     Log.WriteError(error);
                 };
-
-
+                StartPos = -1;
+                EndPos = -1;
+                
                 Proxy = null;
                 SuccessHandler = () => { };
             }
@@ -54,6 +55,8 @@ namespace UB.Model
             public Action SuccessHandler { get; set; }
             public bool KeepAlive { get; set; }
 
+            public long StartPos { get; set; }
+            public long EndPos { get; set; }
             protected override WebRequest GetWebRequest(Uri address)
             {
                 WebRequest request = base.GetWebRequest(address);
@@ -69,6 +72,12 @@ namespace UB.Model
                         var prop = sp.GetType().GetProperty("HttpBehaviour", BindingFlags.Instance | BindingFlags.NonPublic);
                         prop.SetValue(sp, (byte)0, null);
                     }
+
+                    if( StartPos != -1 && EndPos != -1 )
+                    {
+                        webRequest.AddRange(StartPos, EndPos);
+                    }
+
                     webRequest.CookieContainer = m_container;
                     webRequest.UserAgent = userAgent;
                     webRequest.Proxy = null;
@@ -182,6 +191,53 @@ namespace UB.Model
                     }
 
 
+                }
+            }        
+            public long GetContentLength( string url )
+            {
+                lock(downloadLock)
+                {
+                    try
+                    {
+                        WebRequest request = GetWebRequest(new Uri(url));
+                        //request.Method = "HEAD";
+                        StartPos = -128;
+                        EndPos = -128;
+                        WebResponse result = request.GetResponse();
+                        StartPos = -1;
+                        EndPos = -1;
+                        if (result != null)
+                            return result.ContentLength;
+                    }
+                    catch
+                    {
+                        StartPos = -1;
+                        EndPos = -1;
+                    }
+                    return -1;
+                }
+            }
+
+            public Stream DownloadPartial( string url, long startPos, long endPos )
+            {
+                lock (downloadLock)
+                {
+                    try
+                    {
+                        StartPos = startPos;
+                        EndPos = endPos;
+                        WebRequest request = GetWebRequest(new Uri(url));
+                        WebResponse result = request.GetResponse();
+                        StartPos = -1;
+                        EndPos = -1;
+                        return result.GetResponseStream();
+                    }
+                    catch
+                    {
+                        StartPos = -1;
+                        EndPos = -1;
+                    }
+                    return null;
                 }
             }
 

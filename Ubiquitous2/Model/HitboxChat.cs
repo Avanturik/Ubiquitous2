@@ -196,37 +196,50 @@ namespace UB.Model
 
         private bool Login()
         {
-            if (!LoginWithToken())
+            try
             {
-                if (!LoginWithUsername())
+                if (!LoginWithToken())
                 {
-                    Status.IsLoginFailed = true;
-                    return false;
-                }
-                else
-                {
-                    return true;
+                    if (!LoginWithUsername())
+                    {
+                        Status.IsLoginFailed = true;
+                        return false;
+                    }
                 }
             }
-            else
+            catch (Exception e)
             {
-                return true;
+                Log.WriteInfo("Hitbox authorization exception {0}", e.Message);
+                return false;
             }
+            if (!isAnonymous)
+                Status.IsLoggedIn = true;
+
+            return true;
         }
 
         public bool LoginWithToken()
         {
             var authToken = Config.GetParameterValue("AuthToken") as string;
             var userName = Config.GetParameterValue("Username") as string;
-           
-            if (String.IsNullOrWhiteSpace(authToken) || String.IsNullOrWhiteSpace(userName))
+            
+            if( String.IsNullOrEmpty(userName))
+            {
+                isAnonymous = true;
+                return true;
+            }
+
+            if (String.IsNullOrWhiteSpace(authToken))
                 return false;
 
             NickName = userName;
 
             var test = this.With(x => Json.DeserializeUrl<dynamic>(String.Format("https://www.hitbox.tv/api/teams/codex?authToken={0}",authToken)));
+            
             if (test.teams != null)
-                return true;
+            {
+                return false;
+            }
 
             
             Config.SetParameterValue("AuthToken", String.Empty);
@@ -249,6 +262,7 @@ namespace UB.Model
 
             SetCommonHeaders();
             var authToken = this.With(x => loginWebClient.Upload("http://www.hitbox.tv/api/auth/login", authString))
+                                .With(x => String.IsNullOrWhiteSpace(x) ? null : x)
                                 .With(x => JToken.Parse(x))
                                 .With(x => x.Value<string>("authToken"));
 

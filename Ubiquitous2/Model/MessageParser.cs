@@ -55,8 +55,8 @@ namespace UB.Model
                         string url = match.Groups[2].Value;
                         try
                         {
-                            ImageInfo.GetWebImageSize(url, (imageSize) => {
-                                message.Text = r.Replace(message.Text, @"<img width=""" + imageSize.Width + @""" height=""" + imageSize.Height + @""" src=""$2""/>").Replace("href=\"www", "href=\"http://www");
+                            ImageMeasurer.GetWebImageDimensions(url, (info) => {
+                                message.Text = r.Replace(message.Text, @"<img width=""" + info.Dimensions.Width + @""" height=""" + info.Dimensions.Height + @""" src=""$2""/>").Replace("href=\"www", "href=\"http://www");
                             });
                         }
                         catch { }

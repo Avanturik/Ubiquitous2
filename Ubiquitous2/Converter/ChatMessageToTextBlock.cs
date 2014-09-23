@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Documents;
@@ -67,8 +68,26 @@ namespace UB.Converter
                                         if (node.Attributes["height"] != null)
                                             int.TryParse(node.Attributes["height"].Value, out height);
 
-                                        width = width == 0 ? 64 : width;
-                                        height = height == 0 ? 64 : height;
+                                        if( width == 0 && height == 0 )
+                                        {
+                                            ImageMeasurer.GetWebImageDimensions(url, (info) =>
+                                            {
+                                                if( info.Format != null )
+                                                {
+                                                    if (info.Dimensions.Width > 0 && info.Dimensions.Width < (Application.Current as App).ChatBoxWidth)
+                                                    {
+                                                        width = info.Dimensions.Width;
+                                                        height = info.Dimensions.Height;
+                                                    }
+                                                }
+                                                else
+                                                {
+                                                    width = width == 0 ? 64 : width;
+                                                    height = height == 0 ? 64 : height;
+                                                }
+                                            });
+                                        }
+
 
                                         Uri imageUri;
                                         if( Uri.TryCreate(url, UriKind.Absolute, out imageUri) )

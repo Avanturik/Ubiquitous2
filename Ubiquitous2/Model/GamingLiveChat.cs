@@ -168,23 +168,27 @@ namespace UB.Model
         
         private bool Login()
         {
-            if( !LoginWithToken())
+            try
             {
-                if (!LoginWithUsername())
+                if( !LoginWithToken())
                 {
-                    Status.IsLoginFailed = true;
-                    return false;
-                }
-                else
-                {
-                    Status.IsLoggedIn = true;
-                    return true;
-                }
-            }     
-            else
-            {
-                return true;
+                    if (!LoginWithUsername())
+                    {
+                        Status.IsLoginFailed = true;
+                        return false;
+                    }
+                }     
             }
+            catch(Exception e)
+            {
+                Log.WriteInfo("Gaminglive authorization exception {0}", e.Message);
+                return false;
+            }
+
+            if (!isAnonymous)
+                Status.IsLoggedIn = true;
+
+            return true;
         }
         public bool LoginWithUsername()
         {
@@ -221,17 +225,26 @@ namespace UB.Model
             var authToken = (string)Config.GetParameterValue("AuthToken");
             var userName = Config.GetParameterValue("Username") as string;
 
-            if (String.IsNullOrWhiteSpace(authToken) || String.IsNullOrWhiteSpace(userName))
+            if (String.IsNullOrEmpty(userName))
+            {
+                isAnonymous = true;
+                return true;
+            }
+
+            if (String.IsNullOrWhiteSpace(authToken))
                 return false;
 
             SetCommonHeaders();
             loginWebClient.Headers["Auth-Token"] = authToken;
 
             var response = this.With(x => loginWebClient.Download("https://api.gaminglive.tv/auth/me"))
-                                .With(x => JToken.Parse(x));
+                .With(x => String.IsNullOrWhiteSpace(x)?null:x)
+                .With(x => JToken.Parse(x));
 
             if (response == null)
+            {
                 return false;
+            }
 
             var isOk = response.Value<bool>("ok");
             NickName = (string)response.Value<dynamic>("user").login;

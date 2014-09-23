@@ -159,6 +159,7 @@
     <Compile Include="Interactivity\DragBehavior.cs" />
     <Compile Include="Interactivity\ElementToPng.cs" />
     <Compile Include="Interactivity\PasswordBoxAssistant.cs" />
+    <Compile Include="Interactivity\ElementSizeTracker.cs" />
     <Compile Include="Interactivity\WindowPersistentLocationBehavior.cs" />
     <Compile Include="Interactivity\RichTextBoxAttached.cs" />
     <Compile Include="Interactivity\ScrollViewerAttached.cs" />
@@ -316,7 +317,6 @@
     <Compile Include="Utils\Collections.cs" />
     <Compile Include="Utils\Config.cs" />
     <Compile Include="Utils\Html.cs" />
-    <Compile Include="Utils\Image.cs" />
     <Compile Include="Utils\Json.cs" />
     <Compile Include="Utils\Net.cs" />
     <Compile Include="Utils\Theme.cs" />
@@ -365,6 +365,7 @@
     <Compile Include="View\SteamGuardWindow.xaml.cs">
       <DependentUpon>SteamGuardWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Utils\ImageMeasurer.cs" />
     <Page Include="Controls\ResizableBorder.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

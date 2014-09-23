@@ -9,6 +9,7 @@ using UB.Model;
 using UB.Utils;
 using UB.Properties;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace UB.ViewModel
 {
@@ -409,6 +410,72 @@ namespace UB.ViewModel
                 RaisePropertyChanging(AppConfigPropertyName);
                 _appConfig = value;
                 RaisePropertyChanged(AppConfigPropertyName);
+            }
+        }
+
+        /// <summary>
+        /// The <see cref="ChatBoxWidth" /> property's name.
+        /// </summary>
+        public const string ChatBoxWidthPropertyName = "ChatBoxWidth";
+
+        private int _chatBoxWidth = 0;
+
+        /// <summary>
+        /// Sets and gets the ChatBoxWidth property.
+        /// Changes to that property's value raise the PropertyChanged event. 
+        /// </summary>
+        public int ChatBoxWidth
+        {
+            get
+            {
+                return _chatBoxWidth;
+            }
+
+            set
+            {
+                if (_chatBoxWidth == value)
+                {
+                    return;
+                }
+
+                RaisePropertyChanging(ChatBoxWidthPropertyName);
+                _chatBoxWidth = value;
+                (Application.Current as App).ChatBoxWidth = _chatBoxWidth;
+
+
+                RaisePropertyChanged(ChatBoxWidthPropertyName);
+            }
+        }
+
+        /// <summary>
+        /// The <see cref="ChatBoxHeight" /> property's name.
+        /// </summary>
+        public const string ChatBoxHeightPropertyName = "ChatBoxHeight";
+
+        private double _chatBoxHeight = 0;
+
+        /// <summary>
+        /// Sets and gets the ChatBoxHeight property.
+        /// Changes to that property's value raise the PropertyChanged event. 
+        /// </summary>
+        public double ChatBoxHeight
+        {
+            get
+            {
+                return _chatBoxHeight;
+            }
+
+            set
+            {
+                if (_chatBoxHeight == value)
+                {
+                    return;
+                }
+
+                RaisePropertyChanging(ChatBoxHeightPropertyName);
+                _chatBoxHeight = value;
+                (Application.Current as App).ChatBoxHeight = _chatBoxHeight;
+                RaisePropertyChanged(ChatBoxHeightPropertyName);
             }
         }
 

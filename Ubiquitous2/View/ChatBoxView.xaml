@@ -8,12 +8,15 @@
              mc:Ignorable="d" 
              UseLayoutRounding="True"
              DataContext="{Binding Path=ChatBox, Source={StaticResource Locator}}"              
-             Focusable="False"             
-             Style="{DynamicResource ChatBoxStyle}" 
+             Focusable="False"
+             Style="{DynamicResource ChatBoxStyle}"              
              d:DesignWidth="300" d:DesignHeight="400">
 
+    
+    
     <i:Interaction.Behaviors>
         <Interactivity:ElementToPng FileName="{Binding ChatToImagePath}" DelayBefore="600" SaveOnDemand="True" SaveFlag="{Binding IsMessageAdded}"/>   
+        <Interactivity:ElementSizeTracker Width="{Binding ChatBoxWidth, Mode=OneWayToSource}"/>
     </i:Interaction.Behaviors>
 
 </UserControl>

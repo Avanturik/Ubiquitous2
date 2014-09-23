@@ -5,6 +5,7 @@ using System.Linq;
 using System.Net.Cache;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media.Animation;
 using System.Windows.Media.Imaging;
@@ -25,16 +26,14 @@ namespace UB.Model
         {
             lock (getLock)
             {
-                if( width ==0 || height == 0)
-                {
-                    ImageInfo.GetWebImageSize(uri.AbsoluteUri, (size) => {
-                        width = size.Width;
-                        height = size.Height;
-                    });
-                }
+
                 GetImageSource(uri, width, height, (imageSource) =>
                 {
-                    Image image = new Image() { Width = width, Height = height };
+                    Image image = new Image();
+
+                    if( width > 0 && width < (Application.Current as App).ChatBoxWidth )
+                        image = new Image() { Width = width, Height = height };
+
                     image.Source = imageSource;
                     imageSource.DownloadCompleted += (o, e) =>
                     {

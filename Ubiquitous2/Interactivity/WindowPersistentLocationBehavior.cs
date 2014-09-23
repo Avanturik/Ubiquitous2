@@ -30,21 +30,24 @@ namespace UB.Interactivity
             }
             else
             {
-                window.Initialized += (obj,e) =>
-                {
-                    var win = obj as Window;
-                    win.Top = currentSettings.Top;
-                    win.Left = currentSettings.Left;
-                    win.Width = currentSettings.Right - currentSettings.Left;
-                    win.Height = currentSettings.Bottom - currentSettings.Top;                    
-                    win.SetPlacement(currentSettings);
-                };
+                window.Initialized += window_Initialized;
             }
 
             window.SizeChanged += window_SizeChanged;
             window.LocationChanged += window_LocationChanged;
             window.StateChanged +=window_StateChanged;
         }
+
+        void window_Initialized(object obj, EventArgs e)
+        {
+            var win = obj as Window;
+            win.Top = currentSettings.Top;
+            win.Left = currentSettings.Left;
+            win.Width = currentSettings.Right - currentSettings.Left;
+            win.Height = currentSettings.Bottom - currentSettings.Top;                    
+            win.SetPlacement(currentSettings);
+        }
+
 
         void window_StateChanged(object sender, EventArgs e)
         {
@@ -70,7 +73,10 @@ namespace UB.Interactivity
 
         protected override void OnDetaching()
         {
-            
+
+            window.SizeChanged -= window_SizeChanged;
+            window.LocationChanged -= window_LocationChanged;
+            window.StateChanged -= window_StateChanged;
         }
 
         /// <summary>
