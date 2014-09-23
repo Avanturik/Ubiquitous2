@@ -60,7 +60,7 @@ namespace UB.Model
                         Enabled = true,
                         Parameters = new List<ConfigField>() {
                             new ConfigField("Filename", "Path", "FileSave", true, @"c:\ubiquitous.png"),
-                            new ConfigField("Info0", "Save chat to image and use it as Image source in the OBS", "Info", true, null),
+                            new ConfigField("Info0", "Save chat to image and use it as Image source in the OBS", "Info", false, null),
                         }
                     }
 
