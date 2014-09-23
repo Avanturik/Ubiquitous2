@@ -55,12 +55,12 @@
                                         json = JSON.parse(json);
 
                                     var transform = {
-                                        "tag": "div", "class": "msg", "children": [
-                                        { "tag": "img", "class":"ci", "src": "${ChatIconURL}", "html": "" },
-                                        { "tag": "div", "class": "cn", "html": "${Channel}" },
-                                        { "tag": "div", "class": "un", "html": "${FromUserName}" },
-                                        { "tag": "div", "class": "ts", "html": "${TimeStamp}" },
-                                        { "tag": "div", "class": "txt", "html": "${Text}" },
+                                        "tag": "div", "children": [
+                                        { "tag": "img","src": "${ChatIconURL}", "html": "" },
+                                        { "tag": "div","html": "${Channel}" },
+                                        { "tag": "div","html": "${FromUserName}" },
+                                        { "tag": "div","html": "${TimeStamp}" },
+                                        { "tag": "div","html": "${Text}" },
                                         ]
                                     };
 

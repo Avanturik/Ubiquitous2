@@ -13,13 +13,11 @@
 	overflow : auto;
 }
 
-.fixed
-{
+.fixed{
 	position:fixed;	
 	
 }
-#statusbar
-{
+#statusbar{
 	background-color:rgba(70,70,70,0.75);
 	-moz-border-radius: 7px;
 	border-radius: 7px;
@@ -28,8 +26,13 @@
 	height:18px;	
 }
 
+#chat > div div {
+	position:relative;
+	font-size: 8pt;	
+	float:left;
+}
 /*Message div*/
-.msg{
+#chat > div{
 	padding:10px;
 	margin-bottom:5px;	
     background-color:#494949;
@@ -38,17 +41,32 @@
     border-radius: 15px;
 }
 /*Chat Icon*/
-.ci{
-	float:left;
+#chat > div > img:nth-child(1){
 	margin-top: -5px;
 	margin-left: -5px;
     width:11px;
+	display:block;
+	float:left;
     height:11px;
    	-webkit-filter: drop-shadow(1px 1px 1px #222);
     filter: url(drop-shadow.svg#drop-shadow);
 }
+/*Channel name*/
+#chat > div div:nth-child(2){
+	color:#D69B33;
+	margin-top:-6px;
+	margin-right:5px;
+	margin-left:5px;
+	font-size:8pt;
+}
+/*Username*/
+#chat > div div:nth-child(3){
+	color:#FFC042;
+	font-size:8pt;
+	margin-top: -6px;
+}
 /*Timestamp*/
-.ts{
+#chat > div div:nth-child(4){
 	color:#D69B33;
 	display:block;
 	float:right;
@@ -58,28 +76,8 @@
     position:relative;
 	font-size:8pt;
 }
-
-/*Username*/
-.un{
-	display:block;
-	color:#FFC042;
-	font-size:8pt;
-	margin-top: -6px;
-	float:left;
-}
-/*Channel name*/
-.cn{
-	color:#D69B33;
-	display:block;
-	margin-top:-6px;
-	margin-right:5px;
-	margin-left:5px;
-	float:left;
-    position:relative;
-	font-size:8pt;
-}
 /*Text*/
-.txt{
+#chat > div div:nth-child(5){	
 	background-color:#303030;
     -webkit-border-radius: 15px;
     -moz-border-radius: 15px;
@@ -90,8 +88,8 @@
 	margin-right:-8px;
 	padding:5px;
 	clear:left;
+	float:none;
 	font-size:10pt;
-	display:block;
 	color:#9C9C9C;
 }
 a {
@@ -103,3 +101,4 @@ a:hover{
 	color: #FFC042;	
 	text-decoration:none;
 }
+
