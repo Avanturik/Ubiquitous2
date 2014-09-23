@@ -80,7 +80,7 @@ namespace UB.Interactivity
             typeof(bool),
             typeof(ClickThroughBehavior),
             new UIPropertyMetadata(true, (obj, args) => {
-                var window = obj as Window;
+                var window = (obj as ClickThroughBehavior).AssociatedObject as Window;
                 bool isTransparent = (bool)args.NewValue;
                 if (window != null)
                     SwitchTransparency(window, isTransparent);

@@ -318,6 +318,7 @@
     <Compile Include="Utils\Config.cs" />
     <Compile Include="Utils\Html.cs" />
     <Compile Include="Utils\Json.cs" />
+    <Compile Include="Utils\KeyboardListener.cs" />
     <Compile Include="Utils\Net.cs" />
     <Compile Include="Utils\Theme.cs" />
     <Compile Include="Utils\Time.cs" />

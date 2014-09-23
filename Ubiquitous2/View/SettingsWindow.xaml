@@ -109,25 +109,28 @@
             </fluent:BackstageTabItem>
             <fluent:BackstageTabItem Header="Personalization">
                 <Grid Margin="10">
-                    <StackPanel Orientation="Vertical">
-                        <CheckBox IsChecked="{Binding AppConfig.EnableTransparency, Mode=TwoWay}" Content="Enable transparency" Command="{Binding ReopenMainWindow}"/>
-                        <TextBlock TextWrapping="Wrap" FontSize="9">
-                            *Options to try if you get problems with OBS capture:
-                            <LineBreak/>
-                            - use "Save to png" service to capture window as image
-                            <LineBreak/>
-                            - try to enable "Capture layered windows" in OBS
-                            <LineBreak/>
-                            - disable Aero if you got Vista/Seven
-                            <LineBreak/>
-                            - put window on top of windowed game and capture whole monitor (CPU heavy)
-                        </TextBlock>
-                        <Label>Background opacity</Label>
-                        <Slider Value="{Binding AppConfig.BackgroundOpacity, Mode=TwoWay}" Margin="5,0,20,0" Maximum="1" SmallChange="0.05" TickFrequency="0.05" TickPlacement="BottomRight" LargeChange="0.1" Minimum="0.01"></Slider>
-                        <Label>Message background opacity</Label>
-                        <Slider Value="{Binding AppConfig.MessageBackgroundOpacity, Mode=TwoWay}" Margin="5,0,20,0" Maximum="1" SmallChange="0.05" TickFrequency="0.05" TickPlacement="BottomRight" LargeChange="0.1" Minimum="0.01"></Slider>
-                    </StackPanel>
-                    
+                    <ScrollViewer VerticalScrollBarVisibility="Auto">
+                        <StackPanel Orientation="Vertical">
+                            <CheckBox IsChecked="{Binding AppConfig.EnableTransparency, Mode=TwoWay}" Content="Enable transparency" Command="{Binding ReopenMainWindow}"/>
+                            <TextBlock TextWrapping="Wrap" FontSize="9">
+                                *Options to try if you get problems with OBS capture:
+                                <LineBreak/>
+                                - use "Save to png" service to capture window as image
+                                <LineBreak/>
+                                - try to enable "Capture layered windows" in OBS
+                                <LineBreak/>
+                                - disable Aero if you got Vista/Seven
+                                <LineBreak/>
+                                - put window on top of windowed game and capture whole monitor (CPU heavy)
+                                <LineBreak/>
+                            </TextBlock>
+                            <CheckBox IsChecked="{Binding AppConfig.MouseTransparency, Mode=TwoWay}" Content="Click-through window. Hold Ctrl to disable."/>
+                            <Label Margin="0,8,0,0">Background opacity(doesn't affect PNG background)</Label>
+                            <Slider Value="{Binding AppConfig.BackgroundOpacity, Mode=TwoWay}" Margin="5,0,20,0" Maximum="1" SmallChange="0.05" TickFrequency="0.05" TickPlacement="BottomRight" LargeChange="0.1" Minimum="0.01"></Slider>
+                            <Label Margin="0,8,0,0">Message background opacity</Label>
+                            <Slider Value="{Binding AppConfig.MessageBackgroundOpacity, Mode=TwoWay}" Margin="5,0,20,0" Maximum="1" SmallChange="0.05" TickFrequency="0.05" TickPlacement="BottomRight" LargeChange="0.1" Minimum="0.01"></Slider>
+                        </StackPanel>
+                    </ScrollViewer>
                 </Grid>
             </fluent:BackstageTabItem>
         </fluent:BackstageTabControl>

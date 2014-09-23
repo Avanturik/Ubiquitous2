@@ -15,6 +15,38 @@ namespace UB.Model
         }
 
         /// <summary>
+        /// The <see cref="MouseTransparency" /> property's name.
+        /// </summary>
+        public const string MouseTransparencyPropertyName = "MouseTransparency";
+
+        private bool _mouseTransparency = false;
+
+        /// <summary>
+        /// Sets and gets the MouseTransparency property.
+        /// Changes to that property's value raise the PropertyChanged event. 
+        /// </summary>
+        [XmlAttribute]
+        public bool MouseTransparency
+        {
+            get
+            {
+                return _mouseTransparency;
+            }
+
+            set
+            {
+                if (_mouseTransparency == value)
+                {
+                    return;
+                }
+
+                RaisePropertyChanging(MouseTransparencyPropertyName);
+                _mouseTransparency = value;
+                RaisePropertyChanged(MouseTransparencyPropertyName);
+            }
+        }
+
+        /// <summary>
         /// The <see cref="MessageBackgroundOpacity" /> property's name.
         /// </summary>
         public const string MessageBackgroundOpacityPropertyName = "MessageBackgroundOpacity";
@@ -25,6 +57,7 @@ namespace UB.Model
         /// Sets and gets the MessageBackgroundOpacity property.
         /// Changes to that property's value raise the PropertyChanged event. 
         /// </summary>
+        [XmlAttribute]
         public double MessageBackgroundOpacity
         {
             get
@@ -56,6 +89,7 @@ namespace UB.Model
         /// Sets and gets the BackgroundOpacity property.
         /// Changes to that property's value raise the PropertyChanged event. 
         /// </summary>
+        [XmlAttribute]
         public double BackgroundOpacity
         {
             get
@@ -87,6 +121,7 @@ namespace UB.Model
         /// Sets and gets the EnableTransparency property.
         /// Changes to that property's value raise the PropertyChanged event. 
         /// </summary>
+        [XmlAttribute]
         public bool EnableTransparency
         {
             get

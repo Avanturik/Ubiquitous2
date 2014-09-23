@@ -20,11 +20,11 @@
         Margin="0" 
         Padding="0" Icon="/Ubiquitous2;component/Resources/ubiquitous smile.ico" d:DesignWidth="275" d:DesignHeight="394"
         >
-        <i:Interaction.Behaviors>
-            <Interactivity:WindowPersistentLocationBehavior WindowName="MainWindow"/>
-            <Interactivity:ClickThroughBehavior EnableMouseTransparency="{Binding EnableMouseTransparency}"/>
-        </i:Interaction.Behaviors>
-        <i:Interaction.Triggers>
+    <i:Interaction.Behaviors>
+        <Interactivity:WindowPersistentLocationBehavior WindowName="MainWindow"/>
+        <Interactivity:ClickThroughBehavior EnableMouseTransparency="{Binding EnableMouseTransparency}"/>
+    </i:Interaction.Behaviors>
+    <i:Interaction.Triggers>
         <i:EventTrigger EventName="StateChanged">
             <Custom:EventToCommand Command="{Binding ChangeState}"/>
         </i:EventTrigger>
@@ -43,9 +43,7 @@
         <i:EventTrigger EventName="Deactivated">
             <i:InvokeCommandAction Command="{Binding SetUnFocused}"/>
         </i:EventTrigger>
+
     </i:Interaction.Triggers>
-
-
-
 
 </Window>

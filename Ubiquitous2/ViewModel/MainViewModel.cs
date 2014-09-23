@@ -15,6 +15,7 @@ using UB.View;
 using System.Windows;
 using System.Web;
 using System.Threading.Tasks;
+using System.Windows.Input;
 
 namespace UB.ViewModel
 {
@@ -32,6 +33,7 @@ namespace UB.ViewModel
         private StatusWindow statusWindow = new StatusWindow();
         private MusicTickerWindow musicWindow;
         private SteamGuardWindow steamGuardWindow;
+        private KeyboardListener keyboardListener;
         /// <summary>
         /// Initializes a new instance of the MainViewModel class.
         /// </summary>
@@ -46,14 +48,21 @@ namespace UB.ViewModel
 
                 _settingsDataService.GetAppSettings((config) => {
                     AppConfig = config;
-                });
-
+                });                
                 steamGuardWindow = new SteamGuardWindow();
                 Initialize();
             }
         }
         public void Initialize()
         {
+            //watch Ctrl down to switch click-through
+            keyboardListener = new KeyboardListener();
+            keyboardListener.KeyDown += keyboardListener_KeyDown;
+            keyboardListener.KeyUp += keyboardListener_KeyUp;
+            AppConfig.PropertyChanged += AppConfig_PropertyChanged;
+
+            EnableMouseTransparency = AppConfig.MouseTransparency && Keyboard.Modifiers != ModifierKeys.Control;
+
             _generalDataService.Start();
 
             ChannelList = _dataService.ChatChannels;
@@ -95,7 +104,31 @@ namespace UB.ViewModel
                 };
             }
 
+        }
 
+        void AppConfig_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        {
+            if( e.PropertyName.Equals(AppConfig.MouseTransparencyPropertyName) )
+            {
+                EnableMouseTransparency = AppConfig.MouseTransparency;
+            }
+        }
+
+        void keyboardListener_KeyUp(object sender, RawKeyEventArgs args)
+        {
+            if (args.Key == Key.RightCtrl || args.Key == Key.LeftCtrl)
+            {
+                UI.Dispatch(() => EnableMouseTransparency = AppConfig.MouseTransparency);
+            }
+
+        }
+
+        void keyboardListener_KeyDown(object sender, RawKeyEventArgs args)
+        {
+            if (args.Key == Key.RightCtrl || args.Key == Key.LeftCtrl )
+            {
+                UI.Dispatch(() => EnableMouseTransparency = false);
+            }
         }
 
         /// <summary>
@@ -616,7 +649,7 @@ namespace UB.ViewModel
         {
             get
             {
-                return _enableMouseTransparency;
+                return _enableMouseTransparency && AppConfig.EnableTransparency;
             }
 
             set
@@ -663,12 +696,13 @@ namespace UB.ViewModel
             }
         }
 
-        ////public override void Cleanup()
-        ////{
-        ////    // Clean up if needed
+        public override void Cleanup()
+        {
+            // Clean up if needed
+            keyboardListener.Dispose();
 
-        ////    base.Cleanup();
-        ////}
+            base.Cleanup();
+        }
 
     }
 }

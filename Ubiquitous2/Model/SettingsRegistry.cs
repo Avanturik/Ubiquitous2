@@ -170,6 +170,7 @@ namespace UB.Model
                     BackgroundOpacity = 0.8,
                     MessageBackgroundOpacity = 0.01,
                     Parameters = new List<ConfigField>(),
+                    MouseTransparency = false,
                 };
             }
         }
