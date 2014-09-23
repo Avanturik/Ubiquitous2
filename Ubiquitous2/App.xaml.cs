@@ -1,5 +1,6 @@
 ﻿using System.Configuration;
 using System.Diagnostics;
+using System.Net;
 using System.Windows;
 using System.Windows.Interop;
 using System.Windows.Media;
@@ -24,7 +25,8 @@ namespace UB
                     typeof(Timeline),
                     new FrameworkPropertyMetadata { DefaultValue = 20 });
 
-            
+            WebRequest.DefaultWebProxy = null;
+
             //RenderOptions.ProcessRenderMode = RenderMode.SoftwareOnly; 
         }
 

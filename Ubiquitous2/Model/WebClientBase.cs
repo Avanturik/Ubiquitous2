@@ -46,6 +46,8 @@ namespace UB.Model
                     Log.WriteError(error);
                 };
 
+
+                Proxy = null;
                 SuccessHandler = () => { };
             }
             public Action<string> ErrorHandler { get; set; }
@@ -69,6 +71,7 @@ namespace UB.Model
                     }
                     webRequest.CookieContainer = m_container;
                     webRequest.UserAgent = userAgent;
+                    webRequest.Proxy = null;
                     webRequest.CachePolicy = new HttpRequestCachePolicy(HttpRequestCacheLevel.NoCacheNoStore);
                     webRequest.AutomaticDecompression = DecompressionMethods.GZip | DecompressionMethods.Deflate;
                 }
