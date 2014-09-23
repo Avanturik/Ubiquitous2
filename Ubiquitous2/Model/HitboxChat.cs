@@ -426,7 +426,6 @@ namespace UB.Model
                         return;
 
                     Status.IsConnected = true;
-                    Status.IsLoggedIn = true;
                     lock(channelsLock)
                         hitboxChannels.Add(hbChannel);
 

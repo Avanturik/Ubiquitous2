@@ -45,8 +45,8 @@
                 <GradientStop Color="#FF1D1D1D" Offset="1"/>
             </LinearGradientBrush>
         </Grid.Background>
-        <DockPanel Background="#FF252525">
-            <Image Margin="0" Width="64" Source="{Binding CurrentTrack.ImageURL}" Grid.Column="0" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+        <DockPanel Grid.Column="0" Background="#FF252525">
+            <Image Source="{Binding CurrentTrack.ImageURL}"  HorizontalAlignment="Center" VerticalAlignment="Center"/>
         </DockPanel>
         <Rectangle>
             <Rectangle.Fill>
@@ -57,7 +57,7 @@
                 </RadialGradientBrush>
             </Rectangle.Fill>
         </Rectangle>
-        <StackPanel Grid.Row="0" Grid.Column="1" VerticalAlignment="Center" Height="56" Margin="5,0,0,0">
+        <StackPanel Grid.Row="0" Grid.Column="1" VerticalAlignment="Center" Margin="5,0,0,0">
             <TextBlock Text="{Binding CurrentTrack.Album}"   VerticalAlignment="Top"/>
             <TextBlock Text="{Binding CurrentTrack.Artist}"   VerticalAlignment="Top"/>
             <TextBlock Text="{Binding CurrentTrack.Title}"  VerticalAlignment="Top"/>

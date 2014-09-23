@@ -136,7 +136,9 @@ namespace UB.Model
 
                 counterWebPollers.Add(poller);
 
-                Status.IsLoggedIn = true;
+                if( !isAnonymous )
+                    Status.IsLoggedIn = true;
+
                 Status.IsStarting = false;
                 Status.IsConnecting = false;
                 Status.IsLoginFailed = false;
