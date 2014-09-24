@@ -51,7 +51,7 @@ namespace UB.Model
             UI.Dispatch(() => {
                 image.MaxWidth = newWidth;
 
-                if (newWidth >= 16 && newWidth < (Application.Current as App).ChatBoxWidth)
+                if (newWidth >= 1 && newWidth < (Application.Current as App).ChatBoxWidth)
                 {
                     image.Width = newWidth;
                 }
@@ -64,63 +64,68 @@ namespace UB.Model
         }
         public void GetImageSource(Uri uri, int width, int height, Image image, Action<BitmapImage> callback)
         {
-                
-                if( !bitmapImageCache.ContainsKey(uri.AbsoluteUri))
+            bool forceSize = false;
+
+            if (width <= 1)
+                image.Width = 32;
+            else
+            {
+                image.Width = width;
+                forceSize = true;
+            }
+
+            if (!bitmapImageCache.ContainsKey(uri.AbsoluteUri))
+            {
+                var item = new ImageCacheItem(uri, width, height);
+                var itemWeakRef = new WeakReference<ImageCacheItem>(item);
+
+                item.DownloadComplete = () =>
                 {
-                    var item = new ImageCacheItem(uri, width, height);
-                    var itemWeakRef = new WeakReference<ImageCacheItem>(item);
-                    
-                    image.Width = width;
-                    
-                    item.DownloadComplete = () =>
-                    {
+                    if( !forceSize )
                         FixImageSize(image, item.Width);
-                        if (uri.AbsoluteUri.ToLower().Contains(".gif"))
-                        {
-                            SetupGifAnimation(image,item.Bitmap);
-                        }
-                    };
-                    lock (cacheLock)
-                        bitmapImageCache.Add(uri.AbsoluteUri, itemWeakRef);            
-
-                    callback(item.Bitmap);
-
-                }
-                else
-                {                
-                    var itemRef = bitmapImageCache[uri.AbsoluteUri];
-
-                    ImageCacheItem item;
-                    itemRef.TryGetTarget(out item);
-
-                    if (item == null)
-                        return;
-
-                    item.LastAccessed = DateTime.Now;
-                    if (!item.IsDownloading)
+                    if (uri.AbsoluteUri.ToLower().Contains(".gif"))
                     {
-                        if (width <= 1 || width > (Application.Current as App).ChatBoxWidth)
-                            FixImageSize(image, item.Width);
-                        else
-                            image.Width = width;
-
-                        // Don't repeat animation. There is memory leak :/
-                        if (uri.AbsoluteUri.ToLower().Contains(".gif"))
-                        {
-                            SetupGifAnimation(image, item.Bitmap);
-                        }
+                        SetupGifAnimation(image, item.Bitmap);
                     }
-                    callback(item.Bitmap);
-                }
+                };
+                lock (cacheLock)
+                    bitmapImageCache.Add(uri.AbsoluteUri, itemWeakRef);
 
-                foreach (var item in bitmapImageCache.Keys.ToList())
+                callback(item.Bitmap);
+
+            }
+            else
+            {
+                var itemRef = bitmapImageCache[uri.AbsoluteUri];
+
+                ImageCacheItem item;
+                itemRef.TryGetTarget(out item);
+
+                if (item == null)
+                    return;
+
+                item.LastAccessed = DateTime.Now;
+                if (!item.IsDownloading)
                 {
-                    ImageCacheItem cacheItem;                    
-                    bitmapImageCache[item].TryGetTarget( out cacheItem);
-                    if (cacheItem == null || DateTime.Now.Subtract(cacheItem.LastAccessed).Seconds > 120)
-                        lock (cacheLock)
-                            bitmapImageCache.Remove(item);
+                    if(!forceSize)
+                        FixImageSize(image, item.Width);
+
+                    if (uri.AbsoluteUri.ToLower().Contains(".gif"))
+                    {
+                        SetupGifAnimation(image, item.Bitmap);
+                    }
                 }
+                callback(item.Bitmap);
+            }
+
+            foreach (var item in bitmapImageCache.Keys.ToList())
+            {
+                ImageCacheItem cacheItem;
+                bitmapImageCache[item].TryGetTarget(out cacheItem);
+                if (cacheItem == null || DateTime.Now.Subtract(cacheItem.LastAccessed).Seconds > 120)
+                    lock (cacheLock)
+                        bitmapImageCache.Remove(item);
+            }
 
             
         }
