@@ -37,13 +37,15 @@ namespace UB.Model
         }
         private void SetupGifAnimation( Image image, BitmapImage bitmap)
         {
-            if (ImageBehavior.GetAnimatedSource(image) == ImageBehavior.AnimatedSourceProperty.DefaultMetadata.DefaultValue)
+            UI.Dispatch(() =>
             {
-                ImageBehavior.SetRepeatBehavior(image, RepeatBehavior.Forever);
-                ImageBehavior.SetAutoStart(image, true);
-                ImageBehavior.SetAnimatedSource(image, null);
-                ImageBehavior.SetAnimatedSource(image, bitmap);
-            }
+                if (ImageBehavior.GetAnimatedSource(image) == ImageBehavior.AnimatedSourceProperty.DefaultMetadata.DefaultValue)
+                {
+                    ImageBehavior.SetRepeatBehavior(image, RepeatBehavior.Forever);
+                    ImageBehavior.SetAutoStart(image, true);
+                    ImageBehavior.SetAnimatedSource(image, bitmap);
+                }
+            });
         }
 
         private void FixImageSize(Image image, double newWidth)
@@ -85,12 +87,14 @@ namespace UB.Model
 
                 item.DownloadComplete = () =>
                 {
-                    if (!forceSize || width > (Application.Current as App).ChatBoxWidth)
-                        FixImageSize(image, item.Width);
-                    if (uri.AbsoluteUri.ToLower().Contains(".gif"))
-                    {
-                        SetupGifAnimation(image, item.Bitmap);
-                    }
+                    UI.Dispatch(() => {
+                        if (!forceSize || width > (Application.Current as App).ChatBoxWidth)
+                            FixImageSize(image, item.Width);
+                        if (uri.AbsoluteUri.ToLower().Contains(".gif"))
+                        {
+                            SetupGifAnimation(image, item.Bitmap);
+                        }                    
+                    });
                 };
                 lock (cacheLock)
                     bitmapImageCache.Add(uri.AbsoluteUri, itemWeakRef);
