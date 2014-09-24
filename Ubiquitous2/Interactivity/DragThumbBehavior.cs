@@ -19,6 +19,8 @@ namespace UB.Interactivity
 
         void AssociatedObject_MouseDown(object sender, MouseButtonEventArgs e)
         {
+            if (e.ChangedButton != MouseButton.Left)
+                return;
             if (e.ClickCount > 1)
                 SwitchWindowSize();
             else if (e.ClickCount == 1)
