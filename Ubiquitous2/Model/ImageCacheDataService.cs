@@ -105,10 +105,10 @@ namespace UB.Model
                             image.Width = width;
 
                         // Don't repeat animation. There is memory leak :/
-                        //if (uri.AbsoluteUri.ToLower().Contains(".gif"))
-                        //{
-                        //    SetupGifAnimation(image, item.Bitmap);
-                        //}
+                        if (uri.AbsoluteUri.ToLower().Contains(".gif"))
+                        {
+                            SetupGifAnimation(image, item.Bitmap);
+                        }
                     }
                     callback(item.Bitmap);
                 }
