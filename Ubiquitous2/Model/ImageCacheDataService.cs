@@ -68,10 +68,14 @@ namespace UB.Model
             {
                 image.Width = 64;
             }
-            else
+            else if (width <= (Application.Current as App).ChatBoxWidth )
             {
                 image.Width = width;
                 forceSize = true;
+            }
+            else
+            {
+                FixImageSize(image, width);
             }
 
             if (!bitmapImageCache.ContainsKey(uri.AbsoluteUri))
@@ -81,7 +85,7 @@ namespace UB.Model
 
                 item.DownloadComplete = () =>
                 {
-                    if( !forceSize )
+                    if (!forceSize || width > (Application.Current as App).ChatBoxWidth)
                         FixImageSize(image, item.Width);
                     if (uri.AbsoluteUri.ToLower().Contains(".gif"))
                     {
@@ -107,7 +111,7 @@ namespace UB.Model
                 item.LastAccessed = DateTime.Now;
                 if (!item.IsDownloading)
                 {
-                    if(!forceSize)
+                    if (!forceSize || width > (Application.Current as App).ChatBoxWidth)
                         FixImageSize(image, item.Width);
 
                     if (uri.AbsoluteUri.ToLower().Contains(".gif"))
