@@ -160,7 +160,9 @@ namespace UB.Model
             isAnonymous = false;
             Status.IsLoggedIn = false;
             Status.IsConnected = false;
-
+            
+            isFallbackEmoticons = false;
+            isWebEmoticons = false;
             InitEmoticons();
 
             var userName = Config.Parameters.StringValue("Username");
@@ -285,6 +287,7 @@ namespace UB.Model
                 return;
             if (isWebEmoticons)
                 return;
+
             lock(iconParseLock )
             {
                 var list = new List<Emoticon>();

@@ -41,5 +41,11 @@ namespace UB.Design
         {
             
         }
+
+
+        public void GetImageSource(Uri uri, int width, int height, Image image, Action<BitmapImage> callback)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

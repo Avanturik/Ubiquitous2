@@ -68,60 +68,12 @@ namespace UB.Converter
                                         if (node.Attributes["height"] != null)
                                             int.TryParse(node.Attributes["height"].Value, out height);
 
-                                        if( width == 0 && height == 0 )
-                                        {
-                                            ImageMeasurer.GetWebImageDimensions(url, (info) =>
-                                            {
-                                                if( info.Format != null )
-                                                {
-                                                    if (info.Dimensions.Width > 0 && info.Dimensions.Width < (Application.Current as App).ChatBoxWidth)
-                                                    {
-                                                        width = info.Dimensions.Width;
-                                                        height = info.Dimensions.Height;
-                                                    }
-                                                }
-                                                else
-                                                {
-                                                    width = width == 0 ? 64 : width;
-                                                    height = height == 0 ? 64 : height;
-                                                }
-                                            });
-                                        }
-
-
                                         Uri imageUri;
                                         if( Uri.TryCreate(url, UriKind.Absolute, out imageUri) )
                                         {
-                                            dataService.GetImage(imageUri, width, height, (image) =>
-                                            {
-                                                image.Focusable = false;
+                                            dataService.GetImage(imageUri, width, height, (image) => {
                                                 textBlock.Inlines.Add(image);
-                                            }, (image) =>
-                                            {
-                                                if (url.ToLower().Contains(".gif"))
-                                                {
-                                                    var img = image;
-                                                    if (ImageBehavior.GetAnimatedSource(img) == ImageBehavior.AnimatedSourceProperty.DefaultMetadata.DefaultValue)
-                                                    {
-                                                        ImageBehavior.SetRepeatBehavior(img, RepeatBehavior.Forever);
-                                                        ImageBehavior.SetAutoStart(img, true);
-                                                        ImageBehavior.SetAnimatedSource(img, img.Source);
-                                                    }
-                                                    img.IsVisibleChanged += (o, e) =>
-                                                    {
-                                                        if( (bool)e.NewValue)
-                                                        {
-                                                            var source = o as Image;
-                                                            if (ImageBehavior.GetAnimatedSource(source) == ImageBehavior.AnimatedSourceProperty.DefaultMetadata.DefaultValue)
-                                                            {
-                                                                ImageBehavior.SetRepeatBehavior(source, RepeatBehavior.Forever);
-                                                                ImageBehavior.SetAutoStart(source, true);
-                                                                ImageBehavior.SetAnimatedSource(source, source.Source);
-                                                            }
-                                                        }
-                                                    };
-                                                }
-                                            });
+                                            }, null);
                                         }
                                         else
                                         {
