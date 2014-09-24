@@ -48,26 +48,26 @@ namespace UB.Model
 
         private void FixImageSize(Image image, double newWidth)
         {
-            UI.Dispatch(() => {
-                image.MaxWidth = newWidth;
+ 
+            image.MaxWidth = newWidth;
+            if (newWidth >= 1 && newWidth < (Application.Current as App).ChatBoxWidth)
+            {
+                image.Width = newWidth;
+            }
+            else
+            {
+                image.Width = double.NaN;
+            }
 
-                if (newWidth >= 1 && newWidth < (Application.Current as App).ChatBoxWidth)
-                {
-                    image.Width = newWidth;
-                }
-                else
-                {
-                    image.Width = double.NaN;
-                }
-            
-            });
         }
         public void GetImageSource(Uri uri, int width, int height, Image image, Action<BitmapImage> callback)
         {
             bool forceSize = false;
 
             if (width <= 1)
-                image.Width = 32;
+            {
+                image.Width = 64;
+            }
             else
             {
                 image.Width = width;
