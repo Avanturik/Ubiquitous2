@@ -38,23 +38,25 @@
                             <Setter Property="Stretch" Value="Fill"/>
                         </Style>
                     </ControlTemplate.Resources>
-                    <Border Focusable="False" CornerRadius="10" Margin="1,0,1,5" BorderThickness="0,0,1,1" Padding="3,0,3,8">
-                        <Border.Background>
-                            <LinearGradientBrush EndPoint="200,165.008" MappingMode="Absolute" StartPoint="80,0" Opacity="{Binding AppConfig.IndividualMessageBackgroundOpacity}">
-                                <GradientStop Color="#4D4D4D" Offset="1"/>
-                                <GradientStop Color="#383838" Offset="0.123"/>
-                                <GradientStop Color="#515151" Offset="0.486"/>
-                                <GradientStop Color="#3C3C3C" Offset="0.843"/>
-                                <GradientStop Color="#424242" Offset="0.012"/>
-                            </LinearGradientBrush>
-                        </Border.Background>
-                        <Grid Margin="-1,0,-1,3">
+                        <Grid Margin="0">
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="18"/>
                                 <RowDefinition MinHeight="18"/>
                             </Grid.RowDefinitions>
-                            <DockPanel Focusable="False" Grid.Row="0" HorizontalAlignment="Stretch">
-                                <Image Focusable="False" gif:ImageBehavior.AnimatedSource="{Binding Message.ChatIconURL, Mode=OneTime}" gif:ImageBehavior.RepeatBehavior="Forever" Stretch="Fill" Margin ="2,3,0,0" Width="12" Height="12" VerticalAlignment="Top" HorizontalAlignment="Left">
+                        <Border Grid.Row="0" Focusable="False" CornerRadius="10,10,0,0" Margin="0" BorderThickness="0" Padding="0">
+                            <Border.Background>
+                                <LinearGradientBrush EndPoint="200,165.008" MappingMode="Absolute" StartPoint="80,0">
+                                    <GradientStop Color="#4D4D4D" Offset="1"/>
+                                    <GradientStop Color="#383838" Offset="0.123"/>
+                                    <GradientStop Color="#515151" Offset="0.486"/>
+                                    <GradientStop Color="#3C3C3C" Offset="0.843"/>
+                                    <GradientStop Color="#424242" Offset="0.012"/>
+                                </LinearGradientBrush>
+                            </Border.Background>
+                        </Border>
+
+                        <DockPanel Focusable="False" Grid.Row="0" HorizontalAlignment="Stretch">
+                                <Image Focusable="False" gif:ImageBehavior.AnimatedSource="{Binding Message.ChatIconURL, Mode=OneTime}" gif:ImageBehavior.RepeatBehavior="Forever" Stretch="Fill" Margin ="4,3,0,0" Width="12" Height="12" VerticalAlignment="Top" HorizontalAlignment="Left">
                                 <Image.Effect>
                                         <DropShadowEffect BlurRadius="2" Opacity="0.2" ShadowDepth="2"/>
                                     </Image.Effect>
@@ -76,9 +78,9 @@
                                     </TextBox.ContextMenu>
                                 </TextBox>
 
-                                <TextBox Focusable="False" Text="{Binding Message.TimeStamp}" FontSize="10" Foreground="#FFD69B33" TextAlignment="Right" DockPanel.Dock="Right" Margin="0,1,0,0" FontWeight="Bold"/>
+                                <TextBox Focusable="False" Text="{Binding Message.TimeStamp}" FontSize="10" Foreground="#FFD69B33" TextAlignment="Right" DockPanel.Dock="Right" Margin="0,1,4,0" FontWeight="Bold"/>
                             </DockPanel>
-                            <Border Focusable="False" Grid.ColumnSpan="2" Grid.Row="1" CornerRadius="10" BorderThickness="0" Padding="2,1" Margin="0,0,0,-9">
+                            <Border Panel.ZIndex="-1" Focusable="False" Grid.ColumnSpan="2" Grid.Row="1" CornerRadius="0,0,10,10" BorderThickness="4,0,4,4" Padding="2,1" Margin="0,0,0,2" BorderBrush="#FF444444">
                                 <Border.Background>
                                     <SolidColorBrush Opacity="{Binding AppConfig.IndividualMessageBackgroundOpacity}" Color="#303030"/>
                                 </Border.Background>
@@ -87,7 +89,6 @@
                                 </TextBlock>
                             </Border>                            
                         </Grid>
-                    </Border>
                 </ControlTemplate>
             </Setter.Value>
         </Setter>

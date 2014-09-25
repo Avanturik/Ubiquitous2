@@ -35,7 +35,7 @@ namespace UB.ViewModel
                             // Report error here
                             return;
                         }
-                        Initialize(item);
+                        Message = item;
                     });
         }
 
