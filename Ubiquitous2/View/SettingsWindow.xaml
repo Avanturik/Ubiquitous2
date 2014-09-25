@@ -16,7 +16,7 @@
         SnapsToDevicePixels="True"
         UseLayoutRounding="True"
         Topmost="True"
-        Title="SettingsWindow" Icon="..\ubiquitous smile.ico" MinWidth="400" Width="427.493" Height="339" WindowStartupLocation="Manual">
+        Title="SettingsWindow" Icon="..\ubiquitous smile.ico" MinWidth="500" Width="427.493" MinHeight="400" WindowStartupLocation="Manual">
     <i:Interaction.Behaviors>
         <Interactivity:WindowPersistentLocationBehavior WindowName="SettingsWindow"/>
     </i:Interaction.Behaviors>
@@ -150,10 +150,18 @@
                                         </StackPanel>
                                         <StackPanel Margin="5,0,0,0">
                                             <TextBlock VerticalAlignment="Top" HorizontalAlignment="Center" FontWeight="Normal" TextAlignment="Center">
-                                                Message<LineBreak/>Background
+                                                Message
+                                            </TextBlock>
+                                            <Label HorizontalAlignment="Center" VerticalAlignment="Top" FontSize="9" Margin="0,11,0,-6" Content="100%" FontWeight="Normal"/>
+                                            <Slider Value="{Binding AppConfig.IndividualMessageBackgroundOpacity, Mode=TwoWay}"  Maximum="1" SmallChange="0.05" TickFrequency="0.05" TickPlacement="BottomRight" LargeChange="0.1" Minimum="0.01" Orientation="Vertical" VerticalAlignment="Top" HorizontalAlignment="Center" Height="60" FontWeight="Normal"/>
+                                            <Label HorizontalAlignment="Center" VerticalAlignment="Top" FontSize="9" Margin="0,-3,0,0" Content="0%" FontWeight="Normal"/>
+                                        </StackPanel>
+                                        <StackPanel Margin="5,0,0,0">
+                                            <TextBlock VerticalAlignment="Top" HorizontalAlignment="Center" FontWeight="Normal" TextAlignment="Center">
+                                                Music<LineBreak/>Ticker
                                             </TextBlock>
                                             <Label HorizontalAlignment="Center" VerticalAlignment="Top" FontSize="9" Margin="0,-3,0,-6" Content="100%" FontWeight="Normal"/>
-                                            <Slider Value="{Binding AppConfig.IndividualMessageBackgroundOpacity, Mode=TwoWay}"  Maximum="1" SmallChange="0.05" TickFrequency="0.05" TickPlacement="BottomRight" LargeChange="0.1" Minimum="0.01" Orientation="Vertical" VerticalAlignment="Top" HorizontalAlignment="Center" Height="60" FontWeight="Normal"/>
+                                            <Slider Value="{Binding AppConfig.MusicTickerBackgroundOpacity, Mode=TwoWay}"  Maximum="1" SmallChange="0.05" TickFrequency="0.05" TickPlacement="BottomRight" LargeChange="0.1" Minimum="0.01" Orientation="Vertical" VerticalAlignment="Top" HorizontalAlignment="Center" Height="60" FontWeight="Normal"/>
                                             <Label HorizontalAlignment="Center" VerticalAlignment="Top" FontSize="9" Margin="0,-3,0,0" Content="0%" FontWeight="Normal"/>
                                         </StackPanel>
 

@@ -79,6 +79,37 @@ namespace UB.Model
         }
 
         /// <summary>
+        /// The <see cref="MusicTickerBackgroundOpacity" /> property's name.
+        /// </summary>
+        public const string MusicTickerBackgroundOpacityPropertyName = "MusicTickerBackgroundOpacity";
+
+        private double _musicTickerBackgroundOpacity = 0.8;
+
+        /// <summary>
+        /// Sets and gets the MusicTickerBackgroundOpacity property.
+        /// Changes to that property's value raise the PropertyChanged event. 
+        /// </summary>
+        public double MusicTickerBackgroundOpacity
+        {
+            get
+            {
+                return _musicTickerBackgroundOpacity;
+            }
+
+            set
+            {
+                if (_musicTickerBackgroundOpacity == value)
+                {
+                    return;
+                }
+
+                RaisePropertyChanging(MusicTickerBackgroundOpacityPropertyName);
+                _musicTickerBackgroundOpacity = value;
+                RaisePropertyChanged(MusicTickerBackgroundOpacityPropertyName);
+            }
+        }
+        
+        /// <summary>
         /// The <see cref="MessageBackgroundOpacity" /> property's name.
         /// </summary>
         public const string MessageBackgroundOpacityPropertyName = "MessageBackgroundOpacity";
@@ -237,6 +268,8 @@ namespace UB.Model
                 RaisePropertyChanged(ThemeNamePropertyName);
             }
         }
+
+
 
 
     }

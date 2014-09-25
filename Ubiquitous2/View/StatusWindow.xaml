@@ -38,6 +38,9 @@
         </LinearGradientBrush>
     </Window.Resources>
     <Grid>
+        <!--<i:Interaction.Behaviors>
+            <Interactivity:ElementToPng FileName="{Binding MusicTickerToImagePath}" DelayBefore="600" SaveOnDemand="True" SaveFlag="{Binding IsNeedSave}"/>
+        </i:Interaction.Behaviors>-->
         <Grid>
             <ItemsControl Focusable="False" ItemsSource="{Binding ChatsView}" Padding="0" Margin="0,0,0,0">
             <ItemsControl.ItemTemplate>

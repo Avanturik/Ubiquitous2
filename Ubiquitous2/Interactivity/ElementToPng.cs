@@ -92,7 +92,14 @@ namespace UB.Interactivity
 
                 try
                 {
-                    using (Stream stm = File.Open(FileName, FileMode.OpenOrCreate | FileMode.Truncate, FileAccess.ReadWrite, FileShare.Delete))
+                    FileStream file;
+
+                    if( File.Exists(FileName) )
+                        file = File.Open(FileName, FileMode.Truncate, FileAccess.ReadWrite, FileShare.Delete);
+                    else
+                        file = File.Open(FileName, FileMode.Create, FileAccess.ReadWrite, FileShare.Delete);
+
+                    using (Stream stm = file )
                     {
                         png.Save(stm);
                     }

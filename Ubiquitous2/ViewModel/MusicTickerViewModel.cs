@@ -4,6 +4,7 @@ using UB.Model;
 using UB.Utils;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace UB.ViewModel
 {
@@ -17,6 +18,7 @@ namespace UB.ViewModel
     {
         private IGeneralDataService _dataService;
         private IService _lastFmService;
+        private IService imageService;
         /// <summary>
         /// Initializes a new instance of the MusicTickerViewModel class.
         /// </summary>
@@ -28,12 +30,123 @@ namespace UB.ViewModel
         }
         private void initialize()
         {
+            imageService = _dataService.GetService(SettingsRegistry.ServiceTitleImageSaver);
+            ImageServiceConfig = imageService.Config;
+            MusicTickerToImagePath = ImageServiceConfig.GetParameterValue("FilenameMusic") as string;
+
             _lastFmService = _dataService.Services.FirstOrDefault(service => service.Config.ServiceName == SettingsRegistry.ServiceTitleMusicTicker);
             _lastFmService.GetData((dataObject) =>
             {
                 CurrentTrack = dataObject as MusicTrackInfo;
+                CurrentTrack.PropertyChanged += (o,e) => {
+                    if (e.PropertyName == MusicTrackInfo.ImagePropertyName)
+                    {
+                        UI.Dispatch(() => {
+                            IsNeedSave = true;
+                            IsNeedSave = false;                        
+                        });
+                    }
+                };
+                    
             });
             Config = _lastFmService.Config;
+
+            AppConfig = (Application.Current as App).AppConfig;
+
+        }
+
+
+        /// <summary>
+        /// The <see cref="AppConfig" /> property's name.
+        /// </summary>
+        public const string AppConfigPropertyName = "AppConfig";
+
+        private AppConfig _appConfig = new AppConfig();
+
+        /// <summary>
+        /// Sets and gets the AppConfig property.
+        /// Changes to that property's value raise the PropertyChanged event. 
+        /// </summary>
+        public AppConfig AppConfig
+        {
+            get
+            {
+                return _appConfig;
+            }
+
+            set
+            {
+                if (_appConfig == value)
+                {
+                    return;
+                }
+
+                RaisePropertyChanging(AppConfigPropertyName);
+                _appConfig = value;
+                RaisePropertyChanged(AppConfigPropertyName);
+            }
+        }
+
+        /// <summary>
+        /// The <see cref="IsNeedSave" /> property's name.
+        /// </summary>
+        public const string IsNeedSavePropertyName = "IsNeedSave";
+
+        private bool _isNeedSave = false;
+
+        /// <summary>
+        /// Sets and gets the IsNeedSave property.
+        /// Changes to that property's value raise the PropertyChanged event. 
+        /// </summary>
+        public bool IsNeedSave
+        {
+            get
+            {
+                return _isNeedSave;
+            }
+
+            set
+            {
+                if (_isNeedSave == value)
+                {
+                    return;
+                }
+
+                RaisePropertyChanging(IsNeedSavePropertyName);
+                _isNeedSave = value;
+                RaisePropertyChanged(IsNeedSavePropertyName);
+            }
+        }
+
+        /// <summary>
+        /// The <see cref="ImageServiceConfig" /> property's name.
+        /// </summary>
+        public const string ImageServiceConfigPropertyName = "ImageServiceConfig";
+
+        private ServiceConfig _chatToImageService = null;
+
+        /// <summary>
+        /// Sets and gets the ImageServiceConfig property.
+        /// Changes to that property's value raise the PropertyChanged event. 
+        /// </summary>
+        public ServiceConfig ImageServiceConfig
+        {
+            get
+            {
+                return _chatToImageService;
+            }
+
+            set
+            {
+                if (_chatToImageService == value)
+                {
+                    return;
+                }
+
+                RaisePropertyChanging(ImageServiceConfigPropertyName);
+                _chatToImageService = value;
+                RaisePropertyChanged(ImageServiceConfigPropertyName);
+            }
         }
 
         /// <summary>
@@ -72,7 +185,7 @@ namespace UB.ViewModel
         /// </summary>
         public const string CurrentTrackPropertyName = "CurrentTrack";
 
-        private MusicTrackInfo _myProperty = null;
+        private MusicTrackInfo _currentTrack = null;
 
         /// <summary>
         /// Sets and gets the CurrentTrack property.
@@ -82,19 +195,62 @@ namespace UB.ViewModel
         {
             get
             {
-                return _myProperty;
+                return _currentTrack;
             }
 
             set
             {
-                if (_myProperty == value)
+                if (_currentTrack == value)
                 {
                     return;
                 }
 
                 RaisePropertyChanging(CurrentTrackPropertyName);
-                _myProperty = value;
+                _currentTrack = value;
+                _currentTrack.PropertyChanged += (o, e) =>
+                {
+                    if (e.PropertyName == MusicTrackInfo.ImagePropertyName)
+                    {
+                        UI.Dispatch(() =>
+                        {
+                            IsNeedSave = true;
+                            IsNeedSave = false;
+                        });
+                    }
+                };
                 RaisePropertyChanged(CurrentTrackPropertyName);
+            }
+        }
+
+        /// <summary>
+        /// The <see cref="MusicTickerToImagePath" /> property's name.
+        /// </summary>
+        public const string MusicTickerToImagePathPropertyName = "MusicTickerToImagePath";
+
+        private string _musicTickerToImagePath = null;
+
+        /// <summary>
+        /// Sets and gets the MusicTickerToImagePath property.
+        /// Changes to that property's value raise the PropertyChanged event. 
+        /// </summary>
+        public string MusicTickerToImagePath
+        {
+            get
+            {
+                return _musicTickerToImagePath;
+            }
+
+            set
+            {
+                if (_musicTickerToImagePath == value)
+                {
+                    return;
+                }
+
+                RaisePropertyChanging(MusicTickerToImagePathPropertyName);
+                _musicTickerToImagePath = value;
+                imageService.Config.SetParameterValue("FilenameMusic", _musicTickerToImagePath);
+                RaisePropertyChanged(MusicTickerToImagePathPropertyName);
             }
         }
 

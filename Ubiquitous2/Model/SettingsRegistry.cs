@@ -59,8 +59,10 @@ namespace UB.Model
                         IconURL = Icons.PngIcon,
                         Enabled = true,
                         Parameters = new List<ConfigField>() {
-                            new ConfigField("Filename", "Path", "FileSave", true, @"c:\ubiquitous.png"),
                             new ConfigField("Info0", "Save chat to image and use it as Image source in the OBS", "Info", false, null),
+                            new ConfigField("Filename", "Chat box", "FileSave", true, @"c:\ubiquitous_chat.png"),
+                            new ConfigField("FilenameStatus", "Status window", "FileSave", true, @"c:\ubiquitous_status.png"),
+                            new ConfigField("FilenameMusic", "Music ticker", "FileSave", true, @"c:\ubiquitous_music.png"),
                         }
                     }
 
