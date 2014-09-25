@@ -60,6 +60,8 @@ namespace UB.ViewModel
             keyboardListener.KeyUp += keyboardListener_KeyUp;
             AppConfig.PropertyChanged += AppConfig_PropertyChanged;
 
+            Win.ShowStatus();
+
             EnableMouseTransparency = AppConfig.MouseTransparency && Keyboard.Modifiers != ModifierKeys.Control;
 
             _generalDataService.Start();
@@ -67,7 +69,6 @@ namespace UB.ViewModel
             ChannelList = _dataService.ChatChannels;
             SelectedChatChannel = ChannelList[0];
 
-            Win.ShowStatus();
 
             MessengerInstance.Register<bool>(this, "ReopenMainWindow", (message) => { 
                 if( message )
