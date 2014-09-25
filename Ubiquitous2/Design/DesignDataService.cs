@@ -112,5 +112,11 @@ namespace UB.Design
         {
             throw new NotImplementedException();
         }
+
+
+        public void AddMessageSenderToIgnoreList(ChatMessage message)
+        {
+            
+        }
     }
 }

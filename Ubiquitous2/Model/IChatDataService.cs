@@ -20,6 +20,7 @@ namespace UB.Model
         void Stop();
         void Start();
         Action<IChat> ChatStatusHandler { get; set; }
+        void AddMessageSenderToIgnoreList(ChatMessage message);
     }
 
 }

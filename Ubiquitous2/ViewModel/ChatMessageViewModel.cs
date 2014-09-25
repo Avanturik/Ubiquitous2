@@ -15,9 +15,10 @@ namespace UB.ViewModel
 
         private double estimatedHeight;
         private double estimatedWidth;
-        
+
         public ChatMessageViewModel()
         {
+            _dataService = SimpleIoc.Default.GetInstance<IChatDataService>();
         }
 
         [PreferredConstructor]
@@ -40,6 +41,8 @@ namespace UB.ViewModel
         public ChatMessageViewModel (ChatMessage message)
         {
             Message = message;
+            if (Message.ChatIconURL == null)
+                Message.ChatIconURL = Icons.MainIcon;
         }
 
         public ChatMessage Message { get; set; }
@@ -73,6 +76,46 @@ namespace UB.ViewModel
                                           }));
             }
         }
+        
+        private RelayCommand _ignoreUser;
+
+        /// <summary>
+        /// Gets the MyCommand.
+        /// </summary>
+        [JsonIgnore]
+        public RelayCommand IgnoreUser
+        {
+            get
+            {
+                return _ignoreUser
+                    ?? (_ignoreUser = new RelayCommand(
+                                          () =>
+                                          {
+                                              MessengerInstance.Send<YesNoDialog>(new YesNoDialog() { 
+                                                  QuestionText = "Ignore " + Message.FromUserName + "@" + Message.ChatName + " ?",
+                                                  IsOpenRequest = true,
+                                                  YesAction = () => {
+                                                      var dataservice = SimpleIoc.Default.GetInstance<IChatDataService>();
+                                                      dataservice.AddMessageSenderToIgnoreList(Message);
+                                                  },
+                                              },"OpenDialog");
+
+                                          }));
+            }
+        }
+
+        /// <summary>
+        /// The <see cref="InMenu" /> property's name.
+        /// </summary>
+        public const string InMenuPropertyName = "InMenu";
+
+        private bool _inMenu = false;
+
+        /// <summary>
+        /// Sets and gets the InMenu property.
+        /// Changes to that property's value raise the PropertyChanged event. 
+        /// </summary>
+
     }
 
 }

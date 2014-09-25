@@ -34,6 +34,7 @@ namespace UB.ViewModel
         private MusicTickerWindow musicWindow;
         private SteamGuardWindow steamGuardWindow;
         private KeyboardListener keyboardListener;
+        
         /// <summary>
         /// Initializes a new instance of the MainViewModel class.
         /// </summary>
@@ -556,7 +557,7 @@ namespace UB.ViewModel
                 SendTextEditMode = true;
 
             }
-            else
+            else if( !IsMouseOver && !IsFocused)
             {
                 IsOverlayVisible = false;
                 SendTextEditMode = false;

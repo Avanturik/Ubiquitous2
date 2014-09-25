@@ -53,7 +53,17 @@
                                         <TextBlock Focusable="False" FontSize="11" Text="{Binding Message.Channel}" Margin="3,1,0,0" HorizontalAlignment="Left" FontWeight="Bold"/>
                                     </Hyperlink>
                                 </TextBlock>
-                                <TextBox Focusable="False"  FontSize="11" Text="{Binding Message.FromUserName}" Margin="0" Foreground="#FFFFC042" HorizontalAlignment="Left" FontWeight="Bold"/>
+                                <TextBox  Cursor="Hand" Focusable="False" FontSize="11" Text="{Binding Message.FromUserName}" Margin="0" Foreground="#FFFFC042" HorizontalAlignment="Left" FontWeight="Bold" OverridesDefaultStyle="False">
+                                    <TextBox.ContextMenu>
+                                        <ContextMenu Name="userNameMenu" Style="{DynamicResource ContextMenuStyle}">
+                                            <MenuItem Header="Add to ignore list" Command="{Binding IgnoreUser}" Foreground="#FFFFC042">
+                                                <MenuItem.Icon>
+                                                    <Image Width="16" Source="/Ubiquitous2;component/Resources/ignore.png"/>
+                                                </MenuItem.Icon>
+                                            </MenuItem>
+                                        </ContextMenu>
+                                    </TextBox.ContextMenu>
+                                </TextBox>
                                 <TextBox Focusable="False" Text="{Binding Message.TimeStamp}" FontSize="10" Foreground="#FFD69B33" TextAlignment="Right" DockPanel.Dock="Right" Margin="0,1,0,0" FontWeight="Bold"/>
                             </StackPanel>
                             </DockPanel>

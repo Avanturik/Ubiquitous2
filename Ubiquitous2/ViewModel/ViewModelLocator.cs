@@ -47,6 +47,8 @@ namespace UB.ViewModel
                 SimpleIoc.Default.Register<IImageDataSource, ImageCacheDataService>();
                 SimpleIoc.Default.Register<IGeneralDataService, GeneralDataService>();
             }
+
+            SimpleIoc.Default.Register<YesNoDialogViewModel>();
             SimpleIoc.Default.Register<SteamGuardViewModel>();
             //SimpleIoc.Default.Register<LastFMService>();
             SimpleIoc.Default.Register<MusicTickerViewModel>();
@@ -187,7 +189,17 @@ namespace UB.ViewModel
             }
         }
 
-
+                [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance",
+    "CA1822:MarkMembersAsStatic",
+    Justification = "This non-static member is needed for data binding purposes.")]
+        public YesNoDialogViewModel YesNoDialog
+        {
+            get
+            {
+                return ServiceLocator.Current.GetInstance<YesNoDialogViewModel>();
+            }
+        }
+       
 
     }
 }

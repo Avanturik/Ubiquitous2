@@ -24,18 +24,21 @@
                             <ItemsControl Focusable="False" ItemsSource="{Binding Messages}" Padding="0" Margin="0">
                             <ItemsControl.Template>
                                 <ControlTemplate>
-                                    <ScrollViewer VerticalScrollBarVisibility="Visible" Focusable="False" d:DesignHeight="200" d:DesignWidth="500"  Template="{DynamicResource ScrollStyle}" CanContentScroll="True">
-                                            <i:Interaction.Triggers>
-                                            <Interactivity:DataEventTrigger EventName="MessageAdded" d:EventName="">
-                                                <Interactivity:AutoScrollAction Duration="100" EnableAutoScroll="{Binding EnableAutoScroll}"/>
-                                            </Interactivity:DataEventTrigger>
-                                            <Interactivity:DataEventTrigger EventName="MessageSent" d:EventName="">
-                                                <Interactivity:AutoScrollAction Duration="100" EnableAutoScroll="True"/>
-                                            </Interactivity:DataEventTrigger>
-                                        </i:Interaction.Triggers>
-                                        <ItemsPresenter />
-                                    </ScrollViewer>
-                                </ControlTemplate>
+                                        <Grid>
+                                            <ubview:YesNoDialogView Panel.ZIndex="10" Grid.Row="1" Grid.ColumnSpan="3"/>
+                                            <ScrollViewer VerticalScrollBarVisibility="Visible" Focusable="False" d:DesignHeight="200" d:DesignWidth="500"  Template="{DynamicResource ScrollStyle}" CanContentScroll="True">
+                                                <i:Interaction.Triggers>
+                                                    <Interactivity:DataEventTrigger EventName="MessageAdded" d:EventName="">
+                                                        <Interactivity:AutoScrollAction Duration="100" EnableAutoScroll="{Binding EnableAutoScroll}"/>
+                                                    </Interactivity:DataEventTrigger>
+                                                    <Interactivity:DataEventTrigger EventName="MessageSent" d:EventName="">
+                                                        <Interactivity:AutoScrollAction Duration="100" EnableAutoScroll="True"/>
+                                                    </Interactivity:DataEventTrigger>
+                                                </i:Interaction.Triggers>
+                                                <ItemsPresenter />
+                                            </ScrollViewer>
+                                        </Grid>
+                                    </ControlTemplate>
                             </ItemsControl.Template>
                             <ItemsControl.ItemsPanel>
                                 <ItemsPanelTemplate>

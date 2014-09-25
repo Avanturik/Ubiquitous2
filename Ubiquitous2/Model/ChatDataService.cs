@@ -24,6 +24,7 @@ namespace UB.Model
         private List<ChatConfig> chatConfigs;
         private List<IChat> chats;
         private SteamChat steamChat;
+        private HashSet<string> ignoreList = new HashSet<string>();
         //Disposable
         private Timer receiveTimer;
 
@@ -183,7 +184,8 @@ namespace UB.Model
             var chat = sender as IChat;
             message.ChatIconURL = chat.IconURL;
             message.ChatName = chat.ChatName;
-            AddMessageToQueue(message);
+            if( CheckFilters( message ))
+                AddMessageToQueue(message);
         }
         void AddMessageToQueue( ChatMessage message )
         {
@@ -271,6 +273,25 @@ namespace UB.Model
         {
             get;
             set;
+        }
+
+
+        public void AddMessageSenderToIgnoreList(ChatMessage message)
+        {
+            string key = String.Format( "{0}@{1}", message.FromUserName, message.ChatName);
+            if( !ignoreList.Contains(key) )
+            {
+                ignoreList.Add(key);
+            }
+        }
+
+        private bool CheckFilters(ChatMessage message)
+        {
+            string ignoreKey = String.Format("{0}@{1}", message.FromUserName, message.ChatName);
+            if (ignoreList.Contains(ignoreKey))
+                return false;
+
+            return true;
         }
     }
 }

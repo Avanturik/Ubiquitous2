@@ -1,0 +1,12 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <ResourceDictionary.MergedDictionaries>
+        <ResourceDictionary Source="/Skins/Shared/ContextMenuSkin.xaml"/>
+        <ResourceDictionary Source="/Skins/Shared/ScrollViewerSkin.xaml"/>
+        <ResourceDictionary Source="/Skins/Shared/SettingsWindowSkin.xaml"/>
+        <ResourceDictionary Source="/Skins/Shared/Expander.xaml"/>
+        <ResourceDictionary Source="/Skins/Shared/ChatReplyCombo.xaml"/>
+    </ResourceDictionary.MergedDictionaries>
+    
+</ResourceDictionary>
