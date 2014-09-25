@@ -13,21 +13,79 @@ namespace UB.Utils
 {
     public static class Win
     {
+        private static Window[] windows = new Window[] { new StatusWindow(), new MusicTickerWindow()};
         public static void SetPlacement(this Window window, WindowSettings settings)
         {
-            WindowPlacement.SetPlacement(new WindowInteropHelper(window).Handle, settings);
+            window.Top = settings.Top;
+            window.Left = settings.Left;
+            window.Width = settings.Width;
+            window.Height = settings.Height;
         }
 
         public static WindowSettings GetPlacement(this Window window)
         {
-            return WindowPlacement.GetPlacement(new WindowInteropHelper(window).Handle);
+            return new WindowSettings()
+            {
+                Top = window.Top,
+                Left = window.Left,
+                Width = window.Width,
+                Height = window.Height,
+            };
+            
         }
 
         public static WindowSettings GetPlacement(this Window window, string newName)
         {
-            var placement =  WindowPlacement.GetPlacement(new WindowInteropHelper(window).Handle);
-            placement.WindowName = newName;
-            return placement;
+            return new WindowSettings()
+            {
+                Top = window.Top,
+                Left = window.Left,
+                Width = window.Width,
+                Height = window.Height,
+                WindowName = newName,
+            };
+        }
+
+        public static void ShowMusicTicker()
+        {
+            windows[1].Visibility = Visibility.Visible;
+        }
+
+        public static void ShowStatus()
+        {
+            windows[0].Visibility = Visibility.Visible;
+        }
+
+        public static void HideMusicTicker()
+        {
+            windows[1].Visibility = Visibility.Hidden;
+        }
+
+        public static void HideStatus()
+        {
+            windows[0].Visibility = Visibility.Hidden;
+        }
+
+        public static void SetGlobalStatus( WindowState state )
+        {
+            foreach (var win in windows)
+                win.WindowState = state;
+        }
+
+        public static void ReloadAllWindows()
+        {
+            var oldWindows = windows.ToArray();
+
+            windows = new Window[] { new StatusWindow(), new MusicTickerWindow() };
+            
+            for (int i = 0; i < oldWindows.Length; i++)
+            {
+                var visibility = oldWindows[i].Visibility;
+                oldWindows[i].Close();
+                oldWindows[i] = null;
+                windows[i].Visibility = visibility;
+            }
+            oldWindows = null;
         }
     }
 }

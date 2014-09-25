@@ -16,7 +16,6 @@ namespace UB
         {
             
             InitializeComponent();
-
             this.AllowsTransparency = Ubiquitous.Default.Config.AppConfig.EnableTransparency;
             Closing += (s, e) => ViewModelLocator.Cleanup();
         }

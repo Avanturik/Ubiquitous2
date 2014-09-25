@@ -1,4 +1,5 @@
 ﻿using System.Windows;
+using UB.Properties;
 
 namespace UB.View
 {
@@ -13,6 +14,7 @@ namespace UB.View
         public MusicTickerWindow()
         {
             InitializeComponent();
+            this.AllowsTransparency = Ubiquitous.Default.Config.AppConfig.EnableTransparency;
         }
     }
 }

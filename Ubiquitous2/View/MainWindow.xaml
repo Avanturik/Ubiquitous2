@@ -18,7 +18,7 @@
         Background="{x:Null}" 
         ResizeMode="NoResize"
         Margin="0" 
-        Padding="0" Icon="/Ubiquitous2;component/Resources/ubiquitous smile.ico" d:DesignWidth="275" d:DesignHeight="394"
+        Padding="0" Icon="/Ubiquitous2;component/Resources/ubiquitous smile.ico" d:DesignWidth="275" d:DesignHeight="394" Width="275" Height="394"
         >
     <i:Interaction.Behaviors>
         <Interactivity:WindowPersistentLocationBehavior WindowName="MainWindow"/>

@@ -46,9 +46,9 @@ namespace UB.Model
         }
         private void InitializeWindowSettings()
         {
-            if (Ubiquitous.Default.Config.WindowConfigs == null)
+            if (Ubiquitous.Default.Config.WindowSettings == null)
             {
-                Ubiquitous.Default.Config.WindowConfigs = SettingsRegistry.DefaultWindowConfigs.ToList();
+                Ubiquitous.Default.Config.WindowSettings = SettingsRegistry.WindowSettings.ToList();
                 Ubiquitous.Default.Save();
             }
         }

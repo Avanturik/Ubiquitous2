@@ -9,7 +9,7 @@
              Margin="0,0,0,6"
              xmlns:m="clr-namespace:UB.ViewModel"
              DataContext="{Binding Path=ChatMessage, Source={StaticResource Locator}}"
-             d:DesignHeight="89" d:DesignWidth="300" Style="{DynamicResource ChatMessageTemplate}"
+             d:DesignHeight="89" d:DesignWidth="300" Style="{DynamicResource ChatMessageTemplate}" FontFamily="Arial Unicode MS"
              >
 
 </UserControl>

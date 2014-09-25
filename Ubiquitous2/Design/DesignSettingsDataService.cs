@@ -12,7 +12,7 @@ namespace UB.Design
         public void GetChatSettings(Action<List<ChatConfig>> callback)
         {
             callback(new List<ChatConfig>() {                 
-                       new ChatConfig() { ChatName = "LoremIpsum.tv", Enabled = true, Parameters = new List<ConfigField>() {
+                       new ChatConfig() { ChatName = "LoremIpsum.tv", IconURL = Icons.DesignMainIcon, Enabled = true, Parameters = new List<ConfigField>() {
                         new ConfigField() { DataType = "Text", IsVisible = true, Label = "User name:", Name = "Username", Value = "loremuser" }
                        }},
                     });

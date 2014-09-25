@@ -8,10 +8,19 @@
                     xmlns:gif="http://wpfanimatedgif.codeplex.com"
                     >
     <Converter:ChatMessageToInlines x:Key="textConverter" />
+    <Style TargetType="{x:Type TextBlock}">
+        <Setter Property="FontFamily" Value="Segoe UI"/>
+    </Style>
+    <Style TargetType="{x:Type Window}">
+        <Setter Property="FontFamily" Value="Segoe UI"/>
+    </Style>
+    <Style TargetType="{x:Type UserControl}">
+        <Setter Property="TextElement.FontFamily" Value="Segoe UI"/>
+    </Style>
     <Style x:Key="ChatMessageTemplate" TargetType="{x:Type UserControl}">
         <Setter Property="Template">
             <Setter.Value>
-                <ControlTemplate TargetType="{x:Type UserControl}">                    
+                <ControlTemplate TargetType="{x:Type UserControl}">
                     <ControlTemplate.Resources>
                         <Style x:Key="{x:Type Hyperlink}" TargetType="{x:Type Hyperlink}">
                             <Setter Property="TextDecorations" Value="None"/>
@@ -38,48 +47,48 @@
                             <Setter Property="Stretch" Value="Fill"/>
                         </Style>
                     </ControlTemplate.Resources>
-                        <Grid Margin="0">
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="18"/>
-                                <RowDefinition MinHeight="18"/>
-                            </Grid.RowDefinitions>
-                            <DockPanel Focusable="False" Grid.Row="0" HorizontalAlignment="Stretch">
-                            <StackPanel Orientation="Horizontal">
-                                <Image Focusable="False" gif:ImageBehavior.AnimatedSource="{Binding Message.ChatIconURL, Mode=OneTime}" gif:ImageBehavior.RepeatBehavior="Forever" Stretch="Fill" Margin ="2,3,0,0" Width="12" Height="12" VerticalAlignment="Top" HorizontalAlignment="Left">
+                    <Grid Margin="0">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="18"/>
+                            <RowDefinition/>
+                        </Grid.RowDefinitions>
+                        <DockPanel Focusable="False" Grid.Row="0" HorizontalAlignment="Stretch">
+                            <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                <Image Focusable="False" gif:ImageBehavior.AnimatedSource="{Binding Message.ChatIconURL, Mode=OneTime}" gif:ImageBehavior.RepeatBehavior="Forever" Stretch="Fill" Margin ="5,0" Width="12" Height="12" VerticalAlignment="Center" HorizontalAlignment="Left">
                                     <Image.Effect>
                                         <DropShadowEffect BlurRadius="2" Opacity="0.2" ShadowDepth="2"/>
                                     </Image.Effect>
                                 </Image>
-                                <TextBlock ToolTip="Click to set as active channel" Focusable="False">
+                                <TextBlock ToolTip="Click to set as active channel" Focusable="False" VerticalAlignment="Center" Margin="0,0,5,0" HorizontalAlignment="Left">
                                     <Hyperlink Focusable="False" Command="{Binding SetActiveChannel}" Cursor="Hand">
-                                        <TextBlock Focusable="False" FontSize="11" Text="{Binding Message.Channel}" Margin="3,1,0,0" HorizontalAlignment="Left" FontWeight="Bold"/>
+                                        <TextBlock Focusable="False" FontSize="11" Text="{Binding Message.Channel}" Margin="0" HorizontalAlignment="Left" FontWeight="Bold" VerticalAlignment="Center"/>
                                     </Hyperlink>
                                 </TextBlock>
-                                <TextBox ToolTip="Right click for options" Cursor="Hand" Focusable="False" FontSize="11" Text="{Binding Message.FromUserName}" Margin="0" Foreground="#FFFFC042" HorizontalAlignment="Left" FontWeight="Bold" OverridesDefaultStyle="False">
-                                    <TextBox.ContextMenu>
+                                <TextBlock ToolTip="Right click for options" Cursor="Hand" Focusable="False" FontSize="11" Text="{Binding Message.FromUserName}" Margin="0,0,5,0" Foreground="#FFFFC042" HorizontalAlignment="Left" FontWeight="Bold" OverridesDefaultStyle="False" VerticalAlignment="Center">
+                                    <TextBlock.ContextMenu>
                                         <ContextMenu Name="userNameMenu" Style="{DynamicResource ContextMenuStyle}">
-                                            <MenuItem Header="Add to ignore list" Command="{Binding IgnoreUser}"  CommandParameter="{Binding Message}" Foreground="#FFFFC042">
+                                            <MenuItem Header="Add to ignore list" Command="{Binding IgnoreUser}"  CommandParameter="{Binding Message}" Foreground="#FFFFC042" VerticalContentAlignment="Center" VerticalAlignment="Center">
                                                 <MenuItem.Icon>
-                                                    <Image Width="16" Source="/Ubiquitous2;component/Resources/ignore.png"/>
+                                                    <Image Width="16" Source="/Ubiquitous2;component/Resources/ignore.png" HorizontalAlignment="Left" VerticalAlignment="Center"/>
                                                 </MenuItem.Icon>
                                             </MenuItem>
                                         </ContextMenu>
-                                    </TextBox.ContextMenu>
+                                    </TextBlock.ContextMenu>
                                     <!--<i:Interaction.Triggers>
                                         <i:EventTrigger EventName="MouseButtonClick">
                                             <ei:ChangePropertyAction TargetObject="{Binding ElementName=userNameMenu}" PropertyName="IsOpen" Value="true"/>
                                         </i:EventTrigger>
                                     </i:Interaction.Triggers>-->
-                                </TextBox>
-                                <TextBox Focusable="False" Text="{Binding Message.TimeStamp}" FontSize="10" Foreground="#FFD69B33" TextAlignment="Right" DockPanel.Dock="Right" Margin="0,1,0,0" FontWeight="Bold"/>
+                                </TextBlock>
                             </StackPanel>
-                            </DockPanel>
-                            <TextBlock  Grid.Row="1" Focusable="False" TextAlignment="Left" Margin="1,1,1,1" TextWrapping="Wrap" FontSize="14" Foreground="#FFCDCDCD" Interactivity:TextBlockAttached.InlineList="{Binding Message, Converter={StaticResource ResourceKey=textConverter}}"  UseLayoutRounding="True">
-                                <TextBlock.Background>
-                                    <SolidColorBrush Opacity="{Binding AppConfig.IndividualMessageBackgroundOpacity}">
-                                    </SolidColorBrush>
-                                </TextBlock.Background>
-                            </TextBlock>
+                            <TextBlock Focusable="False" Text="{Binding Message.TimeStamp}" FontSize="11" Foreground="#FFD69B33" TextAlignment="Right" DockPanel.Dock="Right" Margin="0" FontWeight="Bold" VerticalAlignment="Center" FontFamily="Segoe UI"/>
+                        </DockPanel>
+                        <TextBlock  Grid.Row="1" Focusable="False" TextAlignment="Left" Margin="1,1,1,1" TextWrapping="Wrap" FontSize="14" Foreground="#FFCDCDCD" Interactivity:TextBlockAttached.InlineList="{Binding Message, Converter={StaticResource ResourceKey=textConverter}}"  UseLayoutRounding="True" FontFamily="Segoe UI">
+                            <TextBlock.Background>
+                                <SolidColorBrush Opacity="{Binding AppConfig.IndividualMessageBackgroundOpacity}">
+                                </SolidColorBrush>
+                            </TextBlock.Background>
+                        </TextBlock>
                     </Grid>
                 </ControlTemplate>
             </Setter.Value>

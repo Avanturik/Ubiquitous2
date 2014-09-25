@@ -113,6 +113,7 @@ namespace UB.ViewModel
                                               Application.Current.MainWindow.Close();
                                               Application.Current.MainWindow = new MainWindow();
                                               Application.Current.MainWindow.Show();
+                                              Win.ReloadAllWindows();
                                           }));
             }
         }

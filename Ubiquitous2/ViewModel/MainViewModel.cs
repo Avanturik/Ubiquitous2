@@ -30,8 +30,6 @@ namespace UB.ViewModel
         private readonly IChatDataService _dataService;
         private readonly IGeneralDataService _generalDataService;
         private readonly ISettingsDataService _settingsDataService;
-        private StatusWindow statusWindow = new StatusWindow();
-        private MusicTickerWindow musicWindow;
         private SteamGuardWindow steamGuardWindow;
         private KeyboardListener keyboardListener;
         
@@ -69,10 +67,7 @@ namespace UB.ViewModel
             ChannelList = _dataService.ChatChannels;
             SelectedChatChannel = ChannelList[0];
 
-            musicWindow = new MusicTickerWindow();
-
-            statusWindow.Visibility = Visibility.Visible;
-            //musicWindow.Visibility = Visibility.Visible;
+            Win.ShowStatus();
 
             MessengerInstance.Register<bool>(this, "ReopenMainWindow", (message) => { 
                 if( message )
@@ -181,8 +176,7 @@ namespace UB.ViewModel
                                               if( Application.Current.MainWindow.WindowState == WindowState.Normal ||
                                                   Application.Current.MainWindow.WindowState == WindowState.Minimized)
                                               {
-                                                  statusWindow.WindowState = Application.Current.MainWindow.WindowState;
-                                                  musicWindow.WindowState = Application.Current.MainWindow.WindowState;
+                                                  Win.SetGlobalStatus(Application.Current.MainWindow.WindowState);
                                               }
                                           }));
             }

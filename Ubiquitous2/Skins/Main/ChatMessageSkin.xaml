@@ -8,6 +8,7 @@
                     xmlns:gif="http://wpfanimatedgif.codeplex.com"
                     >
     <Converter:ChatMessageToInlines x:Key="textConverter" />
+
     <Style x:Key="ChatMessageTemplate" TargetType="{x:Type UserControl}">
         <Setter Property="Template">
             <Setter.Value>
@@ -55,30 +56,30 @@
                             </Border.Background>
                         </Border>
 
-                        <DockPanel Focusable="False" Grid.Row="0" HorizontalAlignment="Stretch">
-                                <Image Focusable="False" gif:ImageBehavior.AnimatedSource="{Binding Message.ChatIconURL, Mode=OneTime}" gif:ImageBehavior.RepeatBehavior="Forever" Stretch="Fill" Margin ="4,3,0,0" Width="12" Height="12" VerticalAlignment="Top" HorizontalAlignment="Left">
+                        <DockPanel Focusable="False" Grid.Row="0" HorizontalAlignment="Stretch" Margin="0" LastChildFill="False" VerticalAlignment="Center">
+                                <Image Focusable="False" gif:ImageBehavior.AnimatedSource="{Binding Message.ChatIconURL, Mode=OneTime}" gif:ImageBehavior.RepeatBehavior="Forever" Stretch="Fill" Margin ="5,0,0,0" Width="12" Height="12" VerticalAlignment="Center" HorizontalAlignment="Left">
                                 <Image.Effect>
                                         <DropShadowEffect BlurRadius="2" Opacity="0.2" ShadowDepth="2"/>
                                     </Image.Effect>
                                 </Image>
-                                <TextBlock ToolTip="Click to set as active channel" Focusable="False">
+                                <TextBlock ToolTip="Click to set as active channel" Focusable="False" VerticalAlignment="Center" Margin="5,0,0,1" Padding="0">
                                     <Hyperlink Focusable="False" Command="{Binding SetActiveChannel}" Cursor="Hand">
-                                        <TextBlock Focusable="False" FontSize="11" Text="{Binding Message.Channel}" Margin="3,1,0,0" HorizontalAlignment="Left" FontWeight="Bold"/>
+                                        <TextBlock Focusable="False" FontSize="11" Text="{Binding Message.Channel}" Margin="0,0,0,0" HorizontalAlignment="Left" FontWeight="Bold"/>
                                     </Hyperlink>
                                 </TextBlock>
-                                <TextBox ToolTip="Right click for options" Cursor="Hand" Focusable="False" FontSize="11" Text="{Binding Message.FromUserName}" Margin="0" Foreground="#FFFFC042" HorizontalAlignment="Left" FontWeight="Bold" OverridesDefaultStyle="False">
-                                    <TextBox.ContextMenu>
+                                <TextBlock ToolTip="Right click for options" Cursor="Hand" Focusable="False" FontSize="11" Text="{Binding Message.FromUserName}" Margin="5,0,0,0" Foreground="#FFFFC042" HorizontalAlignment="Left" FontWeight="Bold" VerticalAlignment="Center" Padding="0">
+                                    <TextBlock.ContextMenu>
                                         <ContextMenu Name="userNameMenu" Style="{DynamicResource ContextMenuStyle}">
-                                            <MenuItem Header="Add to ignore list" Command="{Binding IgnoreUser}" CommandParameter="{Binding Message}" Foreground="#FFFFC042">
+                                            <MenuItem Header="Add to ignore list" Command="{Binding IgnoreUser}" CommandParameter="{Binding Message}" Foreground="#FFFFC042" VerticalAlignment="Center">
                                                 <MenuItem.Icon>
                                                     <Image Width="16" Source="/Ubiquitous2;component/Resources/ignore.png"/>
                                                 </MenuItem.Icon>
                                             </MenuItem>
                                         </ContextMenu>
-                                    </TextBox.ContextMenu>
-                                </TextBox>
+                                    </TextBlock.ContextMenu>
+                                </TextBlock>
 
-                                <TextBox Focusable="False" Text="{Binding Message.TimeStamp}" FontSize="10" Foreground="#FFD69B33" TextAlignment="Right" DockPanel.Dock="Right" Margin="0,1,4,0" FontWeight="Bold"/>
+                                <TextBlock DockPanel.Dock="Right" Focusable="False" Text="{Binding Message.TimeStamp}" FontSize="10" Foreground="#FFD69B33" TextAlignment="Right" Margin="0,0,8,0" FontWeight="Bold" Padding="0" VerticalAlignment="Center"/>
                             </DockPanel>
                             <Border Panel.ZIndex="-1" Focusable="False" Grid.ColumnSpan="2" Grid.Row="1" CornerRadius="0,0,10,10" BorderThickness="4,0,4,4" Padding="2,1" Margin="0,0,0,2" BorderBrush="#FF444444">
                                 <Border.Background>

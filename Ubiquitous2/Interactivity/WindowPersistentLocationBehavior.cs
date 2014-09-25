@@ -22,11 +22,11 @@ namespace UB.Interactivity
             window = AssociatedObject;
             window.WindowStartupLocation = WindowStartupLocation.Manual;
 
-            currentSettings = Ubiquitous.Default.Config.WindowConfigs.FirstOrDefault( config => config.WindowName.Equals(WindowName,StringComparison.InvariantCultureIgnoreCase));
+            currentSettings = Ubiquitous.Default.Config.WindowSettings.FirstOrDefault( config => config.WindowName.Equals(WindowName,StringComparison.InvariantCultureIgnoreCase));
             if (currentSettings == null)
             {
                 currentSettings = window.GetPlacement(WindowName);
-                Ubiquitous.Default.Config.WindowConfigs.Add(currentSettings);
+                Ubiquitous.Default.Config.WindowSettings.Add(currentSettings);
             }
             else
             {
@@ -35,31 +35,22 @@ namespace UB.Interactivity
 
             window.SizeChanged += window_SizeChanged;
             window.LocationChanged += window_LocationChanged;
-            window.StateChanged +=window_StateChanged;
         }
 
         void window_Initialized(object obj, EventArgs e)
         {
             var win = obj as Window;
-            win.Top = currentSettings.Top;
-            win.Left = currentSettings.Left;
-            win.Width = currentSettings.Right - currentSettings.Left;
-            win.Height = currentSettings.Bottom - currentSettings.Top;                    
             win.SetPlacement(currentSettings);
         }
 
-
-        void window_StateChanged(object sender, EventArgs e)
-        {
-            if (currentSettings != null)
-                currentSettings.CopyStateFrom(window.GetPlacement());
-        }
 
         void window_LocationChanged(object sender, EventArgs e)
         {
             if (currentSettings != null)
             {
-                currentSettings.CopyLocationFrom(window.GetPlacement());
+                var currentPlacement = window.GetPlacement();
+                currentSettings.Top = currentPlacement.Top;
+                currentSettings.Left = currentPlacement.Left;
             }
         }
 
@@ -67,7 +58,9 @@ namespace UB.Interactivity
         {
             if (currentSettings != null)
             {
-                currentSettings.CopyLocationFrom(window.GetPlacement());
+                var currentPlacement = window.GetPlacement();
+                currentSettings.Height = currentPlacement.Height;
+                currentSettings.Width = currentPlacement.Width;               
             }            
         }
 
@@ -76,7 +69,6 @@ namespace UB.Interactivity
 
             window.SizeChanged -= window_SizeChanged;
             window.LocationChanged -= window_LocationChanged;
-            window.StateChanged -= window_StateChanged;
         }
 
         /// <summary>

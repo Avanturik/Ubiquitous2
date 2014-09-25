@@ -60,9 +60,9 @@ namespace UB.Model
                         Enabled = true,
                         Parameters = new List<ConfigField>() {
                             new ConfigField("Info0", "Save chat to image and use it as Image source in the OBS", "Info", false, null),
-                            new ConfigField("Filename", "Chat box", "FileSave", true, @"c:\ubiquitous_chat.png"),
-                            new ConfigField("FilenameStatus", "Status window", "FileSave", true, @"c:\ubiquitous_status.png"),
-                            new ConfigField("FilenameMusic", "Music ticker", "FileSave", true, @"c:\ubiquitous_music.png"),
+                            new ConfigField("Filename", "Chat box", "FileSave", true, Environment.GetFolderPath(Environment.SpecialFolder.MyPictures) + @"\ubiquitous_chat.png"),
+                            new ConfigField("FilenameStatus", "Status window", "FileSave", true, Environment.GetFolderPath(Environment.SpecialFolder.MyPictures) + @"\ubiquitous_status.png"),
+                            new ConfigField("FilenameMusic", "Music ticker", "FileSave", true, Environment.GetFolderPath(Environment.SpecialFolder.MyPictures) + @"\ubiquitous_music.png"),
                         }
                     }
 
@@ -178,7 +178,7 @@ namespace UB.Model
             }
         }
         // Default chat settings
-        public static List<WindowSettings> DefaultWindowConfigs
+        public static List<WindowSettings> WindowSettings
         {
             get
             {

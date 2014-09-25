@@ -21,6 +21,17 @@ namespace UB.ViewModel
         {
             _dataService = SimpleIoc.Default.GetInstance<IChatDataService>();
             Initialize(new ChatMessage("Lorem ipsum") { ChatName = SettingsRegistry.ChatTitleNormalTwitch, ChatIconURL = Icons.DesignMainIcon });
+            _dataService.GetRandomMessage(
+            (item, error) =>
+            {
+                if (error != null)
+                {
+                    // Report error here
+                    return;
+                }
+                Message = item;
+                Initialize(item);
+            });
         }
 
         [PreferredConstructor]
@@ -28,15 +39,16 @@ namespace UB.ViewModel
         {
             _dataService = dataService;
             _dataService.GetRandomMessage(
-                    (item, error) =>
-                    {
-                        if (error != null)
-                        {
-                            // Report error here
-                            return;
-                        }
-                        Message = item;
-                    });
+            (item, error) =>
+            {
+                if (error != null)
+                {
+                    // Report error here
+                    return;
+                }
+                Message = item;
+                Initialize(item);
+            });
         }
 
         public ChatMessageViewModel (ChatMessage message)
@@ -47,6 +59,7 @@ namespace UB.ViewModel
 
         private void Initialize(ChatMessage message)
         {
+
             Message = message;
 
             if (Message.ChatIconURL == null)
@@ -54,6 +67,9 @@ namespace UB.ViewModel
 
             if (message.ChatName == null)
                 Message.ChatName = SettingsRegistry.ChatTitleNormalTwitch;
+
+            if (IsInDesignMode)
+                return;
 
             AppConfig = (Application.Current as App).AppConfig;
 

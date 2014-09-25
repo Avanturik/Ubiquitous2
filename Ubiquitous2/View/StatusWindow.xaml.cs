@@ -11,6 +11,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using UB.Properties;
 
 namespace UB.View
 {
@@ -22,6 +23,8 @@ namespace UB.View
         public StatusWindow()
         {
             InitializeComponent();
+            this.AllowsTransparency = Ubiquitous.Default.Config.AppConfig.EnableTransparency;
+
         }
     }
 }

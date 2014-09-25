@@ -17,7 +17,7 @@ namespace UB.Model
         [XmlElement]
         public List<ServiceConfig> ServiceConfigs { get; set; }
         [XmlElement]
-        public List<WindowSettings> WindowConfigs { get; set; }
+        public List<WindowSettings> WindowSettings { get; set; }
         [XmlElement]
         public AppConfig AppConfig { get; set; }
     }

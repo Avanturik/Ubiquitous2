@@ -29,9 +29,14 @@ namespace UB.ViewModel
         IChatDataService _dataService;
         IGeneralDataService _generalDataService;
         ISettingsDataService _settingsDataService;
+
+        public ChatBoxViewModel()
+        {
+
+        }
         /// <summary>
         /// Initializes a new instance of the ChatBoxViewModel class.
-        /// </summary>
+        /// </summary>        
         [PreferredConstructor]
         public ChatBoxViewModel(IChatDataService dataService, IGeneralDataService generalDataService, ISettingsDataService settingsDataService)
         {

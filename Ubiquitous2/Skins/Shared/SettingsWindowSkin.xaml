@@ -9,7 +9,6 @@
     <Style x:Key="SettingsStyle" TargetType="{x:Type Fluent:BackstageTabControl}">
         <Setter Property="Foreground" Value="#FF3B3B3B"/>
         <Setter Property="Background" Value="#FF323232"/>
-        <Setter Property="FontFamily" Value="Segoe UI"/>
         <Setter Property="FontSize" Value="11"/>
         <Setter Property="Template">
             <Setter.Value>
@@ -2488,7 +2487,6 @@
                                         </Setter.Value>
                                     </Setter>
                                     <Setter Property="Foreground" Value="#FF3B3B3B"/>
-                                    <Setter Property="FontFamily" Value="Segoe UI"/>
                                     <Setter Property="FontSize" Value="11"/>
                                     <Setter Property="Template">
                                         <Setter.Value>

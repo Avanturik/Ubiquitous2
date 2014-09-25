@@ -23,7 +23,7 @@ namespace UB.Design
 
             var message = new ChatMessage(text) {
                 FromUserName = "xedoc",
-                ChatIconURL = Icons.MainIcon,
+                ChatIconURL = Icons.DesignMainIcon,
                 Channel = "#loremipsum"
             };
 
@@ -43,7 +43,7 @@ namespace UB.Design
 
         public void ReadMessages(Func<ChatMessage[],Exception, bool> callback)
         {
-
+            
         }
 
 

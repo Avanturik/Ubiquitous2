@@ -13,11 +13,10 @@
     <Application.Resources>
     	<ResourceDictionary>
     		<ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="Skins/Main/Skin.xaml"/>
+                <ResourceDictionary Source="Skins/Simple/Skin.xaml"/>
             </ResourceDictionary.MergedDictionaries>
     		<!--Global View Model Locator-->
-    		<vm:ViewModelLocator x:Key="Locator"
-    			d:IsDataSource="True" />
+    		<vm:ViewModelLocator x:Key="Locator" d:IsDataSource="True" />
 
             <settings:Ubiquitous x:Key="Settings" />
         </ResourceDictionary>
