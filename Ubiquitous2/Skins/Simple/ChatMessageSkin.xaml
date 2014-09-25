@@ -56,7 +56,7 @@
                                 <TextBox  Cursor="Hand" Focusable="False" FontSize="11" Text="{Binding Message.FromUserName}" Margin="0" Foreground="#FFFFC042" HorizontalAlignment="Left" FontWeight="Bold" OverridesDefaultStyle="False">
                                     <TextBox.ContextMenu>
                                         <ContextMenu Name="userNameMenu" Style="{DynamicResource ContextMenuStyle}">
-                                            <MenuItem Header="Add to ignore list" Command="{Binding IgnoreUser}" Foreground="#FFFFC042">
+                                            <MenuItem Header="Add to ignore list" Command="{Binding IgnoreUser}"  CommandParameter="{Binding Message}" Foreground="#FFFFC042">
                                                 <MenuItem.Icon>
                                                     <Image Width="16" Source="/Ubiquitous2;component/Resources/ignore.png"/>
                                                 </MenuItem.Icon>

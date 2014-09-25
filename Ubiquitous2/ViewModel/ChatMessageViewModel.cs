@@ -96,6 +96,9 @@ namespace UB.ViewModel
                     ?? (_ignoreUser = new RelayCommand<ChatMessage>(
                                           (message) =>
                                           {
+                                              if (message == null)
+                                                  return;
+
                                               UI.Dispatch(() => { 
                                                   MessengerInstance.Send<YesNoDialog>(new YesNoDialog() { 
                                                       HeaderText = "Ignore user",
