@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Windows;
 using UB.Properties;
 using UB.Utils;
 
@@ -41,6 +42,7 @@ namespace UB.Model
                 Ubiquitous.Default.Config.AppConfig.ThemeName = "Main";
 
             Theme.SwitchTheme(Ubiquitous.Default.Config.AppConfig.ThemeName);
+            (Application.Current as App).AppConfig = Ubiquitous.Default.Config.AppConfig;
         }
         private void InitializeWindowSettings()
         {

@@ -5,6 +5,7 @@ using UB.Model;
 using GalaSoft.MvvmLight.Ioc;
 using GalaSoft.MvvmLight.Command;
 using Newtonsoft.Json;
+using System.Windows;
 
 
 namespace UB.ViewModel
@@ -19,6 +20,7 @@ namespace UB.ViewModel
         public ChatMessageViewModel()
         {
             _dataService = SimpleIoc.Default.GetInstance<IChatDataService>();
+            Initialize(new ChatMessage("Lorem ipsum") { ChatName = SettingsRegistry.ChatTitleNormalTwitch, ChatIconURL = Icons.DesignMainIcon });
         }
 
         [PreferredConstructor]
@@ -33,14 +35,18 @@ namespace UB.ViewModel
                             // Report error here
                             return;
                         }
-                       
-                        Message = item;
+                        Initialize(item);
                     });
         }
 
         public ChatMessageViewModel (ChatMessage message)
         {
             _dataService = SimpleIoc.Default.GetInstance<IChatDataService>();
+            Initialize(message);
+        }
+
+        private void Initialize(ChatMessage message)
+        {
             Message = message;
 
             if (Message.ChatIconURL == null)
@@ -48,8 +54,10 @@ namespace UB.ViewModel
 
             if (message.ChatName == null)
                 Message.ChatName = SettingsRegistry.ChatTitleNormalTwitch;
-        }
 
+            AppConfig = (Application.Current as App).AppConfig;
+
+        }
         public ChatMessage Message { get; set; }
 
         public double GetEstimatedHeight(double width)
@@ -61,6 +69,37 @@ namespace UB.ViewModel
                 estimatedHeight = TextMeasurer.GetEstimatedHeight(Message.Text, width) + 38; // Add margin
             }
             return estimatedHeight;
+        }
+
+        /// <summary>
+        /// The <see cref="AppConfig" /> property's name.
+        /// </summary>
+        public const string AppConfigPropertyName = "AppConfig";
+
+        private AppConfig _appConfig = new AppConfig();
+
+        /// <summary>
+        /// Sets and gets the AppConfig property.
+        /// Changes to that property's value raise the PropertyChanged event. 
+        /// </summary>
+        public AppConfig AppConfig
+        {
+            get
+            {
+                return _appConfig;
+            }
+
+            set
+            {
+                if (_appConfig == value)
+                {
+                    return;
+                }
+
+                RaisePropertyChanging(AppConfigPropertyName);
+                _appConfig = value;
+                RaisePropertyChanged(AppConfigPropertyName);
+            }
         }
 
         private RelayCommand _setActiveChannel;

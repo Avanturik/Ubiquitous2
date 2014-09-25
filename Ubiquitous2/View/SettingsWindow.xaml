@@ -16,7 +16,7 @@
         SnapsToDevicePixels="True"
         UseLayoutRounding="True"
         Topmost="True"
-        Title="SettingsWindow" Icon="..\ubiquitous smile.ico" MinWidth="400" Width="426" Height="339" WindowStartupLocation="Manual">
+        Title="SettingsWindow" Icon="..\ubiquitous smile.ico" MinWidth="400" Width="427.493" Height="339" WindowStartupLocation="Manual">
     <i:Interaction.Behaviors>
         <Interactivity:WindowPersistentLocationBehavior WindowName="SettingsWindow"/>
     </i:Interaction.Behaviors>
@@ -28,7 +28,7 @@
         <Converter:StringToIsChecked x:Key="stringToIsCheckedConverter"/>
     </Window.Resources>
     <Grid>
-        <fluent:BackstageTabControl SelectedIndex="0" Background="#FF323232" Style="{DynamicResource SettingsStyle}">
+        <fluent:BackstageTabControl SelectedIndex="3" Background="#FF323232" Style="{DynamicResource SettingsStyle}">
             <fluent:BackstageTabItem Header="Chats">
                 <Grid>
                     <ItemsControl ItemsSource="{Binding Chats}"
@@ -111,24 +111,57 @@
                 <Grid Margin="10">
                     <ScrollViewer VerticalScrollBarVisibility="Auto">
                         <StackPanel Orientation="Vertical">
-                            <CheckBox IsChecked="{Binding AppConfig.EnableTransparency, Mode=TwoWay}" Content="Enable transparency" Command="{Binding ReopenMainWindow}"/>
-                            <TextBlock TextWrapping="Wrap" FontSize="9">
-                                *Options to try if you get problems with OBS capture:
-                                <LineBreak/>
-                                - use "Save to png" service to capture window as image
-                                <LineBreak/>
-                                - try to enable "Capture layered windows" in OBS
-                                <LineBreak/>
-                                - disable Aero if you got Vista/Seven
-                                <LineBreak/>
-                                - put window on top of windowed game and capture whole monitor (CPU heavy)
-                                <LineBreak/>
+                            <CheckBox IsChecked="{Binding AppConfig.EnableTransparency, Mode=TwoWay}" Content="Enable transparency" Command="{Binding ReopenMainWindow}" FontWeight="Bold"/>
+                            <TextBlock TextWrapping="Wrap" FontSize="9" Margin="20,0,0,0" FontStyle="Italic">
+                                <TextBlock.ToolTip>
+                                    <TextBlock>                                        
+                                        *Options to try if you get problems with OBS capture:
+                                        <LineBreak/>
+                                        - use "Save to png" service to capture window as image
+                                        <LineBreak/>
+                                        - try to enable "Capture layered windows" in OBS
+                                        <LineBreak/>
+                                        - disable Aero if you got Vista/Seven
+                                        <LineBreak/>
+                                        - put window on top of windowed game and capture whole monitor (CPU heavy)
+                                        <LineBreak/>
+                                    </TextBlock>
+                                </TextBlock.ToolTip>
                             </TextBlock>
-                            <CheckBox IsEnabled="{Binding AppConfig.EnableTransparency,Mode=OneWay}" IsChecked="{Binding AppConfig.MouseTransparency, Mode=TwoWay}" Content="Click-through window. Hold Ctrl to disable."/>
-                            <Label Margin="0,8,0,0">Background opacity(doesn't affect PNG background)</Label>
-                            <Slider Value="{Binding AppConfig.BackgroundOpacity, Mode=TwoWay}" Margin="5,0,20,0" Maximum="1" SmallChange="0.05" TickFrequency="0.05" TickPlacement="BottomRight" LargeChange="0.1" Minimum="0.01"></Slider>
-                            <Label Margin="0,8,0,0">Message background opacity</Label>
-                            <Slider Value="{Binding AppConfig.MessageBackgroundOpacity, Mode=TwoWay}" Margin="5,0,20,0" Maximum="1" SmallChange="0.05" TickFrequency="0.05" TickPlacement="BottomRight" LargeChange="0.1" Minimum="0.01"></Slider>
+                            <CheckBox IsEnabled="{Binding AppConfig.EnableTransparency,Mode=OneWay}" IsChecked="{Binding AppConfig.MouseTransparency, Mode=TwoWay}" Content="Click-through window. Hold Ctrl to disable." FontWeight="Bold"/>
+                            <GroupBox Header="Background opacity control" VerticalAlignment="Top" FontWeight="Bold" Margin="0,10,0,0">
+                                <StackPanel Margin="7,13,0,0">
+                                    <StackPanel Orientation="Horizontal" Margin="0,-9,0,0">
+                                        <StackPanel>
+                                            <TextBlock FontWeight="Normal" VerticalAlignment="Top" HorizontalAlignment="Center" TextAlignment="Center">
+                                                *Main<LineBreak/>window
+                                            </TextBlock>
+                                            <Label HorizontalAlignment="Center" VerticalAlignment="Top" FontSize="9" Margin="0,-3,0,-6" Content="100%" FontWeight="Normal"/>
+                                            <Slider Value="{Binding AppConfig.BackgroundOpacity, Mode=TwoWay}" Maximum="1" SmallChange="0.05" TickFrequency="0.05" TickPlacement="BottomRight" LargeChange="0.1" Minimum="0.01" Orientation="Vertical" VerticalAlignment="Top" HorizontalAlignment="Center" Height="60"/>
+                                            <Label HorizontalAlignment="Center" VerticalAlignment="Top" FontSize="9" Margin="0,-3,0,0" Content="0%" FontWeight="Normal"/>
+                                        </StackPanel>
+                                        <StackPanel Margin="13,0,0,0">
+                                            <TextBlock VerticalAlignment="Top" HorizontalAlignment="Center" FontWeight="Normal" TextAlignment="Center">
+                                                Chat<LineBreak/>box
+                                            </TextBlock>
+                                            <Label HorizontalAlignment="Center" VerticalAlignment="Top" FontSize="9" Margin="0,-3,0,-6" Content="100%" FontWeight="Normal"/>
+                                            <Slider Value="{Binding AppConfig.MessageBackgroundOpacity, Mode=TwoWay}"  Maximum="1" SmallChange="0.05" TickFrequency="0.05" TickPlacement="BottomRight" LargeChange="0.1" Minimum="0.01" Orientation="Vertical" VerticalAlignment="Top" HorizontalAlignment="Center" Height="60" FontWeight="Normal"/>
+                                            <Label HorizontalAlignment="Center" VerticalAlignment="Top" FontSize="9" Margin="0,-3,0,0" Content="0%" FontWeight="Normal"/>
+                                        </StackPanel>
+                                        <StackPanel Margin="5,0,0,0">
+                                            <TextBlock VerticalAlignment="Top" HorizontalAlignment="Center" FontWeight="Normal" TextAlignment="Center">
+                                                Message<LineBreak/>Background
+                                            </TextBlock>
+                                            <Label HorizontalAlignment="Center" VerticalAlignment="Top" FontSize="9" Margin="0,-3,0,-6" Content="100%" FontWeight="Normal"/>
+                                            <Slider Value="{Binding AppConfig.IndividualMessageBackgroundOpacity, Mode=TwoWay}"  Maximum="1" SmallChange="0.05" TickFrequency="0.05" TickPlacement="BottomRight" LargeChange="0.1" Minimum="0.01" Orientation="Vertical" VerticalAlignment="Top" HorizontalAlignment="Center" Height="60" FontWeight="Normal"/>
+                                            <Label HorizontalAlignment="Center" VerticalAlignment="Top" FontSize="9" Margin="0,-3,0,0" Content="0%" FontWeight="Normal"/>
+                                        </StackPanel>
+
+                                    </StackPanel>
+                                    <Label FontSize="10" Margin="0,-7,0,0" FontStyle="Italic" Content="* main window opacity doesn't affect PNG background)" VerticalAlignment="Top" HorizontalAlignment="Left" FontWeight="Normal"/>
+                                </StackPanel>
+                            </GroupBox>
+
                         </StackPanel>
                     </ScrollViewer>
                 </Grid>

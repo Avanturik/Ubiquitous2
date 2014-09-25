@@ -12,6 +12,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Windows;
 using System.Windows.Controls;
+using UB.Model;
 
 namespace Devart.Controls
 {
@@ -253,6 +254,7 @@ namespace Devart.Controls
             public void CreateTopmostElements(Size availableSize)
             {
                 var items = GetItems();
+                
                 double firstItemsHeight = 0;
                 _topmostElementsCount = 0;
 
@@ -266,6 +268,7 @@ namespace Devart.Controls
                     {
                         break;
                     }
+
                 }
             }
 

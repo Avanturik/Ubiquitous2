@@ -74,7 +74,11 @@
                                 <TextBox Focusable="False" Text="{Binding Message.TimeStamp}" FontSize="10" Foreground="#FFD69B33" TextAlignment="Right" DockPanel.Dock="Right" Margin="0,1,0,0" FontWeight="Bold"/>
                             </StackPanel>
                             </DockPanel>
-                            <TextBlock Grid.Row="1" Focusable="False" TextAlignment="Left" Margin="1,1,1,1" TextWrapping="Wrap" FontSize="14" Foreground="#FFCDCDCD" Interactivity:TextBlockAttached.InlineList="{Binding Message, Converter={StaticResource ResourceKey=textConverter}}"  UseLayoutRounding="True">
+                            <TextBlock  Grid.Row="1" Focusable="False" TextAlignment="Left" Margin="1,1,1,1" TextWrapping="Wrap" FontSize="14" Foreground="#FFCDCDCD" Interactivity:TextBlockAttached.InlineList="{Binding Message, Converter={StaticResource ResourceKey=textConverter}}"  UseLayoutRounding="True">
+                                <TextBlock.Background>
+                                    <SolidColorBrush Opacity="{Binding AppConfig.IndividualMessageBackgroundOpacity}">
+                                    </SolidColorBrush>
+                                </TextBlock.Background>
                             </TextBlock>
                     </Grid>
                 </ControlTemplate>

@@ -169,6 +169,7 @@ namespace UB.Model
                     EnableTransparency = false,
                     BackgroundOpacity = 0.8,
                     MessageBackgroundOpacity = 0.01,
+                    IndividualMessageBackgroundOpacity = 0.8,
                     Parameters = new List<ConfigField>(),
                     MouseTransparency = false,
                 };

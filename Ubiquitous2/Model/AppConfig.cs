@@ -47,6 +47,38 @@ namespace UB.Model
         }
 
         /// <summary>
+        /// The <see cref="IndividualMessageBackgroundOpacity" /> property's name.
+        /// </summary>
+        public const string IndividualMessageBackgroundOpacityPropertyName = "IndividualMessageBackgroundOpacity";
+
+        private double _individualMessageBackgroundOpacity = 0.8;
+
+        /// <summary>
+        /// Sets and gets the IndividualMessageBackgroundOpacity property.
+        /// Changes to that property's value raise the PropertyChanged event. 
+        /// </summary>
+        [XmlAttribute]
+        public double IndividualMessageBackgroundOpacity
+        {
+            get
+            {
+                return _individualMessageBackgroundOpacity;
+            }
+
+            set
+            {
+                if (_individualMessageBackgroundOpacity == value)
+                {
+                    return;
+                }
+
+                RaisePropertyChanging(IndividualMessageBackgroundOpacityPropertyName);
+                _individualMessageBackgroundOpacity = value;
+                RaisePropertyChanged(IndividualMessageBackgroundOpacityPropertyName);
+            }
+        }
+
+        /// <summary>
         /// The <see cref="MessageBackgroundOpacity" /> property's name.
         /// </summary>
         public const string MessageBackgroundOpacityPropertyName = "MessageBackgroundOpacity";
