@@ -13,7 +13,7 @@
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type ContextMenu}">    
-                    <Border BorderThickness="1" BorderBrush="Green">
+                    <Border BorderThickness="1" BorderBrush="Green" Background="#01010101">
                         <StackPanel IsItemsHost="True" KeyboardNavigation.DirectionalNavigation="Cycle" Background="#DD424242" />
                     </Border>
                 </ControlTemplate>

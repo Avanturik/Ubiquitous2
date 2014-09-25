@@ -7,176 +7,32 @@
              xmlns:Converter="clr-namespace:UB.Converter"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="174">
-    
-
-    <UserControl.Resources>
-        <Converter:BoolToScrollBarVisibility x:Key="boolToScrollVisibility"></Converter:BoolToScrollBarVisibility>
-        <!-- Region Button Colors & Brushes -->
-        <!--Control colors.-->
-        <Color x:Key="WindowColor">#FFE8EDF9</Color>
-        <Color x:Key="ContentAreaColorLight">#FFC5CBF9</Color>
-        <Color x:Key="ContentAreaColorDark">#FF7381F9</Color>
-
-        <Color x:Key="DisabledControlLightColor">#FFE8EDF9</Color>
-        <Color x:Key="DisabledControlDarkColor">#FFC5CBF9</Color>
-        <Color x:Key="DisabledForegroundColor">#FF888888</Color>
-
-        <Color x:Key="SelectedBackgroundColor">#FFC5CBF9</Color>
-        <Color x:Key="SelectedUnfocusedColor">#FFDDDDDD</Color>
-
-        <Color x:Key="ControlLightColor">White</Color>
-        <Color x:Key="ControlMediumColor">#FF7381F9</Color>
-        <Color x:Key="ControlDarkColor">#FF211AA9</Color>
-
-        <Color x:Key="ControlMouseOverColor">#FF3843C4</Color>
-        <Color x:Key="ControlPressedColor">#FF211AA9</Color>
-
-
-        <Color x:Key="GlyphColor">#FF444444</Color>
-        <Color x:Key="GlyphMouseOver">sc#1, 0.004391443, 0.002428215, 0.242281124</Color>
-
-        <!--Border colors-->
-        <Color x:Key="BorderLightColor">#FFCCCCCC</Color>
-        <Color x:Key="BorderMediumColor">#FF888888</Color>
-        <Color x:Key="BorderDarkColor">#FF444444</Color>
-
-        <Color x:Key="PressedBorderLightColor">#FF888888</Color>
-        <Color x:Key="PressedBorderDarkColor">#FF444444</Color>
-
-        <Color x:Key="DisabledBorderLightColor">#FFAAAAAA</Color>
-        <Color x:Key="DisabledBorderDarkColor">#FF888888</Color>
-
-        <Color x:Key="DefaultBorderBrushDarkColor">Black</Color>
-
-        <!--Control-specific resources.-->
-        <Color x:Key="HeaderTopColor">#FFC5CBF9</Color>
-        <Color x:Key="DatagridCurrentCellBorderColor">Black</Color>
-        <Color x:Key="SliderTrackDarkColor">#FFC5CBF9</Color>
-
-        <Color x:Key="NavButtonFrameColor">#FF3843C4</Color>
-
-        <LinearGradientBrush x:Key="MenuPopupBrush"  EndPoint="0.5,1"  StartPoint="0.5,0">
-            <GradientStop Color="{DynamicResource ControlLightColor}" Offset="0" />
-            <GradientStop Color="{DynamicResource ControlMediumColor}" Offset="0.5" />
-            <GradientStop Color="{DynamicResource ControlLightColor}" Offset="1" />
-        </LinearGradientBrush>
-
-        <LinearGradientBrush x:Key="ProgressBarIndicatorAnimatedFill"  StartPoint="0,0"  EndPoint="1,0">
-            <LinearGradientBrush.GradientStops>
-                <GradientStopCollection>
-                    <GradientStop Color="#000000FF"  Offset="0" />
-                    <GradientStop Color="#600000FF"  Offset="0.4" />
-                    <GradientStop Color="#600000FF"  Offset="0.6" />
-                    <GradientStop Color="#000000FF"   Offset="1" />
-                </GradientStopCollection>
-            </LinearGradientBrush.GradientStops>
-        </LinearGradientBrush>
-        <!-- FocusVisual -->
-        <!-- EndRegion -->
-
-        <Style x:Key="ButtonFocusVisual">
-            <Setter Property="Control.Template">
-                <Setter.Value>
-                    <ControlTemplate>
-                        <Border>
-                            <Rectangle Margin="2" StrokeThickness="1" Stroke="#60000000" StrokeDashArray="1 2" />
-                        </Border>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-        </Style>
-
-        <!-- Button -->
-        <Style x:Key="DialogButtonStyle" TargetType="Button">
-            <Setter Property="SnapsToDevicePixels" Value="true" />
-            <Setter Property="OverridesDefaultStyle"  Value="true" />
-            <Setter Property="FocusVisualStyle"  Value="{StaticResource ButtonFocusVisual}" />
-            <Setter Property="Margin" Value="5"/>
-            <Setter Property="Foreground" Value="#FFFFC042"/>
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="Button">
-                        <Border TextBlock.Foreground="{TemplateBinding Foreground}" x:Name="Border" CornerRadius="2" BorderThickness="1" Background="#261E1E1E" Padding="5">
-                            <Border.BorderBrush>
-                                <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
-                                    <LinearGradientBrush.GradientStops>
-                                        <GradientStopCollection>
-                                            <GradientStop Color="#FF009923" Offset="0.0" />
-                                            <GradientStop Color="#FF001104" Offset="1.0" />
-                                        </GradientStopCollection>
-                                    </LinearGradientBrush.GradientStops>
-                                </LinearGradientBrush>
-                            </Border.BorderBrush>
-                            <VisualStateManager.VisualStateGroups>
-                                <VisualStateGroup x:Name="CommonStates">
-                                    <VisualStateGroup.Transitions>
-                                        <VisualTransition GeneratedDuration="0:0:0.5" />
-                                        <VisualTransition GeneratedDuration="0" To="Pressed" />
-                                    </VisualStateGroup.Transitions>
-                                    <VisualState x:Name="Normal" />
-                                    <VisualState x:Name="MouseOver"/>
-                                    <VisualState x:Name="Pressed">
-                                        <Storyboard>
-                                            <ColorAnimationUsingKeyFrames Storyboard.TargetProperty="(Border.BorderBrush).(GradientBrush.GradientStops)[0].(GradientStop.Color)" Storyboard.TargetName="Border">
-                                                <EasingColorKeyFrame KeyTime="0" Value="#FF001104" />
-                                            </ColorAnimationUsingKeyFrames>
-                                            <ColorAnimationUsingKeyFrames Storyboard.TargetProperty="(Border.BorderBrush).(GradientBrush.GradientStops)[1].(GradientStop.Color)" Storyboard.TargetName="Border">
-                                                <EasingColorKeyFrame KeyTime="0" Value="#FF009923" />
-                                            </ColorAnimationUsingKeyFrames>
-                                        </Storyboard>
-                                    </VisualState>
-                                    <VisualState x:Name="Disabled">
-                                        <Storyboard>
-                                            <ColorAnimationUsingKeyFrames Storyboard.TargetProperty="(TextBlock.Foreground).(SolidColorBrush.Color)" Storyboard.TargetName="Border">
-                                                <EasingColorKeyFrame KeyTime="0" Value="#FF001104" />
-                                            </ColorAnimationUsingKeyFrames>
-                                            <ColorAnimationUsingKeyFrames Storyboard.TargetProperty="(Border.BorderBrush).(GradientBrush.GradientStops)[1].(GradientStop.Color)" Storyboard.TargetName="Border">
-                                                <EasingColorKeyFrame KeyTime="0" Value="#FF009923" />
-                                            </ColorAnimationUsingKeyFrames>
-                                        </Storyboard>
-                                    </VisualState>
-                                </VisualStateGroup>
-                            </VisualStateManager.VisualStateGroups>
-                            <ContentPresenter Margin="2" HorizontalAlignment="Center" VerticalAlignment="Center" RecognizesAccessKey="True" />
-                        </Border>
-                        <ControlTemplate.Triggers>
-                            <Trigger Property="IsDefault" Value="true">
-
-                                <Setter TargetName="Border" Property="BorderBrush">
-                                    <Setter.Value>
-                                        <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
-                                            <GradientBrush.GradientStops>
-                                                <GradientStopCollection>
-                                                    <GradientStop Color="#FF009923" Offset="0.0" />
-                                                    <GradientStop Color="#FF001104" Offset="1.0" />
-                                                </GradientStopCollection>
-                                            </GradientBrush.GradientStops>
-                                        </LinearGradientBrush>
-
-                                    </Setter.Value>
-                                </Setter>
-                            </Trigger>
-                        </ControlTemplate.Triggers>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-        </Style>
-    </UserControl.Resources>
 
     <UserControl.DataContext>
         <Binding Path="YesNoDialog" Source="{StaticResource Locator}"/>
     </UserControl.DataContext>
 
-
-    <Grid Background="#CC151515" Margin="0" Visibility="{Binding IsVisible, Converter={StaticResource boolToVisibilityConverter}}">
-        <Border Padding="0,10" Margin="15,0" VerticalAlignment="Center" Background="#80323232" BorderBrush="#FF045900" BorderThickness="1">           
-            <StackPanel>                
-                <TextBlock Text="{Binding Request.QuestionText}" Foreground="#FFFFC042" HorizontalAlignment="Center" Margin="0,0,0,7"/>
+    <UserControl.Resources>
+        <BooleanToVisibilityConverter x:Key="boolToVisibilityConverter"></BooleanToVisibilityConverter>
+    </UserControl.Resources>
+    
+    <Border VerticalAlignment="Center" Background="#80323232" BorderBrush="#FF045900" BorderThickness="1" Grid.RowSpan="2" Visibility="{Binding IsVisible, Converter={StaticResource boolToVisibilityConverter}}">
+        <Grid Background="#CC151515" Margin="0" >
+            <Grid.RowDefinitions>
+                <RowDefinition Height="16"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <DockPanel Background="#FF0E2B10">
+                <TextBlock Text="{Binding Request.HeaderText}" Grid.Row="0" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="#FFB89333" FontSize="9" FontWeight="Bold"/> 
+            </DockPanel>
+                
+            <StackPanel Grid.Row="1" Margin="0,5,0,0">
+                <TextBlock Text="{Binding Request.QuestionText}" Foreground="#FFFFC042" HorizontalAlignment="Center" Margin="0,0,0,7" VerticalAlignment="Center"/>
                 <StackPanel Orientation="Horizontal" Margin="0" HorizontalAlignment="Center" VerticalAlignment="Center">
-                    <Button Content="Yes" Command="{Binding YesCommand}" Style="{DynamicResource DialogButtonStyle}" />
-                    <Button Content="No" Command="{Binding NoCommand}" Style="{DynamicResource DialogButtonStyle}" />
+                    <Button IsDefault="True" Content="Yes" Command="{Binding YesCommand}" Style="{DynamicResource DialogButtonStyle}" FontSize="11" />
+                    <Button IsCancel="True" Content="No" Command="{Binding NoCommand}" Style="{DynamicResource DialogButtonStyle}" FontSize="11" />
                 </StackPanel>
             </StackPanel>
-        </Border>
-    </Grid>
+        </Grid>
+    </Border>
 </UserControl>

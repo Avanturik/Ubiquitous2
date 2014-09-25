@@ -1,6 +1,7 @@
 ﻿using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
 using UB.Model;
+using UB.Utils;
 
 namespace UB.ViewModel
 {
@@ -20,8 +21,10 @@ namespace UB.ViewModel
             MessengerInstance.Register<YesNoDialog>(this, "OpenDialog", (request) => {
                 if (request.IsOpenRequest)
                 {
-                    Request = request;
-                    IsVisible = true;                    
+                    UI.Dispatch(() => {
+                        Request = request;
+                        IsVisible = true;                                        
+                    });
                 }
             });
         }
@@ -31,7 +34,7 @@ namespace UB.ViewModel
         /// </summary>
         public const string RequestPropertyName = "Request";
 
-        private YesNoDialog _request = new YesNoDialog() { QuestionText = "Close?" };
+        private YesNoDialog _request = new YesNoDialog() { QuestionText = "Close?", HeaderText ="What?" };
 
         /// <summary>
         /// Sets and gets the Request property.

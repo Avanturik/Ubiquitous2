@@ -277,6 +277,7 @@ namespace UB.ViewModel
 
                 RaisePropertyChanging(IsOverlayVisiblePropertyName);
                 _isOverlayVisible = value;
+                MessengerInstance.Send<bool>(!_isOverlayVisible, "EnableAutoScroll");
                 RaisePropertyChanged(IsOverlayVisiblePropertyName);
             }
         }
@@ -553,18 +554,13 @@ namespace UB.ViewModel
             if (IsMouseOver && IsFocused)
             {
                 IsOverlayVisible = true;
-                ScrollToLastMessage();
                 SendTextEditMode = true;
-
             }
             else if( !IsMouseOver && !IsFocused)
             {
                 IsOverlayVisible = false;
                 SendTextEditMode = false;
             }
-
-            MessengerInstance.Send<bool>(!IsOverlayVisible, "EnableAutoScroll");
-
         }
 
         private RelayCommand _enterCommand;
@@ -580,9 +576,9 @@ namespace UB.ViewModel
                     ?? (_enterCommand = new RelayCommand(
                                           () =>
                                           {
-                                              if (SelectedChatChannel == null)
+                                              if (SelectedChatChannel == null || String.IsNullOrEmpty(SendText) )
                                                   return;
-
+                                              
                                               _dataService.SendMessage(new ChatMessage() { 
                                                 Channel = SelectedChatChannel.ChannelName,
                                                 ChatName = SelectedChatChannel.ChatName,
@@ -599,6 +595,7 @@ namespace UB.ViewModel
         {
             var delaySend = new Timer((obj) =>
             {
+                UI.Dispatch(() => MessengerInstance.Send<bool>(false, "MessageSent"));
                 UI.Dispatch(() => MessengerInstance.Send<bool>(true, "MessageSent"));
             }, this, 100, Timeout.Infinite);
 
@@ -701,6 +698,8 @@ namespace UB.ViewModel
         {
             // Clean up if needed
             keyboardListener.Dispose();
+            MessengerInstance.Unregister<bool>(this, "ReopenMainWindow");
+            MessengerInstance.Unregister<ChatMessage>(this, "SetChannel");
 
             base.Cleanup();
         }

@@ -12,7 +12,6 @@
 
 
 
-    <Converter:BoolToScrollBarVisibility x:Key="boolToScrollVisibility"></Converter:BoolToScrollBarVisibility>
     <Style x:Key="ChatBoxStyle" TargetType="{x:Type UserControl}">
         <Setter Property="Template">
             <Setter.Value>

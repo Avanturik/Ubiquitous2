@@ -41,7 +41,7 @@ namespace UB.Design
             return "Lorem ipsum " + text;
         }
 
-        public void ReadMessages(Action<ChatMessage[],Exception> callback)
+        public void ReadMessages(Func<ChatMessage[],Exception, bool> callback)
         {
 
         }

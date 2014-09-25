@@ -10,6 +10,7 @@ using UB.Utils;
 using UB.Properties;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Threading;
 
 namespace UB.ViewModel
 {
@@ -31,11 +32,6 @@ namespace UB.ViewModel
         /// <summary>
         /// Initializes a new instance of the ChatBoxViewModel class.
         /// </summary>
-        public ChatBoxViewModel()
-        {
-
-        }
-
         [PreferredConstructor]
         public ChatBoxViewModel(IChatDataService dataService, IGeneralDataService generalDataService, ISettingsDataService settingsDataService)
         {
@@ -71,6 +67,8 @@ namespace UB.ViewModel
             if (IsInDesignMode)
                 return;
 
+
+
             _settingsDataService.GetAppSettings((config) => {
                 AppConfig = config;
             });
@@ -78,9 +76,11 @@ namespace UB.ViewModel
 
             _dataService.ReadMessages((messages, error) =>
             {
+
                 lock (lockReadMessages)
                 {
                     AddMessages(messages);
+                    return true;
                 }
 
             });
@@ -94,7 +94,7 @@ namespace UB.ViewModel
             MessengerInstance.Register<bool>(this, "EnableAutoScroll", msg =>
             {
                 EnableAutoScroll = msg;
-            });
+            });           
 
             if (_generalDataService.Services == null)
                 _generalDataService.Start();
@@ -477,6 +477,12 @@ namespace UB.ViewModel
                 (Application.Current as App).ChatBoxHeight = _chatBoxHeight;
                 RaisePropertyChanged(ChatBoxHeightPropertyName);
             }
+        }
+
+        public override void Cleanup()
+        {
+                MessengerInstance.Unregister<bool>(this, "MessageSent");
+                MessengerInstance.Unregister<bool>(this, "EnableAutoScroll");
         }
 
     }

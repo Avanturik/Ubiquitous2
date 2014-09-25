@@ -7,6 +7,7 @@
         <ResourceDictionary Source="/Skins/Shared/SettingsWindowSkin.xaml"/>
         <ResourceDictionary Source="/Skins/Shared/Expander.xaml"/>
         <ResourceDictionary Source="/Skins/Shared/ChatReplyCombo.xaml"/>
+        <ResourceDictionary Source="/Skins/Shared/YesNoDialogSkin.xaml"/>
     </ResourceDictionary.MergedDictionaries>
     
 </ResourceDictionary>

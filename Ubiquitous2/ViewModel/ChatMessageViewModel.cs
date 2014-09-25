@@ -8,7 +8,7 @@ using Newtonsoft.Json;
 
 
 namespace UB.ViewModel
-{
+{    
     public class ChatMessageViewModel : ViewModelBase, IHeightMeasurer
     {
         private readonly IChatDataService _dataService;
@@ -33,16 +33,21 @@ namespace UB.ViewModel
                             // Report error here
                             return;
                         }
-
+                       
                         Message = item;
                     });
         }
 
         public ChatMessageViewModel (ChatMessage message)
         {
+            _dataService = SimpleIoc.Default.GetInstance<IChatDataService>();
             Message = message;
+
             if (Message.ChatIconURL == null)
                 Message.ChatIconURL = Icons.MainIcon;
+
+            if (message.ChatName == null)
+                Message.ChatName = SettingsRegistry.ChatTitleNormalTwitch;
         }
 
         public ChatMessage Message { get; set; }
@@ -77,45 +82,39 @@ namespace UB.ViewModel
             }
         }
         
-        private RelayCommand _ignoreUser;
+        private RelayCommand<ChatMessage> _ignoreUser;
 
         /// <summary>
         /// Gets the MyCommand.
         /// </summary>
         [JsonIgnore]
-        public RelayCommand IgnoreUser
+        public RelayCommand<ChatMessage> IgnoreUser
         {
             get
             {
                 return _ignoreUser
-                    ?? (_ignoreUser = new RelayCommand(
-                                          () =>
+                    ?? (_ignoreUser = new RelayCommand<ChatMessage>(
+                                          (message) =>
                                           {
-                                              MessengerInstance.Send<YesNoDialog>(new YesNoDialog() { 
-                                                  QuestionText = "Ignore " + Message.FromUserName + "@" + Message.ChatName + " ?",
-                                                  IsOpenRequest = true,
-                                                  YesAction = () => {
-                                                      var dataservice = SimpleIoc.Default.GetInstance<IChatDataService>();
-                                                      dataservice.AddMessageSenderToIgnoreList(Message);
-                                                  },
-                                              },"OpenDialog");
+                                              UI.Dispatch(() => { 
+                                                  MessengerInstance.Send<YesNoDialog>(new YesNoDialog() { 
+                                                      HeaderText = "Ignore user",
+                                                      QuestionText = message.FromUserName + "@" + message.ChatName,
+                                                      IsOpenRequest = true,
+                                                      YesAction = () => {                                                      
+                                                          _dataService.AddMessageSenderToIgnoreList(message);
+                                                      },
+                                                  },"OpenDialog");
+                                              });
 
                                           }));
             }
         }
 
-        /// <summary>
-        /// The <see cref="InMenu" /> property's name.
-        /// </summary>
-        public const string InMenuPropertyName = "InMenu";
-
-        private bool _inMenu = false;
-
-        /// <summary>
-        /// Sets and gets the InMenu property.
-        /// Changes to that property's value raise the PropertyChanged event. 
-        /// </summary>
-
+        public override void Cleanup()
+        {
+            Log.WriteInfo("Disposed ChatMessageViewModel");
+        }
     }
 
 }

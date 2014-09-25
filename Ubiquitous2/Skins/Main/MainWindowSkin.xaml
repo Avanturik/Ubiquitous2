@@ -11,8 +11,6 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
     
     <BooleanToVisibilityConverter x:Key="boolToVisibilityConverter"></BooleanToVisibilityConverter>
-
-    
     <Style x:Key="TopBarIcon" TargetType="{x:Type Image}">
         <Style.Triggers>
             <Trigger Property="IsMouseOver" Value="True">

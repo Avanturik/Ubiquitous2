@@ -8,7 +8,7 @@ namespace UB.Model
     {
         
         void GetRandomMessage(Action<ChatMessage, Exception> callback);
-        void ReadMessages(Action<ChatMessage[], Exception> callback);
+        void ReadMessages(Func<ChatMessage[], Exception, bool> callback);
         void SwitchChat( String chatName, bool enabled);
         IChat GetChat( String chatName );
         void StartAllChats();

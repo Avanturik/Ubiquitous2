@@ -23,8 +23,8 @@
         <Style TargetType="{x:Type TextBlock}">
             <Setter Property="Margin" Value="0"/>
         </Style>
-
         <BooleanToVisibilityConverter x:Key="boolToVisibilityConverter"></BooleanToVisibilityConverter>
+
     </UserControl.Resources>
     <Grid>
         <Border BorderThickness="0,1,0,0" Background="{DynamicResource {x:Static SystemColors.ControlBrushKey}}">

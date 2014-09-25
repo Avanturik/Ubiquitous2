@@ -9,6 +9,36 @@ namespace UB.Model
     public class YesNoDialog : NotifyPropertyChangeBase
     {
         /// <summary>
+        /// The <see cref="HeaderText" /> property's name.
+        /// </summary>
+        public const string HeaderTextPropertyName = "HeaderText";
+
+        private string _headerText = null;
+
+        /// <summary>
+        /// Sets and gets the HeaderText property.
+        /// Changes to that property's value raise the PropertyChanged event. 
+        /// </summary>
+        public string HeaderText
+        {
+            get
+            {
+                return _headerText;
+            }
+
+            set
+            {
+                if (_headerText == value)
+                {
+                    return;
+                }
+
+                RaisePropertyChanging(HeaderTextPropertyName);
+                _headerText = value;
+                RaisePropertyChanged(HeaderTextPropertyName);
+            }
+        }
+        /// <summary>
         /// The <see cref="QuestionText" /> property's name.
         /// </summary>
         public const string QuestionTextPropertyName = "QuestionText";

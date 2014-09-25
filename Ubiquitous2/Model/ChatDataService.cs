@@ -20,7 +20,7 @@ namespace UB.Model
         private object messageQueueLock = new object();
         private ISettingsDataService settingsDataService;
         private Random random;
-        private Action<ChatMessage[], Exception> readChatCallback;
+        private Func<ChatMessage[], Exception,bool> readChatCallback;
         private List<ChatConfig> chatConfigs;
         private List<IChat> chats;
         private SteamChat steamChat;
@@ -80,7 +80,7 @@ namespace UB.Model
         }
         
 
-        public void ReadMessages( Action<ChatMessage[], Exception> callback)
+        public void ReadMessages( Func<ChatMessage[], Exception, bool> callback)
         {
             readChatCallback = callback;
         }
@@ -141,14 +141,16 @@ namespace UB.Model
                     lock (messageQueueLock)
                     {
                         var messageList = messageQueue.ToList();
-                        readChatCallback(messageQueue.ToArray(), null);
-                        Task.Factory.StartNew(() =>
+                        if( readChatCallback(messageQueue.ToArray(), null) )
                         {
-                            if (steamChat != null && steamChat.Enabled)
-                                messageList.ForEach(message => steamChat.SendMessage(message));
-                        });
+                            Task.Factory.StartNew(() =>
+                            {
+                                if (steamChat != null && steamChat.Enabled)
+                                    messageList.ForEach(message => steamChat.SendMessage(message));
+                            });
 
-                        messageQueue.Clear();
+                            messageQueue.Clear();
+                        }
                     }
                 }
             }, null, 0, 1500);
@@ -194,8 +196,8 @@ namespace UB.Model
                 messageQueue.Add(message);
                 if( message.HighlyImportant )
                 {
-                    readChatCallback(messageQueue.ToArray(), null);
-                    messageQueue.Clear();
+                    if( readChatCallback(messageQueue.ToArray(), null) )
+                        messageQueue.Clear();
                 }
             }
         }
