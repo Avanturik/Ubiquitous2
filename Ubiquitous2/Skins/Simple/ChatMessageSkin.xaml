@@ -3,6 +3,8 @@
                     xmlns:ub="clr-namespace:UB.View"
                     xmlns:Converter="clr-namespace:UB.Converter"
                     xmlns:Interactivity="clr-namespace:UB.Interactivity"
+                    xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+                    xmlns:ei="http://schemas.microsoft.com/expression/2010/interactions"
                     xmlns:gif="http://wpfanimatedgif.codeplex.com"
                     >
     <Converter:ChatMessageToInlines x:Key="textConverter" />
@@ -48,12 +50,12 @@
                                         <DropShadowEffect BlurRadius="2" Opacity="0.2" ShadowDepth="2"/>
                                     </Image.Effect>
                                 </Image>
-                                <TextBlock Focusable="False">
+                                <TextBlock ToolTip="Click to set as active channel" Focusable="False">
                                     <Hyperlink Focusable="False" Command="{Binding SetActiveChannel}" Cursor="Hand">
                                         <TextBlock Focusable="False" FontSize="11" Text="{Binding Message.Channel}" Margin="3,1,0,0" HorizontalAlignment="Left" FontWeight="Bold"/>
                                     </Hyperlink>
                                 </TextBlock>
-                                <TextBox  Cursor="Hand" Focusable="False" FontSize="11" Text="{Binding Message.FromUserName}" Margin="0" Foreground="#FFFFC042" HorizontalAlignment="Left" FontWeight="Bold" OverridesDefaultStyle="False">
+                                <TextBox ToolTip="Right click for options" Cursor="Hand" Focusable="False" FontSize="11" Text="{Binding Message.FromUserName}" Margin="0" Foreground="#FFFFC042" HorizontalAlignment="Left" FontWeight="Bold" OverridesDefaultStyle="False">
                                     <TextBox.ContextMenu>
                                         <ContextMenu Name="userNameMenu" Style="{DynamicResource ContextMenuStyle}">
                                             <MenuItem Header="Add to ignore list" Command="{Binding IgnoreUser}"  CommandParameter="{Binding Message}" Foreground="#FFFFC042">
@@ -63,6 +65,11 @@
                                             </MenuItem>
                                         </ContextMenu>
                                     </TextBox.ContextMenu>
+                                    <!--<i:Interaction.Triggers>
+                                        <i:EventTrigger EventName="MouseButtonClick">
+                                            <ei:ChangePropertyAction TargetObject="{Binding ElementName=userNameMenu}" PropertyName="IsOpen" Value="true"/>
+                                        </i:EventTrigger>
+                                    </i:Interaction.Triggers>-->
                                 </TextBox>
                                 <TextBox Focusable="False" Text="{Binding Message.TimeStamp}" FontSize="10" Foreground="#FFD69B33" TextAlignment="Right" DockPanel.Dock="Right" Margin="0,1,0,0" FontWeight="Bold"/>
                             </StackPanel>
