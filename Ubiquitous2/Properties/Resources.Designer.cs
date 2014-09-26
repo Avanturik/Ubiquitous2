@@ -81,6 +81,16 @@ namespace UB.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        public static System.Drawing.Bitmap gaminglive_round {
+            get {
+                object obj = ResourceManager.GetObject("gaminglive_round", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
         /// </summary>
         public static System.Drawing.Icon gaminglivedark {
@@ -96,6 +106,16 @@ namespace UB.Properties {
         public static System.Drawing.Bitmap hitbox {
             get {
                 object obj = ResourceManager.GetObject("hitbox", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        public static System.Drawing.Bitmap hitbox_round {
+            get {
+                object obj = ResourceManager.GetObject("hitbox_round", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -187,6 +207,16 @@ namespace UB.Properties {
             get {
                 object obj = ResourceManager.GetObject("steam", resourceCulture);
                 return ((System.Drawing.Icon)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        public static System.Drawing.Bitmap twitch_round {
+            get {
+                object obj = ResourceManager.GetObject("twitch_round", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
             }
         }
         

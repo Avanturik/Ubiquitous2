@@ -48,6 +48,7 @@ namespace UB.ViewModel
                 SimpleIoc.Default.Register<IGeneralDataService, GeneralDataService>();
             }
 
+            SimpleIoc.Default.Register<HelloPlaceHolderViewModel>();
             SimpleIoc.Default.Register<YesNoDialogViewModel>();
             SimpleIoc.Default.Register<SteamGuardViewModel>();
             //SimpleIoc.Default.Register<LastFMService>();
@@ -201,5 +202,18 @@ namespace UB.ViewModel
         }
        
 
+                [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance",
+    "CA1822:MarkMembersAsStatic",
+    Justification = "This non-static member is needed for data binding purposes.")]
+        public HelloPlaceHolderViewModel HelloPlaceHolder
+        {
+            get
+            {
+                return ServiceLocator.Current.GetInstance<HelloPlaceHolderViewModel>();
+            }
+        }
+       
+
+        
     }
 }

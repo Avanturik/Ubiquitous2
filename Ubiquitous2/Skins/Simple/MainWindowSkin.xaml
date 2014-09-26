@@ -48,90 +48,91 @@
                     <Border BorderThickness="1" BorderBrush="#FF323232" >
 
                         <Grid Margin="0">
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="15" />
-                            <RowDefinition Height="*" />
-                            <RowDefinition Height="15" />
-                        </Grid.RowDefinitions>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="15" />
-                            <ColumnDefinition Width="*" />
-                            <ColumnDefinition Width="15" />
-                        </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="15" />
+                                <RowDefinition Height="*" />
+                                <RowDefinition Height="15" />
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="15" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="15" />
+                            </Grid.ColumnDefinitions>
 
                             <Rectangle Fill="#FF1E1E1E" Panel.ZIndex="-10" Opacity="{Binding AppConfig.BackgroundOpacity}" Grid.RowSpan="3" Grid.ColumnSpan="3" />
                             <Grid Grid.RowSpan="3" Grid.ColumnSpan="3" Margin="5">
-                            <DockPanel Focusable="False" d:DesignHeight="300" d:DesignWidth="500">
-                                <Grid Focusable="False">
-                                    <Grid.RowDefinitions>
-                                        <RowDefinition Height="Auto"/>
-                                        <RowDefinition/>
-                                        <RowDefinition Height="Auto"/>
-                                    </Grid.RowDefinitions>
-                                    <Border Background="#011E1E1E" BorderThickness="0" CornerRadius="0" Focusable="False" Grid.Row="0" Padding="1" VerticalAlignment="Top" HorizontalAlignment="Stretch" Panel.ZIndex="1">
-                                        <i:Interaction.Behaviors>
-                                            <Interactivity:DragThumb/>
-                                        </i:Interaction.Behaviors>
- 
-                                        <DockPanel HorizontalAlignment="Stretch" VerticalAlignment="Center">
+                                <DockPanel Focusable="False" d:DesignHeight="300" d:DesignWidth="500">
+                                    <Grid Focusable="False">
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition/>
+                                            <RowDefinition Height="Auto"/>
+                                        </Grid.RowDefinitions>
+                                        <Border Background="#011E1E1E" BorderThickness="0" CornerRadius="0" Focusable="False" Grid.Row="0" Padding="1" VerticalAlignment="Top" HorizontalAlignment="Stretch" Panel.ZIndex="1">
+                                            <i:Interaction.Behaviors>
+                                                <Interactivity:DragThumb/>
+                                            </i:Interaction.Behaviors>
+
+                                            <DockPanel HorizontalAlignment="Stretch" VerticalAlignment="Center">
                                                 <TextBlock DockPanel.Dock="Right" HorizontalAlignment="Right" VerticalAlignment="Center">
                                                 <Hyperlink Style="{StaticResource OverlayHyperlink}" Focusable="False" Command="{Binding ExitApplication}">
                                                     <Image Style="{StaticResource TopBarIcon}" DockPanel.Dock="Right" Width="11" Source="/Ubiquitous2;component/Resources/close.ico" HorizontalAlignment="Right" VerticalAlignment="Center">
                                                     </Image>
                                                 </Hyperlink>
-                                            </TextBlock>
-                                            <TextBlock DockPanel.Dock="Right" HorizontalAlignment="Right" VerticalAlignment="Center">
+                                                </TextBlock>
+                                                <TextBlock DockPanel.Dock="Right" HorizontalAlignment="Right" VerticalAlignment="Center">
                                                 <Hyperlink Style="{StaticResource OverlayHyperlink}" Focusable="False" Command="{Binding Minimize}">
                                                     <Image Margin="0,0,14,0" Style="{StaticResource TopBarIcon}" DockPanel.Dock="Right" Width="11" Source="/Ubiquitous2;component/Resources/minimize.ico" HorizontalAlignment="Right" VerticalAlignment="Center">
                                                     </Image>
                                                 </Hyperlink>
-                                            </TextBlock>
+                                                </TextBlock>
 
-                                            <TextBlock DockPanel.Dock="Right" HorizontalAlignment="Right" VerticalAlignment="Center">
+                                                <TextBlock DockPanel.Dock="Right" HorizontalAlignment="Right" VerticalAlignment="Center">
                                                 <Hyperlink Style="{StaticResource OverlayHyperlink}" Focusable="False" Command="{Binding ShowSettings}">
                                                 <Image Margin="0,0,14,0" Style="{StaticResource TopBarIcon}" DockPanel.Dock="Right" Width="12" Source="/Ubiquitous2;component/Resources/settings.ico" HorizontalAlignment="Right" VerticalAlignment="Center">
                                                     </Image>
                                             </Hyperlink>
 
-                                            </TextBlock>
+                                                </TextBlock>
 
-                                        </DockPanel>
-                                    </Border>
-                                    <View:ChatBoxView Focusable="False" Grid.Row="1" Margin="0,4,0,0" RenderTransformOrigin="1,0" OverridesDefaultStyle="True" Padding="0">
-                                        <!--<MouseBinding Gesture="LeftClick" Command="{Binding ShowOverlay}"/>-->
-                                    </View:ChatBoxView>
+                                            </DockPanel>
+                                        </Border>
+                                        <View:HelloPlaceHolderView Grid.Row="1" Panel.ZIndex="2" VerticalAlignment="Stretch"/>
+                                        <View:ChatBoxView Focusable="False" Grid.Row="1" Margin="0,4,0,0" RenderTransformOrigin="1,0" OverridesDefaultStyle="True" Padding="0">
+                                            <!--<MouseBinding Gesture="LeftClick" Command="{Binding ShowOverlay}"/>-->
+                                        </View:ChatBoxView>
                                         <Border CornerRadius="0,0,10,10" Focusable="False" Grid.Row="2" Padding="24,0,5,0" VerticalAlignment="Bottom" HorizontalAlignment="Stretch" Panel.ZIndex="1" Visibility="{Binding IsOverlayVisible, Converter={StaticResource boolToVisibilityConverter}}" BorderBrush="#FF1E1E1E" BorderThickness="1" Margin="0" Height="36">
-                                        <DockPanel Focusable="False" VerticalAlignment="Bottom" Background="Transparent" Margin="0">
-                                            <ComboBox Focusable="False" Style="{DynamicResource ReplyComboStyle}" Name="replyCombo" ItemsSource="{Binding ChannelList}" SelectedItem="{Binding SelectedChatChannel}" ItemTemplate="{DynamicResource ReplyComboTemplate}" IsReadOnly="True" IsEditable="False" Margin="-18,1,61,6" VerticalAlignment="Stretch"/>
-                                            <Border Focusable="False" CornerRadius="7" Background="#FF303030" Padding="6,0" Margin="-55,-24,1,-19" Height="22">
-                                                <Grid Focusable="False" Margin="0">
-                                                    <TextBox FocusManager.IsFocusScope="True" x:Name="ReplyTextBox" Panel.ZIndex="1" TextWrapping="Wrap" Margin="0" Background="#7F303030" Foreground="#FFBDBDBD" BorderThickness="0" Text="{Binding SendText,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" Padding="5,2,5,0" MaxHeight="54" ScrollViewer.CanContentScroll="True" VerticalScrollBarVisibility="Auto" MinHeight="20">
-                                                        <TextBox.InputBindings>
-                                                            <KeyBinding Key="Enter" Command="{Binding EnterCommand}"/>
-                                                        </TextBox.InputBindings>
-                                                    </TextBox>
-                                                    <TextBlock Focusable="False" Panel.ZIndex="0" MaxHeight="54" Margin="0,-3,0,0" Padding="5" Foreground="#66CFCFCF" Text="{Binding SelectedChatChannel.ChannelName}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Visibility="{Binding ElementName=ReplyTextBox, Path=Text.IsEmpty, Converter={StaticResource boolToVisibilityConverter}}" FontStyle="Italic"></TextBlock>
-                                                </Grid>
-                                            </Border>
-                                        </DockPanel>
-                                    </Border>
-                                </Grid>
+                                            <DockPanel Focusable="False" VerticalAlignment="Bottom" Background="Transparent" Margin="0">
+                                                <ComboBox Focusable="False" Style="{DynamicResource ReplyComboStyle}" Name="replyCombo" ItemsSource="{Binding ChannelList}" SelectedItem="{Binding SelectedChatChannel}" ItemTemplate="{DynamicResource ReplyComboTemplate}" IsReadOnly="True" IsEditable="False" Margin="-18,1,61,6" VerticalAlignment="Stretch"/>
+                                                <Border Focusable="False" CornerRadius="7" Background="#FF303030" Padding="6,0" Margin="-55,-24,1,-19" Height="22">
+                                                    <Grid Focusable="False" Margin="0">
+                                                        <TextBox FocusManager.IsFocusScope="True" x:Name="ReplyTextBox" Panel.ZIndex="1" TextWrapping="Wrap" Margin="0" Background="#7F303030" Foreground="#FFBDBDBD" BorderThickness="0" Text="{Binding SendText,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" Padding="5,2,5,0" MaxHeight="54" ScrollViewer.CanContentScroll="True" VerticalScrollBarVisibility="Auto" MinHeight="20">
+                                                            <TextBox.InputBindings>
+                                                                <KeyBinding Key="Enter" Command="{Binding EnterCommand}"/>
+                                                            </TextBox.InputBindings>
+                                                        </TextBox>
+                                                        <TextBlock Focusable="False" Panel.ZIndex="0" MaxHeight="54" Margin="0,-3,0,0" Padding="5" Foreground="#66CFCFCF" Text="{Binding SelectedChatChannel.ChannelName}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Visibility="{Binding ElementName=ReplyTextBox, Path=Text.IsEmpty, Converter={StaticResource boolToVisibilityConverter}}" FontStyle="Italic"></TextBlock>
+                                                    </Grid>
+                                                </Border>
+                                            </DockPanel>
+                                        </Border>
+                                    </Grid>
 
-                            </DockPanel>
-                        </Grid>
+                                </DockPanel>
+                            </Grid>
 
 
-                        <Border Name="topLeft" Style="{StaticResource WindowBorder}"/>
-                        <Border Name="top" Style="{StaticResource WindowBorder}" Grid.Column="1" Padding="0" Margin="-7,0" />
-                        <Border Name="topRight" Style="{StaticResource WindowBorder}" Grid.Column="2" />
-                        <Border Name="right" Style="{StaticResource WindowBorder}" Grid.Row="1" Grid.Column="2" Margin="0,-7" />
-                        <Border Name="bottomRight" Style="{StaticResource WindowBorder}" Grid.Row="2" Grid.Column="2"  />
-                        <Border Name="bottom" Style="{StaticResource WindowBorder}" Grid.Row="2" Grid.Column="1" Margin="-7,0" />
-                        <Border Name="bottomLeft" Style="{StaticResource WindowBorder}" Grid.Row="2" />
-                        <Border Name="left" Style="{StaticResource WindowBorder}" Grid.Row="1" Margin="0,-7" />
+                            <Border Name="topLeft" Style="{StaticResource WindowBorder}"/>
+                            <Border Name="top" Style="{StaticResource WindowBorder}" Grid.Column="1" Padding="0" Margin="-7,0" />
+                            <Border Name="topRight" Style="{StaticResource WindowBorder}" Grid.Column="2" />
+                            <Border Name="right" Style="{StaticResource WindowBorder}" Grid.Row="1" Grid.Column="2" Margin="0,-7" />
+                            <Border Name="bottomRight" Style="{StaticResource WindowBorder}" Grid.Row="2" Grid.Column="2"  />
+                            <Border Name="bottom" Style="{StaticResource WindowBorder}" Grid.Row="2" Grid.Column="1" Margin="-7,0" />
+                            <Border Name="bottomLeft" Style="{StaticResource WindowBorder}" Grid.Row="2" />
+                            <Border Name="left" Style="{StaticResource WindowBorder}" Grid.Row="1" Margin="0,-7" />
 
-                        <i:Interaction.Behaviors>
-                            <Interactivity:WindowResizeBehavior
+                            <i:Interaction.Behaviors>
+                                <Interactivity:WindowResizeBehavior
                                 TopLeftGrip="{Binding ElementName=topLeft}"
                                 TopGrip="{Binding ElementName=top}"
                                 TopRightGrip="{Binding ElementName=topRight}"
@@ -140,9 +141,9 @@
                                 BottomGrip="{Binding ElementName=bottom}"
                                 BottomLeftGrip="{Binding ElementName=bottomLeft}"
                                 LeftGrip="{Binding ElementName=left}"/>
-                        </i:Interaction.Behaviors>
+                            </i:Interaction.Behaviors>
 
-                    </Grid>
+                        </Grid>
                     </Border>
                     <ControlTemplate.Triggers>
                         <DataTrigger Binding="{Binding SendTextEditMode}" Value="True">
