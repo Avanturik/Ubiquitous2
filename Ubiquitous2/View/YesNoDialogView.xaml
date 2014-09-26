@@ -16,21 +16,21 @@
         <BooleanToVisibilityConverter x:Key="boolToVisibilityConverter"></BooleanToVisibilityConverter>
     </UserControl.Resources>
     
-    <Border VerticalAlignment="Center" Background="#80323232" BorderBrush="#FF045900" BorderThickness="1" Grid.RowSpan="2" Visibility="{Binding IsVisible, Converter={StaticResource boolToVisibilityConverter}}">
+    <Border VerticalAlignment="Center" Background="#80323232" BorderBrush="#FF045900" BorderThickness="1" Grid.RowSpan="2" Visibility="{Binding IsVisible, Converter={StaticResource boolToVisibilityConverter}}" Margin="10,0">
         <Grid Background="#CC151515" Margin="0" >
             <Grid.RowDefinitions>
-                <RowDefinition Height="16"/>
+                <RowDefinition Height="24"/>
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
             <DockPanel Background="#FF0E2B10">
-                <TextBlock Text="{Binding Request.HeaderText}" Grid.Row="0" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="#FFB89333" FontSize="9" FontWeight="Bold"/> 
+                <TextBlock Text="{Binding Request.HeaderText}" Grid.Row="0" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="#FFB89333" FontSize="11" FontWeight="Bold" Margin="0,3"/> 
             </DockPanel>
                 
             <StackPanel Grid.Row="1" Margin="0,5,0,0">
-                <TextBlock Text="{Binding Request.QuestionText}" Foreground="#FFFFC042" HorizontalAlignment="Center" Margin="0,0,0,7" VerticalAlignment="Center"/>
+                <TextBlock Text="{Binding Request.QuestionText}" Foreground="#FFFFC042" HorizontalAlignment="Center" Margin="0,0,0,7" VerticalAlignment="Center" FontSize="10"/>
                 <StackPanel Orientation="Horizontal" Margin="0" HorizontalAlignment="Center" VerticalAlignment="Center">
-                    <Button IsDefault="True" Content="Yes" Command="{Binding YesCommand}" Style="{DynamicResource DialogButtonStyle}" FontSize="11" />
-                    <Button IsCancel="True" Content="No" Command="{Binding NoCommand}" Style="{DynamicResource DialogButtonStyle}" FontSize="11" />
+                    <Button IsDefault="True" Content="Yes" Command="{Binding YesCommand}" Style="{DynamicResource DialogButtonStyle}" FontSize="10" />
+                    <Button IsCancel="True" Content="No" Command="{Binding NoCommand}" Style="{DynamicResource DialogButtonStyle}" FontSize="10" />
                 </StackPanel>
             </StackPanel>
         </Grid>

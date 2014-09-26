@@ -19,10 +19,15 @@ namespace UB.ViewModel
     public class StatusViewModel : ViewModelBase
     {
         private IChatDataService _dataService;
+        private IGeneralDataService _generalDataService;
+        private IService imageService;
+
         [PreferredConstructor]
-        public StatusViewModel( IChatDataService dataService)
+        public StatusViewModel(IChatDataService dataService, IGeneralDataService generalDataService)
         {
+
             _dataService = dataService;
+            _generalDataService = generalDataService;
             Initialize();
         }
 
@@ -31,6 +36,9 @@ namespace UB.ViewModel
             if (Chats == null)
                 Chats = new ObservableCollection<IChat>();
 
+            imageService = _generalDataService.GetService(SettingsRegistry.ServiceTitleImageSaver);
+            ImageServiceConfig = imageService.Config;
+            StatusToImagePath = ImageServiceConfig.GetParameterValue("FilenameStatus") as string;
 
             ChatsView = CollectionViewSource.GetDefaultView(Chats) as ListCollectionView;
             ChatsView.CustomSort = new SortViewerCount();
@@ -41,6 +49,11 @@ namespace UB.ViewModel
                         if (chat.Enabled == true)
                         {
                             Chats.Add(chat);
+                            chat.Status.PropertyChanged += (o, e) =>
+                            {
+                                IsNeedSave = true;
+                                IsNeedSave = false;
+                            };
                         }
                         if( ChatsView.NeedsRefresh )
                             ChatsView.Refresh();
@@ -50,7 +63,104 @@ namespace UB.ViewModel
 
 
         }
+
+
+
         public ListCollectionView ChatsView { get; set; }
+
+
+        /// <summary>
+        /// The <see cref="ImageServiceConfig" /> property's name.
+        /// </summary>
+        public const string ImageServiceConfigPropertyName = "ImageServiceConfig";
+
+        private ServiceConfig _imageServiceConfig = new ServiceConfig();
+
+        /// <summary>
+        /// Sets and gets the ImageServiceConfig property.
+        /// Changes to that property's value raise the PropertyChanged event. 
+        /// </summary>
+        public ServiceConfig ImageServiceConfig
+        {
+            get
+            {
+                return _imageServiceConfig;
+            }
+
+            set
+            {
+                if (_imageServiceConfig == value)
+                {
+                    return;
+                }
+
+                RaisePropertyChanging(ImageServiceConfigPropertyName);
+                _imageServiceConfig = value;
+                RaisePropertyChanged(ImageServiceConfigPropertyName);
+            }
+        }
+
+        /// <summary>
+        /// The <see cref="IsNeedSave" /> property's name.
+        /// </summary>
+        public const string IsNeedSavePropertyName = "IsNeedSave";
+
+        private bool _isNeedSave = false;
+
+        /// <summary>
+        /// Sets and gets the IsNeedSave property.
+        /// Changes to that property's value raise the PropertyChanged event. 
+        /// </summary>
+        public bool IsNeedSave
+        {
+            get
+            {
+                return _isNeedSave;
+            }
+
+            set
+            {
+                if (_isNeedSave == value)
+                {
+                    return;
+                }
+
+                RaisePropertyChanging(IsNeedSavePropertyName);
+                _isNeedSave = value;
+                RaisePropertyChanged(IsNeedSavePropertyName);
+            }
+        }
+
+        /// <summary>
+        /// The <see cref="StatusToImagePath" /> property's name.
+        /// </summary>
+        public const string StatusToImagePathPropertyName = "StatusToImagePath";
+
+        private string _statusToImagePath = null;
+
+        /// <summary>
+        /// Sets and gets the StatusToImagePath property.
+        /// Changes to that property's value raise the PropertyChanged event. 
+        /// </summary>
+        public string StatusToImagePath
+        {
+            get
+            {
+                return _statusToImagePath;
+            }
+
+            set
+            {
+                if (_statusToImagePath == value)
+                {
+                    return;
+                }
+
+                RaisePropertyChanging(StatusToImagePathPropertyName);
+                _statusToImagePath = value;
+                RaisePropertyChanged(StatusToImagePathPropertyName);
+            }
+        }
 
         /// <summary>
         /// The <see cref="Chats" /> property's name.
