@@ -97,7 +97,6 @@
 
                                             </DockPanel>
                                         </Border>
-                                        <View:HelloPlaceHolderView Grid.Row="1" Panel.ZIndex="2" VerticalAlignment="Stretch"/>
                                         <View:ChatBoxView Focusable="False" Grid.Row="1" Margin="0,4,0,0" RenderTransformOrigin="1,0" OverridesDefaultStyle="True" Padding="0">
                                             <!--<MouseBinding Gesture="LeftClick" Command="{Binding ShowOverlay}"/>-->
                                         </View:ChatBoxView>

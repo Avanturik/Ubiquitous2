@@ -120,7 +120,6 @@
 
                                         </DockPanel>
                                     </Border>
-                                    <View:HelloPlaceHolderView Grid.Row="1" Panel.ZIndex="2" VerticalAlignment="Stretch"/>
                                     <View:ChatBoxView Focusable="False" Grid.Row="1" Margin="0,0,4,0" RenderTransformOrigin="1,0" OverridesDefaultStyle="True" Padding="0"/>
 
                                     <Border CornerRadius="0,0,10,10" Focusable="False" Grid.Row="2" Padding="24,0,5,0" VerticalAlignment="Bottom" HorizontalAlignment="Stretch" Panel.ZIndex="1" Visibility="{Binding IsOverlayVisible, Converter={StaticResource boolToVisibilityConverter}}" BorderBrush="#FF165B1D" BorderThickness="1" Margin="0" Height="36">

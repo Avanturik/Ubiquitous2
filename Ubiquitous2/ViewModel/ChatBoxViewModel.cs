@@ -166,6 +166,9 @@ namespace UB.ViewModel
                         return false;
                     };
                 });
+
+                IsMessageAdded = false;
+                IsMessageAdded = true;
             }
         }
         private void AddMessages(ChatMessage[] messages)
