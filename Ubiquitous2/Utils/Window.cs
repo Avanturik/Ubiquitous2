@@ -13,7 +13,12 @@ namespace UB.Utils
 {
     public static class Win
     {
+        //Transparent windows
         private static Window[] windows = new Window[] { new StatusWindow(), new MusicTickerWindow()};
+
+        //Normal windows
+        private static Window dashboardWindow = new DashBoardWindow();
+
         public static void SetPlacement(this Window window, WindowSettings settings)
         {
             window.Top = settings.Top;
@@ -65,8 +70,16 @@ namespace UB.Utils
         {
             windows[0].Visibility = Visibility.Hidden;
         }
+        public static void ShowDashBoard()
+        {
+            dashboardWindow.Visibility = Visibility.Visible;
+        }
+        public static void HideDashBoard()
+        {
+            dashboardWindow.Visibility = Visibility.Hidden;
+        }
 
-        public static void SetGlobalStatus( WindowState state )
+        public static void SetGlobalStatus(WindowState state)
         {
             foreach (var win in windows)
                 win.WindowState = state;

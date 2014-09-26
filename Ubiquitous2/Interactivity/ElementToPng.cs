@@ -65,18 +65,11 @@ namespace UB.Interactivity
                 var height = visual.RenderSize.Height;
 
                 if( width == 0 || height == 0 )
-                    return; 
-
+                    return;
+                
                 RenderTargetBitmap rtb = new RenderTargetBitmap((Int32)width, (Int32)height, 96, 96, PixelFormats.Pbgra32);
 
-                DrawingVisual dv = new DrawingVisual();
-
-                using (DrawingContext dc = dv.RenderOpen())
-                {
-                    VisualBrush vb = new VisualBrush(visual);
-                    dc.DrawRectangle(vb, null, new Rect(0, 0, width, height));
-                }
-                rtb.Render(dv);
+                rtb.Render(visual);
                 
                 PngBitmapEncoder png = new PngBitmapEncoder();
 

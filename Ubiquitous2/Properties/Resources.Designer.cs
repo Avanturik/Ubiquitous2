@@ -73,6 +73,16 @@ namespace UB.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        public static System.Drawing.Bitmap dashboard {
+            get {
+                object obj = ResourceManager.GetObject("dashboard", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         public static System.Drawing.Bitmap gaminglive {
             get {
                 object obj = ResourceManager.GetObject("gaminglive", resourceCulture);
@@ -207,6 +217,16 @@ namespace UB.Properties {
             get {
                 object obj = ResourceManager.GetObject("steam", resourceCulture);
                 return ((System.Drawing.Icon)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        public static System.Drawing.Bitmap twitch_large {
+            get {
+                object obj = ResourceManager.GetObject("twitch_large", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
             }
         }
         

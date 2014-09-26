@@ -152,8 +152,14 @@
     <Compile Include="Controls\SmoothPanel\SmoothPanelMeasurer.cs" />
     <Compile Include="Controls\SmoothPanel\SmoothPanelTemplate.cs" />
     <Compile Include="Controls\SmoothPanel\SmoothPanelViewCache.cs" />
+    <Compile Include="Model\Game.cs" />
+    <Compile Include="Model\IStreamTopic.cs" />
     <Compile Include="Model\YesNoDialog.cs" />
+    <Compile Include="ViewModel\DashBoardViewModel.cs" />
     <Compile Include="ViewModel\HelloPlaceHolderViewModel.cs" />
+    <Compile Include="View\DashBoardWindow.xaml.cs">
+      <DependentUpon>DashBoardWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="View\HelloPlaceHolderView.xaml.cs">
       <DependentUpon>HelloPlaceHolderView.xaml</DependentUpon>
     </Compile>
@@ -394,6 +400,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="View\DashBoardWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="View\HelloPlaceHolderView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -578,6 +588,12 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Resource>
     <Resource Include="Resources\gaminglive_round.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resources\dashboard.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resources\twitch_large.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Resource>
     <Content Include="web\css\simple.css">

@@ -6,10 +6,11 @@ using System.Collections.Generic;
 using Newtonsoft.Json.Linq;
 using System.Threading.Tasks;
 using System.Linq;
+using System.Collections.ObjectModel;
 
 namespace UB.Model
 {
-    public class TwitchChat : IRCChatBase
+    public class TwitchChat : IRCChatBase, IStreamTopic
     {
         private const string ircDomain = "irc.twitch.tv";
         private const int ircPort = 6667;
@@ -27,8 +28,7 @@ namespace UB.Model
         private List<WebPoller> counterWebPollers = new List<WebPoller>();
 
         public TwitchChat(ChatConfig config) : 
-            base(new IRCLoginInfo()
-        {
+            base(new IRCLoginInfo() {
             HostName = ircDomain,
             Port = ircPort,
         })
@@ -144,7 +144,6 @@ namespace UB.Model
                 Status.IsLoginFailed = false;
             }
         }
-
         void TwitchChat_NoticeReceived(object sender, StringEventArgs e)
         {
             if (e.Text.Contains("Login unsuccessful"))
@@ -154,7 +153,6 @@ namespace UB.Model
                 Status.IsLoggedIn = false;
             }
         }
-
         public override bool Start()
         {
             isAnonymous = false;
@@ -280,7 +278,6 @@ namespace UB.Model
           
             return base.Stop();
         }
-
         public override void DownloadEmoticons(string url)
         {
             if (isFallbackEmoticons)
@@ -340,13 +337,11 @@ namespace UB.Model
 
             return oauthToken;
         }
-
         public override bool SendMessage(ChatMessage message)
         {
             RaiseMessageReceive( message.Text, message.Channel, LoginInfo.UserName, important:true, isSentByMe:true );
             return base.SendMessage(message);
         }
-
         public void Authenticate( Action afterAction)
         {
             webClient.Headers["X-Requested-With"] = "XMLHttpRequest";
@@ -380,6 +375,77 @@ namespace UB.Model
             webClient.Headers["Accept"] = "application/vnd.twitchtv.v2+json";
             afterAction();
         }
+        
+
+        #region IStreamTopic
+        public Game CurrentGame
+        {
+            get
+            {
+                throw new NotImplementedException();
+            }
+            set
+            {
+                throw new NotImplementedException();
+            }
+        }
+        public string Topic
+        {
+            get
+            {
+                throw new NotImplementedException();
+            }
+            set
+            {
+                throw new NotImplementedException();
+            }
+        }
+        public string Description
+        {
+            get
+            {
+                throw new NotImplementedException();
+            }
+            set
+            {
+                throw new NotImplementedException();
+            }
+        }
+        public ObservableCollection<Game> Games
+        {
+            get
+            {
+                throw new NotImplementedException();
+            }
+            set
+            {
+                throw new NotImplementedException();
+            }
+        }
+        public void QueryGameList(string gameName)
+        {
+            throw new NotImplementedException();
+        }
+        public void GetTopic()
+        {
+            throw new NotImplementedException();
+        }
+        public void SetTopic()
+        {
+            throw new NotImplementedException();
+        }
+        public string SearchQuery
+        {
+            get
+            {
+                throw new NotImplementedException();
+            }
+            set
+            {
+                throw new NotImplementedException();
+            }
+        }
+        #endregion IStreamTopic
     }
 
 

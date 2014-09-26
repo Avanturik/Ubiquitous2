@@ -115,7 +115,12 @@
                                                 <Image Margin="0,0,14,0" Style="{StaticResource TopBarIcon}" DockPanel.Dock="Right" Width="14" Source="/Ubiquitous2;component/Resources/settings.ico" HorizontalAlignment="Right" VerticalAlignment="Center">
                                                     </Image>
                                             </Hyperlink>
+                                            </TextBlock>
 
+                                            <TextBlock DockPanel.Dock="Right" HorizontalAlignment="Right" VerticalAlignment="Center">
+                                                <Hyperlink Style="{StaticResource OverlayHyperlink}" Focusable="False" Command="{Binding ShowDashboard}">
+                                                <Image Margin="0,0,14,0" Style="{StaticResource TopBarIcon}" DockPanel.Dock="Right" Width="14" Source="/Ubiquitous2;component/Resources/dashboard.png" HorizontalAlignment="Right" VerticalAlignment="Center"/>
+                                                </Hyperlink>
                                             </TextBlock>
 
                                         </DockPanel>

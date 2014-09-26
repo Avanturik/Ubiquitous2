@@ -71,7 +71,8 @@ namespace UB.ViewModel
             if (IsInDesignMode)
                 return;
 
-            AppConfig = (Application.Current as App).AppConfig;
+            if( Application.Current != null)
+                AppConfig = (Application.Current as App).AppConfig;
 
         }
         public ChatMessage Message { get; set; }

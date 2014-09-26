@@ -688,7 +688,23 @@ namespace UB.ViewModel
                 RaisePropertyChanged(AppConfigPropertyName);
             }
         }
+        private RelayCommand _showDashboard;
 
+        /// <summary>
+        /// Gets the ShowDashboard.
+        /// </summary>
+        public RelayCommand ShowDashboard
+        {
+            get
+            {
+                return _showDashboard
+                    ?? (_showDashboard = new RelayCommand(
+                                          () =>
+                                          {
+                                              Win.ShowDashBoard();
+                                          }));
+            }
+        }
         public override void Cleanup()
         {
             // Clean up if needed
@@ -698,6 +714,7 @@ namespace UB.ViewModel
 
             base.Cleanup();
         }
+
 
     }
 }

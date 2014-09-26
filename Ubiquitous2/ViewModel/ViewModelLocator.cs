@@ -48,6 +48,7 @@ namespace UB.ViewModel
                 SimpleIoc.Default.Register<IGeneralDataService, GeneralDataService>();
             }
 
+            SimpleIoc.Default.Register<DashBoardViewModel>();
             SimpleIoc.Default.Register<HelloPlaceHolderViewModel>();
             SimpleIoc.Default.Register<YesNoDialogViewModel>();
             SimpleIoc.Default.Register<SteamGuardViewModel>();
@@ -212,8 +213,18 @@ namespace UB.ViewModel
                 return ServiceLocator.Current.GetInstance<HelloPlaceHolderViewModel>();
             }
         }
-       
 
-        
+
+                [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance",
+"CA1822:MarkMembersAsStatic",
+Justification = "This non-static member is needed for data binding purposes.")]
+                public DashBoardViewModel DashBoard
+                {
+                    get
+                    {
+                        return ServiceLocator.Current.GetInstance<DashBoardViewModel>();
+                    }
+                }
+       
     }
 }
