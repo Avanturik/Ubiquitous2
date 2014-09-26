@@ -11,7 +11,7 @@
     <UserControl.DataContext>
         <Binding Path="HelloPlaceHolder" Source="{StaticResource Locator}"/>
     </UserControl.DataContext>
-    <Grid Margin="10">
+    <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="121*"/>
             <ColumnDefinition Width="127*"/>
