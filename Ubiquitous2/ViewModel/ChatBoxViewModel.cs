@@ -24,6 +24,7 @@ namespace UB.ViewModel
     {
         public event EventHandler<EventArgs> MessageAdded;
         public event EventHandler<EventArgs> MessageSent;
+        private bool firstMessageReceived = false;
         private object lockReadMessages = new object();
         private IService imageService;
         IChatDataService _dataService;
@@ -70,7 +71,10 @@ namespace UB.ViewModel
 
 
             if (IsInDesignMode)
+            {
+                firstMessageReceived = true;
                 return;
+            }
 
 
 
@@ -177,6 +181,11 @@ namespace UB.ViewModel
             }
             else
             {
+                if( !firstMessageReceived )
+                {
+                    firstMessageReceived = true;
+                    MessengerInstance.Send<bool>(false, "SwitchHelloPlaceHolder");
+                }
                 UI.Dispatch(() =>
                 {               
                     foreach( var msg in messages)
