@@ -152,16 +152,25 @@
     <Compile Include="Controls\SmoothPanel\SmoothPanelMeasurer.cs" />
     <Compile Include="Controls\SmoothPanel\SmoothPanelTemplate.cs" />
     <Compile Include="Controls\SmoothPanel\SmoothPanelViewCache.cs" />
+    <Compile Include="Converter\BoolToScrollBarVisibility - Copy.cs" />
     <Compile Include="Model\Game.cs" />
     <Compile Include="Model\IStreamTopic.cs" />
     <Compile Include="Model\YesNoDialog.cs" />
     <Compile Include="ViewModel\DashBoardViewModel.cs" />
     <Compile Include="ViewModel\HelloPlaceHolderViewModel.cs" />
+    <Compile Include="ViewModel\EditBoxViewModel.cs" />
+    <Compile Include="ViewModel\StreamTopicSectionViewModel.cs" />
     <Compile Include="View\DashBoardWindow.xaml.cs">
       <DependentUpon>DashBoardWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="View\EditBoxView.xaml.cs">
+      <DependentUpon>EditBoxView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="View\HelloPlaceHolderView.xaml.cs">
       <DependentUpon>HelloPlaceHolderView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\StreamTopicSectionView.xaml.cs">
+      <DependentUpon>StreamTopicSectionView.xaml</DependentUpon>
     </Compile>
     <Compile Include="View\YesNoDialogView.xaml.cs">
       <DependentUpon>YesNoDialogView.xaml</DependentUpon>
@@ -404,7 +413,15 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="View\EditBoxView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="View\HelloPlaceHolderView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\StreamTopicSectionView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

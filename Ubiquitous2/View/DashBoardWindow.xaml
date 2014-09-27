@@ -57,6 +57,7 @@
                                 <ColumnDefinition Width="*"/>
                             </Grid.ColumnDefinitions>
                             <Image Height="80" Width="80" Source="/Ubiquitous2;component/Resources/ubiheadset.png" Grid.RowSpan="2" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                            
                             <TextBox Text="Game title" Grid.Column="1" BorderBrush="#FF6C6C6C" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Center" BorderThickness="1,1,0,0" Background="White"/>
                             <TextBox Text="Topic"  Grid.Column="2" BorderThickness="1,1,1,0" BorderBrush="#FF6C6C6C" VerticalContentAlignment="Center"/>
                             <TextBox Text="Description" Grid.Column="1" Grid.ColumnSpan="2" Grid.Row="1" BorderBrush="#FF6C6C6C" Margin="0"/>

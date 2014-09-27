@@ -13,11 +13,12 @@ namespace UB.Utils
 {
     public static class Win
     {
-        //Transparent windows
-        private static Window[] windows = new Window[] { new StatusWindow(), new MusicTickerWindow()};
-
         //Normal windows
-        private static Window dashboardWindow = new DashBoardWindow();
+        public static Window StatusWindow = new StatusWindow();
+        public static Window MusicTickerWindow = new MusicTickerWindow();
+        public static Window DashboardWindow = new DashBoardWindow();
+
+
 
         public static void SetPlacement(this Window window, WindowSettings settings)
         {
@@ -53,52 +54,60 @@ namespace UB.Utils
 
         public static void ShowMusicTicker()
         {
-            windows[1].Visibility = Visibility.Visible;
+            if (!MusicTickerWindow.IsLoaded)
+                MusicTickerWindow = new MusicTickerWindow();
+
+            MusicTickerWindow.Visibility = Visibility.Visible;
         }
 
         public static void ShowStatus()
         {
-            windows[0].Visibility = Visibility.Visible;
+            if (!StatusWindow.IsLoaded)
+                StatusWindow = new StatusWindow();
+
+            StatusWindow.Visibility = Visibility.Visible;
         }
 
         public static void HideMusicTicker()
         {
-            windows[1].Visibility = Visibility.Hidden;
+            MusicTickerWindow.Visibility = Visibility.Hidden;
         }
 
         public static void HideStatus()
         {
-            windows[0].Visibility = Visibility.Hidden;
+            StatusWindow.Visibility = Visibility.Hidden;
         }
         public static void ShowDashBoard()
         {
-            dashboardWindow.Visibility = Visibility.Visible;
+            if (!DashboardWindow.IsLoaded)
+                DashboardWindow = new DashBoardWindow();
+
+            DashboardWindow.Visibility = Visibility.Visible;
         }
         public static void HideDashBoard()
         {
-            dashboardWindow.Visibility = Visibility.Hidden;
+            DashboardWindow.Visibility = Visibility.Hidden;
         }
 
         public static void SetGlobalStatus(WindowState state)
         {
-            foreach (var win in windows)
-                win.WindowState = state;
+            StatusWindow.WindowState = state;
+            MusicTickerWindow.WindowState = state;
         }
 
         public static void ReloadAllWindows()
         {
-            var oldWindows = windows.ToArray();
+            Visibility statusVisibility = StatusWindow.Visibility;
+            Visibility musicTickerVisibility = MusicTickerWindow.Visibility;
 
-            windows = new Window[] { new StatusWindow(), new MusicTickerWindow() };
-            
-            for (int i = 0; i < oldWindows.Length; i++)
-            {
-                var visibility = oldWindows[i].Visibility;
-                oldWindows[i].Close();
-                oldWindows[i] = null;
-                windows[i].Visibility = visibility;
-            }
-            oldWindows = null;
+            StatusWindow.Close();
+            MusicTickerWindow.Close();
+
+            StatusWindow = new StatusWindow();
+            MusicTickerWindow = new MusicTickerWindow();
+
+            StatusWindow.Visibility = statusVisibility;
+            MusicTickerWindow.Visibility = musicTickerVisibility;
         }
     }
 }

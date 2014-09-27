@@ -5,6 +5,7 @@ using UB.Utils;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
+using UB.View;
 
 namespace UB.ViewModel
 {
@@ -50,6 +51,14 @@ namespace UB.ViewModel
                     
             });
             Config = _lastFmService.Config;
+
+            Config.PropertyChanging += (o, e) => { 
+                if( e.PropertyName == ServiceConfig.EnabledPropertyName )
+                {
+                    if (!Win.MusicTickerWindow.IsLoaded)
+                        Win.MusicTickerWindow = new MusicTickerWindow();
+                }
+            };
 
             AppConfig = (Application.Current as App).AppConfig;
 

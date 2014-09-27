@@ -1,0 +1,37 @@
+﻿<UserControl x:Class="UB.View.EditBoxView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:Converter="clr-namespace:UB.Converter"
+             xmlns:ei="http://schemas.microsoft.com/expression/2010/interactions"
+             xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+             DataContext="{Binding Path=EditBox, Source={StaticResource Locator}}"    
+             Name="EditBoxUserControl"
+             mc:Ignorable="d" d:DesignWidth="220" Height="29">
+    <UserControl.Resources>
+        <Converter:CountToVisibility x:Key="CountToVisibilityConverter"/>        
+    </UserControl.Resources>
+                                     
+    <Grid Margin="0">
+        <TextBox Text="{Binding Text,UpdateSourceTrigger=PropertyChanged}" Name="EditTextBox" Padding="3,0" Panel.ZIndex="1" Background="Transparent" TextWrapping="Wrap" Margin="0" BorderThickness="0" ScrollViewer.CanContentScroll="True" VerticalScrollBarVisibility="Auto" VerticalContentAlignment="Center"/>
+        <TextBox Text="{Binding Watermark}" Padding="3,0" Background="Transparent" Foreground="Gray" Focusable="False" TextWrapping="Wrap" Panel.ZIndex="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Visibility="{Binding ElementName=EditTextBox, Path=Text.IsEmpty, Converter={StaticResource boolToVisibilityConverter}}" FontStyle="Italic" UseLayoutRounding="True" VerticalContentAlignment="Center" HorizontalScrollBarVisibility="Disabled"/>
+        <Popup  IsOpen="{Binding Suggestions.Count, Mode=OneWay, Converter={StaticResource CountToVisibilityConverter}}"
+                Width="{Binding ElementName=EditTextBox, Path=ActualWidth}"
+                HorizontalOffset="0"
+                MinHeight="25"
+                MaxHeight="600"
+                AllowsTransparency="True"
+                PopupAnimation="Slide"
+                Focusable="False">
+            <StackPanel Orientation="Vertical">
+                <ListBox ItemsSource="{Binding Suggestions}" Name="Suggestions" Focusable="False" BorderThickness="0">
+                    <!--<i:EventTrigger EventName="SelectionChanged">
+                        <i:InvokeCommandAction Command="{Binding SuggestionSelect}" CommandParameter="{Binding ElementName=Suggestions, Path=SelectedValue, Mode=OneWayToSource}"/>
+                    </i:EventTrigger>-->
+                </ListBox>
+
+            </StackPanel>
+        </Popup>
+    </Grid>
+</UserControl>

@@ -48,6 +48,8 @@ namespace UB.ViewModel
                 SimpleIoc.Default.Register<IGeneralDataService, GeneralDataService>();
             }
 
+            SimpleIoc.Default.Register<StreamTopicSectionViewModel>(); 
+            SimpleIoc.Default.Register<EditBoxViewModel>();
             SimpleIoc.Default.Register<DashBoardViewModel>();
             SimpleIoc.Default.Register<HelloPlaceHolderViewModel>();
             SimpleIoc.Default.Register<YesNoDialogViewModel>();
@@ -203,9 +205,7 @@ namespace UB.ViewModel
         }
        
 
-                [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance",
-    "CA1822:MarkMembersAsStatic",
-    Justification = "This non-static member is needed for data binding purposes.")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance",    "CA1822:MarkMembersAsStatic",    Justification = "This non-static member is needed for data binding purposes.")]
         public HelloPlaceHolderViewModel HelloPlaceHolder
         {
             get
@@ -215,16 +215,32 @@ namespace UB.ViewModel
         }
 
 
-                [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance",
-"CA1822:MarkMembersAsStatic",
-Justification = "This non-static member is needed for data binding purposes.")]
-                public DashBoardViewModel DashBoard
-                {
-                    get
-                    {
-                        return ServiceLocator.Current.GetInstance<DashBoardViewModel>();
-                    }
-                }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification = "This non-static member is needed for data binding purposes.")]
+        public DashBoardViewModel DashBoard
+        {
+            get
+            {
+                return ServiceLocator.Current.GetInstance<DashBoardViewModel>();
+            }
+        }
+
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance","CA1822:MarkMembersAsStatic",Justification = "This non-static member is needed for data binding purposes.")]
+        public EditBoxViewModel EditBox
+        {
+            get
+            {
+                return ServiceLocator.Current.GetInstance<EditBoxViewModel>();
+            }
+        }
+
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification = "This non-static member is needed for data binding purposes.")]
+        public StreamTopicSectionViewModel StreamTopicSection
+        {
+            get
+            {
+                return ServiceLocator.Current.GetInstance<StreamTopicSectionViewModel>();
+            }
+        }
        
     }
 }
