@@ -1,4 +1,8 @@
-﻿using GalaSoft.MvvmLight;
+﻿using System.Collections.ObjectModel;
+using GalaSoft.MvvmLight;
+using GalaSoft.MvvmLight.Ioc;
+using UB.Model;
+using System.Linq;
 
 namespace UB.ViewModel
 {
@@ -10,11 +14,70 @@ namespace UB.ViewModel
     /// </summary>
     public class DashBoardViewModel : ViewModelBase
     {
+        private IChatDataService _dataService;
         /// <summary>
         /// Initializes a new instance of the DashBoardViewModel class.
         /// </summary>
-        public DashBoardViewModel()
+        [PreferredConstructor]
+        public DashBoardViewModel(IChatDataService dataService)
         {
+            _dataService = dataService;
+            Initialize();
+        }
+
+
+        private void Initialize()
+        {
+            foreach( var chat in _dataService.Chats )
+            {
+                if( chat is IStreamTopic)
+                {
+                    var streamTopic = chat as IStreamTopic;
+                    StreamTopics.Add(new StreamTopicSectionViewModel() { 
+                        Game = new EditBoxViewModel() {
+                            Text = streamTopic.CurrentGame.Name,
+                            Watermark = "Game title",
+                            UpdateSuggestions = (name) =>
+                            {
+                                streamTopic.QueryGameList(name);
+                                return new ObservableCollection<string>(streamTopic.Games.Select(game => game.Name));
+                            },                        
+                        },
+                        StreamServiceIcon = chat.IconURL
+                    });
+                }
+            }
+        }
+
+        /// <summary>
+        /// The <see cref="StreamTopics" /> property's name.
+        /// </summary>
+        public const string StreamTopicsPropertyName = "StreamTopics";
+
+        private ObservableCollection<StreamTopicSectionViewModel> _streamTopics = new ObservableCollection<StreamTopicSectionViewModel>();
+
+        /// <summary>
+        /// Sets and gets the StreamTopics property.
+        /// Changes to that property's value raise the PropertyChanged event. 
+        /// </summary>
+        public ObservableCollection<StreamTopicSectionViewModel> StreamTopics
+        {
+            get
+            {
+                return _streamTopics;
+            }
+
+            set
+            {
+                if (_streamTopics == value)
+                {
+                    return;
+                }
+
+                RaisePropertyChanging(StreamTopicsPropertyName);
+                _streamTopics = value;
+                RaisePropertyChanged(StreamTopicsPropertyName);
+            }
         }
     }
 }

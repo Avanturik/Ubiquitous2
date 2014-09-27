@@ -47,5 +47,36 @@ namespace UB.ViewModel
                 RaisePropertyChanged(StreamServiceIconPropertyName);
             }
         }
+
+        /// <summary>
+        /// The <see cref="Game" /> property's name.
+        /// </summary>
+        public const string GamePropertyName = "Game";
+
+        private EditBoxViewModel _game = new EditBoxViewModel() { Text = "", Watermark = "game name" };
+
+        /// <summary>
+        /// Sets and gets the Game property.
+        /// Changes to that property's value raise the PropertyChanged event. 
+        /// </summary>
+        public EditBoxViewModel Game
+        {
+            get
+            {
+                return _game;
+            }
+
+            set
+            {
+                if (_game == value)
+                {
+                    return;
+                }
+
+                RaisePropertyChanging(GamePropertyName);
+                _game = value;
+                RaisePropertyChanged(GamePropertyName);
+            }
+        }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
+using System.Windows.Controls;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
 using GalaSoft.MvvmLight.Ioc;
@@ -16,6 +17,7 @@ namespace UB.ViewModel
     /// </summary>
     public class EditBoxViewModel : ViewModelBase
     {
+        private bool isSelectedFromList = false;
         private object lockUpdateSuggestions = new object();
         /// <summary>
         /// Initializes a new instance of the MvvmViewModel1 class.
@@ -119,33 +121,59 @@ namespace UB.ViewModel
                 _text = value;
                 RaisePropertyChanged(TextPropertyName);
 
-                Task.Factory.StartNew(() =>
+                if( !isSelectedFromList )
                 {
-                    lock (lockUpdateSuggestions)
-                        UI.Dispatch(() => {
-                            if( UpdateSuggestions != null)
-                                Suggestions = UpdateSuggestions(_text);
-                        });
-                });
+                    Task.Factory.StartNew(() =>
+                    {
+                        lock (lockUpdateSuggestions)
+                            UI.Dispatch(() =>
+                            {
+                                if (UpdateSuggestions != null)
+                                    Suggestions = UpdateSuggestions(_text);
+                            });
+                    });
+                }
+                else
+                {
+                    Suggestions.Clear();
+                }
             }
         }
 
-        private RelayCommand<string> _suggestionSelect;
+        /// <summary>
+        /// The <see cref="SelectedSuggestion" /> property's name.
+        /// </summary>
+        public const string SelectedSuggestionPropertyName = "SelectedSuggestion";
+
+        private string _selectedSuggestion = null;
 
         /// <summary>
-        /// Gets the SuggestionSelect.
+        /// Sets and gets the SelectedSuggestion property.
+        /// Changes to that property's value raise the PropertyChanged event. 
         /// </summary>
-        public RelayCommand<string> SuggestionSelect
+        public string SelectedSuggestion
         {
             get
             {
-                return _suggestionSelect
-                    ?? (_suggestionSelect = new RelayCommand<string>(
-                                          (selectedValue) =>
-                                          {
-                                              
-                                          }));
+                return _selectedSuggestion;
+            }
+
+            set
+            {
+                if (_selectedSuggestion == value)
+                {
+                    return;
+                }
+
+                RaisePropertyChanging(SelectedSuggestionPropertyName);
+                _selectedSuggestion = value;
+                RaisePropertyChanged(SelectedSuggestionPropertyName);
+
+                isSelectedFromList = true;
+                Text = _selectedSuggestion;
+                isSelectedFromList = false;
             }
         }
+
     }
 }

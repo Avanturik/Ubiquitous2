@@ -8,6 +8,7 @@
         xmlns:Devart="clr-namespace:Devart.Controls"
         xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
         xmlns:Interactivity="clr-namespace:UB.Interactivity"
+        xmlns:View="clr-namespace:UB.View"
         Title="Dashboard"
         mc:Ignorable="d ignore"
         DataContext="{Binding DashBoard, Source={StaticResource Locator}}" d:DesignWidth="660" d:DesignHeight="450" Width="660" Height="450" Background="#FF1E1E1E">
@@ -37,60 +38,41 @@
                     </ComboBox>
                     <Button Content="Save" Padding="15,1" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="13,0,0,0"/>
                 </StackPanel>
-                <ScrollViewer  Grid.Row="1" Template="{StaticResource ScrollStyle}">
-                    <ScrollViewer.Background>
-                        <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
-                            <GradientStop Color="White" Offset="0"/>
-                            <GradientStop Color="Gray" Offset="0.889"/>
-                        </LinearGradientBrush>
-                    </ScrollViewer.Background>
+                <DockPanel Grid.Row="1">
+                    
+                <ItemsControl ItemsSource="{Binding StreamTopics}"
+					Padding="0"
+					HorizontalContentAlignment="Left"
+					VirtualizingPanel.IsVirtualizing="True"
+                    ScrollViewer.VerticalScrollBarVisibility="Auto"
+                    ScrollViewer.CanContentScroll="True"
+                    Background="#FF494949">
+                    <ItemsControl.Template>
+                        <ControlTemplate>
+                            <ScrollViewer Template="{DynamicResource ScrollStyle}" CanContentScroll="True">
+                                <ItemsPresenter/>
+                            </ScrollViewer>
+                        </ControlTemplate>
+                    </ItemsControl.Template>
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <View:StreamTopicSectionView DataContext="{Binding}"/>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+                </DockPanel>
 
-                    <StackPanel Orientation="Vertical" Margin="20,0" Grid.Row="1">
-                        <Grid Margin="5" VerticalAlignment="Top">
-                            <Grid.RowDefinitions>
-                                <RowDefinition/>
-                                <RowDefinition Height="45"/>
-                            </Grid.RowDefinitions>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="90"/>
-                                <ColumnDefinition Width="*"/>
-                                <ColumnDefinition Width="*"/>
-                            </Grid.ColumnDefinitions>
-                            <Image Height="80" Width="80" Source="/Ubiquitous2;component/Resources/ubiheadset.png" Grid.RowSpan="2" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                            
-                            <TextBox Text="Game title" Grid.Column="1" BorderBrush="#FF6C6C6C" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Center" BorderThickness="1,1,0,0" Background="White"/>
-                            <TextBox Text="Topic"  Grid.Column="2" BorderThickness="1,1,1,0" BorderBrush="#FF6C6C6C" VerticalContentAlignment="Center"/>
-                            <TextBox Text="Description" Grid.Column="1" Grid.ColumnSpan="2" Grid.Row="1" BorderBrush="#FF6C6C6C" Margin="0"/>
-                        </Grid>
-                        <Grid Margin="5" VerticalAlignment="Top">
-                            <Grid.RowDefinitions>
-                                <RowDefinition/>
-                                <RowDefinition Height="45"/>
-                            </Grid.RowDefinitions>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="90"/>
-                                <ColumnDefinition Width="*"/>
-                                <ColumnDefinition Width="*"/>
-                            </Grid.ColumnDefinitions>
-                            <Image Height="80" Width="80" Source="/Ubiquitous2;component/Resources/twitch_large.png" Grid.RowSpan="2" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                            <TextBox Text="Game title" Grid.Column="1" BorderBrush="#FF6C6C6C" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Center" BorderThickness="1,1,0,0"/>
-                            <TextBox Text="Topic"  Grid.Column="2" BorderThickness="1,1,1,0" BorderBrush="#FF6C6C6C" VerticalContentAlignment="Center"/>
-                            <TextBox Text="Description" Grid.Column="1" Grid.ColumnSpan="2" Grid.Row="1" BorderBrush="#FF6C6C6C" Margin="0"/>
-                        </Grid>
-
-                    </StackPanel>
-                </ScrollViewer>
                 <Button FontSize="16" Padding="5"  Grid.Row="2" Content="Update topic" FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Center">
-                        <Button.Background>
-                            <LinearGradientBrush EndPoint="0,1" StartPoint="0,0">
-                                <GradientStop Color="#FF2AB900" Offset="0"/>
-                                <GradientStop Color="#FF1CCB00" Offset="0.5"/>
-                                <GradientStop Color="#FF1EDE00" Offset="0.545"/>
-                                <GradientStop Color="#FF005326" Offset="1"/>
-                            </LinearGradientBrush>
-                        </Button.Background>
-                    </Button>
-                </Grid>
+                    <Button.Background>
+                        <LinearGradientBrush EndPoint="0,1" StartPoint="0,0">
+                            <GradientStop Color="#FF2AB900" Offset="0"/>
+                            <GradientStop Color="#FF1CCB00" Offset="0.5"/>
+                            <GradientStop Color="#FF1EDE00" Offset="0.545"/>
+                            <GradientStop Color="#FF005326" Offset="1"/>
+                        </LinearGradientBrush>
+                    </Button.Background>
+                </Button>
+            </Grid>
 
         </fluent:BackstageTabItem>
         <fluent:BackstageTabItem Header="Analytics" Foreground="White">

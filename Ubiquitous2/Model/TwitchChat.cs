@@ -38,6 +38,9 @@ namespace UB.Model
             ContentParsers.Add(MessageParser.ParseURLs);
             ContentParsers.Add(MessageParser.ParseEmoticons);
 
+            CurrentGame = new Game();
+            Games = new ObservableCollection<Game>();
+
             Users = new Dictionary<string, ChatUser>();
             ChatChannels = new List<string>();
 
@@ -380,70 +383,37 @@ namespace UB.Model
         #region IStreamTopic
         public Game CurrentGame
         {
-            get
-            {
-                throw new NotImplementedException();
-            }
-            set
-            {
-                throw new NotImplementedException();
-            }
+            get;
+            set;
         }
         public string Topic
         {
-            get
-            {
-                throw new NotImplementedException();
-            }
-            set
-            {
-                throw new NotImplementedException();
-            }
+            get;
+            set;
         }
         public string Description
         {
-            get
-            {
-                throw new NotImplementedException();
-            }
-            set
-            {
-                throw new NotImplementedException();
-            }
+            get;
+            set;
         }
         public ObservableCollection<Game> Games
         {
-            get
-            {
-                throw new NotImplementedException();
-            }
-            set
-            {
-                throw new NotImplementedException();
-            }
+            get;
+            set;
         }
         public void QueryGameList(string gameName)
         {
-            throw new NotImplementedException();
         }
         public void GetTopic()
         {
-            throw new NotImplementedException();
         }
         public void SetTopic()
         {
-            throw new NotImplementedException();
         }
         public string SearchQuery
         {
-            get
-            {
-                throw new NotImplementedException();
-            }
-            set
-            {
-                throw new NotImplementedException();
-            }
+            get;
+            set;
         }
         #endregion IStreamTopic
     }

@@ -43,7 +43,6 @@ namespace UB.Model
             get;
             set;
         }
-
         void QueryGameList(string gameName);
         void GetTopic();
         void SetTopic();

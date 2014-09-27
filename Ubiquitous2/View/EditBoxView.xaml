@@ -25,12 +25,7 @@
                 PopupAnimation="Slide"
                 Focusable="False">
             <StackPanel Orientation="Vertical">
-                <ListBox ItemsSource="{Binding Suggestions}" Name="Suggestions" Focusable="False" BorderThickness="0">
-                    <!--<i:EventTrigger EventName="SelectionChanged">
-                        <i:InvokeCommandAction Command="{Binding SuggestionSelect}" CommandParameter="{Binding ElementName=Suggestions, Path=SelectedValue, Mode=OneWayToSource}"/>
-                    </i:EventTrigger>-->
-                </ListBox>
-
+                <ListBox ItemsSource="{Binding Suggestions}" Name="Suggestions" SelectedValue="{Binding SelectedSuggestion}" Focusable="False" BorderThickness="0"/>
             </StackPanel>
         </Popup>
     </Grid>
