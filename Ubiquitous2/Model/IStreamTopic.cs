@@ -31,8 +31,10 @@ namespace UB.Model
             get;
             set;
         }
-        void QueryGameList(string gameName);
+        void QueryGameList(string gameName, Action callback);
         void GetTopic();
         void SetTopic();
+
+        Action StreamTopicAcquired { get; set; }
     }
 }

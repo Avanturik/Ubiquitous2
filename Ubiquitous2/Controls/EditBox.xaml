@@ -5,24 +5,23 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:Converter="clr-namespace:UB.Converter"
              mc:Ignorable="d" d:DesignWidth="300" d:DesignHeight="34">
-    <UserControl.Resources>
-        <Converter:CountToVisibility x:Key="CountToVisibilityConverter"/>
-    </UserControl.Resources>
 
+    
     <Grid Margin="0">
-        <TextBox BorderThickness="0" Text="{Binding Text, RelativeSource={RelativeSource AncestorType=UserControl}, UpdateSourceTrigger=PropertyChanged}" Name="EditTextBox" Padding="3,0" Panel.ZIndex="1" Background="Transparent" TextWrapping="Wrap" Margin="0" ScrollViewer.CanContentScroll="True" VerticalScrollBarVisibility="Auto" VerticalContentAlignment="Center"/>
-        <TextBox BorderThickness="0" Text="{Binding Watermark, RelativeSource={RelativeSource AncestorType=UserControl}}" Padding="3,0" Background="Transparent" Foreground="Gray" Focusable="False" TextWrapping="Wrap" Panel.ZIndex="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Visibility="{Binding ElementName=EditTextBox, Path=Text.IsEmpty, Converter={StaticResource boolToVisibilityConverter}}" FontStyle="Italic" UseLayoutRounding="True" VerticalContentAlignment="Center" HorizontalScrollBarVisibility="Disabled"/>
-        <Popup  IsOpen="{Binding Suggestions.Count, RelativeSource={RelativeSource AncestorType=UserControl}, Mode=OneWay, Converter={StaticResource CountToVisibilityConverter}}"
-                Width="{Binding ElementName=EditTextBox, Path=ActualWidth}"
-                HorizontalOffset="0"
+        <TextBox BorderThickness="0" Text="{Binding Text, RelativeSource={RelativeSource AncestorType=UserControl}, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" x:Name="PART_Edit" Padding="3,0" Panel.ZIndex="1" Background="Transparent" TextWrapping="Wrap" Margin="0" ScrollViewer.CanContentScroll="True" VerticalScrollBarVisibility="Auto" VerticalContentAlignment="Center"/>
+        <TextBox x:Name="PART_Watermark" BorderThickness="0" Text="{Binding Watermark, RelativeSource={RelativeSource AncestorType=UserControl}}" Padding="3,0" Background="Transparent" Foreground="Gray" Focusable="False" TextWrapping="Wrap" Panel.ZIndex="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Visibility="{Binding Text.IsEmpty, Converter={StaticResource boolToVisibilityConverter}, ElementName=PART_Edit}" FontStyle="Italic" UseLayoutRounding="True" VerticalContentAlignment="Center" HorizontalScrollBarVisibility="Disabled"/>
+        <Popup x:Name="PART_Popup"
+                VerticalOffset="0"
+                HorizontalOffset="0" 
+                PlacementTarget="{Binding ElementName=PART_Edit}"
+                Width="{Binding ActualWidth, ElementName=PART_Edit}"
                 MinHeight="25"
+                StaysOpen="False"
                 MaxHeight="600"
                 AllowsTransparency="True"
                 PopupAnimation="Slide"
                 Focusable="False">
-            <StackPanel Orientation="Vertical">
-                <ListBox ItemsSource="{Binding Suggestions, RelativeSource={RelativeSource AncestorType=UserControl}}" SelectedValue="{Binding SelectedSuggestion, RelativeSource={RelativeSource AncestorType=UserControl}}" Focusable="False" BorderThickness="0"/>
-            </StackPanel>
+            <ListBox  Name="SuggestionsListBox" ItemsSource="{Binding Suggestions, RelativeSource={RelativeSource AncestorType=UserControl}}" SelectedValue="{Binding SelectedSuggestion, RelativeSource={RelativeSource AncestorType=UserControl}}" Focusable="False" BorderThickness="1"/>
         </Popup>
     </Grid>
 

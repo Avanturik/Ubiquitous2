@@ -7,6 +7,7 @@ using Newtonsoft.Json.Linq;
 using System.Threading.Tasks;
 using System.Linq;
 using System.Collections.ObjectModel;
+using System.Web;
 
 namespace UB.Model
 {
@@ -18,6 +19,7 @@ namespace UB.Model
         private const string emoticonFallbackUrl = @"Content\twitchemoticons.json";
         private bool isOAuthTokenRenewed = false;
         private bool isAnonymous = false;
+        private object lockSearch = new object();
         private WebClientBase webClient = new WebClientBase();
         private static List<Emoticon> sharedEmoticons = new List<Emoticon>();
         private object iconParseLock = new object();
@@ -391,20 +393,55 @@ namespace UB.Model
             get;
             set;
         }
-        public void QueryGameList(string gameName)
+        public void QueryGameList(string gameName, Action callback)
         {
+            lock( lockSearch)
+            {
+                Log.WriteInfo("Searching twitch game {0}", gameName);
+                Games.Clear();
+                Games.Add(new Game() { Name = "Loading..." });
+                
+                if( callback != null)
+                    UI.Dispatch(() => callback());
+
+                var jsonGames = this.With(x => webClient.Download(String.Format("http://www.twitch.tv/discovery/search?term={0}", HttpUtility.UrlEncode(gameName))))
+                    .With(x => JToken.Parse(x))
+                    .With(x => x.ToArray<dynamic>());
+
+                if (jsonGames == null)
+                {
+                    Log.WriteInfo("Twitch search returned empty result", gameName);
+                    return;
+                }
+
+                Games.Clear();
+                foreach (var obj in jsonGames)
+                {
+                    Games.Add(new Game()
+                    {
+                        Id = obj.id,
+                        Name = obj.name,
+                    });
+                }
+                if (callback != null)
+                    UI.Dispatch(() => callback());
+            }
+
         }
         public void GetTopic()
         {
             Task.Factory.StartNew(() => {
-                var json = this.With(x => webClient.Download(String.Format("http://api.twitch.tv/api/channels/{0}/ember?on_site=1", LoginInfo.UserName.ToLower())))
-                                .With(x => JToken.Parse(x));
+                var json = this.With(x => webClient.Download(String.Format("http://api.twitch.tv/api/channels/{0}/ember?on_site=1", HttpUtility.UrlEncode(LoginInfo.UserName.ToLower()))))
+                               .With(x => JToken.Parse(x));
 
                 if (json == null)
                     return;
 
                 Info.Topic = json["status"].ToObject<string>();
-                Info.CurrentGame.Name = json["game"].ToObject<string>();            
+                Info.CurrentGame.Name = json["game"].ToObject<string>();
+
+                if (StreamTopicAcquired != null)
+                    UI.Dispatch( () => StreamTopicAcquired());
             });
         }
         public void SetTopic()
@@ -415,7 +452,14 @@ namespace UB.Model
             get;
             set;
         }
+        public Action StreamTopicAcquired
+        {
+            get;
+            set;
+        }
         #endregion IStreamTopic
+
+
     }
 
 

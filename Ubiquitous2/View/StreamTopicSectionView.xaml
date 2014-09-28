@@ -12,7 +12,7 @@
     <Grid Margin="5" VerticalAlignment="Top" Background="White">
         <Grid.RowDefinitions>
             <RowDefinition/>
-            <RowDefinition Height="45"/>
+            <RowDefinition Height="60"/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="90"/>
@@ -21,12 +21,10 @@
         </Grid.ColumnDefinitions>
         <Image Height="80" Width="80" Source="{Binding ChannelIcon}" Grid.RowSpan="2" HorizontalAlignment="Center" VerticalAlignment="Center"/>
 
-        <Controls:EditBox Grid.Column="1" Height="40" VerticalAlignment="Bottom" Text="{Binding StreamInfo.CurrentGame.Name}" Watermark="Game title"/>
-        <!--<TextBox Text="Game title" Grid.Column="1" BorderBrush="#FF6C6C6C"  BorderThickness="1,1,0,0" Background="White"/>-->
-        <TextBox Text="Topic" Visibility="{Binding ElementName=Topic, Path=Text.IsEmpty, Converter={StaticResource boolToVisibilityConverter}}" Panel.ZIndex="-1" Foreground="Gray" Grid.Column="2"  FontStyle="Italic" VerticalContentAlignment="Center" BorderBrush="Gray" BorderThickness="1,1,1,0"/>
-        <TextBox Text="{Binding StreamInfo.Topic}" BorderBrush="Gray" BorderThickness="1,1,0,0" Name="Topic" Background="Transparent"  Grid.Column="2"  VerticalContentAlignment="Center"/>
-
-        <TextBox Text="Description" Visibility="{Binding ElementName=Description, Path=Text.IsEmpty, Converter={StaticResource boolToVisibilityConverter}}" Panel.ZIndex="-1" Foreground="Gray" Grid.Column="1" Grid.Row="1" Grid.ColumnSpan="2"  FontStyle="Italic"/>
-        <TextBox Text="{Binding StreamInfo.Description}" BorderBrush="Gray" BorderThickness="1" Name="Description" Background="Transparent" Grid.Column="1"  Grid.ColumnSpan="2" Grid.Row="1"  Margin="0"/>
+        <Controls:EditBox Grid.Column="1" EnableSuggestion="{Binding EnableGameSuggestion}" CommandNeedSuggestion="{Binding CommandNeedSuggestion}" Suggestions="{Binding GameSuggestions}" Text="{Binding StreamInfo.CurrentGame.Name, Mode=TwoWay}" Watermark="Game title" BorderThickness="1,1,0,0" BorderBrush="#FF686868"/>
+        <TextBox Text="Topic" Visibility="{Binding ElementName=Topic, Path=Text.IsEmpty, Converter={StaticResource boolToVisibilityConverter}}" Panel.ZIndex="-1" Foreground="Gray" Grid.Column="2"  FontStyle="Italic" VerticalContentAlignment="Center" BorderBrush="Gray" BorderThickness="0"/>
+        <TextBox Text="{Binding StreamInfo.Topic,Mode=TwoWay}" BorderBrush="#FF686868" BorderThickness="1,1,1,0" Name="Topic" Background="Transparent"  Grid.Column="2"  VerticalContentAlignment="Center"/>
+        <TextBox Text="Description" Visibility="{Binding ElementName=Description, Path=Text.IsEmpty, Converter={StaticResource boolToVisibilityConverter}}" Panel.ZIndex="-1" Foreground="Gray" Grid.Column="1" Grid.Row="1" Grid.ColumnSpan="2"  FontStyle="Italic" BorderThickness="0"/>
+        <TextBox Text="{Binding StreamInfo.Description,Mode=TwoWay}" BorderBrush="#FF686868" BorderThickness="1" Name="Description" Background="Transparent" Grid.Column="1"  Grid.ColumnSpan="2" Grid.Row="1"  Margin="0"/>
     </Grid>
 </UserControl>

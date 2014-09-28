@@ -3,6 +3,9 @@ using GalaSoft.MvvmLight;
 using UB.Model;
 using System.Linq;
 using GalaSoft.MvvmLight.Ioc;
+using GalaSoft.MvvmLight.Command;
+using System.Threading.Tasks;
+using UB.Utils;
 namespace UB.ViewModel
 {
     /// <summary>
@@ -13,57 +16,111 @@ namespace UB.ViewModel
     /// </summary>
     public class StreamTopicSectionViewModel : ViewModelBase
     {
+        private IStreamTopic _streamTopic;
+
         [PreferredConstructor]
         public StreamTopicSectionViewModel()
         {
 
         }
+
+
+
+
         /// <summary>
         /// Initializes a new instance of the StreamTopicSectionViewModel class.
         /// </summary>
         public StreamTopicSectionViewModel(IStreamTopic streamTopic)
         {
-            StreamInfo = streamTopic.Info;
-            GameEditBox = new EditBoxViewModel() { 
-                Watermark = "Game title",
-                Text = StreamInfo.CurrentGame.Name,
-                UpdateSuggestions = (name) =>
-                {
-                    streamTopic.QueryGameList(name);
-                    return new ObservableCollection<string>(streamTopic.Games.Select(game => game.Name));
-                },
-            };
+            _streamTopic = streamTopic;
+            StreamInfo = _streamTopic.Info;
             ChannelIcon = (streamTopic as IChat).IconURL;
+            EnableGameSuggestion = true;
         }
 
+
         /// <summary>
-        /// The <see cref="GameEditBox" /> property's name.
+        /// The <see cref="EnableGameSuggestion" /> property's name.
         /// </summary>
-        public const string GameEditBoxPropertyName = "GameEditBox";
+        public const string EnableGameSuggestionPropertyName = "EnableGameSuggestion";
 
-        private EditBoxViewModel _gameEditBox = new EditBoxViewModel();
+        private bool _enableGameSuggestion = false;
 
         /// <summary>
-        /// Sets and gets the GameEditBox property.
+        /// Sets and gets the EnableGameSuggestion property.
         /// Changes to that property's value raise the PropertyChanged event. 
         /// </summary>
-        public EditBoxViewModel GameEditBox
+        public bool EnableGameSuggestion
         {
             get
             {
-                return _gameEditBox;
+                return _enableGameSuggestion;
             }
 
             set
             {
-                if (_gameEditBox == value)
+                if (_enableGameSuggestion == value)
                 {
                     return;
                 }
 
-                RaisePropertyChanging(GameEditBoxPropertyName);
-                _gameEditBox = value;
-                RaisePropertyChanged(GameEditBoxPropertyName);
+                RaisePropertyChanging(EnableGameSuggestionPropertyName);
+                _enableGameSuggestion = value;
+                RaisePropertyChanged(EnableGameSuggestionPropertyName);
+            }
+        }
+
+        private RelayCommand _commandNeedSuggestion;
+
+        /// <summary>
+        /// Gets the CommandNeedSuggestion.
+        /// </summary>
+        public RelayCommand CommandNeedSuggestion
+        {
+            get
+            {
+                return _commandNeedSuggestion
+                    ?? (_commandNeedSuggestion = new RelayCommand(
+                                          () =>
+                                          {
+                                              Task.Factory.StartNew(() => {
+                                                  _streamTopic.QueryGameList(StreamInfo.CurrentGame.Name, () =>
+                                                  {
+                                                      GameSuggestions = new ObservableCollection<string>(_streamTopic.Games.ToList().Select(game => game.Name));
+                                                  });                                              
+                                              });
+                                          }));
+            }
+        }
+
+        /// <summary>
+        /// The <see cref="GameSuggestions" /> property's name.
+        /// </summary>
+        public const string GameSuggestionsPropertyName = "GameSuggestions";
+
+        private ObservableCollection<string> _gameSuggestions = new ObservableCollection<string>();
+
+        /// <summary>
+        /// Sets and gets the GameSuggestions property.
+        /// Changes to that property's value raise the PropertyChanged event. 
+        /// </summary>
+        public ObservableCollection<string> GameSuggestions
+        {
+            get
+            {
+                return _gameSuggestions;
+            }
+
+            set
+            {
+                if (_gameSuggestions == value)
+                {
+                    return;
+                }
+
+                RaisePropertyChanging(GameSuggestionsPropertyName);
+                _gameSuggestions = value;
+                RaisePropertyChanged(GameSuggestionsPropertyName);
             }
         }
 
