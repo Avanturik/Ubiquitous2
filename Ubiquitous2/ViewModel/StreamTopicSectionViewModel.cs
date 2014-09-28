@@ -1,5 +1,8 @@
-﻿using GalaSoft.MvvmLight;
+﻿using System.Collections.ObjectModel;
+using GalaSoft.MvvmLight;
 using UB.Model;
+using System.Linq;
+using GalaSoft.MvvmLight.Ioc;
 namespace UB.ViewModel
 {
     /// <summary>
@@ -10,73 +13,121 @@ namespace UB.ViewModel
     /// </summary>
     public class StreamTopicSectionViewModel : ViewModelBase
     {
+        [PreferredConstructor]
+        public StreamTopicSectionViewModel()
+        {
+
+        }
         /// <summary>
         /// Initializes a new instance of the StreamTopicSectionViewModel class.
         /// </summary>
-        public StreamTopicSectionViewModel()
+        public StreamTopicSectionViewModel(IStreamTopic streamTopic)
         {
+            StreamInfo = streamTopic.Info;
+            GameEditBox = new EditBoxViewModel() { 
+                Watermark = "Game title",
+                Text = StreamInfo.CurrentGame.Name,
+                UpdateSuggestions = (name) =>
+                {
+                    streamTopic.QueryGameList(name);
+                    return new ObservableCollection<string>(streamTopic.Games.Select(game => game.Name));
+                },
+            };
+            ChannelIcon = (streamTopic as IChat).IconURL;
         }
 
         /// <summary>
-        /// The <see cref="StreamServiceIcon" /> property's name.
+        /// The <see cref="GameEditBox" /> property's name.
         /// </summary>
-        public const string StreamServiceIconPropertyName = "StreamServiceIcon";
+        public const string GameEditBoxPropertyName = "GameEditBox";
 
-        private string _streamServiceIcon = Icons.DesignMainHeadsetIcon;
+        private EditBoxViewModel _gameEditBox = new EditBoxViewModel();
 
         /// <summary>
-        /// Sets and gets the StreamServiceIcon property.
+        /// Sets and gets the GameEditBox property.
         /// Changes to that property's value raise the PropertyChanged event. 
         /// </summary>
-        public string StreamServiceIcon
+        public EditBoxViewModel GameEditBox
         {
             get
             {
-                return _streamServiceIcon;
+                return _gameEditBox;
             }
 
             set
             {
-                if (_streamServiceIcon == value)
+                if (_gameEditBox == value)
                 {
                     return;
                 }
 
-                RaisePropertyChanging(StreamServiceIconPropertyName);
-                _streamServiceIcon = value;
-                RaisePropertyChanged(StreamServiceIconPropertyName);
+                RaisePropertyChanging(GameEditBoxPropertyName);
+                _gameEditBox = value;
+                RaisePropertyChanged(GameEditBoxPropertyName);
             }
         }
 
         /// <summary>
-        /// The <see cref="Game" /> property's name.
+        /// The <see cref="ChannelIcon" /> property's name.
         /// </summary>
-        public const string GamePropertyName = "Game";
+        public const string ChannelIconPropertyName = "ChannelIcon";
 
-        private EditBoxViewModel _game = new EditBoxViewModel() { Text = "", Watermark = "game name" };
+        private string _channelIcon = Icons.MainHeadsetIcon;
 
         /// <summary>
-        /// Sets and gets the Game property.
+        /// Sets and gets the ChannelIcon property.
         /// Changes to that property's value raise the PropertyChanged event. 
         /// </summary>
-        public EditBoxViewModel Game
+        public string ChannelIcon
         {
             get
             {
-                return _game;
+                return _channelIcon;
             }
 
             set
             {
-                if (_game == value)
+                if (_channelIcon == value)
                 {
                     return;
                 }
 
-                RaisePropertyChanging(GamePropertyName);
-                _game = value;
-                RaisePropertyChanged(GamePropertyName);
+                RaisePropertyChanging(ChannelIconPropertyName);
+                _channelIcon = value;
+                RaisePropertyChanged(ChannelIconPropertyName);
             }
         }
+
+        /// <summary>
+        /// The <see cref="StreamInfo" /> property's name.
+        /// </summary>
+        public const string StreamInfoPropertyName = "StreamInfo";
+
+        private StreamInfo _streamInfo = new StreamInfo();
+
+        /// <summary>
+        /// Sets and gets the StreamInfo property.
+        /// Changes to that property's value raise the PropertyChanged event. 
+        /// </summary>
+        public StreamInfo StreamInfo
+        {
+            get
+            {
+                return _streamInfo;
+            }
+
+            set
+            {
+                if (_streamInfo == value)
+                {
+                    return;
+                }
+
+                RaisePropertyChanging(StreamInfoPropertyName);
+                _streamInfo = value;
+                RaisePropertyChanged(StreamInfoPropertyName);
+            }
+        }
+        
     }
 }

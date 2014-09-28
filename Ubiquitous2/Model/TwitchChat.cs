@@ -38,7 +38,7 @@ namespace UB.Model
             ContentParsers.Add(MessageParser.ParseURLs);
             ContentParsers.Add(MessageParser.ParseEmoticons);
 
-            CurrentGame = new Game();
+            Info = new StreamInfo();
             Games = new ObservableCollection<Game>();
 
             Users = new Dictionary<string, ChatUser>();
@@ -248,6 +248,7 @@ namespace UB.Model
         private void StartWithToken(string oauthToken)
         {
             LoginInfo.Password = "oauth:" + oauthToken;
+            GetTopic();
             base.Start();
         }
         private void StartAnonymously()
@@ -379,19 +380,8 @@ namespace UB.Model
             afterAction();
         }
         
-
         #region IStreamTopic
-        public Game CurrentGame
-        {
-            get;
-            set;
-        }
-        public string Topic
-        {
-            get;
-            set;
-        }
-        public string Description
+        public StreamInfo Info
         {
             get;
             set;
@@ -406,6 +396,16 @@ namespace UB.Model
         }
         public void GetTopic()
         {
+            Task.Factory.StartNew(() => {
+                var json = this.With(x => webClient.Download(String.Format("http://api.twitch.tv/api/channels/{0}/ember?on_site=1", LoginInfo.UserName.ToLower())))
+                                .With(x => JToken.Parse(x));
+
+                if (json == null)
+                    return;
+
+                Info.Topic = json["status"].ToObject<string>();
+                Info.CurrentGame.Name = json["game"].ToObject<string>();            
+            });
         }
         public void SetTopic()
         {

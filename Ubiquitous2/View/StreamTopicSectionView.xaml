@@ -4,8 +4,9 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:View="clr-namespace:UB.View"
+             xmlns:Controls="clr-namespace:UB.Controls"
              mc:Ignorable="d" 
-             DataContext="{Binding}"
+             DataContext="{Binding}"    
              d:DesignHeight="300" d:DesignWidth="364.179">
     
     <Grid Margin="5" VerticalAlignment="Top" Background="White">
@@ -18,11 +19,14 @@
             <ColumnDefinition Width="*"/>
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
-        <Image Height="80" Width="80" Source="{Binding StreamServiceIcon}" Grid.RowSpan="2" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+        <Image Height="80" Width="80" Source="{Binding ChannelIcon}" Grid.RowSpan="2" HorizontalAlignment="Center" VerticalAlignment="Center"/>
 
-        <View:EditBoxView Grid.Column="1" DataContext="{Binding Game}" />
+        <Controls:EditBox Grid.Column="1" Height="40" VerticalAlignment="Bottom" Text="{Binding StreamInfo.CurrentGame.Name}" Watermark="Game title"/>
         <!--<TextBox Text="Game title" Grid.Column="1" BorderBrush="#FF6C6C6C"  BorderThickness="1,1,0,0" Background="White"/>-->
-        <TextBox Text="{Binding Topic}"  Grid.Column="2" BorderThickness="1,1,1,0" BorderBrush="#FF6C6C6C" VerticalContentAlignment="Center"/>
-        <TextBox Text="{Binding Description}" Grid.Column="1" Grid.ColumnSpan="2" Grid.Row="1" BorderBrush="#FF6C6C6C" Margin="0"/>
+        <TextBox Text="Topic" Visibility="{Binding ElementName=Topic, Path=Text.IsEmpty, Converter={StaticResource boolToVisibilityConverter}}" Panel.ZIndex="-1" Foreground="Gray" Grid.Column="2"  FontStyle="Italic" VerticalContentAlignment="Center" BorderBrush="Gray" BorderThickness="1,1,1,0"/>
+        <TextBox Text="{Binding StreamInfo.Topic}" BorderBrush="Gray" BorderThickness="1,1,0,0" Name="Topic" Background="Transparent"  Grid.Column="2"  VerticalContentAlignment="Center"/>
+
+        <TextBox Text="Description" Visibility="{Binding ElementName=Description, Path=Text.IsEmpty, Converter={StaticResource boolToVisibilityConverter}}" Panel.ZIndex="-1" Foreground="Gray" Grid.Column="1" Grid.Row="1" Grid.ColumnSpan="2"  FontStyle="Italic"/>
+        <TextBox Text="{Binding StreamInfo.Description}" BorderBrush="Gray" BorderThickness="1" Name="Description" Background="Transparent" Grid.Column="1"  Grid.ColumnSpan="2" Grid.Row="1"  Margin="0"/>
     </Grid>
 </UserControl>

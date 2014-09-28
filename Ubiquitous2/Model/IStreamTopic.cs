@@ -8,23 +8,11 @@ using System.Collections.ObjectModel;
 
 namespace UB.Model
 {
-    interface IStreamTopic
+    public interface IStreamTopic
     {
 
         [XmlElement]
-        Game CurrentGame
-        {
-            get;
-            set;
-        }
-        [XmlAttribute]
-        string Topic
-        {
-            get;
-            set;
-        }
-        [XmlAttribute]
-        string Description
+        StreamInfo Info
         {
             get;
             set;

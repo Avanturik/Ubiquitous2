@@ -142,8 +142,8 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="Controls\ResizableBorder.xaml.cs">
-      <DependentUpon>ResizableBorder.xaml</DependentUpon>
+    <Compile Include="Controls\EditBox.xaml.cs">
+      <DependentUpon>EditBox.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\SmoothPanel\DataBindHelper.cs" />
     <Compile Include="Controls\SmoothPanel\IHeightMeasurer.cs" />
@@ -155,6 +155,7 @@
     <Compile Include="Converter\BoolToScrollBarVisibility - Copy.cs" />
     <Compile Include="Model\Game.cs" />
     <Compile Include="Model\IStreamTopic.cs" />
+    <Compile Include="Model\StreamInfo.cs" />
     <Compile Include="Model\YesNoDialog.cs" />
     <Compile Include="ViewModel\DashBoardViewModel.cs" />
     <Compile Include="ViewModel\HelloPlaceHolderViewModel.cs" />
@@ -401,7 +402,7 @@
       <DependentUpon>SteamGuardWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="Utils\ImageMeasurer.cs" />
-    <Page Include="Controls\ResizableBorder.xaml">
+    <Page Include="Controls\EditBox.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

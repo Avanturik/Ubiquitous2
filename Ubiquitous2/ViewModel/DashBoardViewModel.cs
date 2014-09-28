@@ -33,18 +33,7 @@ namespace UB.ViewModel
                 if( chat is IStreamTopic)
                 {
                     var streamTopic = chat as IStreamTopic;
-                    StreamTopics.Add(new StreamTopicSectionViewModel() { 
-                        Game = new EditBoxViewModel() {
-                            Text = streamTopic.CurrentGame.Name,
-                            Watermark = "Game title",
-                            UpdateSuggestions = (name) =>
-                            {
-                                streamTopic.QueryGameList(name);
-                                return new ObservableCollection<string>(streamTopic.Games.Select(game => game.Name));
-                            },                        
-                        },
-                        StreamServiceIcon = chat.IconURL
-                    });
+                    StreamTopics.Add(new StreamTopicSectionViewModel(streamTopic));
                 }
             }
         }

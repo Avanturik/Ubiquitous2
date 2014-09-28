@@ -48,7 +48,7 @@ namespace UB.ViewModel
                 SimpleIoc.Default.Register<IGeneralDataService, GeneralDataService>();
             }
 
-            SimpleIoc.Default.Register<StreamTopicSectionViewModel>(); 
+            SimpleIoc.Default.Register<StreamTopicSectionViewModel>();
             SimpleIoc.Default.Register<EditBoxViewModel>();
             SimpleIoc.Default.Register<DashBoardViewModel>();
             SimpleIoc.Default.Register<HelloPlaceHolderViewModel>();

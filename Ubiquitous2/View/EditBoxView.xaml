@@ -14,8 +14,8 @@
     </UserControl.Resources>
                                      
     <Grid Margin="0">
-        <TextBox Text="{Binding Text,UpdateSourceTrigger=PropertyChanged}" Name="EditTextBox" Padding="3,0" Panel.ZIndex="1" Background="Transparent" TextWrapping="Wrap" Margin="0" BorderThickness="0" ScrollViewer.CanContentScroll="True" VerticalScrollBarVisibility="Auto" VerticalContentAlignment="Center"/>
-        <TextBox Text="{Binding Watermark}" Padding="3,0" Background="Transparent" Foreground="Gray" Focusable="False" TextWrapping="Wrap" Panel.ZIndex="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Visibility="{Binding ElementName=EditTextBox, Path=Text.IsEmpty, Converter={StaticResource boolToVisibilityConverter}}" FontStyle="Italic" UseLayoutRounding="True" VerticalContentAlignment="Center" HorizontalScrollBarVisibility="Disabled"/>
+        <TextBox BorderThickness="0" Text="{Binding Text,UpdateSourceTrigger=PropertyChanged}" Name="EditTextBox" Padding="3,0" Panel.ZIndex="1" Background="Transparent" TextWrapping="Wrap" Margin="0" ScrollViewer.CanContentScroll="True" VerticalScrollBarVisibility="Auto" VerticalContentAlignment="Center"/>
+        <TextBox BorderThickness="0" Text="{Binding Watermark}" Padding="3,0" Background="Transparent" Foreground="Gray" Focusable="False" TextWrapping="Wrap" Panel.ZIndex="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Visibility="{Binding ElementName=EditTextBox, Path=Text.IsEmpty, Converter={StaticResource boolToVisibilityConverter}}" FontStyle="Italic" UseLayoutRounding="True" VerticalContentAlignment="Center" HorizontalScrollBarVisibility="Disabled"/>
         <Popup  IsOpen="{Binding Suggestions.Count, Mode=OneWay, Converter={StaticResource CountToVisibilityConverter}}"
                 Width="{Binding ElementName=EditTextBox, Path=ActualWidth}"
                 HorizontalOffset="0"
