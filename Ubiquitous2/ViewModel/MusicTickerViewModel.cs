@@ -52,11 +52,14 @@ namespace UB.ViewModel
             });
             Config = _lastFmService.Config;
 
-            Config.PropertyChanging += (o, e) => { 
-                if( e.PropertyName == ServiceConfig.EnabledPropertyName )
+            Config.PropertyChanged += (o, e) =>
+            {
+                if (e.PropertyName == ServiceConfig.EnabledPropertyName)
                 {
-                    if (!Win.MusicTickerWindow.IsLoaded)
-                        Win.MusicTickerWindow = new MusicTickerWindow();
+                    if (Config.Enabled)
+                        Win.ShowMusicTicker();
+                    else
+                        Win.HideMusicTicker();
                 }
             };
 

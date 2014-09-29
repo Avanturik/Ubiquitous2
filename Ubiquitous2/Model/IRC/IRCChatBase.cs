@@ -191,7 +191,7 @@ namespace UB.Model
                     Channel = channel
                 }));
 
-            Log.WriteInfo("User {0} left from {1}", user, channel);
+            Log.WriteInfo("User {0} left {1}", user, channel);
 
         }
         private void ReadPrivateMessage(IrcRawMessageEventArgs e)

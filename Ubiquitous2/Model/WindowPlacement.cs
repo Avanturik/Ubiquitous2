@@ -161,6 +161,7 @@ namespace UB.Model
         /// Sets and gets the Height property.
         /// Changes to that property's value raise the PropertyChanged event. 
         /// </summary>
+        [XmlAttribute]
         public double Height
         {
             get

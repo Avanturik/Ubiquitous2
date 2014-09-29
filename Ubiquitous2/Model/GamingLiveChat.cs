@@ -9,7 +9,6 @@ using UB.Utils;
 
 namespace UB.Model
 {
-    //nick=__$anonymous&authToken=__$anonymous
     class GamingLiveChat : IChat
     {
         public event EventHandler<ChatServiceEventArgs> MessageReceived;

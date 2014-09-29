@@ -298,7 +298,7 @@ namespace UB.Model
 
                         parser(message, this);
                         if( original != message.Text)
-                            Log.WriteInfo("After paresing with {0}: {1}", number, message.Text);
+                            Log.WriteInfo("After parsing with {0}: {1}", number, message.Text);
                         number++;
                     });
                 }

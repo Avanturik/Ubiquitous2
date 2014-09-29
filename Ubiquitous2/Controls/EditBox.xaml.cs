@@ -19,8 +19,9 @@ using UB.Utils;
 
 namespace UB.Controls
 {
-   
-    [TemplatePart(Name="PART_Popup", Type=typeof(Popup))]
+    [TemplatePart(Name = "PART_Edit", Type = typeof(TextBox))]
+    [TemplatePart(Name = "PART_Watermark", Type = typeof(TextBox))]
+    [TemplatePart(Name = "PART_Popup", Type = typeof(Popup))]
     /// <summary>
     /// Interaction logic for EditBox.xaml
     /// </summary>
