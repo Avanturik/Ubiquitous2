@@ -5,7 +5,8 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:ignore="http://www.ignore.com"
         xmlns:fluent="clr-namespace:Fluent;assembly=Fluent"
-        xmlns:Devart="clr-namespace:Devart.Controls"        
+        xmlns:Devart="clr-namespace:Devart.Controls"       
+        xmlns:Controls="clr-namespace:UB.Controls"
         xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
         xmlns:Interactivity="clr-namespace:UB.Interactivity"
         xmlns:View="clr-namespace:UB.View"
@@ -36,9 +37,7 @@
                 </Grid.RowDefinitions>                
                 <StackPanel Grid.Row="0" Orientation="Horizontal" VerticalAlignment="Center" Margin="0,8" Height="26">
                     <Label HorizontalAlignment="Left" VerticalAlignment="Center" FontWeight="Bold">Preset:</Label>
-                    <ComboBox SelectedIndex="0" HorizontalAlignment="Left" Width="180" VerticalAlignment="Center">
-                        <ComboBoxItem>Default</ComboBoxItem>
-                    </ComboBox>
+                    <Controls:EditComboBox Items="{Binding TopicPresets,Mode=TwoWay}" MinWidth="100"/>                    
                     <Button Content="Apply" Padding="15,1" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="13,0,0,0"/>
                 </StackPanel>
                 <TextBlock Grid.Row="1" Margin="5,0,0,0">Batch topic change. Anonymous accounts are hidden!</TextBlock>

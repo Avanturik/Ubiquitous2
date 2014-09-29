@@ -138,6 +138,10 @@
     <Compile Include="Controls\EditBox.xaml.cs">
       <DependentUpon>EditBox.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\EditComboBox\EditComboBox.xaml.cs">
+      <DependentUpon>EditComboBox.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\EditComboBox\EditComboBoxItem.cs" />
     <Compile Include="Controls\SmoothPanel\DataBindHelper.cs" />
     <Compile Include="Controls\SmoothPanel\IHeightMeasurer.cs" />
     <Compile Include="Controls\SmoothPanel\SmoothPanel.cs" />
@@ -398,6 +402,10 @@
     </Compile>
     <Compile Include="Utils\ImageMeasurer.cs" />
     <Page Include="Controls\EditBox.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\EditComboBox\EditComboBox.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

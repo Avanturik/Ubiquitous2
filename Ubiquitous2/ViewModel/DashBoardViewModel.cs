@@ -3,6 +3,7 @@ using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Ioc;
 using UB.Model;
 using System.Linq;
+using UB.Controls;
 
 namespace UB.ViewModel
 {
@@ -25,7 +26,6 @@ namespace UB.ViewModel
             Initialize();
         }
 
-
         private void Initialize()
         {
             foreach( var chat in _dataService.Chats )
@@ -36,9 +36,40 @@ namespace UB.ViewModel
                     StreamTopics.Add(new StreamTopicSectionViewModel(streamTopic));
                 }
             }
+            //TopicPresets = new ObservableCollection<EditComboBoxItem>();
         }
 
 
+        /// <summary>
+        /// The <see cref="TopicPresets" /> property's name.
+        /// </summary>
+        public const string TopicPresetsPropertyName = "TopicPresets";
+
+        private ObservableCollection<EditComboBoxItem> _topicPresets = new ObservableCollection<EditComboBoxItem>();
+
+        /// <summary>
+        /// Sets and gets the TopicPresets property.
+        /// Changes to that property's value raise the PropertyChanged event. 
+        /// </summary>
+        public ObservableCollection<EditComboBoxItem> TopicPresets
+        {
+            get
+            {
+                return _topicPresets;
+            }
+
+            set
+            {
+                if (_topicPresets == value)
+                {
+                    return;
+                }
+
+                RaisePropertyChanging(TopicPresetsPropertyName);
+                _topicPresets = value;
+                RaisePropertyChanged(TopicPresetsPropertyName);
+            }
+        }
 
         /// <summary>
         /// The <see cref="StreamTopics" /> property's name.
