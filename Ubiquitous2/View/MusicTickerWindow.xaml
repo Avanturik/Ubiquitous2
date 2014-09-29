@@ -32,6 +32,7 @@
     <i:Interaction.Behaviors>
         <Interactivity:WindowPersistentLocationBehavior WindowName="MusicTickerWindow"/>
         <Interactivity:DragWindow/>
+        <Interactivity:UnclosableWindow/>
     </i:Interaction.Behaviors>
 
     <Grid>

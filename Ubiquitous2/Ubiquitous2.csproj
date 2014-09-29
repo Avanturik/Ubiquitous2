@@ -146,6 +146,7 @@
     <Compile Include="Controls\SmoothPanel\SmoothPanelTemplate.cs" />
     <Compile Include="Controls\SmoothPanel\SmoothPanelViewCache.cs" />
     <Compile Include="Converter\BoolToScrollBarVisibility - Copy.cs" />
+    <Compile Include="Interactivity\UnclosableWindow.cs" />
     <Compile Include="Model\Game.cs" />
     <Compile Include="Model\IStreamTopic.cs" />
     <Compile Include="Model\StreamInfo.cs" />

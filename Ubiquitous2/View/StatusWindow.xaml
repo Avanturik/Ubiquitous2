@@ -20,6 +20,7 @@
     <i:Interaction.Behaviors>
         <Interactivity:WindowPersistentLocationBehavior WindowName="StatusWindow"/>
         <Interactivity:DragWindow/>
+        <Interactivity:UnclosableWindow/>
     </i:Interaction.Behaviors> 
     
     <Window.Resources>

@@ -15,10 +15,6 @@ namespace UB.View
         {
             InitializeComponent();
             this.AllowsTransparency = Ubiquitous.Default.Config.AppConfig.EnableTransparency;
-            this.Closing += (o, e) => {
-                this.Visibility = System.Windows.Visibility.Hidden;
-                e.Cancel = true;
-            };
         }
     }
 }
