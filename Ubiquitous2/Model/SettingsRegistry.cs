@@ -57,9 +57,9 @@ namespace UB.Model
                     {
                         ServiceName = ServiceTitleImageSaver,
                         IconURL = Icons.PngIcon,
-                        Enabled = true,
+                        Enabled = false,
                         Parameters = new List<ConfigField>() {
-                            new ConfigField("Info0", "Save chat to image and use it as Image source in the OBS", "Info", false, null),
+                            new ConfigField("Info0", "Save chat to image and use it as Image source in the OBS", "Info", true, null),
                             new ConfigField("Filename", "Chat box", "FileSave", true, Environment.GetFolderPath(Environment.SpecialFolder.MyPictures) + @"\ubiquitous_chat.png"),
                             new ConfigField("FilenameStatus", "Status window", "FileSave", true, Environment.GetFolderPath(Environment.SpecialFolder.MyPictures) + @"\ubiquitous_status.png"),
                             new ConfigField("FilenameMusic", "Music ticker", "FileSave", true, Environment.GetFolderPath(Environment.SpecialFolder.MyPictures) + @"\ubiquitous_music.png"),
