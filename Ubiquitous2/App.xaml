@@ -6,8 +6,7 @@
       </ResourceDictionary.MergedDictionaries>
       <!--Global View Model Locator-->
       <vm:ViewModelLocator x:Key="Locator" d:IsDataSource="True" />
-      <settings:Ubiquitous x:Key="Settings" />
-      <vm:ViewModelLocator x:Key="Locator" d:IsDataSource="True" />
-    </ResourceDictionary>
+            <settings:Ubiquitous x:Key="Settings" />
+        </ResourceDictionary>
   </Application.Resources>
 </Application>
