@@ -242,11 +242,5 @@ namespace UB.ViewModel
             }
         
         }
-
-        public bool? Show()
-        {
-            var settings = new SettingsWindow();            
-            return settings.ShowDialog();
-        }
     }
 }

@@ -16,6 +16,7 @@
 
     <i:Interaction.Behaviors>
         <Interactivity:WindowPersistentLocationBehavior WindowName="DashboardWindow"/>
+        <Interactivity:UnclosableWindow/>
     </i:Interaction.Behaviors>
 
     <fluent:BackstageTabControl SelectedIndex="3" Background="#FF323232" Style="{DynamicResource SettingsStyle}" ItemsPanelBackground="#FF3F3F46" Foreground="White">
@@ -37,7 +38,7 @@
                     <ComboBox SelectedIndex="0" HorizontalAlignment="Left" Width="180" VerticalAlignment="Center">
                         <ComboBoxItem>Default</ComboBoxItem>
                     </ComboBox>
-                    <Button Content="Save" Padding="15,1" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="13,0,0,0"/>
+                    <Button Content="Apply" Padding="15,1" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="13,0,0,0"/>
                 </StackPanel>
                 <DockPanel Grid.Row="1">
                     
@@ -62,17 +63,6 @@
                     </ItemsControl.ItemTemplate>
                 </ItemsControl>
                 </DockPanel>
-
-                <Button FontSize="16" Padding="5"  Grid.Row="2" Content="Update topic" FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Center">
-                    <Button.Background>
-                        <LinearGradientBrush EndPoint="0,1" StartPoint="0,0">
-                            <GradientStop Color="#FF2AB900" Offset="0"/>
-                            <GradientStop Color="#FF1CCB00" Offset="0.5"/>
-                            <GradientStop Color="#FF1EDE00" Offset="0.545"/>
-                            <GradientStop Color="#FF005326" Offset="1"/>
-                        </LinearGradientBrush>
-                    </Button.Background>
-                </Button>
             </Grid>
 
         </fluent:BackstageTabItem>

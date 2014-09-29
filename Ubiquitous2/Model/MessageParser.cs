@@ -52,14 +52,12 @@ namespace UB.Model
                 {
                     if (match.Groups.Count > 1)
                     {
-                        string url = match.Groups[2].Value;
-                        try
-                        {
-                            ImageMeasurer.GetWebImageDimensions(url, (info) => {
-                                message.Text = r.Replace(message.Text, @"<img width=""" + info.Dimensions.Width + @""" height=""" + info.Dimensions.Height + @""" src=""$2""/>").Replace("href=\"www", "href=\"http://www");
-                            });
-                        }
-                        catch { }
+                        //string url = match.Groups[2].Value;
+                        //try
+                        //{
+                            message.Text = r.Replace(message.Text, @"<img src=""$2""/>").Replace("href=\"www", "href=\"http://www");
+                        //}
+                        //catch { }
                     }
                 }
             }

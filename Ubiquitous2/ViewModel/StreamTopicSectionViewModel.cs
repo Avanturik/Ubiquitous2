@@ -21,11 +21,11 @@ namespace UB.ViewModel
         [PreferredConstructor]
         public StreamTopicSectionViewModel()
         {
-
+            StreamInfo = new StreamInfo() { 
+                HasDescription = true,
+            };
+            ChannelIcon = Icons.DesignMainHeadsetIcon;
         }
-
-
-
 
         /// <summary>
         /// Initializes a new instance of the StreamTopicSectionViewModel class.

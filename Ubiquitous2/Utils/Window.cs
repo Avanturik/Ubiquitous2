@@ -13,7 +13,7 @@ namespace UB.Utils
 {
     public static class Win
     {
-        //Normal windows
+        public static Window SettingsWindow = new SettingsWindow();
         public static Window StatusWindow = new StatusWindow();
         public static Window MusicTickerWindow = new MusicTickerWindow();
         public static Window DashboardWindow = new DashBoardWindow();
@@ -58,9 +58,6 @@ namespace UB.Utils
 
         public static void ShowStatus()
         {
-            if (!StatusWindow.IsLoaded)
-                StatusWindow = new StatusWindow();
-
             StatusWindow.Visibility = Visibility.Visible;
         }
 
@@ -75,9 +72,6 @@ namespace UB.Utils
         }
         public static void ShowDashBoard()
         {
-            if (!DashboardWindow.IsLoaded)
-                DashboardWindow = new DashBoardWindow();
-
             DashboardWindow.Visibility = Visibility.Visible;
         }
         public static void HideDashBoard()
@@ -85,10 +79,21 @@ namespace UB.Utils
             DashboardWindow.Visibility = Visibility.Hidden;
         }
 
+        public static void ShowSettings()
+        {
+            SettingsWindow.Visibility = Visibility.Visible;
+        }
+        public static void HideSettings()
+        {
+            SettingsWindow.Visibility = Visibility.Hidden;
+        }
+
         public static void SetGlobalStatus(WindowState state)
         {
-            StatusWindow.WindowState = state;
-            MusicTickerWindow.WindowState = state;
+            StatusWindow.WindowState = state != WindowState.Maximized ? state : StatusWindow.WindowState;
+            MusicTickerWindow.WindowState = state != WindowState.Maximized ? state : MusicTickerWindow.WindowState;
+            SettingsWindow.WindowState = state != WindowState.Maximized ? state : SettingsWindow.WindowState;
+            DashboardWindow.WindowState = state != WindowState.Maximized ? state : DashboardWindow.WindowState;
         }
 
         public static void ReloadAllWindows()

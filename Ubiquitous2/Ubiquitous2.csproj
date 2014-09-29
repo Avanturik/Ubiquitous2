@@ -543,6 +543,9 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
+    <Content Include="web\favicon.ico">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Resource Include="Resources\twitchevent.ico">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Resource>

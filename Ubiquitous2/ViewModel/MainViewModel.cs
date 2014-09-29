@@ -214,8 +214,7 @@ namespace UB.ViewModel
                     ?? (_showSettings = new RelayCommand(
                                           () =>
                                           {
-                                              var settings = ServiceLocator.Current.GetInstance<SettingsViewModel>();
-                                              settings.Show();
+                                              Win.ShowSettings();
                                           }));
             }
         }
