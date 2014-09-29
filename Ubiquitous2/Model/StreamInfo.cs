@@ -7,12 +7,44 @@ using System.Xml.Serialization;
 
 namespace UB.Model
 {
+    [Serializable]
     public class StreamInfo :NotifyPropertyChangeBase
     {
 
         public StreamInfo()
         {
             CurrentGame = new Game();
+        }
+
+        /// <summary>
+        /// The <see cref="ChatName" /> property's name.
+        /// </summary>
+        public const string ChatNamePropertyName = "ChatName";
+
+        private string _chatName = null;
+
+        /// <summary>
+        /// Sets and gets the ChatName property.
+        /// Changes to that property's value raise the PropertyChanged event. 
+        /// </summary>
+        public string ChatName
+        {
+            get
+            {
+                return _chatName;
+            }
+
+            set
+            {
+                if (_chatName == value)
+                {
+                    return;
+                }
+
+                RaisePropertyChanging(ChatNamePropertyName);
+                _chatName = value;
+                RaisePropertyChanged(ChatNamePropertyName);
+            }
         }
 
         /// <summary>
@@ -205,6 +237,71 @@ namespace UB.Model
                 RaisePropertyChanging(DescriptionPropertyName);
                 _description = value;
                 RaisePropertyChanged(DescriptionPropertyName);
+            }
+        }
+
+
+        /// <summary>
+        /// The <see cref="CanBeChanged" /> property's name.
+        /// </summary>
+        public const string CanBeChangedPropertyName = "CanBeChanged";
+
+        private bool _canBeChanged = false;
+
+        /// <summary>
+        /// Sets and gets the CanBeChanged property.
+        /// Changes to that property's value raise the PropertyChanged event. 
+        /// </summary>
+        [XmlIgnore]
+        public bool CanBeChanged
+        {
+            get
+            {
+                return _canBeChanged;
+            }
+
+            set
+            {
+                if (_canBeChanged == value)
+                {
+                    return;
+                }
+
+                RaisePropertyChanging(CanBeChangedPropertyName);
+                _canBeChanged = value;
+                RaisePropertyChanged(CanBeChangedPropertyName);
+            }
+        }
+
+        /// <summary>
+        /// The <see cref="CanBeRead" /> property's name.
+        /// </summary>
+        public const string CanBeReadPropertyName = "CanBeRead";
+
+        private bool _canBeRead = false;
+
+        /// <summary>
+        /// Sets and gets the CanBeRead property.
+        /// Changes to that property's value raise the PropertyChanged event. 
+        /// </summary>
+        [XmlIgnore]
+        public bool CanBeRead
+        {
+            get
+            {
+                return _canBeRead;
+            }
+
+            set
+            {
+                if (_canBeRead == value)
+                {
+                    return;
+                }
+
+                RaisePropertyChanging(CanBeReadPropertyName);
+                _canBeRead = value;
+                RaisePropertyChanged(CanBeReadPropertyName);
             }
         }
         

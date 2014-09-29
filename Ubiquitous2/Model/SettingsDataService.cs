@@ -31,6 +31,16 @@ namespace UB.Model
             InitializeServiceSettings();
             InitializeWindowSettings();
             InitializeAppSettings();
+            InitializeStreamInfos();
+        }
+        private void InitializeStreamInfos()
+        {
+            if( Ubiquitous.Default.Config.StreamInfoPresets == null )
+            {
+                Ubiquitous.Default.Config.StreamInfoPresets = new List<StreamInfoPreset>();
+            }
+            Ubiquitous.Default.Config.StreamInfoPresets.Add(new StreamInfoPreset() { PresetName = "Default", StreamTopics = new List<StreamInfo>() });
+
         }
         private void InitializeAppSettings()
         {

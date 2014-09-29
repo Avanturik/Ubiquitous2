@@ -9,14 +9,15 @@ using System.Xml.Serialization;
 namespace UB.Model
 {
     [Serializable]
-    [XmlRoot(ElementName = "ChatConfigs")]
     public class ConfigSections
     {
-        [XmlElement]
+        [XmlArray]
+        public List<StreamInfoPreset> StreamInfoPresets { get; set; }
+        [XmlArray]
         public List<ChatConfig> ChatConfigs { get; set; }
-        [XmlElement]
+        [XmlArray]
         public List<ServiceConfig> ServiceConfigs { get; set; }
-        [XmlElement]
+        [XmlArray]
         public List<WindowSettings> WindowSettings { get; set; }
         [XmlElement]
         public AppConfig AppConfig { get; set; }

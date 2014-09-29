@@ -38,6 +38,8 @@ namespace UB.ViewModel
             }
         }
 
+
+
         /// <summary>
         /// The <see cref="StreamTopics" /> property's name.
         /// </summary>

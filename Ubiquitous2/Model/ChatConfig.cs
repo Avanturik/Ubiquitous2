@@ -19,7 +19,6 @@ namespace UB.Model
         public String IconURL { get; set; }
         [XmlAttribute]
         public bool Enabled { get; set; }
-        [XmlAttribute]
         /// <summary>
         /// The <see cref="HideViewersCounter" /> property's name.
         /// </summary>
@@ -31,6 +30,7 @@ namespace UB.Model
         /// Sets and gets the HideViewersCounter property.
         /// Changes to that property's value raise the PropertyChanged event. 
         /// </summary>
+        [XmlAttribute]
         public bool HideViewersCounter
         {
             get

@@ -10,22 +10,18 @@ namespace UB.Model
 {
     public interface IStreamTopic
     {
-
-        [XmlElement]
         StreamInfo Info
         {
             get;
             set;
         }
 
-        [XmlIgnore]
         ObservableCollection<Game> Games
         {
             get;
             set;
         }
 
-        [XmlIgnore]
         string SearchQuery
         {
             get;
@@ -34,7 +30,7 @@ namespace UB.Model
         void QueryGameList(string gameName, Action callback);
         void GetTopic();
         void SetTopic();
-
+        
         Action StreamTopicAcquired { get; set; }
     }
 }

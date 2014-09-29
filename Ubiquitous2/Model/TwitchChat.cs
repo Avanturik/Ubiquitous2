@@ -40,7 +40,14 @@ namespace UB.Model
             ContentParsers.Add(MessageParser.ParseURLs);
             ContentParsers.Add(MessageParser.ParseEmoticons);
 
-            Info = new StreamInfo();
+            Info = new StreamInfo() { 
+                HasDescription = false,
+                HasGame = true,
+                HasTopic = true,
+                ChatName = this.ChatName,
+            };
+            
+
             Games = new ObservableCollection<Game>();
 
             Users = new Dictionary<string, ChatUser>();
@@ -142,7 +149,10 @@ namespace UB.Model
                 counterWebPollers.Add(poller);
 
                 if( !isAnonymous )
+                {
                     Status.IsLoggedIn = true;
+                    Info.CanBeChanged = true;
+                }
 
                 Status.IsStarting = false;
                 Status.IsConnecting = false;
@@ -439,6 +449,7 @@ namespace UB.Model
 
                 Info.Topic = json["status"].ToObject<string>();
                 Info.CurrentGame.Name = json["game"].ToObject<string>();
+                Info.CanBeRead = true;
 
                 if (StreamTopicAcquired != null)
                     UI.Dispatch( () => StreamTopicAcquired());

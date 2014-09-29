@@ -9,8 +9,8 @@ namespace UB.Model
     public interface IChat
     {
         event EventHandler<ChatServiceEventArgs> MessageReceived;
-        String ChatName { get; set; }
-        String IconURL { get; set; }
+        string ChatName { get; set; }
+        string IconURL { get; set; }
         string NickName { get; set; }
         bool HideViewersCounter { get; set; }
         

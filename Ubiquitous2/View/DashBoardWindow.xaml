@@ -19,56 +19,58 @@
         <Interactivity:UnclosableWindow/>
     </i:Interaction.Behaviors>
 
-    <fluent:BackstageTabControl SelectedIndex="3" Background="#FF323232" Style="{DynamicResource SettingsStyle}" ItemsPanelBackground="#FF3F3F46" Foreground="White">
+    <fluent:BackstageTabControl SelectedIndex="0" Background="#FF323232" Style="{DynamicResource SettingsStyle}" ItemsPanelBackground="#FF3F3F46" Foreground="White">
         <fluent:BackstageTabItem Header="Stream topic">
-                <Grid>
-                    <Grid.Background>
-                        <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
-                            <GradientStop Color="White" Offset="0"/>
-                            <GradientStop Color="Gray" Offset="0.889"/>
-                        </LinearGradientBrush>
-                    </Grid.Background>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="17*"/>
-                        <RowDefinition Height="130*"/>
-                        <RowDefinition Height="23*"/>
-                    </Grid.RowDefinitions>
-                <StackPanel Grid.Row="0" Orientation="Horizontal" VerticalAlignment="Center">
+            <Grid>
+                <Grid.Background>
+                    <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                        <GradientStop Color="White" Offset="0"/>
+                        <GradientStop Color="Gray" Offset="0.889"/>
+                    </LinearGradientBrush>
+                </Grid.Background>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="14*"/>
+                    <RowDefinition Height="6*"/>
+                    <RowDefinition Height="101*"/>
+                    <RowDefinition Height="19*"/>
+                </Grid.RowDefinitions>                
+                <StackPanel Grid.Row="0" Orientation="Horizontal" VerticalAlignment="Center" Margin="0,8" Height="26">
                     <Label HorizontalAlignment="Left" VerticalAlignment="Center" FontWeight="Bold">Preset:</Label>
                     <ComboBox SelectedIndex="0" HorizontalAlignment="Left" Width="180" VerticalAlignment="Center">
                         <ComboBoxItem>Default</ComboBoxItem>
                     </ComboBox>
                     <Button Content="Apply" Padding="15,1" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="13,0,0,0"/>
                 </StackPanel>
-                <DockPanel Grid.Row="1">
-                    
-                <ItemsControl ItemsSource="{Binding StreamTopics}"
+                <TextBlock Grid.Row="1" Margin="5,0,0,0">Batch topic change. Anonymous accounts are hidden!</TextBlock>
+                <DockPanel Grid.Row="2">
+
+                    <ItemsControl ItemsSource="{Binding StreamTopics}"
 					Padding="0"
 					HorizontalContentAlignment="Left"
 					VirtualizingPanel.IsVirtualizing="True"
                     ScrollViewer.VerticalScrollBarVisibility="Auto"
                     ScrollViewer.CanContentScroll="True"
                     Background="#FF494949">
-                    <ItemsControl.Template>
-                        <ControlTemplate>
-                            <ScrollViewer Template="{DynamicResource ScrollStyle}" CanContentScroll="True">
-                                <ItemsPresenter/>
-                            </ScrollViewer>
-                        </ControlTemplate>
-                    </ItemsControl.Template>
-                    <ItemsControl.ItemTemplate>
-                        <DataTemplate>
-                            <View:StreamTopicSectionView DataContext="{Binding}"/>
-                        </DataTemplate>
-                    </ItemsControl.ItemTemplate>
-                </ItemsControl>
+                        <ItemsControl.Template>
+                            <ControlTemplate>
+                                <ScrollViewer Template="{DynamicResource ScrollStyle}" CanContentScroll="True">
+                                    <ItemsPresenter/>
+                                </ScrollViewer>
+                            </ControlTemplate>
+                        </ItemsControl.Template>
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <View:StreamTopicSectionView DataContext="{Binding}"/>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
                 </DockPanel>
             </Grid>
 
         </fluent:BackstageTabItem>
         <fluent:BackstageTabItem Header="Analytics" Foreground="White">
             <Grid>
-                <TextBlock>Stream time details<LineBreak/>Average viewers per time interval<LineBreak/>Chat activity</TextBlock>
+                <TextBlock Foreground="Black">Stream time details<LineBreak/>Average viewers per time interval<LineBreak/>Chat activity</TextBlock>
             </Grid>
         </fluent:BackstageTabItem>
     </fluent:BackstageTabControl>

@@ -5,26 +5,8 @@
     <Setting Name="LoremIpsum" Provider="PortableSettingsProvider" Type="System.String" Scope="User">
       <Value Profile="(Default)">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</Value>
     </Setting>
-    <Setting Name="MainWindowHeight" Provider="PortableSettingsProvider" Type="System.Double" Scope="User">
-      <Value Profile="(Default)">500</Value>
-    </Setting>
-    <Setting Name="MainWindowWidth" Provider="PortableSettingsProvider" Type="System.Double" Scope="User">
-      <Value Profile="(Default)">400</Value>
-    </Setting>
     <Setting Name="Config" Provider="PortableSettingsProvider" Type="UB.Model.ConfigSections" Scope="User">
       <Value Profile="(Default)" />
-    </Setting>
-    <Setting Name="WebServerPort" Provider="PortableSettingsProvider" Type="System.Int32" Scope="User">
-      <Value Profile="(Default)">8080</Value>
-    </Setting>
-    <Setting Name="LastFMUserName" Provider="PortableSettingsProvider" Type="System.String" Scope="User">
-      <Value Profile="(Default)" />
-    </Setting>
-    <Setting Name="LastFMPassword" Provider="PortableSettingsProvider" Type="System.String" Scope="User">
-      <Value Profile="(Default)" />
-    </Setting>
-    <Setting Name="IsMusicTickerEnabled" Provider="PortableSettingsProvider" Type="System.Boolean" Scope="User">
-      <Value Profile="(Default)">False</Value>
     </Setting>
   </Settings>
 </SettingsFile>

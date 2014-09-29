@@ -150,6 +150,7 @@
     <Compile Include="Model\Game.cs" />
     <Compile Include="Model\IStreamTopic.cs" />
     <Compile Include="Model\StreamInfo.cs" />
+    <Compile Include="Model\StreamInfoPreset.cs" />
     <Compile Include="Model\YesNoDialog.cs" />
     <Compile Include="ViewModel\DashBoardViewModel.cs" />
     <Compile Include="ViewModel\HelloPlaceHolderViewModel.cs" />

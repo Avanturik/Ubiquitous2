@@ -89,6 +89,7 @@ namespace UB.Model
         /// Sets and gets the MusicTickerBackgroundOpacity property.
         /// Changes to that property's value raise the PropertyChanged event. 
         /// </summary>
+        [XmlAttribute]
         public double MusicTickerBackgroundOpacity
         {
             get
