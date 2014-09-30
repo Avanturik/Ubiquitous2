@@ -3,15 +3,19 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:Controls="clr-namespace:UB.Controls"
              mc:Ignorable="d" 
              d:DesignHeight="29" d:DesignWidth="138">
     <Grid>
-        <ComboBox x:Name="PART_Combo" 
-                  IsEditable="True"
-                  DisplayMemberPath="Title" 
-                  IsReadOnly="False" 
-                  Text="{Binding Text, RelativeSource={RelativeSource AncestorType=UserControl}, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
-                  ItemsSource="{Binding ItemsSource, RelativeSource={RelativeSource AncestorType=UserControl}, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
-        </ComboBox>
+        <Controls:ComboBoxWOKeyNavigation x:Name="PART_Combo" 
+                    IsEditable="True"
+                    DisplayMemberPath="Title" 
+                    IsReadOnly="False" 
+                    IsSynchronizedWithCurrentItem="False"
+                    IsTextSearchEnabled="False" 
+                    VerticalContentAlignment="Center"                    
+                    Text="{Binding SelectedItem.Title, RelativeSource={RelativeSource Self}, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                    ItemsSource="{Binding ItemsSource, RelativeSource={RelativeSource AncestorType=UserControl}, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+        </Controls:ComboBoxWOKeyNavigation>
     </Grid>
 </UserControl>

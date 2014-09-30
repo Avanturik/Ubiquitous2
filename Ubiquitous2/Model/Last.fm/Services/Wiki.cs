@@ -54,8 +54,6 @@ namespace UB.LastFM.Services
 		/// </returns>
 		public string GetSummary()
 		{
-			// TODO: Clean the string before return
-			
 			XmlDocument doc = request(prefix + ".getInfo");
       
 			return extract(doc, "summary");

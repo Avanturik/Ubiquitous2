@@ -444,9 +444,9 @@ namespace UB.Model
                 var json = this.With(x => webClient.Download(String.Format("http://api.twitch.tv/api/channels/{0}/ember?on_site=1", HttpUtility.UrlEncode(LoginInfo.UserName.ToLower()))))
                                .With(x => JToken.Parse(x));
 
-                if (json == null)
+                if (json == null || Info == null)
                     return;
-
+                
                 Info.Topic = json["status"].ToObject<string>();
                 Info.CurrentGame.Name = json["game"].ToObject<string>();
                 Info.CanBeRead = true;

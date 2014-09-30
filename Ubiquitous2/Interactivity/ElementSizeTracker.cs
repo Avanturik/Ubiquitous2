@@ -16,7 +16,6 @@ namespace UB.Interactivity
     public class ElementSizeTracker : Behavior<FrameworkElement>
     {
         private FrameworkElement element;
-        private WindowSettings currentSettings;
         protected override void OnAttached()
         {            
             element = AssociatedObject;

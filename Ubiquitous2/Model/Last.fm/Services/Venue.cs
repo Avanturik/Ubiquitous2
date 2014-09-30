@@ -76,8 +76,6 @@ namespace UB.LastFM.Services
 		/// </returns>
 		public string GetName()
 		{
-			// TODO: Replace this call when venue.getInfo comes out.
-			
 			XmlDocument doc = request("venue.getEvents");
 			return doc.DocumentElement.GetElementsByTagName("events")[0].Attributes.GetNamedItem("venue").InnerText;
 		}

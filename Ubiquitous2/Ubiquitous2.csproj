@@ -138,6 +138,7 @@
     <Compile Include="Controls\EditBox.xaml.cs">
       <DependentUpon>EditBox.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\EditComboBox\ComboBoxWOKeyNavigation.cs" />
     <Compile Include="Controls\EditComboBox\EditComboBox.xaml.cs">
       <DependentUpon>EditComboBox.xaml</DependentUpon>
     </Compile>
@@ -157,6 +158,7 @@
     <Compile Include="Model\StreamInfo.cs" />
     <Compile Include="Model\StreamInfoPreset.cs" />
     <Compile Include="Model\YesNoDialog.cs" />
+    <Compile Include="Utils\Clone.cs" />
     <Compile Include="ViewModel\DashBoardViewModel.cs" />
     <Compile Include="ViewModel\HelloPlaceHolderViewModel.cs" />
     <Compile Include="ViewModel\EditBoxViewModel.cs" />
@@ -553,6 +555,12 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
+    <Content Include="Content\goodgame_smiles.css">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\goodgame_smiles.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="web\favicon.ico">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

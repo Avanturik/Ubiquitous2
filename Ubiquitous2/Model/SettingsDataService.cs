@@ -39,8 +39,6 @@ namespace UB.Model
             {
                 Ubiquitous.Default.Config.StreamInfoPresets = new List<StreamInfoPreset>();
             }
-            Ubiquitous.Default.Config.StreamInfoPresets.Add(new StreamInfoPreset() { PresetName = "Default", StreamTopics = new List<StreamInfo>() });
-
         }
         private void InitializeAppSettings()
         {

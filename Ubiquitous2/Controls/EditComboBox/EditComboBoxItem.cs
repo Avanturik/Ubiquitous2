@@ -12,6 +12,129 @@ namespace UB.Controls
     {
 
         /// <summary>
+        /// The <see cref="LinkedObject" /> property's name.
+        /// </summary>
+        public const string LinkedObjectPropertyName = "LinkedObject";
+
+        private object _myProperty = null;
+
+        /// <summary>
+        /// Sets and gets the LinkedObject property.
+        /// Changes to that property's value raise the PropertyChanged event. 
+        /// </summary>
+        public object LinkedObject
+        {
+            get
+            {
+                return _myProperty;
+            }
+
+            set
+            {
+                if (_myProperty == value)
+                {
+                    return;
+                }
+
+                RaisePropertyChanging(LinkedObjectPropertyName);
+                _myProperty = value;
+                RaisePropertyChanged(LinkedObjectPropertyName);
+            }
+        }
+
+        /// <summary>
+        /// The <see cref="IsCurrent" /> property's name.
+        /// </summary>
+        public const string IsCurrentPropertyName = "IsCurrent";
+
+        private bool _isCurrent = false;
+
+        /// <summary>
+        /// Sets and gets the IsCurrent property.
+        /// Changes to that property's value raise the PropertyChanged event. 
+        /// </summary>
+        public bool IsCurrent
+        {
+            get
+            {
+                return _isCurrent;
+            }
+
+            set
+            {
+                if (_isCurrent == value)
+                {
+                    return;
+                }
+
+                RaisePropertyChanging(IsCurrentPropertyName);
+                _isCurrent = value;
+                RaisePropertyChanged(IsCurrentPropertyName);
+            }
+        }
+
+        /// <summary>
+        /// The <see cref="IsUnselectable" /> property's name.
+        /// </summary>
+        public const string IsUnselectablePropertyName = "IsUnselectable";
+
+        private bool _isUnselectable = false;
+
+        /// <summary>
+        /// Sets and gets the IsUnselectable property.
+        /// Changes to that property's value raise the PropertyChanged event. 
+        /// </summary>
+        public bool IsUnselectable
+        {
+            get
+            {
+                return _isUnselectable;
+            }
+
+            set
+            {
+                if (_isUnselectable == value)
+                {
+                    return;
+                }
+
+                RaisePropertyChanging(IsUnselectablePropertyName);
+                _isUnselectable = value;
+                RaisePropertyChanged(IsUnselectablePropertyName);
+            }
+        }
+
+        /// <summary>
+        /// The <see cref="IsUndeletable" /> property's name.
+        /// </summary>
+        public const string IsUndeletablePropertyName = "IsUndeletable";
+
+        private bool _isUndeletable = false;
+
+        /// <summary>
+        /// Sets and gets the IsUndeletable property.
+        /// Changes to that property's value raise the PropertyChanged event. 
+        /// </summary>
+        public bool IsUndeletable
+        {
+            get
+            {
+                return _isUndeletable;
+            }
+
+            set
+            {
+                if (_isUndeletable == value)
+                {
+                    return;
+                }
+
+                RaisePropertyChanging(IsUndeletablePropertyName);
+                _isUndeletable = value;
+                RaisePropertyChanged(IsUndeletablePropertyName);
+            }
+        }
+        /// <summary>
         /// The <see cref="SelectAction" /> property's name.
         /// </summary>
         public const string SelectActionPropertyName = "SelectAction";

@@ -5,63 +5,91 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Controls;
+using UB.Utils;
 
 namespace UB.Controls
 {
     public class EditComboBoxActions
     {
-        private EditComboBox editCombo;
-        private ComboBox combo;
-        private ObservableCollection<EditComboBoxItem> items;
-        private EditComboBoxItem previousSelection;
-        private const string ActionNewName = "<New...>";
-        private const string ActionDelName = "<Delete...>";
-        public EditComboBoxActions(EditComboBox comboBox)
+        private ObservableCollection<EditComboBoxItem> _items;
+        private const string newItemPrefix = "New #";
+        public EditComboBoxActions(ObservableCollection<EditComboBoxItem> items)
         {
-            editCombo = comboBox;
-            items = editCombo.ItemsSource;
-            editCombo.PART_Combo.SelectionChanged += PART_Combo_SelectionChanged;
-            editCombo.PART_Combo.TextInput += PART_Combo_TextInput;
+            _items = items;
             FillDefaultActions();
-        }
-
-        void PART_Combo_TextInput(object sender, System.Windows.Input.TextCompositionEventArgs e)
-        {
-            var text = e.Text;
-            //TODO rename item
-        }
-
-        void PART_Combo_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {            
-            //TODO call actions
-            previousSelection = editCombo.PART_Combo.SelectedItem as EditComboBoxItem;
         }
 
         private void FillDefaultActions()
         {
-            if (items == null)
+            if (_items == null)
                 return;
 
-            if( !items.Any( item => item.Title.Equals(ActionNewName, StringComparison.InvariantCultureIgnoreCase)))
+            var defaultCommands = new Dictionary<string, Action>() { 
+                {"<New...>", Add},
+                {"<Delete...>", Del},
+            };
+
+            foreach( var item in _items )
             {
-                items.Insert(0, new EditComboBoxItem() { Title = ActionNewName, SelectAction = AddAction });
-                items.Insert(1, new EditComboBoxItem() { Title = ActionDelName, SelectAction = DelAction });
+                if( item.SelectAction == null )
+                    item.SelectAction = () => Select(item);
             }
+
+            for (int i = 0; i < defaultCommands.Count; i++)
+                _items.Insert(i, new EditComboBoxItem() { 
+                    Title = defaultCommands.Keys.ElementAt(i), 
+                    SelectAction = defaultCommands.Values.ElementAt(i), 
+                    IsUndeletable = true, 
+                    IsUnselectable = true 
+                });
+
         }
 
-        private void AddAction()
+        public Action<EditComboBoxItem> AddAction { get; set; }
+        public Action<EditComboBoxItem> DelAction { get; set; }
+        public Action<EditComboBoxItem> SelectAction { get; set; }
+
+        private void Add()
         {
-            items.Add(new EditComboBoxItem() { Title = "New #" + items.Count(item => item.Title.StartsWith("New #"))+1, SelectAction = SelAction });
+            var current = _items.FirstOrDefault(item => !item.IsUnselectable && item.IsCurrent);
+            if (current != null)
+                current.IsCurrent = false;
+
+            var newItem = new EditComboBoxItem()
+            {
+                Title = String.Format("{0}{1}",newItemPrefix, _items.Count(item => item.Title.StartsWith(newItemPrefix)) + 1),
+                IsUnselectable = false,
+                IsCurrent = true,
+            };
+            newItem.SelectAction = () => Select(newItem);
+
+            _items.Add(newItem);
+
+            if (AddAction != null)
+                AddAction(newItem);
         }
 
-        private void DelAction()
+        private void Del()
         {
-            
+            _items.RemoveAll(item => !item.IsUndeletable && item.IsCurrent == true);
+            var firstNonCommand = _items.FirstOrDefault(item => !item.IsUnselectable);
+            if (firstNonCommand != null)
+                firstNonCommand.IsCurrent = true;
+
+            if (DelAction != null)
+                DelAction(firstNonCommand);
         }
 
-        private void SelAction()
+        private void Select(EditComboBoxItem item)
         {
+            var currentItem = _items.FirstOrDefault(i => i.IsCurrent);
+            if( currentItem != null )
+                currentItem.IsCurrent = false;
 
+            item.IsCurrent = true;
+
+            if (SelectAction != null)
+                SelectAction(item);
         }
 
     }

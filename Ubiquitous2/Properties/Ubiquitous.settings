@@ -2,10 +2,10 @@
 <SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="UB.Properties" GeneratedClassName="Ubiquitous">
   <Profiles />
   <Settings>
-    <Setting Name="LoremIpsum" Provider="PortableSettingsProvider" Type="System.String" Scope="User">
+    <Setting Name="LoremIpsum" Provider="PortableSettingsProvider" Roaming="true" Type="System.String" Scope="User">
       <Value Profile="(Default)">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</Value>
     </Setting>
-    <Setting Name="Config" Provider="PortableSettingsProvider" Type="UB.Model.ConfigSections" Scope="User">
+    <Setting Name="Config" Provider="PortableSettingsProvider" Roaming="true" Type="UB.Model.ConfigSections" Scope="User">
       <Value Profile="(Default)" />
     </Setting>
   </Settings>

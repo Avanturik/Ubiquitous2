@@ -16,6 +16,27 @@ namespace UB.Model
             CurrentGame = new Game();
         }
 
+        public StreamInfo GetCopy()
+        {
+            var result = new StreamInfo() { 
+                CanBeChanged = this.CanBeChanged,
+                CanBeRead = this.CanBeRead,
+                ChatName = this.ChatName,
+                CurrentGame = new Game()
+                {
+                    Id = this.CurrentGame.Id,
+                    Name = this.CurrentGame.Name,
+                },
+                Description = this.Description,
+                HasDescription = this.HasDescription,
+                HasGame = this.HasGame,
+                HasTopic = this.HasTopic,
+                Topic = this.Topic
+
+            };
+            return result;
+        }
+
         /// <summary>
         /// The <see cref="ChatName" /> property's name.
         /// </summary>
@@ -27,6 +48,7 @@ namespace UB.Model
         /// Sets and gets the ChatName property.
         /// Changes to that property's value raise the PropertyChanged event. 
         /// </summary>
+        [XmlAttribute]
         public string ChatName
         {
             get

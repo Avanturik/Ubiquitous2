@@ -32,7 +32,6 @@ namespace UB.LastFM.Radio
 		
 		public StationURI(string uri)
 		{
-			// TODO
 		}
 		
 		public StationURI(string stationType, string resourceName, string subType)
