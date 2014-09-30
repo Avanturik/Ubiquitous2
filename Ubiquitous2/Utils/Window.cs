@@ -90,10 +90,10 @@ namespace UB.Utils
 
         public static void SetGlobalStatus(WindowState state)
         {
-            StatusWindow.WindowState = state != WindowState.Maximized ? state : StatusWindow.WindowState;
-            MusicTickerWindow.WindowState = state != WindowState.Maximized ? state : MusicTickerWindow.WindowState;
-            SettingsWindow.WindowState = state != WindowState.Maximized ? state : SettingsWindow.WindowState;
-            DashboardWindow.WindowState = state != WindowState.Maximized ? state : DashboardWindow.WindowState;
+            var windows = new Window[] { StatusWindow, MusicTickerWindow, SettingsWindow, DashboardWindow };
+            if (state != WindowState.Maximized)
+                foreach (var win in windows)
+                    win.WindowState = state;
         }
 
         public static void ReloadAllWindows()

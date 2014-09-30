@@ -46,7 +46,7 @@ namespace UB.Interactivity
 
         void window_LocationChanged(object sender, EventArgs e)
         {
-            if (currentSettings != null)
+            if (currentSettings != null && window.WindowState == WindowState.Normal)
             {
                 var currentPlacement = window.GetPlacement();
                 currentSettings.Top = currentPlacement.Top;
@@ -56,7 +56,7 @@ namespace UB.Interactivity
 
         void window_SizeChanged(object sender, SizeChangedEventArgs e)
         {
-            if (currentSettings != null)
+            if (currentSettings != null && window.WindowState == WindowState.Normal)
             {
                 var currentPlacement = window.GetPlacement();
                 currentSettings.Height = currentPlacement.Height;

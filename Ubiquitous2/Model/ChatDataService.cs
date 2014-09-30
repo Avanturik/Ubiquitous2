@@ -174,7 +174,8 @@ namespace UB.Model
                     Task.Factory.StartNew(() => {
                         var c = chat;
                         c.Start(); 
-                        ChatStatusHandler(c);
+                        if( ChatStatusHandler != null )
+                            ChatStatusHandler(c);
                     });
                 }
             });

@@ -141,6 +141,7 @@
     <Compile Include="Controls\EditComboBox\EditComboBox.xaml.cs">
       <DependentUpon>EditComboBox.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\EditComboBox\EditComboBoxActions.cs" />
     <Compile Include="Controls\EditComboBox\EditComboBoxItem.cs" />
     <Compile Include="Controls\SmoothPanel\DataBindHelper.cs" />
     <Compile Include="Controls\SmoothPanel\IHeightMeasurer.cs" />

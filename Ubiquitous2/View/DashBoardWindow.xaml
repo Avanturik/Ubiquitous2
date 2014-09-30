@@ -37,7 +37,7 @@
                 </Grid.RowDefinitions>                
                 <StackPanel Grid.Row="0" Orientation="Horizontal" VerticalAlignment="Center" Margin="0,8" Height="26">
                     <Label HorizontalAlignment="Left" VerticalAlignment="Center" FontWeight="Bold">Preset:</Label>
-                    <Controls:EditComboBox Items="{Binding TopicPresets,Mode=TwoWay}" MinWidth="100"/>                    
+                    <Controls:EditComboBox ItemsSource="{Binding TopicPresets,Mode=TwoWay}" MinWidth="100"/>                    
                     <Button Content="Apply" Padding="15,1" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="13,0,0,0"/>
                 </StackPanel>
                 <TextBlock Grid.Row="1" Margin="5,0,0,0">Batch topic change. Anonymous accounts are hidden!</TextBlock>

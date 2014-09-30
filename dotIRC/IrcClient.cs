@@ -1223,8 +1223,7 @@ namespace dotIRC
             }
             else
             {
-                throw new ArgumentException(string.Format(
-                    Properties.Resources.MessageInvalidSource, prefix), "prefix");
+                return null;
             }
         }
 

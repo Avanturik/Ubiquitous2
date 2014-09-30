@@ -13,6 +13,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using UB.Utils;
 
 namespace UB.Controls
 {
@@ -23,121 +24,78 @@ namespace UB.Controls
     {
         private bool isActionDisabled = false;
         private EditComboBoxItem lastSelection = null;
+        private EditComboBoxActions comboActions;
         private const int StandardCommandsNumber = 2;
         public EditComboBox()
         {
             InitializeComponent();
-            PART_Combo.SelectionChanged += (o,e) => {
-                var selectedItem = PART_Combo.SelectedItem as EditComboBoxItem;
-                var text = PART_Combo.Text;
-                if (selectedItem == null)
-                {
-                    if( !String.IsNullOrWhiteSpace(text) && lastSelection != null) 
-                    {
-                        lastSelection.Title = text;
-                    }
-                    return;
-                }
-
-                    
-                if (PART_Combo.SelectedIndex > StandardCommandsNumber - 1)
-                    lastSelection = selectedItem;
-
-                if (selectedItem.SelectAction != null && !isActionDisabled)
-                    selectedItem.SelectAction();
-            };
+            
         }
 
-        /// <summary>
-        /// The <see cref="Items" /> dependency property's name.
-        /// </summary>
-        public const string ItemsPropertyName = "Items";
 
         /// <summary>
-        /// Gets or sets the value of the <see cref="Items" />
+        /// The <see cref="ItemsSource" /> dependency property's name.
+        /// </summary>
+        public const string ItemsSourcePropertyName = "ItemsSource";
+
+        /// <summary>
+        /// Gets or sets the value of the <see cref="ItemsSource" />
         /// property. This is a dependency property.
         /// </summary>
-        public ObservableCollection<EditComboBoxItem> Items
+        public ObservableCollection<EditComboBoxItem> ItemsSource
         {
             get
             {
-                return (ObservableCollection<EditComboBoxItem>)GetValue(ItemsProperty);
+                return (ObservableCollection<EditComboBoxItem>)GetValue(ItemsSourceProperty);
             }
             set
             {
-                SetValue(ItemsProperty, value);
-            }
-        }
-
-        private void AddNewItem()
-        {
-            var source = PART_Combo.ItemsSource as ObservableCollection<EditComboBoxItem>;
-            if( source == null )
-                return;
-
-            var newTitle = "New #";
-            var newItemIndex = 1;
-            while (source.Any(item => item.Title.Equals(String.Format("{0}{1}", newTitle, newItemIndex))))
-                newItemIndex++;
-
-            var newItem = new EditComboBoxItem() { Title = String.Format("{0}{1}",newTitle,newItemIndex) };
-            source.Add(newItem);
-            isActionDisabled = true;
-            PART_Combo.SelectedItem = newItem;
-            isActionDisabled = false;
-
-        }
-
-        private void DeleteCurrent()
-        {
-            if (Items == null)
-                return;
-
-            if( Items.Count > StandardCommandsNumber && lastSelection != null )
-            {
-                var source = PART_Combo.ItemsSource as ObservableCollection<EditComboBoxItem>;
-                source.Remove(lastSelection);
+                SetValue(ItemsSourceProperty, value);
             }
         }
 
         /// <summary>
-        /// Identifies the <see cref="Items" /> dependency property.
+        /// Identifies the <see cref="ItemsSource" /> dependency property.
         /// </summary>
-        public static readonly DependencyProperty ItemsProperty = DependencyProperty.Register(
-            ItemsPropertyName,
+        public static readonly DependencyProperty ItemsSourceProperty = DependencyProperty.Register(
+            ItemsSourcePropertyName,
             typeof(ObservableCollection<EditComboBoxItem>),
             typeof(EditComboBox),
             new UIPropertyMetadata(null, (o, e) => {
                 var editCombo = o as EditComboBox;
-                if (editCombo == null)
-                    return;
-
-                var newCollection = e.NewValue as ObservableCollection<EditComboBoxItem>;
-                if( newCollection == null )
-                {
-                    editCombo.PART_Combo.ItemsSource = null;
-                    return;
-                }
-
-                if( !newCollection.Any( item => item.Title == "<New...>" ))
-                {
-                    newCollection.Insert(0, new EditComboBoxItem()
-                    {
-                        Title = "<New...>",
-                        SelectAction = () => editCombo.AddNewItem(),
-                    });
-                    newCollection.Insert(1, new EditComboBoxItem()
-                    {
-                        Title = "<Delete...>",
-                        SelectAction = () => editCombo.DeleteCurrent(),
-                    });
-                }
-
-                editCombo.PART_Combo.ItemsSource = newCollection;
-                editCombo.isActionDisabled = true;
-                editCombo.PART_Combo.SelectedIndex = 0;
-                editCombo.isActionDisabled = false;
+                if( editCombo != null)
+                    editCombo.comboActions = new EditComboBoxActions(editCombo);
             }));
+
+        /// <summary>
+        /// The <see cref="Text" /> dependency property's name.
+        /// </summary>
+        public const string TextPropertyName = "Text";
+
+        /// <summary>
+        /// Gets or sets the value of the <see cref="Text" />
+        /// property. This is a dependency property.
+        /// </summary>
+        public string Text
+        {
+            get
+            {
+                return (string)GetValue(TextProperty);
+            }
+            set
+            {
+                SetValue(TextProperty, value);
+            }
+        }
+
+        /// <summary>
+        /// Identifies the <see cref="Text" /> dependency property.
+        /// </summary>
+        public static readonly DependencyProperty TextProperty = DependencyProperty.Register(
+            TextPropertyName,
+            typeof(string),
+            typeof(EditComboBox),
+            new UIPropertyMetadata(null));
 
     }
 }

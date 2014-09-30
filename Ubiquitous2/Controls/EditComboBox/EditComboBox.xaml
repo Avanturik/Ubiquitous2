@@ -6,6 +6,12 @@
              mc:Ignorable="d" 
              d:DesignHeight="29" d:DesignWidth="138">
     <Grid>
-        <ComboBox x:Name="PART_Combo" IsEditable="True"></ComboBox>
+        <ComboBox x:Name="PART_Combo" 
+                  IsEditable="True"
+                  DisplayMemberPath="Title" 
+                  IsReadOnly="False" 
+                  Text="{Binding Text, RelativeSource={RelativeSource AncestorType=UserControl}, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
+                  ItemsSource="{Binding ItemsSource, RelativeSource={RelativeSource AncestorType=UserControl}, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+        </ComboBox>
     </Grid>
 </UserControl>
