@@ -128,7 +128,11 @@ namespace UB.ViewModel
                                                       if (newInfo == null)
                                                           continue;
 
-                                                      streamTopic.Info = newInfo.GetCopy();
+                                                      streamTopic.Info.CurrentGame.Id = newInfo.CurrentGame.Id;
+                                                      streamTopic.Info.CurrentGame.Name = newInfo.CurrentGame.Name;
+                                                      streamTopic.Info.Topic = newInfo.Topic;
+                                                      streamTopic.Info.Description = newInfo.Description;
+
                                                   }
                                               }  
 
