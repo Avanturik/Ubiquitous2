@@ -16,7 +16,7 @@ namespace UB.Controls
         /// </summary>
         public const string LinkedObjectPropertyName = "LinkedObject";
 
-        private object _myProperty = null;
+        private object _linkedObject = null;
 
         /// <summary>
         /// Sets and gets the LinkedObject property.
@@ -26,18 +26,18 @@ namespace UB.Controls
         {
             get
             {
-                return _myProperty;
+                return _linkedObject;
             }
 
             set
             {
-                if (_myProperty == value)
+                if (_linkedObject == value)
                 {
                     return;
                 }
 
                 RaisePropertyChanging(LinkedObjectPropertyName);
-                _myProperty = value;
+                _linkedObject = value;
                 RaisePropertyChanged(LinkedObjectPropertyName);
             }
         }

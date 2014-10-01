@@ -33,6 +33,16 @@ namespace UB.Controls
             {
                 if( item.SelectAction == null )
                     item.SelectAction = () => Select(item);
+
+                item.PropertyChanged += (o, e) =>
+                {
+                    if (e.PropertyName == EditComboBoxItem.TitlePropertyName)
+                    {
+                        Rename(o as EditComboBoxItem);
+                    }
+
+                };
+
             }
 
             for (int i = 0; i < defaultCommands.Count; i++)
@@ -48,6 +58,12 @@ namespace UB.Controls
         public Action<EditComboBoxItem> AddAction { get; set; }
         public Action<EditComboBoxItem> DelAction { get; set; }
         public Action<EditComboBoxItem> SelectAction { get; set; }
+        public Action<EditComboBoxItem> RenameAction { get; set; }
+        private void Rename(EditComboBoxItem item)
+        {
+            if (RenameAction != null)
+                RenameAction(item);
+        }
 
         private void Add()
         {
@@ -71,13 +87,19 @@ namespace UB.Controls
 
         private void Del()
         {
-            _items.RemoveAll(item => !item.IsUndeletable && item.IsCurrent == true);
-            var firstNonCommand = _items.FirstOrDefault(item => !item.IsUnselectable);
-            if (firstNonCommand != null)
-                firstNonCommand.IsCurrent = true;
 
+            var oldItem = _items.FirstOrDefault(item => !item.IsUndeletable && item.IsCurrent == true);
+            EditComboBoxItem oldItemBackup = null;
+            
+            if (oldItem != null)
+                oldItemBackup = new EditComboBoxItem() { 
+                    Title = oldItem.Title,
+                    LinkedObject = oldItem.LinkedObject
+                };
+            _items.RemoveAll(item => !item.IsUndeletable && item.IsCurrent == true);
+            
             if (DelAction != null)
-                DelAction(firstNonCommand);
+                DelAction(oldItemBackup);
         }
 
         private void Select(EditComboBoxItem item)

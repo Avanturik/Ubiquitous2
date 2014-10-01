@@ -41,11 +41,17 @@ namespace UB.ViewModel
             TopicPresets = new ObservableCollection<EditComboBoxItem>();
             _streamDataService.GetPresets((presets) => {
                 if (presets != null)
-                    presets.ForEach(preset => TopicPresets.Add(new EditComboBoxItem()
-                    {
-                        LinkedObject = preset,
-                        Title = preset.PresetName,
-                    }));
+                {
+                    presets.ForEach(preset => {
+                        var editComboItem = new EditComboBoxItem()
+                        {
+                            LinkedObject = preset,
+                            Title = preset.PresetName,
+                        };
+                        TopicPresets.Add(editComboItem);
+
+                    });
+                }
             });
         }
 
@@ -91,7 +97,9 @@ namespace UB.ViewModel
                     ?? (_renamePreset = new RelayCommand(
                                           () =>
                                           {
-                                              
+                                              var selected = TopicPresets.FirstOrDefault(item => item.IsCurrent);
+                                              if (selected != null)
+                                                  (selected.LinkedObject as StreamInfoPreset).PresetName = selected.Title;
                                           }));
             }
         }
@@ -126,20 +134,20 @@ namespace UB.ViewModel
             }
         }
 
-        private RelayCommand _deletePreset;
+        private RelayCommand<EditComboBoxItem> _deletePreset;
 
         /// <summary>
         /// Gets the DeletePreset.
         /// </summary>
-        public RelayCommand DeletePreset
+        public RelayCommand<EditComboBoxItem> DeletePreset
         {
             get
             {
                 return _deletePreset
-                    ?? (_deletePreset = new RelayCommand(
-                                          () =>
+                    ?? (_deletePreset = new RelayCommand<EditComboBoxItem>(
+                                          (item) =>
                                           {
-                                              
+                                              _streamDataService.RemovePreset(item.LinkedObject as StreamInfoPreset);
                                           }));
             }
         }

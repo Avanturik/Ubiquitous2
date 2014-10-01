@@ -63,5 +63,9 @@ namespace UB.Model
         {
             GetStreamTopics((streams) => streams.ForEach(stream => stream.SetTopic()));
         }
+        public void RemovePreset(StreamInfoPreset preset)
+        {
+            presets.Remove(preset);
+        }
     }
 }

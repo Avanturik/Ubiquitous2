@@ -111,11 +111,11 @@ namespace UB.Controls
         /// Gets or sets the value of the <see cref="CommandDelete" />
         /// property. This is a dependency property.
         /// </summary>
-        public RelayCommand CommandDelete
+        public RelayCommand<EditComboBoxItem> CommandDelete
         {
             get
             {
-                return (RelayCommand)GetValue(CommandDeleteProperty);
+                return (RelayCommand<EditComboBoxItem>)GetValue(CommandDeleteProperty);
             }
             set
             {
@@ -128,7 +128,7 @@ namespace UB.Controls
         /// </summary>
         public static readonly DependencyProperty CommandDeleteProperty = DependencyProperty.Register(
             CommandDeletePropertyName,
-            typeof(RelayCommand),
+            typeof(RelayCommand<EditComboBoxItem>),
             typeof(EditComboBox),
             new UIPropertyMetadata(null));
 
@@ -202,7 +202,6 @@ namespace UB.Controls
 
                 editCombo.comboActions.AddAction = (item) =>
                 {
-                    Log.WriteInfo("add" + item.Title);
                     editCombo.PART_Combo.SelectedItem = item;
 
                     if (editCombo.CommandAdd != null)
@@ -210,56 +209,25 @@ namespace UB.Controls
                 };
                 editCombo.comboActions.DelAction = (item) =>
                 {
-                    Log.WriteInfo("delete current");
-                    editCombo.PART_Combo.SelectedItem = item;
+                    var newCurrent = editCombo.ItemsSource.FirstOrDefault( comboItem => !comboItem.IsUnselectable );
+                    if( newCurrent != null)
+                        newCurrent.IsCurrent = true;
+                    
+                    editCombo.PART_Combo.SelectedItem = newCurrent;
 
-                    if (editCombo.CommandDelete != null)
-                        editCombo.CommandDelete.Execute(null);
+                    if (editCombo.CommandDelete != null && item != null)
+                        editCombo.CommandDelete.Execute(item);
                 };
                 editCombo.comboActions.SelectAction = (item) =>
                 {
                     if (editCombo.CommandSelect != null)
                         editCombo.CommandSelect.Execute(null);
-
-                    Log.WriteInfo("select:" + item.Title);
                 };
-            }));
-
-        /// <summary>
-        /// The <see cref="Text" /> dependency property's name.
-        /// </summary>
-        public const string TextPropertyName = "Text";
-
-        /// <summary>
-        /// Gets or sets the value of the <see cref="Text" />
-        /// property. This is a dependency property.
-        /// </summary>
-        public string Text
-        {
-            get
-            {
-                return (string)GetValue(TextProperty);
-            }
-            set
-            {
-                SetValue(TextProperty, value);
-            }
-        }
-
-        /// <summary>
-        /// Identifies the <see cref="Text" /> dependency property.
-        /// </summary>
-        public static readonly DependencyProperty TextProperty = DependencyProperty.Register(
-            TextPropertyName,
-            typeof(string),
-            typeof(EditComboBox),
-            new UIPropertyMetadata(null, (o, e) => {
-                var command = o.With(x => o as EditComboBox)
-                    .With(x => x.CommandRename);
-
-                if( command != null )
-                    command.Execute(null);
-
+                editCombo.comboActions.RenameAction = (item) =>
+                    {
+                        if (editCombo.CommandRename != null)
+                            editCombo.CommandRename.Execute(null);
+                    };
             }));
 
     }
