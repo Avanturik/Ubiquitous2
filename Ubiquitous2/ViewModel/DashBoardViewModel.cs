@@ -20,41 +20,44 @@ namespace UB.ViewModel
     public class DashBoardViewModel : ViewModelBase
     {
         private IChatDataService _dataService;
+        private IStreamPageDataService _streamDataService;
         /// <summary>
         /// Initializes a new instance of the DashBoardViewModel class.
         /// </summary>
         [PreferredConstructor]
-        public DashBoardViewModel(IChatDataService dataService)
+        public DashBoardViewModel(IChatDataService dataService, IStreamPageDataService streamDataService)
         {
             _dataService = dataService;
+            _streamDataService = streamDataService;
             Initialize();
         }
 
         private void Initialize()
         {
 
-            //Fill stream topic sections with current web values
-            foreach (var chat in _dataService.Chats)
-            {
-                if (chat is IStreamTopic)
-                {
-                    var streamTopic = chat as IStreamTopic;
-                    streamTopic.Info.ChatName = chat.ChatName;
-                    StreamTopics.Add(new StreamTopicSectionViewModel(streamTopic));
-                }
-            }
+            InitializeTopicSections();
             
             //Preset combobox
             TopicPresets = new ObservableCollection<EditComboBoxItem>();
-            foreach( var preset in Ubiquitous.Default.Config.StreamInfoPresets )
-            {
-                TopicPresets.Add(new EditComboBoxItem() { 
-                    LinkedObject = preset,
-                    Title = preset.PresetName,
-                });
-            }
+            _streamDataService.GetPresets((presets) => {
+                if (presets != null)
+                    presets.ForEach(preset => TopicPresets.Add(new EditComboBoxItem()
+                    {
+                        LinkedObject = preset,
+                        Title = preset.PresetName,
+                    }));
+            });
         }
 
+        #region Stream topic       
+        private void InitializeTopicSections()
+        {
+            StreamTopics.Clear();
+            _streamDataService.GetStreamTopics((topics) => {
+                if (topics != null)
+                    topics.ForEach( topic => StreamTopics.Add(new StreamTopicSectionViewModel(topic)) );
+            });
+        }
         private RelayCommand _loadWeb;
 
         /// <summary>
@@ -69,15 +72,8 @@ namespace UB.ViewModel
                                           () =>
                                           {
                                               StreamTopics.Clear();
-                                              foreach (var chat in _dataService.Chats)
-                                              {
-                                                  if (chat is IStreamTopic)
-                                                  {
-                                                      var streamTopic = chat as IStreamTopic;
-                                                      streamTopic.GetTopic();
-                                                      StreamTopics.Add(new StreamTopicSectionViewModel(streamTopic));
-                                                  }
-                                              }                                              
+                                              _streamDataService.LoadTopicsFromWeb();
+                                              InitializeTopicSections();
                                           }));
             }
         }
@@ -118,24 +114,14 @@ namespace UB.ViewModel
 
                                               if (linkedSettings == null)
                                                   return;
-
-                                              foreach (var chat in _dataService.Chats)
-                                              {
-                                                  if (chat is IStreamTopic)
-                                                  {
-                                                      var streamTopic = chat as IStreamTopic;
-                                                      var newInfo = linkedSettings.StreamTopics.FirstOrDefault(item => item.ChatName == chat.ChatName);
-                                                      if (newInfo == null)
-                                                          continue;
-
-                                                      streamTopic.Info.CurrentGame.Id = newInfo.CurrentGame.Id;
-                                                      streamTopic.Info.CurrentGame.Name = newInfo.CurrentGame.Name;
-                                                      streamTopic.Info.Topic = newInfo.Topic;
-                                                      streamTopic.Info.Description = newInfo.Description;
-
-                                                  }
-                                              }  
-
+                                              _streamDataService.GetStreamTopics((streams) => {
+                                                  streams.ForEach(stream => {
+                                                      var newInfo = linkedSettings.StreamTopics.FirstOrDefault(item => item.ChatName == stream.Info.ChatName);
+                                                      if (newInfo != null)
+                                                          stream.Info = newInfo;
+                                                  });
+                                              });
+                                              InitializeTopicSections();
                                           }));
             }
         }
@@ -172,18 +158,8 @@ namespace UB.ViewModel
                                           () =>
                                           {
                                               var selected = TopicPresets.FirstOrDefault( item => item.IsCurrent );
-                                              if( selected == null )
-                                                  return;
-
-                                              var newPreset = new StreamInfoPreset() { PresetName = selected.Title };
-                                              newPreset.StreamTopics = new List<StreamInfo>();
-                                              foreach( var sectionViewMmodel in StreamTopics )
-                                              {
-                                                  var info = sectionViewMmodel.StreamInfo;
-                                                  newPreset.StreamTopics.Add( info.GetCopy() );
-                                              }
-
-                                              Ubiquitous.Default.Config.StreamInfoPresets.Add( newPreset );
+                                              if( selected != null )
+                                                selected.LinkedObject = _streamDataService.AddPreset(selected.Title);
                                           }));
             }
         }
@@ -274,5 +250,6 @@ namespace UB.ViewModel
                 RaisePropertyChanged(StreamTopicsPropertyName);
             }
         }
+        #endregion
     }
 }

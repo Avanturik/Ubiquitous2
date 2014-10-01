@@ -44,7 +44,7 @@ namespace UB.Model
                 HasDescription = false,
                 HasGame = true,
                 HasTopic = true,
-                ChatName = this.ChatName,
+                ChatName = Config.ChatName,
             };
             
 

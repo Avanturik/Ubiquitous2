@@ -154,9 +154,11 @@
     <Compile Include="Converter\BoolToScrollBarVisibility - Copy.cs" />
     <Compile Include="Interactivity\UnclosableWindow.cs" />
     <Compile Include="Model\Game.cs" />
+    <Compile Include="Model\IStreamPageDataService.cs" />
     <Compile Include="Model\IStreamTopic.cs" />
     <Compile Include="Model\StreamInfo.cs" />
     <Compile Include="Model\StreamInfoPreset.cs" />
+    <Compile Include="Model\StreamPageDataService.cs" />
     <Compile Include="Model\YesNoDialog.cs" />
     <Compile Include="Utils\Clone.cs" />
     <Compile Include="ViewModel\DashBoardViewModel.cs" />
