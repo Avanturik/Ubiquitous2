@@ -1,15 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Web;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using UB.Utils;
 
 namespace UB.Model
 {
-    class GamingLiveChat : IChat
+    class GamingLiveChat : IChat, IStreamTopic
     {
         public event EventHandler<ChatServiceEventArgs> MessageReceived;
         private WebClientBase loginWebClient = new WebClientBase();
@@ -29,6 +31,17 @@ namespace UB.Model
 
             ContentParsers.Add(MessageParser.ParseURLs);
             ContentParsers.Add(MessageParser.ParseSimpleImageTags);
+
+            Info = new StreamInfo()
+            {
+                HasDescription = false,
+                HasGame = true,
+                CurrentGame = new Game(),
+                HasTopic = true,
+                ChatName = Config.ChatName,
+            };
+
+            Games = new ObservableCollection<Game>();
 
             Enabled = Config.Enabled;
         }
@@ -185,7 +198,10 @@ namespace UB.Model
             }
 
             if (!isAnonymous)
+            {
                 Status.IsLoggedIn = true;
+                GetTopic();
+            }
 
             return true;
         }
@@ -414,18 +430,84 @@ namespace UB.Model
 
         public Func<string, object> RequestData
         {
-            get
-            {
-                throw new NotImplementedException();
-            }
-            set
-            {
-                throw new NotImplementedException();
-            }
+            get;
+            set;
         }
 
 
         public bool HideViewersCounter
+        {
+            get;
+            set;
+
+        }
+
+        public StreamInfo Info
+        {
+            get;
+            set;
+        }
+
+        public ObservableCollection<Game> Games
+        {
+            get;
+            set;
+
+        }
+
+        public string SearchQuery
+        {
+            get;
+            set;
+
+        }
+
+        public void QueryGameList(string gameName, Action callback)
+        {
+
+        }
+
+        JToken GetLiveStreamInfo()
+        {
+            var getUrl = @"https://api.gaminglive.tv/channels/{0}?authToken={1}";
+            var userName = Config.GetParameterValue("Username") as string;
+            var authToken = Config.GetParameterValue("AuthToken") as string;
+
+            return this.With(x => loginWebClient.Download(String.Format(getUrl, HttpUtility.UrlEncode(userName.ToLower()), authToken)))
+                            .With(x => JToken.Parse(x));
+
+        }
+        public void GetTopic()
+        {
+            if (!Status.IsLoggedIn)
+                return;
+
+            Task.Factory.StartNew(() =>
+            {
+                var jsonInfo = GetLiveStreamInfo();             
+                
+                if (jsonInfo == null)
+                    return;
+
+                Info.Topic = jsonInfo["name"].ToObject<string>();
+                
+                //TODO: Implement Gaminglive.tv Game info when it will be available
+                //Info.CurrentGame.Name = 
+                //Info.CurrentGame.Id = 
+
+                Info.CanBeRead = true;
+                Info.CanBeChanged = true;
+
+                if (StreamTopicAcquired != null)
+                    UI.Dispatch(() => StreamTopicAcquired());
+            });
+        }
+
+        public void SetTopic()
+        {
+        }
+
+        public Action StreamTopicAcquired
         {
             get;
             set;
