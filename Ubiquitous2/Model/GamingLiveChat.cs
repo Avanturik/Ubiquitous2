@@ -231,6 +231,7 @@ namespace UB.Model
             }
             else
             {
+                isAnonymous = false;
                 Config.SetParameterValue("AuthToken", authToken);
                 return true;
             }
@@ -266,6 +267,7 @@ namespace UB.Model
         
             if( isOk && !String.IsNullOrWhiteSpace(NickName) )
             {
+                isAnonymous = false;
                 return true;
             }
 
