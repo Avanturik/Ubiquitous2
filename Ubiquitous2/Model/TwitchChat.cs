@@ -46,7 +46,7 @@ namespace UB.Model
                 HasTopic = true,
                 ChatName = Config.ChatName,
             };
-            
+
 
             Games = new ObservableCollection<Game>();
 

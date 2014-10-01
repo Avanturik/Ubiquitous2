@@ -86,7 +86,7 @@ namespace UB.ViewModel
                                               Task.Factory.StartNew(() => {
                                                   _streamTopic.QueryGameList(StreamInfo.CurrentGame.Name, () =>
                                                   {
-                                                      GameSuggestions = new ObservableCollection<string>(_streamTopic.Games.ToList().Select(game => game.Name));
+                                                      GameSuggestions = new ObservableCollection<string>(_streamTopic.Games.OrderBy( item => item.Name).Select(game => game.Name));
                                                   });                                              
                                               });
                                           }));

@@ -146,6 +146,31 @@ namespace UB.Model
                 return result;
             }
 
+            public Stream PutStream(string url, Stream stream)
+            {
+                try
+                {
+                    var request = (HttpWebRequest)WebRequest.Create(url);
+                    request.Method = "PUT";
+                    if (stream != null)
+                    {
+                        request.ContentLength = stream.Length;
+                        Stream dataStream = request.GetRequestStream();
+                        stream.CopyTo(dataStream);
+                        stream.Flush();
+                        dataStream.Flush();
+                        dataStream.Close();
+                    }
+
+                    HttpWebResponse response = (HttpWebResponse)request.GetResponse();
+                    return response.GetResponseStream();
+                }
+                catch
+                {
+                    return null;
+                }
+            }
+
             public void SetCookie(string name, string value, string domain)
             {
                 if (name == null || value == null)

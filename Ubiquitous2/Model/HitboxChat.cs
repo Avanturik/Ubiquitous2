@@ -1,17 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Net;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Web;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using UB.Utils;
 
 namespace UB.Model
 {
-    public class HitboxChat : IChat
+    public class HitboxChat : IChat, IStreamTopic
     {
         public event EventHandler<ChatServiceEventArgs> MessageReceived;
         private WebClientBase loginWebClient = new WebClientBase();
@@ -27,6 +29,7 @@ namespace UB.Model
         private object channelsLock = new object();
         private object pollerLock = new object();
         private object toolTipLock = new object();
+        private object lockSearch = new object();
 
         public HitboxChat(ChatConfig config)
         {
@@ -41,6 +44,17 @@ namespace UB.Model
             ContentParsers.Add(MessageParser.RemoveRedundantTags);
             ContentParsers.Add(MessageParser.ParseURLs);
             ContentParsers.Add(MessageParser.ParseSpaceSeparatedEmoticons);
+
+            Info = new StreamInfo()
+            {
+                HasDescription = false,
+                HasGame = true,
+                HasTopic = true,
+                ChatName = Config.ChatName,
+            };
+
+            Games = new ObservableCollection<Game>();
+
 
             Enabled = Config.Enabled;
         }
@@ -213,7 +227,10 @@ namespace UB.Model
                 return false;
             }
             if (!isAnonymous)
+            {
                 Status.IsLoggedIn = true;
+                GetTopic();
+            }
 
             return true;
         }
@@ -505,17 +522,10 @@ namespace UB.Model
         }
 
 
-
         public Func<string, object> RequestData
         {
-            get
-            {
-                throw new NotImplementedException();
-            }
-            set
-            {
-                throw new NotImplementedException();
-            }
+            get;
+            set;
         }
 
 
@@ -525,6 +535,176 @@ namespace UB.Model
             set;
 
         }
+
+        #region IStreamTopic
+        public StreamInfo Info
+        {
+            get;
+            set;
+
+        }
+
+        public ObservableCollection<Game> Games
+        {
+            get;
+            set;
+
+        }
+
+        public string SearchQuery
+        {
+            get;
+            set;
+
+        }
+
+        private dynamic[] GetHitboxGameList(string partName, int count = 100)
+        {
+            var url = "https://www.hitbox.tv/api/games?q={0}&limit={2}&_={1}";
+
+            return this.With(x => loginWebClient.Download(String.Format(url, HttpUtility.UrlEncode(partName), Time.UnixTimestamp(),count)))
+                .With(x => JToken.Parse(x))
+                .With(x => x["categories"])
+                .With(x => x.ToArray<dynamic>());
+
+        }
+
+        public void QueryGameList(string gameName, Action callback)
+        {
+            lock (lockSearch)
+            {
+                Log.WriteInfo("Searching hitbox game {0}", gameName);
+                Games.Clear();
+                Games.Add(new Game() { Name = "Loading..." });
+
+                if (callback != null)
+                    UI.Dispatch(() => callback());
+                
+                var jsonGames = GetHitboxGameList(gameName);
+
+                if (jsonGames == null)
+                {
+                    Log.WriteInfo("Hitbox search returned empty result", gameName);
+                    return;
+                }
+
+                Games.Clear();
+                foreach (var obj in jsonGames)
+                {
+                    Games.Add(new Game()
+                    {
+                        Id = obj.category_id,
+                        Name = obj.category_name,
+                    });
+                }
+
+                if (callback != null)
+                    UI.Dispatch(() => callback());
+            }
+
+        }
+
+        public void GetTopic()
+        {
+            if( !Status.IsLoggedIn )
+                return;
+
+            Task.Factory.StartNew(() =>
+            {
+                var jsonInfo = GetLiveStreamInfo();
+
+                if (jsonInfo == null)
+                    return;
+
+                var livestream = this.With(x => jsonInfo["livestream"].ToArray<JToken>())
+                    .With(x => x.Count() <= 0 ? null : x[0].ToObject<JToken>());
+                    
+
+                if (livestream == null)
+                    return;
+
+                Info.Topic = livestream["media_status"].ToObject<string>();
+                Info.CurrentGame.Name = livestream["category_name"].ToObject<string>();
+                Info.CurrentGame.Id = livestream["category_id"].ToObject<string>();
+
+                Info.CanBeRead = true;
+                Info.CanBeChanged = true;
+
+                if (StreamTopicAcquired != null)
+                    UI.Dispatch(() => StreamTopicAcquired());
+
+            });
+        }
+
+        JToken GetLiveStreamInfo()
+        {
+            var getUrl = @"https://www.hitbox.tv/api/media/live/{0}/list?authToken={1}&filter=newfirst&nocache=true&showHidden=true";
+            var userName = Config.GetParameterValue("Username") as string;
+            var authToken = Config.GetParameterValue("AuthToken") as string;
+
+            return this.With(x => loginWebClient.Download(String.Format(getUrl, HttpUtility.UrlEncode(userName.ToLower()), authToken)))
+                            .With(x => JToken.Parse(x));
+            
+        }
+
+        public void SetTopic()
+        {
+            var currentInfo = GetLiveStreamInfo();
+            var livestream = this.With( x => currentInfo )
+                            .With(x => x["livestream"])
+                            .With(x => x[0]);
+
+            if (livestream == null)
+                return;
+
+            currentInfo["livestream"][0]["media_status"] = Info.Topic;
+            
+            if( !String.IsNullOrWhiteSpace( Info.CurrentGame.Name) )
+            {
+                var gameList = GetHitboxGameList( Info.CurrentGame.Name, 1 );                    
+                if( gameList.Count() > 0 )
+                {
+                    var game = gameList[0];
+                    currentInfo["livestream"][0]["category_name"] = Info.CurrentGame.Name;
+                    currentInfo["livestream"][0]["category_id"] = (string)game.category_id;
+                    currentInfo["livestream"][0]["category_name_short"] = (string)game.category_name_short;
+                    currentInfo["livestream"][0]["category_seo_key"] = (string)game.category_seo_key;
+                    currentInfo["livestream"][0]["category_viewers"] = (string)game.category_viewers;
+                    currentInfo["livestream"][0]["category_logo_small"] = (string)game.category_logo_small;
+                    currentInfo["livestream"][0]["category_logo_large"] = (string)game.category_logo_large;
+                    currentInfo["livestream"][0]["category_updated"] = (string)game.category_updated;
+                    currentInfo["livestream"][0]["media_category_id"] = (string)game.category_id;
+                }
+            }
+            
+            
+            Json.SerializeToStream<JToken>(currentInfo, (stream) => {
+                var putUrl = @"https://www.hitbox.tv/api/media/live/{0}/list?authToken={1}&filter=recent&hiddenOnly=false&limit=10&nocache=true&publicOnly=false&search=&showHidden=true&yt=false";
+                var userName = Config.GetParameterValue("Username") as string;
+                var authToken = Config.GetParameterValue("AuthToken") as string;
+
+                if (null == loginWebClient.PutStream(String.Format(putUrl, HttpUtility.UrlEncode(userName.ToLower()), authToken), stream))
+                {
+                    //Authentication data expired ? Let's login again
+                    LoginWithUsername();
+
+                    userName = Config.GetParameterValue("Username") as string;
+                    authToken = Config.GetParameterValue("AuthToken") as string;
+                    stream.Position = 0;
+                    loginWebClient.PutStream(String.Format(putUrl, HttpUtility.UrlEncode(userName.ToLower()), authToken), stream);
+                }
+            });
+            
+            //livestream["category_name"]
+            //livestream["category_id"]
+        }
+
+        public Action StreamTopicAcquired
+        {
+            get;
+            set;
+        }
+        #endregion
     }
 
     public class HitboxChannel
@@ -863,6 +1043,8 @@ namespace UB.Model
     public class HitboxChannelStats
     {
         public HitboxRequest request { get; set; }
+        [JsonProperty( Required = Required.Default)]
+        public string authToken { get; set; }
         public string media_type { get; set; }
         public List<HitboxLivestream> livestream { get; set; }
     }
