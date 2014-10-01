@@ -126,7 +126,13 @@ namespace UB.ViewModel
                                                   streams.ForEach(stream => {
                                                       var newInfo = linkedSettings.StreamTopics.FirstOrDefault(item => item.ChatName == stream.Info.ChatName);
                                                       if (newInfo != null)
+                                                      {
                                                           stream.Info = newInfo;
+                                                      }
+                                                      else
+                                                      {
+                                                          linkedSettings.StreamTopics.Add(stream.Info.GetCopy());
+                                                      }
                                                   });
                                               });
                                               InitializeTopicSections();
