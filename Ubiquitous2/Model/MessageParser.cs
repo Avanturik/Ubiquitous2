@@ -19,8 +19,10 @@ namespace UB.Model
             result = Regex.Replace(result, @"<a.*href=""(.*?)"".*>", "$1");
             result = Regex.Replace(result, @"<(http.*?)>", "$1");
             result = Regex.Replace(result, @"<[^>]*>", "");
-
-            return result;
+            if (String.IsNullOrWhiteSpace(result))
+                return message;
+            else
+                return result;
         }
         public static void RemoveRedundantTags( ChatMessage message, IChat chat)
         {

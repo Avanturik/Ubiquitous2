@@ -43,7 +43,7 @@ namespace UB.Model
         public void LoadTopicsFromWeb()
         {
             GetStreamTopics((streams) => streams.ForEach(stream => stream.GetTopic()));
-        }
+        }       
         public void GetStreamTopics(Action<List<IStreamTopic>> callback)
         {
             var streamTopics = chatDataService.Chats.Where(chat => chat is IStreamTopic).Select( chat => 
@@ -58,6 +58,10 @@ namespace UB.Model
                 callback ( new List<IStreamTopic>());
             else
                 callback(streamTopics);
+        }
+        public void UpdateTopicsOnWeb()
+        {
+            GetStreamTopics((streams) => streams.ForEach(stream => stream.SetTopic()));
         }
     }
 }

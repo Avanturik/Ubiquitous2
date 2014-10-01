@@ -177,14 +177,7 @@ namespace UB.ViewModel
                     ?? (_updateWeb = new RelayCommand(
                                           () =>
                                           {
-                                                foreach( var chat in _dataService.Chats )
-                                                {
-                                                    if( chat is IStreamTopic)
-                                                    {
-                                                        var streamTopic = chat as IStreamTopic;
-                                                        //TODO: update istreamtopic with current viewmodel settings, call SetTopic
-                                                    }
-                                                }
+                                              _streamDataService.UpdateTopicsOnWeb();
                                           }));
             }
         }

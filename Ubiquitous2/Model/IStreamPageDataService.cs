@@ -11,6 +11,7 @@ namespace UB.Model
         void GetStreamTopics( Action<List<IStreamTopic>> callback);
         void GetPresets(Action<List<StreamInfoPreset>> callback);
         void LoadTopicsFromWeb();
+        void UpdateTopicsOnWeb();
         StreamInfoPreset AddPreset(string presetName);
     }
 }

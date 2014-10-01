@@ -56,7 +56,8 @@ namespace UB.Model
             this.NoticeReceived += TwitchChat_NoticeReceived;
             this.ChatUserJoined += TwitchChat_ChatUserJoined;
             this.ChatUserLeft += TwitchChat_ChatUserLeft;
-
+            
+            webClient.KeepAlive = true;
         }
 
         void TwitchChat_ChatUserLeft(object sender, ChatUserEventArgs e)
@@ -362,8 +363,7 @@ namespace UB.Model
         {
             webClient.Headers["X-Requested-With"] = "XMLHttpRequest";
 
-            var csrfToken = this.With(x => webClient.Download("http://ru.twitch.tv/user/login_popup"))
-                .With( x => Re.GetSubString(x, @"^.*authenticity_token.*?value=""(.*?)"""));
+            var csrfToken = GetCSRFToken();
 
             if (csrfToken == null)
             {
@@ -388,10 +388,28 @@ namespace UB.Model
                 return;
             }
             webClient.Headers["Twitch-Api-Token"] = apiToken;
-            webClient.Headers["Accept"] = "application/vnd.twitchtv.v2+json";
+            webClient.Headers["X-CSRF-Token"] = csrfToken;
+            webClient.Headers["Accept"] = "*/*";
             afterAction();
         }
-        
+
+        private string GetCSRFToken()
+        {
+            return this.With(x => webClient.Download("http://ru.twitch.tv/user/login_popup"))
+                    .With(x => Re.GetSubString(x, @"^.*authenticity_token.*?value=""(.*?)"""));
+            
+        }
+        private string TwitchPost(string url, string parameters)
+        {
+            var csrfToken = webClient.CookieValue("csrf_token", "http://twitch.tv");
+
+            if (String.IsNullOrWhiteSpace(csrfToken)) 
+                Authenticate(() => {});
+
+            webClient.ContentType = ContentType.UrlEncodedUTF8;
+            return webClient.Upload(url, parameters);
+        }
+
         #region IStreamTopic
         public StreamInfo Info
         {
@@ -457,6 +475,18 @@ namespace UB.Model
         }
         public void SetTopic()
         {
+            Task.Factory.StartNew(() => {
+                var url = String.Format(@"http://www.twitch.tv/{0}/update", LoginInfo.UserName.ToLower());
+                var parameters = String.Format( @"title={0}&meta_game={1}", HttpUtility.UrlEncode( Info.Topic), HttpUtility.UrlEncode(Info.CurrentGame.Name) );
+                var result = TwitchPost( url,parameters);
+                
+                // Did you just login on Web and your session cookie is invalid now ? Okay, let's authenticate again...
+                if (!result.Contains(@"""ok"""))
+                {
+                    Authenticate(delegate { });
+                    TwitchPost( url,parameters );
+                }
+            });
         }
         public string SearchQuery
         {
