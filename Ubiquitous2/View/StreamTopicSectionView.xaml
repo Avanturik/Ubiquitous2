@@ -9,7 +9,7 @@
              DataContext="{Binding}"    
              d:DesignHeight="300" d:DesignWidth="364.179">
 
-    <Grid IsEnabled="{Binding StreamInfo.CanBeChanged}" Visibility="{Binding StreamInfo.CanBeRead, Converter={StaticResource boolToVisibilityConverter}}" Margin="5" VerticalAlignment="Top">
+    <Grid Visibility="{Binding StreamInfo.CanBeChanged, Converter={StaticResource boolToVisibilityConverter}}" Margin="5" VerticalAlignment="Top">
         <Grid.Background>
             <LinearGradientBrush StartPoint="0,100" EndPoint="354,100" MappingMode="Absolute">
                 <GradientStop Color="#FF2C281A" Offset="0.066"/>
