@@ -3,16 +3,25 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using System.Web;
+using UB.Utils;
 
 namespace UB.Model
 {
     public class GoodgameChat : IChat, IStreamTopic
     {
         public event EventHandler<ChatServiceEventArgs> MessageReceived;
-        private const string emoticonsUrl = @"http://goodgame.ru/css/compiled/smiles.css";
+        private const string emoticonUrl = @"http://goodgame.ru/css/compiled/chat.css";
+        //private const string emoticonUrl = @"http://goodgame.ru/css/compiled/smiles.css";
         private const string emoticonImageUrl = @"http://goodgame.ru/images/generated/smiles.png";
-        public GoodgameChat( ChatConfig config)
+        private const string emoticonFallbackUrl = @"Content\goodgame_smiles.css";
+        private object iconParseLock = new object();
+        private bool isFallbackEmoticons = false;
+        private bool isWebEmoticons = false;
+        private WebClientBase webClient = new WebClientBase();
+        public GoodgameChat(ChatConfig config)
         {
             Config = config;
             ContentParsers = new List<Action<ChatMessage, IChat>>();
@@ -69,6 +78,10 @@ namespace UB.Model
 
         public bool Start()
         {
+            isFallbackEmoticons = false;
+            isWebEmoticons = false;
+            InitEmoticons();
+
             return true;
         }
 
@@ -138,7 +151,69 @@ namespace UB.Model
 
         public void DownloadEmoticons(string url)
         {
+            if (isFallbackEmoticons)
+                return;
+            if (isWebEmoticons)
+                return;
 
+            lock (iconParseLock)
+            {
+                var list = new List<Emoticon>();
+                if (Emoticons == null)
+                    Emoticons = new List<Emoticon>();
+
+
+                var content = webClient.Download(url);
+
+                MatchCollection matches = Regex.Matches(content, @"\.smiles\.([^{|\s|\n|\t]+)\s*\{\s*([^}]+)\s*}", RegexOptions.IgnoreCase);
+
+                if (matches.Count <= 0 )
+                {
+                    Log.WriteError("Unable to get Goodgame.ru emoticons!");
+                }
+                else
+                {
+                    foreach (Match match in matches)
+                    {
+                        if( match.Groups.Count >= 2)
+                        {
+                            var smileName = match.Groups[1].Value;
+                            var cssClassDefinition = match.Groups[2].Value;
+
+                            var background = Css.GetBackground(cssClassDefinition);
+
+                            if( background != null && !String.IsNullOrWhiteSpace(url) && background.width > 0 && background.height > 0)
+                            {
+                                var originalUrl = String.Format("http://goodgame.ru/{0}", background.url.Replace("../../", ""));
+                                var modifiedUrl = Url.AppendParameter(originalUrl, "ubx", background.x);
+                                modifiedUrl = Url.AppendParameter(modifiedUrl, "uby", background.y);
+
+                                list.Add( new Emoticon(String.Format(":{0}:", smileName),
+                                    modifiedUrl,
+                                    background.width,
+                                    background.height
+                                ));
+                            }
+                        }
+                    }
+                    if (list.Count > 0)
+                    {
+                        Emoticons = list;
+                        if (isFallbackEmoticons)
+                            isWebEmoticons = true;
+
+                        isFallbackEmoticons = true;
+                    }
+                }
+            }
+        }
+
+        private void InitEmoticons()
+        {
+            //Fallback icon list
+            DownloadEmoticons(AppDomain.CurrentDomain.BaseDirectory + emoticonFallbackUrl);
+            //Web icons
+            Task.Factory.StartNew(() => DownloadEmoticons(emoticonUrl));
         }
 
         public ChatConfig Config

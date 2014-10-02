@@ -17,7 +17,7 @@ namespace UB.Utils
             {
                 using (HtmlTextWriter htmlWriter = new HtmlTextWriter(stringWriter, String.Empty))
                 {
-                    htmlWriter.AddAttribute(HtmlTextWriterAttribute.Src, src);
+                    htmlWriter.AddAttribute(HtmlTextWriterAttribute.Src, src, false);
                     htmlWriter.AddAttribute(HtmlTextWriterAttribute.Width, width.ToString());
                     htmlWriter.AddAttribute(HtmlTextWriterAttribute.Height, height.ToString());
                     htmlWriter.RenderBeginTag(HtmlTextWriterTag.Img);

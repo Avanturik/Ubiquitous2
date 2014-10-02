@@ -130,6 +130,9 @@
     <Reference Include="WpfAnimatedGif">
       <HintPath>..\packages\WpfAnimatedGif.1.5.0-beta\lib\net\WpfAnimatedGif.dll</HintPath>
     </Reference>
+    <Reference Include="WriteableBitmapEx.Wpf">
+      <HintPath>..\packages\WriteableBitmapEx.1.0.12.0\lib\net40\WriteableBitmapEx.Wpf.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <ApplicationDefinition Include="App.xaml">
@@ -170,8 +173,11 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Compile Include="Utils\Bitmap.cs" />
     <Compile Include="Utils\Clone.cs" />
     <Compile Include="Utils\Crypt.cs" />
+    <Compile Include="Utils\Css.cs" />
+    <Compile Include="Utils\Url.cs" />
     <Compile Include="ViewModel\DashBoardViewModel.cs" />
     <Compile Include="ViewModel\HelloPlaceHolderViewModel.cs" />
     <Compile Include="ViewModel\EditBoxViewModel.cs" />

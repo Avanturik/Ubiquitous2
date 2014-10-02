@@ -5,6 +5,7 @@ using System.Linq;
 using System.Net.Cache;
 using System.Text;
 using System.Threading.Tasks;
+using System.Web;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media.Animation;
@@ -79,7 +80,40 @@ namespace UB.Model
             {
                 FixImageSize(image, width);
             }
+            Int32 x = -1;
+            Int32 y = -1;
+            //URL contains offset parameter ?
+            if( uri.AbsoluteUri.Contains("ubx="))
+            {
+                var query = HttpUtility.ParseQueryString(uri.Query);
+                var ubx = query["ubx"];
+                var uby = query["uby"];
+                
+                Int32.TryParse( ubx, out x);
+                Int32.TryParse( uby, out y);
 
+                if( !(x >= 0 && y >= 0) )
+                {
+                    x = -1;
+                    y = -1;
+                }
+
+                Uri bigPictureUri = Url.RemoveParameters(uri, new string[] { "ubx", "uby" });
+
+                if(!bitmapImageCache.ContainsKey(bigPictureUri.AbsoluteUri))
+                {
+                    var item = new ImageCacheItem(bigPictureUri, width, height);
+                    var itemWeakRef = new WeakReference<ImageCacheItem>(item);
+                    lock (cacheLock)
+                    {
+                        bitmapImageCache.Add(bigPictureUri.AbsoluteUri, itemWeakRef);
+
+                        //TODO: implement crop and save to cache
+                    }
+
+                }           
+            }
+            
             if (!bitmapImageCache.ContainsKey(uri.AbsoluteUri))
             {
                 var item = new ImageCacheItem(uri, width, height);
