@@ -170,6 +170,50 @@ namespace UB.Model
                     return null;
                 }
             }
+            public void RequestPatchOptions(string url)
+            {
+                try
+                {
+                    var request = (HttpWebRequest)WebRequest.Create(url);
+                    request.Method = "OPTIONS";
+
+                    HttpWebResponse response = (HttpWebResponse)request.GetResponse();
+                    if (response != null)
+                        return;
+                }
+                catch
+                {
+                }
+            }
+
+            public Stream PatchStream(string url, Stream stream)
+            {
+                try
+                {
+                    var request = (HttpWebRequest)WebRequest.Create(url);
+                    request.Method = "PATCH";
+                    request.Headers = Headers;
+                    request.ContentType = @"application/json;charset=UTF-8";
+
+                    if (stream != null)
+                    {
+                        request.ContentLength = stream.Length;
+                        Stream dataStream = request.GetRequestStream();
+                        stream.CopyTo(dataStream);
+                        stream.Flush();
+                        dataStream.Flush();
+                        dataStream.Close();
+                    }
+
+                    HttpWebResponse response = (HttpWebResponse)request.GetResponse();
+                    return response.GetResponseStream();
+                }
+                catch
+                {
+                    return null;
+                }
+            }
+
 
             public void SetCookie(string name, string value, string domain)
             {

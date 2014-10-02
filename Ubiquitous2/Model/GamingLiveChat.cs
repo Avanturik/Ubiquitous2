@@ -16,6 +16,7 @@ namespace UB.Model
         public event EventHandler<ChatServiceEventArgs> MessageReceived;
         private WebClientBase loginWebClient = new WebClientBase();
         private List<GamingLiveChannel> gamingLiveChannels = new List<GamingLiveChannel>();
+        private GamingLiveGameList jsonGames;
         private object counterLock = new object();
         private object channelsLock = new object();
         private List<WebPoller> counterWebPollers = new List<WebPoller>();
@@ -201,6 +202,7 @@ namespace UB.Model
             {
                 Status.IsLoggedIn = true;
                 GetTopic();
+                GetGameList();
             }
 
             return true;
@@ -231,6 +233,7 @@ namespace UB.Model
             }
             else
             {
+                isAnonymous = false;
                 Config.SetParameterValue("AuthToken", authToken);
                 return true;
             }
@@ -266,6 +269,7 @@ namespace UB.Model
         
             if( isOk && !String.IsNullOrWhiteSpace(NickName) )
             {
+                isAnonymous = false;
                 return true;
             }
 
@@ -464,7 +468,10 @@ namespace UB.Model
 
         public void QueryGameList(string gameName, Action callback)
         {
-
+            Games.Clear();            
+            jsonGames.games.Where(game => game.name.ToLower().StartsWith(gameName.ToLower())).Select(game => new Game() { Id = game.id, Name = game.name }).ToList().ForEach( game => Games.Add(game));
+            if (callback != null)
+                UI.Dispatch(() => callback());
         }
 
         JToken GetLiveStreamInfo()
@@ -490,11 +497,13 @@ namespace UB.Model
                     return;
 
                 Info.Topic = jsonInfo["name"].ToObject<string>();
+                var game = jsonInfo["game"];
+                if( game != null )
+                {
+                    Info.CurrentGame.Name = game["name"].ToObject<string>();
+                    Info.CurrentGame.Id = game["id"].ToObject<string>();
+                }
                 
-                //TODO: Implement Gaminglive.tv Game info when it will be available
-                //Info.CurrentGame.Name = 
-                //Info.CurrentGame.Id = 
-
                 Info.CanBeRead = true;
                 Info.CanBeChanged = true;
 
@@ -502,9 +511,46 @@ namespace UB.Model
                     UI.Dispatch(() => StreamTopicAcquired());
             });
         }
-
+        public void GetGameList()
+        {
+            Task.Factory.StartNew(() =>
+            {
+                jsonGames = Json.DeserializeUrl<GamingLiveGameList>(@"http://api.gaminglive.tv/games");
+                if (jsonGames == null)
+                    return;
+            });
+        }
         public void SetTopic()
         {
+            var userName = Config.GetParameterValue("Username") as string;
+            var authToken = Config.GetParameterValue("AuthToken") as string;
+
+            var jsonInfo = new GamingLiveChannelUpdate
+            {
+                slug = userName.ToLower(),
+                owner = userName.ToLower(),
+                name = Info.Topic,
+                authToken = authToken,
+                game = jsonGames.games.FirstOrDefault( game => game.name.Equals(Info.CurrentGame.Name,StringComparison.InvariantCultureIgnoreCase) ),
+            };
+
+
+
+            Json.SerializeToStream<GamingLiveChannelUpdate>(jsonInfo, (stream) =>
+            {
+                var putUrl = @"https://api.gaminglive.tv/channels/";
+                if (null == loginWebClient.PatchStream(putUrl, stream))
+                {
+                    //Authentication data expired ? Let's login again
+                    LoginWithUsername();
+                    jsonInfo.authToken = Config.GetParameterValue("AuthToken") as string;
+
+                    Json.SerializeToStream<GamingLiveChannelUpdate>(jsonInfo, (streamRetry) =>
+                    {
+                        loginWebClient.PatchStream(putUrl, streamRetry);
+                    });
+                }
+            });
         }
 
         public Action StreamTopicAcquired
@@ -602,6 +648,16 @@ namespace UB.Model
         }
     }
     #region Gaminglive json classes
+
+    public class GamingLiveChannelUpdate
+    {
+        public string slug { get; set; }
+        public string owner { get; set; }
+        public string name { get; set; }
+        public string authToken { get; set; }
+        public GamingLiveGame game { get; set; }
+    }
+
     public class GamingLiveGame
     {
         public string id { get; set; }
@@ -633,6 +689,11 @@ namespace UB.Model
         public GamingLiveState state { get; set; }
         public int views { get; set; }
         public int followers { get; set; }
+    }
+
+    public class GamingLiveGameList
+    {
+        public List<GamingLiveGame> games { get; set; }
     }
     #endregion
 }

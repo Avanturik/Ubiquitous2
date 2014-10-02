@@ -255,7 +255,7 @@ namespace UB.Model
             
             if (test.teams != null)
             {
-                return false;
+                return true;
             }
 
             
@@ -291,6 +291,7 @@ namespace UB.Model
             }
             else
             {
+                isAnonymous = false;
                 Config.SetParameterValue("AuthToken", authToken);
                 return true;
             }
