@@ -155,7 +155,9 @@
     <Compile Include="Converter\BoolToScrollBarVisibility - Copy.cs" />
     <Compile Include="Converter\NonEmptyToVisibility.cs" />
     <Compile Include="Interactivity\UnclosableWindow.cs" />
+    <Compile Include="Model\DummyChat.cs" />
     <Compile Include="Model\Game.cs" />
+    <Compile Include="Model\GoodgameChat.cs" />
     <Compile Include="Model\IStreamPageDataService.cs" />
     <Compile Include="Model\IStreamTopic.cs" />
     <Compile Include="Model\OBSRemoteService.cs" />
@@ -163,6 +165,11 @@
     <Compile Include="Model\StreamInfoPreset.cs" />
     <Compile Include="Model\StreamPageDataService.cs" />
     <Compile Include="Model\YesNoDialog.cs" />
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
     <Compile Include="Utils\Clone.cs" />
     <Compile Include="Utils\Crypt.cs" />
     <Compile Include="ViewModel\DashBoardViewModel.cs" />
@@ -551,11 +558,6 @@
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Properties\Resources.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Resources.resx</DependentUpon>
-    </Compile>
     <Compile Include="Properties\Settings.Designer.cs">
       <AutoGen>True</AutoGen>
       <DependentUpon>Settings.settings</DependentUpon>
@@ -568,6 +570,9 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Resource Include="Resources\obs.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resources\goodgame16x16.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Resource>
     <Content Include="web\favicon.ico">
@@ -677,8 +682,8 @@
     </Resource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
-      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <None Include="app.config" />
     <None Include="Model\Last.fm\Radio\.svn\all-wcprops" />

@@ -20,6 +20,7 @@ namespace UB.Model
         public static string SteamIcon = @"/Ubiquitous2;component/Resources/steam.ico";
         public static string PngIcon = @"/Ubiquitous2;component/Resources/png.png";
         public static string OBSIcon = @"/Ubiquitous2;component/Resources/obs.png";
+        public static string GoodgameIcon = @"/Ubiquitous2;component/Resources/goodgame16x16.png";
 
 
         public static string DesignMainIcon = @"pack://application:,,,/Ubiquitous2;component/Resources/ubiquitous smile.ico";

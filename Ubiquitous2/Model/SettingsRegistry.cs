@@ -16,6 +16,7 @@ namespace UB.Model
         public static string ChatTitleGamingLive = "Gaminglive.tv";
         public static string ChatTitleHitBox = "Hitbox.tv";
         public static string ChatTitleSteam = "Steam";
+        public static string ChatTitleGoodgame = "Goodgame.ru";
 
         //Service titles
         public static string ServiceTitleMusicTicker = "Music ticker";
@@ -171,6 +172,22 @@ namespace UB.Model
 
                         }
                     },
+                    //Goodgame.ru
+                    new ChatConfig()
+                    {
+                        ChatName = ChatTitleGoodgame,
+                        IconURL = Icons.GoodgameIcon,
+                        Enabled = false,
+                        Parameters = new List<ConfigField>() {
+                            new ConfigField() {  Name = "Username", Label = "Username", DataType = "Text", IsVisible = true, Value = String.Empty },
+                            new ConfigField() {  Name = "Password", Label = "Password", DataType = "Password", IsVisible = true, Value = String.Empty },
+                            new ConfigField() {  Name = "Channels", Label = "Channels", DataType = "Text", IsVisible = true, Value = "xedoc" },
+                            new ConfigField() {  Name = "AuthToken", Label = "AuthToken", DataType = "Text", IsVisible = false, Value = String.Empty },
+                            new ConfigField("Info1", "Leave username and password empty and fill channels if you need readonly access", "Info", true, null),
+                            new ConfigField("Info2", "Channels is comma separated list. Hashtag is optional. e.g: #xedoc, ipsum, #lorem", "Info", true, null),
+                        }
+                    },
+
                 };
             }        
         }
@@ -271,6 +288,16 @@ namespace UB.Model
                                                 {
                                                     ChatName = ChatTitleSteam,
                                                     IconURL = Icons.SteamIcon,
+                                                };
+                                             }},
+
+            //Goodgame
+            {ChatTitleGoodgame, (config)=>
+                                            {
+                                                return new GoodgameChat(config)
+                                                {
+                                                    ChatName = ChatTitleGoodgame,
+                                                    IconURL = Icons.GoodgameIcon,
                                                 };
                                              }},
 

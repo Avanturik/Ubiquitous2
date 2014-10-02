@@ -150,8 +150,9 @@ namespace UB.Model
                 MusicTrackInfo.Album = (album == null ? "Unknown album" : album.Title);
                 MusicTrackInfo.Artist = (artist == null ? "Unknown artist" : artist.Name);
                 MusicTrackInfo.ImageURL = imageUrl;
-                MusicTrackInfo.Title = track.Title; 
+                MusicTrackInfo.Title = track.Title;
 
+                _currentTrack = track;
             }
             else if( track == null )
             {
@@ -160,7 +161,6 @@ namespace UB.Model
                 MusicTrackInfo.Title = "";
                 MusicTrackInfo.ImageURL = Icons.MainHeadsetIcon;
             }
-            _currentTrack = track;
 
         }
         

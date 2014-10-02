@@ -113,6 +113,16 @@ namespace UB.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        public static System.Drawing.Bitmap goodgame16x16 {
+            get {
+                object obj = ResourceManager.GetObject("goodgame16x16", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         public static System.Drawing.Bitmap hitbox {
             get {
                 object obj = ResourceManager.GetObject("hitbox", resourceCulture);
