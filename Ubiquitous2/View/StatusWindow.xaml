@@ -16,7 +16,7 @@
         Icon="..\ubiquitous smile.ico"
         UseLayoutRounding="True"
         DataContext="{Binding Source={StaticResource Locator},Path=Status}" 
-        SizeToContent="WidthAndHeight" HorizontalAlignment="Center" VerticalAlignment="Center" MaxHeight="32" Padding="0">
+        SizeToContent="Width" HorizontalAlignment="Center" VerticalAlignment="Center" MaxHeight="32" Padding="0">
     <i:Interaction.Behaviors>
         <Interactivity:WindowPersistentLocationBehavior WindowName="StatusWindow"/>
         <Interactivity:DragWindow/>

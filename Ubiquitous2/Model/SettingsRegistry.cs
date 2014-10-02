@@ -21,6 +21,7 @@ namespace UB.Model
         public static string ServiceTitleMusicTicker = "Music ticker";
         public static string ServiceTitleWebServer = "Web server";
         public static string ServiceTitleImageSaver = "Save chat to image";
+        public static string ServiceTitleObsRemote = "OBS control";
 
 
         //Default service settings
@@ -63,6 +64,19 @@ namespace UB.Model
                             new ConfigField("Filename", "Chat box", "FileSave", true, Environment.GetFolderPath(Environment.SpecialFolder.MyPictures) + @"\ubiquitous_chat.png"),
                             new ConfigField("FilenameStatus", "Status window", "FileSave", true, Environment.GetFolderPath(Environment.SpecialFolder.MyPictures) + @"\ubiquitous_status.png"),
                             new ConfigField("FilenameMusic", "Music ticker", "FileSave", true, Environment.GetFolderPath(Environment.SpecialFolder.MyPictures) + @"\ubiquitous_music.png"),
+                        }
+                    },
+                    new ServiceConfig()
+                    {
+                        ServiceName = ServiceTitleObsRemote,
+                        IconURL = Icons.OBSIcon,
+                        Enabled = false,
+                        Parameters = new List<ConfigField>() {
+                            new ConfigField("Info0", "Start/stop/switch OBS scenes from Steam overlay/GUI/Web", "Info", true, null),
+                            new ConfigField("Host", "OBS host", "Text", true, "localhost"),
+                            new ConfigField("Password", "OBSRemote password", "Password", true, "admin"),
+                            new ConfigField("Info1", @"Default OBSRemote password is ""admin"". To disable authentication leave it empty", "Info", true, null),
+                            new ConfigField("Info2", @"This service depend on OBSRemote plugin: http://obsremote.com", "Info", true, null),
                         }
                     }
 
@@ -199,6 +213,8 @@ namespace UB.Model
             {ServiceTitleWebServer, (config)=> { return new WebServerService(config); }},
             //Chat to image saver
             {ServiceTitleImageSaver, (config)=> { return new ChatToImageService(config); }},
+            //OBS control via OBSRemote
+            {ServiceTitleObsRemote, (config)=> { return new OBSRemoteService(config); }},
             
             
             //TODO: OBS support

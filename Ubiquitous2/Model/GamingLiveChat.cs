@@ -511,7 +511,7 @@ namespace UB.Model
                     UI.Dispatch(() => StreamTopicAcquired());
             });
         }
-        public void GetGameList()
+        private void GetGameList()
         {
             Task.Factory.StartNew(() =>
             {

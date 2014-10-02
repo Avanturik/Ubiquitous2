@@ -475,6 +475,9 @@ namespace UB.Model
         }
         public void SetTopic()
         {
+            if (!Status.IsLoggedIn)
+                return;
+
             Task.Factory.StartNew(() => {
                 var url = String.Format(@"http://www.twitch.tv/{0}/update", LoginInfo.UserName.ToLower());
                 var parameters = String.Format( @"title={0}&meta_game={1}", HttpUtility.UrlEncode( Info.Topic), HttpUtility.UrlEncode(Info.CurrentGame.Name) );

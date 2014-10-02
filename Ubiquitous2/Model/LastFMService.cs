@@ -51,6 +51,8 @@ namespace UB.Model
         }
         public bool Start()
         {
+            Log.WriteInfo("Starting Last.fm service... ");
+
             lock( startStopLock )
             {
                 if( Config == null )
@@ -93,6 +95,8 @@ namespace UB.Model
         }
         public bool Stop()
         {
+            Log.WriteInfo("Stopping Last.fm service... ");
+
             lock(startStopLock)
             {
                 Status.IsLoggedIn = false;
@@ -211,6 +215,8 @@ namespace UB.Model
 
         public void Restart()
         {
+            Log.WriteInfo("Restarting Last.fm service... ");
+
             Status.ResetToDefault();
 
             Stop();

@@ -26,6 +26,72 @@ namespace UB.Model
             IsStarting = false;
             IsConnecting = false;
         }
+        private bool isInProgress
+        {
+            get { return IsStopping || IsStarting || IsConnecting; }
+        }
+
+        /// <summary>
+        /// The <see cref="IsInProgress" /> property's name.
+        /// </summary>
+        public const string IsInProgressPropertyName = "IsInProgress";
+
+        private bool _isInProgress = false;
+
+        /// <summary>
+        /// Sets and gets the IsInProgress property.
+        /// Changes to that property's value raise the PropertyChanged event. 
+        /// </summary>
+        public bool IsInProgress
+        {
+            get
+            {
+                return _isInProgress;
+            }
+
+            set
+            {
+                if (_isInProgress == value)
+                {
+                    return;
+                }
+
+                RaisePropertyChanging(IsInProgressPropertyName);
+                _isInProgress = value;
+                RaisePropertyChanged(IsInProgressPropertyName);
+            }
+        }
+
+        /// <summary>
+        /// The <see cref="LastError" /> property's name.
+        /// </summary>
+        public const string LastErrorPropertyName = "LastError";
+
+        private string _lastError = null;
+
+        /// <summary>
+        /// Sets and gets the LastError property.
+        /// Changes to that property's value raise the PropertyChanged event. 
+        /// </summary>
+        public string LastError
+        {
+            get
+            {
+                return _lastError;
+            }
+
+            set
+            {
+                if (_lastError == value)
+                {
+                    return;
+                }
+
+                RaisePropertyChanging(LastErrorPropertyName);
+                _lastError = value;
+                RaisePropertyChanged(LastErrorPropertyName);
+            }
+        }
 
         /// <summary>
         /// The <see cref="ViewersCount" /> property's name.
@@ -237,9 +303,11 @@ namespace UB.Model
                     return;
                 }
 
+
                 RaisePropertyChanging(IsStoppingPropertyName);
                 _isStopping = value;
                 RaisePropertyChanged(IsStoppingPropertyName);
+                _isInProgress = isInProgress;
             }
         }
 
@@ -271,6 +339,8 @@ namespace UB.Model
                 RaisePropertyChanging(IsStartingPropertyName);
                 _isStarting = value;
                 RaisePropertyChanged(IsStartingPropertyName);
+                _isInProgress = isInProgress;
+
             }
         }
 
@@ -303,6 +373,7 @@ namespace UB.Model
                 RaisePropertyChanging(IsConnectingPropertyName);
                 _isConnecting = value;
                 RaisePropertyChanged(IsConnectingPropertyName);
+                _isInProgress = isInProgress;
             }
         }
 

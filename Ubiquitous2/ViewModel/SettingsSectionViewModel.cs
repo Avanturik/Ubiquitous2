@@ -34,12 +34,43 @@ namespace UB.ViewModel
             _enabled = _service.Config.Enabled;
             _name = _service.Config.ServiceName;
             _iconURL = service.Config.IconURL;
-
+            _status = _service.Status;
             foreach( var parameter in service.Config.Parameters )
             {
                 if (parameter.IsVisible)
                     SettingsFields.Add(new SettingsFieldViewModel(parameter));
             } 
+        }
+
+        /// <summary>
+        /// The <see cref="Status" /> property's name.
+        /// </summary>
+        public const string StatusPropertyName = "Status";
+
+        private StatusBase _status = null;
+
+        /// <summary>
+        /// Sets and gets the Status property.
+        /// Changes to that property's value raise the PropertyChanged event. 
+        /// </summary>
+        public StatusBase Status
+        {
+            get
+            {
+                return _status;
+            }
+
+            set
+            {
+                if (_status == value)
+                {
+                    return;
+                }
+
+                RaisePropertyChanging(StatusPropertyName);
+                _status = value;
+                RaisePropertyChanged(StatusPropertyName);
+            }
         }
 
         /// <summary>
@@ -150,8 +181,7 @@ namespace UB.ViewModel
                                               IsLoaderVisible = true;
                                                 if (this.Enabled)
                                                 {
-                                                    this.Enabled = false;
-                                                    this.Enabled = true;
+                                                    _service.Restart();
                                                 }
                                               IsLoaderVisible = false;
                                           }));

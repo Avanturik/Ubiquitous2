@@ -44,9 +44,15 @@ namespace UB.ViewModel
         {
             chatDataService = ServiceLocator.Current.GetInstance<IChatDataService>();
             chatConfig = config;
+
             _enabled = config.Enabled;
             _name = config.ChatName;
             _iconURL = config.IconURL ?? _iconURL;
+
+            var chat = chatDataService.GetChat(config.ChatName);
+            if( chat != null )
+                _status = chat.Status;
+
             foreach( var param in config.Parameters )
             {
                 if( param.IsVisible)
@@ -58,6 +64,37 @@ namespace UB.ViewModel
         public double GetEstimatedHeight(double availableWidth)
         {
             return 30;
+        }
+
+        /// <summary>
+        /// The <see cref="Status" /> property's name.
+        /// </summary>
+        public const string StatusPropertyName = "Status";
+
+        private StatusBase _status = null;
+
+        /// <summary>
+        /// Sets and gets the Status property.
+        /// Changes to that property's value raise the PropertyChanged event. 
+        /// </summary>
+        public StatusBase Status
+        {
+            get
+            {
+                return _status;
+            }
+
+            set
+            {
+                if (_status == value)
+                {
+                    return;
+                }
+
+                RaisePropertyChanging(StatusPropertyName);
+                _status = value;
+                RaisePropertyChanged(StatusPropertyName);
+            }
         }
 
         /// <summary>

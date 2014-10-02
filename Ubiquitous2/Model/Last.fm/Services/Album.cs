@@ -156,7 +156,12 @@ namespace UB.LastFM.Services
 		{
 			XmlDocument doc = request("album.getInfo");
 			
-			return extractAll(doc, "image", 4)[(int)size];
+            var properties =  extractAll(doc, "image", 4);
+            if (properties.Length >= ((int)size) - 1)
+                return properties[(int)size];
+            else
+                return String.Empty;
+
 		}
 		
 		/// <summary>

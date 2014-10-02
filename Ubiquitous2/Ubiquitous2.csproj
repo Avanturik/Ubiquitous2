@@ -153,15 +153,18 @@
     <Compile Include="Controls\SmoothPanel\SmoothPanelTemplate.cs" />
     <Compile Include="Controls\SmoothPanel\SmoothPanelViewCache.cs" />
     <Compile Include="Converter\BoolToScrollBarVisibility - Copy.cs" />
+    <Compile Include="Converter\NonEmptyToVisibility.cs" />
     <Compile Include="Interactivity\UnclosableWindow.cs" />
     <Compile Include="Model\Game.cs" />
     <Compile Include="Model\IStreamPageDataService.cs" />
     <Compile Include="Model\IStreamTopic.cs" />
+    <Compile Include="Model\OBSRemoteService.cs" />
     <Compile Include="Model\StreamInfo.cs" />
     <Compile Include="Model\StreamInfoPreset.cs" />
     <Compile Include="Model\StreamPageDataService.cs" />
     <Compile Include="Model\YesNoDialog.cs" />
     <Compile Include="Utils\Clone.cs" />
+    <Compile Include="Utils\Crypt.cs" />
     <Compile Include="ViewModel\DashBoardViewModel.cs" />
     <Compile Include="ViewModel\HelloPlaceHolderViewModel.cs" />
     <Compile Include="ViewModel\EditBoxViewModel.cs" />
@@ -564,6 +567,9 @@
     <Content Include="Content\goodgame_smiles.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Resource Include="Resources\obs.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
     <Content Include="web\favicon.ico">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

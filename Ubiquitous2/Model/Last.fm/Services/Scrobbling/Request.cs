@@ -44,7 +44,7 @@ namespace UB.LastFM.Scrobbling
 			request.UserAgent = Utilities.UserAgent;
 			request.ContentType = "application/x-www-form-urlencoded";
 			request.Method = "POST";
-      request.Headers["Accept-Charset"] = "utf-8";
+            request.Headers["Accept-Charset"] = "utf-8";
 			
 			if (Lib.Proxy != null)
 				request.Proxy = Lib.Proxy;

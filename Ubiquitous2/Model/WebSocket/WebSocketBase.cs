@@ -16,6 +16,7 @@ namespace UB.Model
         {
             Port = "80";
             PingInterval = 25000;
+            SubProtocol = String.Empty;
         }
         public List<KeyValuePair<string, string>> Cookies
         {
@@ -37,6 +38,8 @@ namespace UB.Model
             get;
             set;
         }
+        public string SubProtocol { get; set; }
+
         public void Disconnect()
         {
             try
@@ -68,7 +71,7 @@ namespace UB.Model
             {
                 socket = new WebSocket(
                     url,
-                    "",
+                    SubProtocol,
                     Cookies,
                     null,
                     "Mozilla/5.0 (Windows NT 6.0; WOW64; rv:14.0) Gecko/20100101 Firefox/14.0.1",
@@ -106,7 +109,10 @@ namespace UB.Model
             Log.WriteError("WebSocket error {0}", e.Exception.Message);
 
             if (DisconnectHandler != null)
+            {
                 DisconnectHandler();
+                DisconnectHandler = null;
+            }
         }
 
         public bool IsClosed { get {return socket.State == WebSocketState.Closed;} }
@@ -128,7 +134,14 @@ namespace UB.Model
         }
         public void Send(string message)
         {
-            socket.Send(message);
+            try
+            {
+                socket.Send(message);
+            }
+            catch
+            {
+                Log.WriteError("Error sending message to websocket");
+            }
         }
         void socket_Opened(object sender, EventArgs e)
         {

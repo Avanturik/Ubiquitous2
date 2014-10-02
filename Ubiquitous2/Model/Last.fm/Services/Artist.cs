@@ -142,8 +142,10 @@ namespace UB.LastFM.Services
 			XmlDocument doc = request("artist.getInfo");
 			
 			string[] sizes = extractAll(doc, "image", 3);
-			
-			return sizes[(int)size];
+            if (sizes.Length <= 0)
+                return String.Empty;
+            else
+                return sizes[(int)size];
 		}
 		
 		/// <summary>

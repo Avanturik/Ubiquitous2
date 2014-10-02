@@ -76,6 +76,8 @@ namespace UB.LastFM.Services
 		
 		internal string[] extractAll(XmlNode node, string name, int limitCount)
 		{
+            if (node == null)
+                return new string[] { };
 			string[] s = extractAll(node, name);
 			List<string> l = new List<string>();
 			
@@ -87,7 +89,10 @@ namespace UB.LastFM.Services
     
 		internal string[] extractAll(XmlNode node, string name)
 		{
-			List<string> list = new List<string>();
+			if( node == null )
+                return new string[]{};
+
+            List<string> list = new List<string>();
 			
 			for(int i = 0; i < ((XmlElement)node).GetElementsByTagName(name).Count; i++)
 				list.Add(extract(node, name, i));

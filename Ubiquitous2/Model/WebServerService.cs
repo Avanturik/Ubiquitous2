@@ -16,6 +16,7 @@ namespace UB.Model
         public WebServerService(ServiceConfig config) : base(config.GetParameterValue("Port")) 
         {
             Config = config;
+            Status = new StatusBase();
         }
         private readonly HashSet<KeyValuePair<string, string>> ContentTypes = new HashSet<KeyValuePair<string, string>> {
                 new KeyValuePair<string,string>(".png", "image/png"),
@@ -122,12 +123,14 @@ namespace UB.Model
         
         public bool Stop()
         {
+            Log.WriteInfo("Stopping web server... ");
             base.StopHttpServer();
             return false;
         }
 
         public void Restart()
         {
+            Log.WriteInfo("Restarting web server... ");
             this.Stop();
             this.Start();
         }
@@ -157,6 +160,7 @@ namespace UB.Model
 
         public bool Start()
         {
+            Log.WriteInfo("Starting web server... ");
             base.StartHttpServer(Config);
             return true;
         }
