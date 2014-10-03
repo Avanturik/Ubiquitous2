@@ -510,13 +510,14 @@ namespace UB.Model
         }
         public void DownloadEmoticons(string url)
         {
-            if (isFallbackEmoticons)
-                return;
-            if (isWebEmoticons)
-                return;
 
             lock (iconParseLock)
             {
+                if (isFallbackEmoticons)
+                    return;
+                if (isWebEmoticons)
+                    return;
+
                 var list = new List<Emoticon>();
                 if (Emoticons == null)
                     Emoticons = new List<Emoticon>();
