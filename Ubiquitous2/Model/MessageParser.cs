@@ -54,12 +54,7 @@ namespace UB.Model
                 {
                     if (match.Groups.Count > 1)
                     {
-                        //string url = match.Groups[2].Value;
-                        //try
-                        //{
-                            message.Text = r.Replace(message.Text, @"<img src=""$2""/>").Replace("href=\"www", "href=\"http://www");
-                        //}
-                        //catch { }
+                        message.Text = r.Replace(message.Text, @"<img src=""$2""/>").Replace("href=\"www", "href=\"http://www");
                     }
                 }
             }

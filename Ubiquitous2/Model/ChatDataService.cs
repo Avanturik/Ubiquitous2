@@ -154,7 +154,10 @@ namespace UB.Model
                     }
                 }
             }, null, 0, 1500);
-            Chats.ForEach(chat => {
+
+            int waitChatStatus = 5000;
+            Chats.ForEach(chat =>
+            {
                 chat.MessageReceived += chat_MessageReceived;
                 chat.AddChannel = (channel, fromChat) =>
                 {
@@ -173,7 +176,14 @@ namespace UB.Model
                 {
                     Task.Factory.StartNew(() => {
                         var c = chat;
-                        c.Start(); 
+                        c.Start();
+
+                        while (ChatStatusHandler == null && waitChatStatus > 0 )
+                        {
+                            waitChatStatus -= 50;
+                            Thread.Sleep(100);
+                        }
+
                         if( ChatStatusHandler != null )
                             ChatStatusHandler(c);
                     });

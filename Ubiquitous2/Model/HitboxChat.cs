@@ -239,7 +239,12 @@ namespace UB.Model
         {
             var authToken = Config.GetParameterValue("AuthToken") as string;
             var userName = Config.GetParameterValue("Username") as string;
-            
+            var password = Config.GetParameterValue("Password") as string;
+            var tokenCredentials = Config.GetParameterValue("AuthTokenCredentials") as string;
+
+            if (tokenCredentials != userName + password)
+                return false;
+
             if( String.IsNullOrEmpty(userName))
             {
                 isAnonymous = true;
@@ -260,6 +265,7 @@ namespace UB.Model
 
             
             Config.SetParameterValue("AuthToken", String.Empty);
+
             return false;
         }
         public bool LoginWithUsername()
@@ -293,6 +299,8 @@ namespace UB.Model
             {
                 isAnonymous = false;
                 Config.SetParameterValue("AuthToken", authToken);
+                Config.SetParameterValue("AuthTokenCredentials", userName + password);
+
                 return true;
             }
         }
@@ -444,7 +452,7 @@ namespace UB.Model
                         return;
 
                     Status.IsConnected = true;
-                    lock(channelsLock)
+                    lock (channelsLock)
                         hitboxChannels.Add(hbChannel);
 
                     ChatChannels.RemoveAll(chan => chan.Equals(hbChannel.ChannelName, StringComparison.InvariantCultureIgnoreCase));

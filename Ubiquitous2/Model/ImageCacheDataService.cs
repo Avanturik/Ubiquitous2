@@ -31,8 +31,50 @@ namespace UB.Model
 
                 GetImageSource(uri, width, height, image, (imageSource) =>
                 {
-                    image.Source = imageSource;
-                    UI.Dispatch(() => callback(image));
+                    int x = -1;
+                    int y = -1;
+                    //URL contains offset parameter ?
+                    if (uri.AbsoluteUri.Contains("ubx="))
+                    {
+                        var query = HttpUtility.ParseQueryString(uri.Query);
+                        var ubx = query["ubx"];
+                        var uby = query["uby"];
+                        
+                        if( !Int32.TryParse(ubx, out x) || !Int32.TryParse(uby, out y))
+                        {
+                            x = -1;
+                            y = -1;
+                        }
+                        else
+                        {
+                            x = Math.Abs(x);
+                            y = Math.Abs(y);
+                        }
+                        image.Width = width;
+                        image.Height = height;
+
+                        if (imageSource.IsDownloading)
+                        {
+                            imageSource.DownloadCompleted += (o, e) =>
+                            {
+                                var cropped = new CroppedBitmap(imageSource, new Int32Rect(x, y, width, height));
+                                image.Source = cropped;
+                            };
+                            UI.Dispatch(() => callback(image));
+                        }
+                        else
+                        {
+                            var cropped = new CroppedBitmap(imageSource, new Int32Rect(x, y, width, height));
+                            image.Source = cropped;
+                            UI.Dispatch(() => callback(image));
+                        }
+                    }
+                    else
+                    {
+                        image.Source = imageSource;
+                        UI.Dispatch(() => callback(image));
+                    }
+
                 });
             }
         }
@@ -80,38 +122,10 @@ namespace UB.Model
             {
                 FixImageSize(image, width);
             }
-            Int32 x = -1;
-            Int32 y = -1;
-            //URL contains offset parameter ?
             if( uri.AbsoluteUri.Contains("ubx="))
             {
                 var query = HttpUtility.ParseQueryString(uri.Query);
-                var ubx = query["ubx"];
-                var uby = query["uby"];
-                
-                Int32.TryParse( ubx, out x);
-                Int32.TryParse( uby, out y);
-
-                if( !(x >= 0 && y >= 0) )
-                {
-                    x = -1;
-                    y = -1;
-                }
-
-                Uri bigPictureUri = Url.RemoveParameters(uri, new string[] { "ubx", "uby" });
-
-                if(!bitmapImageCache.ContainsKey(bigPictureUri.AbsoluteUri))
-                {
-                    var item = new ImageCacheItem(bigPictureUri, width, height);
-                    var itemWeakRef = new WeakReference<ImageCacheItem>(item);
-                    lock (cacheLock)
-                    {
-                        bitmapImageCache.Add(bigPictureUri.AbsoluteUri, itemWeakRef);
-
-                        //TODO: implement crop and save to cache
-                    }
-
-                }           
+                uri = Url.RemoveParameters(uri, new string[] { "ubx", "uby" });
             }
             
             if (!bitmapImageCache.ContainsKey(uri.AbsoluteUri))

@@ -105,6 +105,7 @@ namespace UB.Model
                             new ConfigField() {  Name = "OAuthToken", Label = "OAuth token", DataType = "Text", IsVisible = false, Value = String.Empty },
                             new ConfigField("Info1", "Enter justinfan<anydigits> and fill channels to get readonly access", "Info", true, null),
                             new ConfigField("Info2", "Channels is comma separated list. Hashtag is optional. e.g: #xedoc, ipsum, #lorem", "Info", true, null),
+                            new ConfigField() {  Name = "AuthTokenCredentials", Label = "Auth token credentials", DataType = "Text", IsVisible = false, Value = String.Empty },
                         }
                     },
                     //Twitch events
@@ -120,6 +121,7 @@ namespace UB.Model
                             new ConfigField() {  Name = "OAuthToken", Label = "OAuth token", DataType = "Text", IsVisible = false, Value = String.Empty },
                             new ConfigField("Info1", "Enter justinfan<anydigits> and fill channels to get readonly access", "Info", true, null),
                             new ConfigField("Info2", "Channels is comma separated list. Hashtag is optional. e.g: #xedoc, ipsum, #lorem", "Info", true, null),
+                            new ConfigField() {  Name = "AuthTokenCredentials", Label = "Auth token credentials", DataType = "Text", IsVisible = false, Value = String.Empty },
                         }
                     },
                     //Gaminglive.tv
@@ -135,6 +137,7 @@ namespace UB.Model
                             new ConfigField() {  Name = "AuthToken", Label = "AuthToken", DataType = "Text", IsVisible = false, Value = String.Empty },
                             new ConfigField("Info1", "Fill channels and leave username and password empty if you need readonly access.", "Info", true, null),
                             new ConfigField("Info2", "Channels is comma separated list. Hashtag is optional. e.g: #xedoc, ipsum, #lorem", "Info", true, null),
+                            new ConfigField() {  Name = "AuthTokenCredentials", Label = "Auth token credentials", DataType = "Text", IsVisible = false, Value = String.Empty },
                         }
                     },
                     //Hitbox.tv
@@ -150,6 +153,7 @@ namespace UB.Model
                             new ConfigField() {  Name = "AuthToken", Label = "AuthToken", DataType = "Text", IsVisible = false, Value = String.Empty },
                             new ConfigField("Info1", "Leave username and password empty and fill channels if you need readonly access", "Info", true, null),
                             new ConfigField("Info2", "Channels is comma separated list. Hashtag is optional. e.g: #xedoc, ipsum, #lorem", "Info", true, null),
+                            new ConfigField() {  Name = "AuthTokenCredentials", Label = "Auth token credentials", DataType = "Text", IsVisible = false, Value = String.Empty },
                         }
                     },
                     //Steam
@@ -169,6 +173,7 @@ namespace UB.Model
                             new ConfigField() {  Name = "AuthToken", Label = "AuthToken", DataType = "Text", IsVisible = false, Value = String.Empty },
                             new ConfigField("Info1", "Usage: create additional Steam account for bot and add you main account to his friends ", "Info", true, null),
                             new ConfigField("Info3", "If Steam Guard window will popup - enter a code from email", "Info", true, null),
+                            new ConfigField() {  Name = "AuthTokenCredentials", Label = "Auth token credentials", DataType = "Text", IsVisible = false, Value = String.Empty },
 
                         }
                     },
@@ -185,6 +190,7 @@ namespace UB.Model
                             new ConfigField() {  Name = "AuthToken", Label = "AuthToken", DataType = "Text", IsVisible = false, Value = String.Empty },
                             new ConfigField("Info1", "Leave username and password empty and fill channels if you need readonly access", "Info", true, null),
                             new ConfigField("Info2", "Channels is comma separated list. Hashtag is optional. e.g: #xedoc, ipsum, #lorem", "Info", true, null),
+                            new ConfigField() {  Name = "AuthTokenCredentials", Label = "Auth token credentials", DataType = "Text", IsVisible = false, Value = String.Empty },
                         }
                     },
 

@@ -235,13 +235,21 @@ namespace UB.Model
             {
                 isAnonymous = false;
                 Config.SetParameterValue("AuthToken", authToken);
+                Config.SetParameterValue("AuthTokenCredentials", userName + password);
                 return true;
+
             }
         }
         public bool LoginWithToken()
         {
             var authToken = (string)Config.GetParameterValue("AuthToken");
-            var userName = Config.GetParameterValue("Username") as string;
+            var userName = Config.GetParameterValue("Username") as string;            
+            var password = Config.GetParameterValue("Password") as string;
+            var tokenCredentials = Config.GetParameterValue("AuthTokenCredentials") as string;
+            
+            if (tokenCredentials != userName + password)
+                return false;
+
 
             if (String.IsNullOrEmpty(userName))
             {

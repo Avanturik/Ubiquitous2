@@ -222,6 +222,11 @@ namespace UB.Model
                 else // Login with OAuth token
                 {
                     var oauthToken = Config.Parameters.StringValue("OAuthToken");
+                    var oauthTokenCredentials = Config.Parameters.StringValue("AuthTokenCredentials");
+                    
+                    if ( LoginInfo.UserName + LoginInfo.Password != oauthTokenCredentials)
+                        oauthToken = null;
+
                     if (!String.IsNullOrWhiteSpace(oauthToken) && !Status.IsLoginFailed)
                     {
                         StartWithToken(oauthToken);
@@ -350,7 +355,10 @@ namespace UB.Model
                 .With(x => x.Value<string>("chat_oauth_token"));
 
             if ( oauthToken != null )
+            {
                 Config.SetParameterValue("OAuthToken", oauthToken);
+                Config.SetParameterValue("AuthTokenCredentials", LoginInfo.UserName + LoginInfo.Password);
+            }
 
             return oauthToken;
         }

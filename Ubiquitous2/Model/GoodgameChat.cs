@@ -2,16 +2,21 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Runtime.Serialization;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Web;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using UB.Utils;
 
 namespace UB.Model
 {
     public class GoodgameChat : IChat, IStreamTopic
     {
+        //API: https://docs.google.com/document/d/1vVtEhiqHhyW7wYor3zLh6PNu0_v_3LTboTQBPaRR1SY/edit?pli=1
+
         public event EventHandler<ChatServiceEventArgs> MessageReceived;
         private const string emoticonUrl = @"http://goodgame.ru/css/compiled/chat.css";
         //private const string emoticonUrl = @"http://goodgame.ru/css/compiled/smiles.css";
@@ -26,6 +31,8 @@ namespace UB.Model
         private object pollerLock = new object();
         private bool isFallbackEmoticons = false;
         private bool isWebEmoticons = false;
+        private bool isAnonymous = true;
+        private string chatToken = null;
         private WebClientBase webClient = new WebClientBase();
         public GoodgameChat(ChatConfig config)
         {
@@ -34,7 +41,14 @@ namespace UB.Model
             ChatChannels = new List<string>();
             Emoticons = new List<Emoticon>();
             Status = new StatusBase();
+            Status.ResetToDefault();
             Users = new Dictionary<string, ChatUser>();
+
+            Enabled = Config.Enabled;          
+
+            ContentParsers.Add(MessageParser.RemoveRedundantTags);
+            ContentParsers.Add(MessageParser.ParseURLs);
+            ContentParsers.Add(MessageParser.ParseEmoticons);
 
             Info = new StreamInfo()
             {
@@ -46,8 +60,9 @@ namespace UB.Model
 
             Games = new ObservableCollection<Game>();
 
-            Enabled = Config.Enabled; 
         }
+        public UInt32 UserId = 0;
+
         public string ChatName
         {
             get;
@@ -107,10 +122,149 @@ namespace UB.Model
         }
         private bool Login()
         {
+            try
+            {
+                if (!LoginWithToken())
+                {
+                    if (!LoginWithUsername())
+                    {
+                        Status.IsLoginFailed = true;
+                        return false;
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                Log.WriteInfo("Goodgame authorization exception {0}", e.Message);
+                return false;
+            }
+            if (!isAnonymous)
+            {
+                Status.IsLoggedIn = true;
+                GetTopic();
+            }
+
             return true;
         }
+        private string GoodgameGet(string url)
+        {
+            var content = webClient.Download(url);
+            if( content != null && content.Length < 1000 && content.Contains("location.href="))
+            {
+                var cookieName = Re.GetSubString( content, @"\.cookie=\""(.*?)=");
+                var cookieValue = Re.GetSubString( content, @"\.cookie=\"".*?=(.*?)""");
+                var newHref = Re.GetSubString( content, @"location\.href=""(.*?)""");
+                if( !String.IsNullOrWhiteSpace(cookieName) && !String.IsNullOrWhiteSpace(cookieValue) && !String.IsNullOrWhiteSpace(newHref))
+                {
+                    webClient.SetCookie( cookieName, cookieValue, "goodgame.ru");
+                    content = webClient.Download( newHref );
+                }
+            }
+            return content;
+        }
+        private bool LoginWithToken()
+        {
+            var authToken = Config.GetParameterValue("AuthToken") as string;
+            var userName = Config.GetParameterValue("Username") as string;
+            var password = Config.GetParameterValue("Password") as string;
+            var tokenCredentials = Config.GetParameterValue("AuthTokenCredentials") as string;
+
+            if (tokenCredentials != userName + password)
+                return false;
+
+            if (String.IsNullOrEmpty(userName))
+            {
+                isAnonymous = true;
+                return true;
+            }
+
+            if (String.IsNullOrWhiteSpace(authToken))
+                return false;
+
+            NickName = userName;
+
+            webClient.SetCookie("PHPSESSID", authToken, "goodgame.ru");
+
+            var content = GoodgameGet("http://goodgame.ru/chat/");
+            
+            if (String.IsNullOrWhiteSpace(content))
+                return false;
+
+            chatToken = Re.GetSubString(content, @"token.*?'(.*?)'");
+            UInt32.TryParse(Re.GetSubString(content, @"userId.*?'(\d+)"), out UserId);
+            if( UserId == 0 )
+            {
+                Config.SetParameterValue("AuthToken", String.Empty);
+                isAnonymous = true;
+                return false;
+            }
+            else
+            {
+                Config.SetParameterValue("AuthToken", authToken);
+                Config.SetParameterValue("AuthTokenCredentials", userName + password);
+            }
+
+            return true;
+        }
+
+        private bool LoginWithUsername()
+        {
+            var userName = Config.GetParameterValue("Username") as string;
+            var password = Config.GetParameterValue("Password") as string;
+
+            if (String.IsNullOrWhiteSpace(userName) || String.IsNullOrWhiteSpace(password))
+            {
+                isAnonymous = true;
+                return true;
+            }
+
+            NickName = userName;
+
+            var authString = String.Format(@"nickname={0}&password={1}&remember=1", HttpUtility.UrlEncode(userName), HttpUtility.UrlEncode(password));
+            
+            webClient.ContentType = ContentType.UrlEncoded;
+            webClient.Headers["X-Requested-With"] = "XMLHttpRequest";
+
+            webClient.Upload(@"http://goodgame.ru/ajax/login/", authString);
+            var authToken = webClient.CookieValue("PHPSESSID", "http://goodgame.ru");
+            var uid = webClient.CookieValue("uid", "http://goodgame.ru");
+
+            if (String.IsNullOrWhiteSpace(authToken))
+            {
+                Log.WriteError("Login to goodgame.ru failed. Joining anonymously");
+                isAnonymous = true;
+                return false;
+            }
+            else
+            {
+                Config.SetParameterValue("AuthToken", authToken);
+                Config.SetParameterValue("AuthTokenCredentials", userName + password);
+                return LoginWithToken();
+            }
+        }
+
         public bool Stop()
         {
+            if (!Enabled)
+                Status.ResetToDefault();
+
+            if (Status.IsStopping)
+                return false;
+
+            Log.WriteInfo("Stopping Goodgame chat");
+
+            Status.IsStopping = true;
+            Status.IsStarting = false;
+
+            lock (channelsLock)
+            {
+                goodgameChannels.ForEach(chan =>
+                {
+                    StopCounterPoller(chan.ChannelName);
+                    chan.Leave();
+                });
+            }
+            ChatChannels.Clear();
             return true;
         }
 
@@ -121,6 +275,18 @@ namespace UB.Model
 
         public bool SendMessage(ChatMessage message)
         {
+            if (isAnonymous)
+                return false;
+
+            var goodgameChannel = goodgameChannels.FirstOrDefault(channel => channel.ChannelName.Equals(message.Channel, StringComparison.InvariantCultureIgnoreCase));
+            if (goodgameChannel != null)
+            {
+                if (String.IsNullOrWhiteSpace(message.FromUserName))
+                {
+                    message.FromUserName = NickName;
+                }
+                Task.Factory.StartNew(() => goodgameChannel.SendMessage(message));
+            }
             return true;
         }
 
@@ -172,7 +338,17 @@ namespace UB.Model
             set;
 
         }
-
+        private UInt32 GetChannelId( string channelName )
+        {
+            UInt32 channelId = 0;
+            var content = GoodgameGet(String.Format(@"http://goodgame.ru/api/getupcomingbroadcast?id={0}&fmt=json", channelName.Replace("#","")));
+            var textChannelId = Re.GetSubString(content, @"stream_id.*?(\d+)");
+            if( !String.IsNullOrWhiteSpace(textChannelId) )
+            {
+                UInt32.TryParse(textChannelId, out channelId);
+            }
+            return channelId;
+        }
         private void JoinChannels()
         {
 
@@ -210,23 +386,34 @@ namespace UB.Model
                     }
                 };
                 if (!goodgameChannels.Any(c => c.ChannelName == channel))
-                    goodgameChannel.Join((hbChannel) =>
+                {
+                    goodgameChannel.ChannelId = GetChannelId(channel);
+                    goodgameChannel.Join((ggChannel) =>
                     {
                         if (Status.IsStopping)
                             return;
 
-                        Status.IsConnected = true;
+                        UI.Dispatch(() => {
+                            HideViewersCounter = false;
+                            Status.IsConnected = true;
+                            if (!ggChannel.IsAnonymous)
+                            {
+                                isAnonymous = false;
+                                Status.IsLoggedIn = true;
+                            }
+                        });
                         lock (channelsLock)
-                            goodgameChannels.Add(hbChannel);
+                            goodgameChannels.Add(ggChannel);
 
-                        ChatChannels.RemoveAll(chan => chan.Equals(hbChannel.ChannelName, StringComparison.InvariantCultureIgnoreCase));
-                        ChatChannels.Add((hbChannel.ChannelName));
+                        ChatChannels.RemoveAll(chan => chan.Equals(ggChannel.ChannelName, StringComparison.InvariantCultureIgnoreCase));
+                        ChatChannels.Add((ggChannel.ChannelName));
                         if (AddChannel != null)
                             AddChannel(goodgameChannel.ChannelName, this);
 
-                        WatchChannelStats(goodgameChannel.ChannelName);
+                        WatchChannelStats(goodgameChannel.ChannelName, goodgameChannel.ChannelId.ToString());
 
-                    }, NickName, channel, (String)Config.GetParameterValue("AuthToken"));
+                    }, NickName, channel, chatToken);
+                }
             }
         }
         void StopCounterPoller(string channelName)
@@ -243,15 +430,13 @@ namespace UB.Model
                 counterWebPollers.Remove(poller);
             }
         }
-        public void WatchChannelStats(string channel)
+        public void WatchChannelStats(string channel, string channelId)
         {            
-            return;
-
             var poller = new WebPoller()
             {
                 Id = channel,
                 //TODO: get streamid and watch plain text counter
-                Uri = new Uri(String.Format(@"http://ftp.goodgame.ru/counter/{0}.txt?rnd=0.06468730559572577", channel.Replace("#", ""))),
+                Uri = new Uri(String.Format(@"http://ftp.goodgame.ru/counter/{0}.txt?rnd=0.06468730559572577", channelId )),
             };
 
             UI.Dispatch(() =>
@@ -337,9 +522,9 @@ namespace UB.Model
                     Emoticons = new List<Emoticon>();
 
 
-                var content = webClient.Download(url);
+                var content = GoodgameGet(url);
 
-                MatchCollection matches = Regex.Matches(content, @"\.smiles\.([^{|\s|\n|\t]+)\s*\{\s*([^}]+)\s*}", RegexOptions.IgnoreCase);
+                MatchCollection matches = Regex.Matches(content, @"\.smiles\.smile-([^{|\s|\n|\t]*)\s*\{\s*([^}]*)\s*}", RegexOptions.IgnoreCase);
 
                 if (matches.Count <= 0 )
                 {
@@ -454,18 +639,115 @@ namespace UB.Model
         private WebSocketBase webSocket;
         private GoodgameChat _chat;
         private Random random = new Random();
-        private bool isAnonymous = false;
+        private WebClientBase webClient = new WebClientBase();
+        private UInt32 userId = 0;
+        private Action<GoodgameChannel> joinCallback;
+        private Dictionary<string, Action<GoodgameChannel, GoodGameData>>
+            packetHandlers = new Dictionary<string, Action<GoodgameChannel, GoodGameData>>() {
+                {"welcome", WelcomeHandler},
+                {"success_auth", SuccessAuthHandler},
+                {"success_join", SuccessJoinHandler},
+                {"channel_counters", ChannelCountersHandler},
+                {"message", MessageHandler},
+            };
 
         public GoodgameChannel(GoodgameChat chat)
         {
             _chat = chat;
+            userId = _chat.UserId;
             Status = new StatusBase();
+            IsAnonymous = true;
         }
         public StatusBase Status { get; set; }
         
         public string NickName { get; set; }
         public string AuthToken { get; set; }
-        
+        public UInt32 ChannelId { get; set; }
+
+        public bool IsAnonymous { get; set; }
+
+        private static void WelcomeHandler(GoodgameChannel channel, GoodGameData data)
+        {
+            Log.WriteInfo("Goodgame protocol version: {0}", data.ProtocolVersion);
+            Log.WriteInfo("Goodgame servicer identity: {0}", data.ServerIdentity);
+
+            channel.SendCredentials();
+        }
+        private static void SuccessAuthHandler(GoodgameChannel channel, GoodGameData data)
+        {
+            channel.Status.IsConnected = true;
+            if (data.UserId == 0)
+            {
+                channel.IsAnonymous = true;
+            }
+            else
+            {
+                channel.Status.IsLoggedIn = true;
+                channel.IsAnonymous = false;
+            }
+
+            channel.SendChannelJoin();
+        }
+        private void SendChannelJoin()
+        {
+
+            var joinPacket = new GoodgamePacket()
+            {
+                Type = "join",
+                Data = new GoodGameData()
+                {
+                    ChannelId = ChannelId,
+                    IsHidden = false,
+                    Mobile = 0,
+                },
+            };
+            if( joinPacket != null && joinPacket.Data != null )
+            {
+                Log.WriteInfo("Goodgame sending {0}", joinPacket.ToString());
+                webSocket.Send(joinPacket.ToString());
+            }
+        }
+        private static void SuccessJoinHandler(GoodgameChannel channel, GoodGameData data)
+        {
+            UI.Dispatch(() => {
+                channel.Status.IsConnecting = false;
+                channel.Status.IsStarting = false;
+                channel._chat.Status.IsConnected = true;
+                channel._chat.Status.IsConnecting = false;
+                channel._chat.Status.IsConnected = true;
+
+                if (!channel.IsAnonymous)
+                    channel.Status.IsLoggedIn = true;            
+            });
+
+
+            if (channel.joinCallback != null)
+                channel.joinCallback(channel);
+
+            Log.WriteInfo("Goodgame joined to #{0} id:{1}", data.ChannelName, data.ChannelId);
+        }
+        private static void ChannelCountersHandler(GoodgameChannel channel, GoodGameData data)
+        {
+            Log.WriteInfo("Goodgame counters. Clients: {0}, Users:{1}", data.ClientsInChannel, data.UsersInChannel);
+        }
+        private static void MessageHandler(GoodgameChannel channel, GoodGameData data)
+        {
+            if (String.IsNullOrWhiteSpace(data.UserName) || String.IsNullOrWhiteSpace(data.Text))
+                return;
+
+            if (channel.ReadMessage != null)
+                channel.ReadMessage(new ChatMessage()
+                {
+                    Channel = channel.ChannelName,
+                    ChatIconURL = channel._chat.IconURL,
+                    ChatName = channel._chat.ChatName,
+                    FromUserName = data.UserName,
+                    HighlyImportant = false,
+                    IsSentByMe = false,
+                    Text = data.Text,
+                });
+        }
+
         public void Join(Action<GoodgameChannel> callback, string nickName, string channel, string authToken)
         {
 
@@ -479,13 +761,13 @@ namespace UB.Model
             webSocket = new WebSocketBase();
             webSocket.PingInterval = 0;
             webSocket.Origin = "http://goodgame.ru";
-            webSocket.ConnectHandler = () =>
-            {
-                SendCredentials(NickName, channel, authToken);
+            joinCallback = callback;
+            //webSocket.ConnectHandler = () =>
+            //{
 
-                if (callback != null)
-                    callback(this);
-            };
+            //    if (callback != null)
+            //        callback(this);
+            //};
 
             webSocket.DisconnectHandler = () =>
             {
@@ -497,10 +779,20 @@ namespace UB.Model
             Connect();
         }
 
-        private void SendCredentials(string nickname, string channel, string authToken)
+        private void SendCredentials()
         {
-            isAnonymous = String.IsNullOrWhiteSpace(authToken) || String.IsNullOrWhiteSpace(nickname);
-            //webSocket.Send(...);
+            var authPacket = new GoodgamePacket()
+            {
+                Type = "auth",
+                Data = new GoodGameData()
+                {
+                    UserId = userId,
+                    Token = AuthToken
+                },
+            };
+
+            Log.WriteInfo("Goodgame sending {0}", authPacket.ToString());
+            webSocket.Send(authPacket.ToString());
         }
         private void Connect()
         {
@@ -513,7 +805,22 @@ namespace UB.Model
         }
         private void ReadRawMessage(string rawMessage)
         {
-            //TODO: parse gg raw messages
+            Log.WriteInfo("Goodgame raw message received: {0}", rawMessage);
+            if( rawMessage.StartsWith("a"))
+            {
+                var packet = this.With( x => JArray.Parse(rawMessage.Substring(1)))
+                    .With( x => x[0])
+                    .With( x => JsonConvert.DeserializeObject<GoodgamePacket>( x.Value<string>() ));
+
+                if (packet == null)
+                    return;
+
+                if ( packet.Data != null && packetHandlers.ContainsKey(packet.Type))
+                    packetHandlers[packet.Type](this, packet.Data);
+            }
+            else if( rawMessage.StartsWith("o"))
+            {
+            }
         }
         public string ChannelName { get; set; }
         public void Leave()
@@ -528,13 +835,109 @@ namespace UB.Model
         public Action<ChatMessage> ReadMessage { get; set; }
         public void SendMessage(ChatMessage message)
         {
-            if (isAnonymous || String.IsNullOrWhiteSpace(message.Channel) ||
+            if (IsAnonymous || String.IsNullOrWhiteSpace(message.Channel) ||
                 String.IsNullOrWhiteSpace(message.FromUserName) ||
                 String.IsNullOrWhiteSpace(message.Text))
                 return;
 
-            //webSocket.Send(asdf);
+            var messagePacket = new GoodgamePacket()
+            {
+                Type = "send_message",
+                Data = new GoodGameData()
+                {
+                    ChannelId = ChannelId,
+                    Text = message.Text,
+                    IsIconHidden = false,
+                    Mobile = 0,
+                }
+            };
+
+            webSocket.Send(messagePacket.ToString());
         }
+    }
+
+
+    [DataContract]
+    public class GoodgamePacket
+    {
+        [DataMember(Name = "type")]
+        public string Type { get; set;  }
+        [DataMember(Name = "data")]
+        public GoodGameData Data { get; set; }
+        
+        public override string ToString()
+        {
+            return @"[""" + JsonConvert.SerializeObject(this).Replace(@"""",@"\""") + @"""]";
+        }
+        
+    }
+
+    [DataContract]
+    public class GoodGameChannelStatus
+    {
+        public string stream_id { get; set; }
+        public string stream_key { get; set; }
+        public string stream_name { get; set; }
+        public string stream_status { get; set; }
+    }
+
+    [DataContract]
+    public class GoodGameData 
+    {
+        [DataMember(Name = "user_id", EmitDefaultValue = false, IsRequired = false)]
+        public UInt32 UserId { get; set; }
+        [DataMember(Name = "token", EmitDefaultValue = false, IsRequired = false)]
+        public string Token { get; set; }
+        [DataMember(Name = "channel_id", EmitDefaultValue = false, IsRequired = false)]
+        public UInt32 ChannelId { get; set; }
+        [DataMember(Name = "hidden", EmitDefaultValue = false, IsRequired = false)]
+        public bool IsHidden { get; set; }
+        [DataMember(Name = "mobile", EmitDefaultValue = false, IsRequired = false)]
+        public UInt32 Mobile { get; set; }
+        [DataMember(Name = "text", EmitDefaultValue = false, IsRequired = false)]
+        public string Text { get; set; }
+        [DataMember(Name = "hideIcon", EmitDefaultValue = false, IsRequired = false)]
+        public bool IsIconHidden { get; set; }
+        [DataMember(Name = "protocolVersion", EmitDefaultValue = false, IsRequired = false)]
+        public string ProtocolVersion { get; set; }
+        [DataMember(Name = "serverIdent", EmitDefaultValue = false, IsRequired = false)]
+        public string ServerIdentity { get; set; }
+        [DataMember(Name = "user_name", EmitDefaultValue = false, IsRequired = false)]
+        public string UserName { get; set; }
+        [DataMember(Name = "channel_name", EmitDefaultValue = false, IsRequired = false)]
+        public string ChannelName { get; set; }
+        [DataMember(Name = "motd", EmitDefaultValue = false, IsRequired = false)]
+        public string Greeting { get; set; }
+        [DataMember(Name = "slowmod", EmitDefaultValue = false, IsRequired = false)]
+        public UInt32 SlowMode { get; set; }
+        [DataMember(Name = "smiles", EmitDefaultValue = false, IsRequired = false)]
+        public UInt32 Smiles { get; set; }
+        [DataMember(Name = "smilesPeka", EmitDefaultValue = false, IsRequired = false)]
+        public UInt32 SmilesPeka { get; set; }
+        [DataMember(Name = "clients_in_channel", EmitDefaultValue = false, IsRequired = false)]
+        public UInt32 ClientsInChannel { get; set; }
+        [DataMember(Name = "users_in_channel", EmitDefaultValue = false, IsRequired = false)]
+        public UInt32 UsersInChannel { get; set; }
+        [DataMember(Name = "access_rights", EmitDefaultValue = false, IsRequired = false)]
+        public UInt32 AccessRights { get; set; }
+        [DataMember(Name = "premium", EmitDefaultValue = false, IsRequired = false)]
+        public UInt32 Premium { get; set; }
+        [DataMember(Name = "is_banned", EmitDefaultValue = false, IsRequired = false)]
+        public bool IsBanned { get; set; }
+        [DataMember(Name = "banned_time", EmitDefaultValue = false, IsRequired = false)]
+        public UInt32 BannedTime { get; set; }
+        [DataMember(Name = "reason", EmitDefaultValue = false, IsRequired = false)]
+        public string Reason { get; set; }
+        [DataMember(Name = "payments", EmitDefaultValue = false, IsRequired = false)]
+        public UInt32 Payments { get; set; }
+        [DataMember(Name = "paidsmiles", EmitDefaultValue = false, IsRequired = false)]
+        public object[] PaidSmiles { get; set; }
+        [DataMember(Name = "user_rights", EmitDefaultValue = false, IsRequired = false)]
+        public UInt32 UserRights { get; set; }
+        [DataMember(Name = "message_id", EmitDefaultValue = false, IsRequired = false)]
+        public UInt32 MessageId { get; set; }
+        [DataMember(Name = "timestamp", EmitDefaultValue = false, IsRequired = false)]
+        public UInt32 Timestamp { get; set; }
     }
 
 }

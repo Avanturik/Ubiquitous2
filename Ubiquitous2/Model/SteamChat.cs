@@ -132,6 +132,12 @@ namespace UB.Model
         private bool LoginWithToken()
         {
             var authToken = Config.GetParameterValue("AuthToken") as string;
+            var userName = Config.GetParameterValue("Username") as string;
+            var password = Config.GetParameterValue("Password") as string;
+            var tokenCredentials = Config.GetParameterValue("AuthTokenCredentials") as string;
+
+            if (tokenCredentials != userName + password)
+                return false;
 
             if (String.IsNullOrWhiteSpace(authToken))
                 return false;
@@ -156,6 +162,8 @@ namespace UB.Model
             }
 
             Config.SetParameterValue("AuthToken", RSALogin(userName, password));
+            Config.SetParameterValue("AuthTokenCredentials", userName + password);
+
             return LoginWithToken();
         }
 
