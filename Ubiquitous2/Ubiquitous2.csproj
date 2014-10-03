@@ -177,6 +177,7 @@
     <Compile Include="Utils\Clone.cs" />
     <Compile Include="Utils\Crypt.cs" />
     <Compile Include="Utils\Css.cs" />
+    <Compile Include="Utils\Random.cs" />
     <Compile Include="Utils\Url.cs" />
     <Compile Include="ViewModel\DashBoardViewModel.cs" />
     <Compile Include="ViewModel\HelloPlaceHolderViewModel.cs" />

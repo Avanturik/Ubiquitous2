@@ -695,9 +695,6 @@ namespace UB.Model
                     loginWebClient.PutStream(String.Format(putUrl, HttpUtility.UrlEncode(userName.ToLower()), authToken), stream);
                 }
             });
-            
-            //livestream["category_name"]
-            //livestream["category_id"]
         }
 
         public Action StreamTopicAcquired
