@@ -525,7 +525,7 @@ namespace UB.Model
 
                 var content = GoodgameGet(url);
 
-                MatchCollection matches = Regex.Matches(content, @"\.smiles\.smile-([^{|\s|\n|\t]*)\s*\{\s*([^}]*)\s*}", RegexOptions.IgnoreCase);
+                MatchCollection matches = Regex.Matches(content, @"}[^\.]*\.smile-([^-|\s]*)\s*{(.*?)}", RegexOptions.IgnoreCase);
 
                 if (matches.Count <= 0 )
                 {
