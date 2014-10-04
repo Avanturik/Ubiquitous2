@@ -545,9 +545,7 @@ namespace UB.Model
                             if( background != null && !String.IsNullOrWhiteSpace(url) && background.width > 0 && background.height > 0)
                             {
                                 var originalUrl = String.Format("http://goodgame.ru/{0}", background.url.Replace("../../", ""));
-                                var modifiedUrl = Url.AppendParameter(originalUrl, "ubx", background.x);
-                                modifiedUrl = Url.AppendParameter(modifiedUrl, "uby", background.y);
-
+                                var modifiedUrl = String.Format(@"/ubiquitous/cache?ubx={0}&uby={1}&uburl={2}", background.x, background.y, HttpUtility.UrlEncode(originalUrl));
                                 list.Add( new Emoticon(String.Format(":{0}:", smileName),
                                     modifiedUrl,
                                     background.width,

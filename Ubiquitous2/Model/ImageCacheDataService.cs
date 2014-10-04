@@ -34,11 +34,10 @@ namespace UB.Model
                     int x = -1;
                     int y = -1;
                     //URL contains offset parameter ?
-                    if (uri.AbsoluteUri.Contains("ubx="))
+                    if (uri.OriginalString.Contains("ubx="))
                     {
-                        var query = HttpUtility.ParseQueryString(uri.Query);
-                        var ubx = query["ubx"];
-                        var uby = query["uby"];
+                        var ubx = Url.GetParameter(uri, "ubx");
+                        var uby = Url.GetParameter(uri, "uby");
                         
                         if( !Int32.TryParse(ubx, out x) || !Int32.TryParse(uby, out y))
                         {
@@ -64,9 +63,12 @@ namespace UB.Model
                         }
                         else
                         {
-                            var cropped = new CroppedBitmap(imageSource, new Int32Rect(x, y, width, height));
-                            image.Source = cropped;
-                            UI.Dispatch(() => callback(image));
+                            if( imageSource.PixelWidth >= width && imageSource.PixelHeight >= height)
+                            {
+                                var cropped = new CroppedBitmap(imageSource, new Int32Rect(x, y, width, height));
+                                image.Source = cropped;
+                                UI.Dispatch(() => callback(image));
+                            }
                         }
                     }
                     else
@@ -122,43 +124,51 @@ namespace UB.Model
             {
                 FixImageSize(image, width);
             }
-            if( uri.AbsoluteUri.Contains("ubx="))
+            //if( uri.AbsoluteUri.Contains("ubx="))
+            //{
+            //    uri = Url.RemoveParameters(uri, new string[] { "ubx", "uby" });
+            //}
+            if( uri.OriginalString.Contains("uburl="))
             {
-                var query = HttpUtility.ParseQueryString(uri.Query);
-                uri = Url.RemoveParameters(uri, new string[] { "ubx", "uby" });
+                Uri.TryCreate(HttpUtility.UrlDecode( Url.GetParameter(uri,"uburl")), UriKind.RelativeOrAbsolute, out uri);               
             }
             
-            if (!bitmapImageCache.ContainsKey(uri.AbsoluteUri))
+            if (!bitmapImageCache.ContainsKey(uri.OriginalString))
             {
-                var item = new ImageCacheItem(uri, width, height);
+                var item = new ImageCacheItem(uri, width, height) { 
+                    DownloadComplete = (cacheItem) =>
+                    {
+                        UI.Dispatch(() => {
+                            if (!forceSize || width > (Application.Current as App).ChatBoxWidth)
+                                FixImageSize(image, cacheItem.Width);
+                            if (uri.OriginalString.ToLower().Contains(".gif"))
+                            {
+                                SetupGifAnimation(image, cacheItem.Bitmap);
+                            }                    
+                        });
+                    }
+                };
                 var itemWeakRef = new WeakReference<ImageCacheItem>(item);
 
-                item.DownloadComplete = () =>
-                {
-                    UI.Dispatch(() => {
-                        if (!forceSize || width > (Application.Current as App).ChatBoxWidth)
-                            FixImageSize(image, item.Width);
-                        if (uri.AbsoluteUri.ToLower().Contains(".gif"))
-                        {
-                            SetupGifAnimation(image, item.Bitmap);
-                        }                    
-                    });
-                };
+               
                 lock (cacheLock)
-                    bitmapImageCache.Add(uri.AbsoluteUri, itemWeakRef);
+                    bitmapImageCache.Add(uri.OriginalString, itemWeakRef);
 
                 callback(item.Bitmap);
 
             }
             else
             {
-                var itemRef = bitmapImageCache[uri.AbsoluteUri];
+                var itemRef = bitmapImageCache[uri.OriginalString];
 
                 ImageCacheItem item;
                 itemRef.TryGetTarget(out item);
 
                 if (item == null)
+                {
+                    bitmapImageCache.Remove(uri.OriginalString);
                     return;
+                }
 
                 item.LastAccessed = DateTime.Now;
                 if (!item.IsDownloading)
@@ -166,7 +176,7 @@ namespace UB.Model
                     if (!forceSize || width > (Application.Current as App).ChatBoxWidth)
                         FixImageSize(image, item.Width);
 
-                    if (uri.AbsoluteUri.ToLower().Contains(".gif"))
+                    if (uri.OriginalString.ToLower().Contains(".gif"))
                     {
                         SetupGifAnimation(image, item.Bitmap);
                     }
@@ -198,9 +208,9 @@ namespace UB.Model
             {
                 Width = Bitmap.PixelWidth;
                 Height = Bitmap.PixelHeight;
-                IsDownloading = false;
                 if (DownloadComplete != null) 
-                    DownloadComplete();
+                    DownloadComplete(this);
+                IsDownloading = false;
             };
             Bitmap.BeginInit();
             Bitmap.CacheOption = BitmapCacheOption.OnLoad;
@@ -216,6 +226,6 @@ namespace UB.Model
         public int Width { get; set; }
         public int Height { get; set; }
         public bool IsDownloading { get; set; }
-        public Action DownloadComplete { get; set; }
+        public Action<ImageCacheItem> DownloadComplete { get; set; }
     }
 }

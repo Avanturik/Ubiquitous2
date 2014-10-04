@@ -69,7 +69,7 @@ namespace UB.Converter
                                             int.TryParse(node.Attributes["height"].Value, out height);
 
                                         Uri imageUri;
-                                        if( Uri.TryCreate(url, UriKind.Absolute, out imageUri) )
+                                        if( Uri.TryCreate(url, UriKind.RelativeOrAbsolute, out imageUri) )
                                         {
                                             dataService.GetImage(imageUri, width, height, (image) => {
                                                 textBlock.Inlines.Add(image);

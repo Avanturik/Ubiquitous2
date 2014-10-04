@@ -5,7 +5,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
-
+using GalaSoft.MvvmLight.Ioc;
+using UB.Utils;
 
 namespace UB.Model
 {
@@ -13,10 +14,12 @@ namespace UB.Model
     {
         private object lockSend = new object();
         private const string webContentFolder = @"web\";
+        private IImageDataSource imageDataSource;
         public WebServerService(ServiceConfig config) : base(config.GetParameterValue("Port")) 
         {
             Config = config;
             Status = new StatusBase();
+            imageDataSource = SimpleIoc.Default.GetInstance<IImageDataSource>();
         }
         private readonly HashSet<KeyValuePair<string, string>> ContentTypes = new HashSet<KeyValuePair<string, string>> {
                 new KeyValuePair<string,string>(".png", "image/png"),
@@ -52,6 +55,10 @@ namespace UB.Model
                     var url = uri.LocalPath;
                     SendResourceToClient(contentType, new Uri(url, UriKind.Relative),processor);
                 }
+                else if( uri.OriginalString.ToLower().Contains("/ubiquitous/cache?"))
+                {
+                    SendCachedImageToClient(uri.OriginalString, processor);
+                }
             }
 
             Log.WriteInfo("Httpserver sending {0} to client as {1}", uri.LocalPath,contentType);
@@ -62,6 +69,20 @@ namespace UB.Model
             }
         }
 
+        private bool SendCachedImageToClient( string url, HttpProcessor httpProcessor)
+        {
+            Uri uri = null;
+
+            if( Uri.TryCreate(url, UriKind.Relative, out uri))
+            {
+                imageDataSource.GetImage(uri, 0,0, (image) => {
+                   SendStreamToClient( image.ToPngStream(), "image/png", httpProcessor);
+                },(img)=>{});
+
+            }
+
+            return true;
+        }
         private bool SendResourceToClient( string contentType, Uri resourceUri,HttpProcessor httpProcessor )
         {
             var resource = Application.GetResourceStream(resourceUri);

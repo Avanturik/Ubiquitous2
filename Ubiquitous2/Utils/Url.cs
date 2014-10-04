@@ -22,6 +22,18 @@ namespace UB.Utils
             return uriBuilder.ToString();
         }
 
+        public static string GetParameter (Uri uri, string parameterName )
+        {
+            var checkUri = uri;
+            if (!checkUri.IsAbsoluteUri)
+                if( Uri.TryCreate("http://loclahost/" + uri.OriginalString, UriKind.Absolute, out checkUri))
+                {
+                    var query = HttpUtility.ParseQueryString(checkUri.Query);
+                    return query[parameterName];
+                }
+            return String.Empty;
+        }
+
         public static Uri RemoveParameters( Uri uri, string[] parameters )
         {
             var uriBuilder = new UriBuilder(uri);
