@@ -186,7 +186,7 @@ namespace UB.Model
                         Parameters = new List<ConfigField>() {
                             new ConfigField() {  Name = "Username", Label = "Username", DataType = "Text", IsVisible = true, Value = String.Empty },
                             new ConfigField() {  Name = "Password", Label = "Password", DataType = "Password", IsVisible = true, Value = String.Empty },
-                            new ConfigField() {  Name = "Channels", Label = "Channels", DataType = "Text", IsVisible = true, Value = "xedoc" },
+                            new ConfigField() {  Name = "Channels", Label = "Channels", DataType = "Text", IsVisible = true, Value = "#FlaimStraik, iks_slon,#gopro,twaryna,tapka,kolya_milk,x_kish_x,d1oxde,warrion,CerealKiller" },
                             new ConfigField() {  Name = "AuthToken", Label = "AuthToken", DataType = "Text", IsVisible = false, Value = String.Empty },
                             new ConfigField("Info1", "Leave username and password empty and fill channels if you need readonly access", "Info", true, null),
                             new ConfigField("Info2", "Channels is comma separated list. Hashtag is optional. e.g: #xedoc, ipsum, #lorem", "Info", true, null),
