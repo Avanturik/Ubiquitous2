@@ -692,6 +692,7 @@ namespace UB.Model
         private void SendChannelJoin()
         {
 
+            Log.WriteInfo("Goodgame serializing join packet. ChannelId: {0}", ChannelId);
             var joinPacket = new GoodgamePacket()
             {
                 Type = "join",
@@ -745,7 +746,7 @@ namespace UB.Model
                     FromUserName = data.UserName,
                     HighlyImportant = false,
                     IsSentByMe = false,
-                    Text = data.Text,
+                    Text = HttpUtility.HtmlDecode(data.Text),
                 });
         }
 
@@ -930,7 +931,7 @@ namespace UB.Model
         [DataMember(Name = "reason", EmitDefaultValue = false, IsRequired = false)]
         public string Reason { get; set; }
         [DataMember(Name = "payments", EmitDefaultValue = false, IsRequired = false)]
-        public UInt32 Payments { get; set; }
+        public double Payments { get; set; }
         [DataMember(Name = "paidsmiles", EmitDefaultValue = false, IsRequired = false)]
         public object[] PaidSmiles { get; set; }
         [DataMember(Name = "user_rights", EmitDefaultValue = false, IsRequired = false)]
