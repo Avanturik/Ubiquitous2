@@ -302,9 +302,7 @@ namespace UB.Model
         }
         public override void DownloadEmoticons(string url)
         {
-            if (isFallbackEmoticons)
-                return;
-            if (isWebEmoticons)
+            if (isFallbackEmoticons && isWebEmoticons )
                 return;
 
             lock(iconParseLock )
@@ -338,6 +336,7 @@ namespace UB.Model
                     }
                     if (list.Count > 0)
                     {
+
                         sharedEmoticons = list.ToList();
                         Emoticons = sharedEmoticons;
                         if (isFallbackEmoticons)

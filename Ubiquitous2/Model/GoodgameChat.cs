@@ -514,9 +514,7 @@ namespace UB.Model
 
             lock (iconParseLock)
             {
-                if (isFallbackEmoticons)
-                    return;
-                if (isWebEmoticons)
+                if (isFallbackEmoticons && isWebEmoticons)
                     return;
 
                 var list = new List<Emoticon>();
