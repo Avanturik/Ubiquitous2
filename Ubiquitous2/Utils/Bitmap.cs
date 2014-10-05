@@ -19,14 +19,35 @@ namespace UB.Utils
             return cropped;
         }
 
+        public static Stream CroppedBitmapToPngStream( this CroppedBitmap image )
+        {
+            MemoryStream memStream = new MemoryStream();
+            PngBitmapEncoder encoder = new PngBitmapEncoder();
+
+            var frame = encoder.With(x => image)
+                .With(x => BitmapFrame.Create(x));
+            if (frame == null)
+                return null;
+
+            encoder.Frames.Add(frame);
+            encoder.Save(memStream);
+            return memStream;
+
+        }
         public static Stream ToPngStream(this System.Windows.Controls.Image image)
         {
-            if (image.Source == null)
+            if (image == null || image.Source == null)
                 return null;
 
             MemoryStream memStream = new MemoryStream();
             PngBitmapEncoder encoder = new PngBitmapEncoder();
-            encoder.Frames.Add(BitmapFrame.Create(image.Source as BitmapImage));
+
+            var frame = encoder.With( x => image.Source as CroppedBitmap)
+                .With( x => BitmapFrame.Create(x));
+            if (frame == null)
+                return null;
+
+            encoder.Frames.Add(frame);
             encoder.Save(memStream);
             return memStream;
         }

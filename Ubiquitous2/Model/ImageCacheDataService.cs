@@ -62,6 +62,7 @@ namespace UB.Model
                             y = -1;
                             w = -1;
                             h = -1;
+                            callback(null);
                         }
                         else
                         {

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using GalaSoft.MvvmLight.Ioc;
@@ -54,10 +55,12 @@ namespace UB.Model
                 {
                     var url = uri.LocalPath;
                     SendResourceToClient(contentType, new Uri(url, UriKind.Relative),processor);
+                    return;
                 }
                 else if( uri.OriginalString.ToLower().Contains("/ubiquitous/cache?"))
                 {
                     SendCachedImageToClient(uri.OriginalString, processor);
+                    return;
                 }
             }
 
@@ -72,16 +75,21 @@ namespace UB.Model
         private bool SendCachedImageToClient( string url, HttpProcessor httpProcessor)
         {
             Uri uri = null;
-
+            var processor = httpProcessor;
             if( Uri.TryCreate(url, UriKind.RelativeOrAbsolute, out uri))
             {
+                bool gotImage = false;
                 UI.Dispatch(() =>
                 {
                     imageDataSource.GetImage(uri, 0, 0, (image) =>
                     {
-                        SendStreamToClient(image.ToPngStream(), "image/png", httpProcessor);
+                        var stream = image.ToPngStream();
+                        stream.Position = 0;
+                        SendStreamToClient(stream, "image/png", processor);
+                        gotImage = true;
                     }, (img) => { });
                 });
+                while (!gotImage) Thread.Sleep(5);
             }
 
             return true;
@@ -105,17 +113,16 @@ namespace UB.Model
 
         private bool SendStreamToClient( Stream stream, string contentType, HttpProcessor httpProcessor)
         {
-            if (stream != null)
+            if (stream == null || httpProcessor == null || httpProcessor.OutputStream == null)
+                return false;
+
+            httpProcessor.OutputStream.AutoFlush = true;
+            lock( lockSend )
             {
-                httpProcessor.OutputStream.AutoFlush = true;
-                lock( lockSend )
-                {
-                    httpProcessor.WriteSuccess(contentType);
-                    stream.CopyTo(httpProcessor.OutputStream.BaseStream);
-                }
-                return true;
+                httpProcessor.WriteSuccess(contentType);
+                stream.CopyTo(httpProcessor.OutputStream.BaseStream);
             }
-            return false;
+            return true;
         }
 
         public void SendJsonToClient(Stream jsonStream, HttpProcessor httpProcessor)
