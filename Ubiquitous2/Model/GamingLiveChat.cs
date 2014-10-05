@@ -610,7 +610,7 @@ namespace UB.Model
             webSocket.Path = String.Format("/chat/{0}?nick={1}&authToken={2}", ChannelName.Replace("#",""), nickName, authToken );
             webSocket.ConnectHandler = () =>
             {
-                secondWebSocket.Send("{}");
+                webSocket.Send("{}");
             };
 
             webSocket.DisconnectHandler = () =>
@@ -625,7 +625,7 @@ namespace UB.Model
             secondWebSocket.Origin = webSocket.Origin;
             secondWebSocket.Path = webSocket.Path;
 
-            secondWebSocket.Connect();
+            //secondWebSocket.Connect();
             webSocket.Connect();
 
             secondWebSocket.Connect();
