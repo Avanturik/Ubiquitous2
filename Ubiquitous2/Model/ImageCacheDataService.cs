@@ -109,6 +109,7 @@ namespace UB.Model
                     ImageBehavior.SetRepeatBehavior(image, RepeatBehavior.Forever);
                     ImageBehavior.SetAutoStart(image, true);
                     ImageBehavior.SetAnimatedSource(image, bitmap);
+                    image.Measure(new Size(bitmap.PixelWidth, bitmap.PixelHeight));
                 }
             });
         }
@@ -164,7 +165,7 @@ namespace UB.Model
                             if (uri.OriginalString.ToLower().Contains(".gif"))
                             {
                                 SetupGifAnimation(image, cacheItem.Bitmap);
-                            }                    
+                            }
                         });
                     }
                 };
@@ -172,8 +173,7 @@ namespace UB.Model
                 lock (cacheLock)
                     bitmapImageCache.Add(uri.OriginalString, item);
 
-                callback(item.Bitmap);
-
+                callback(item.Bitmap);              
             }
             else
             {
