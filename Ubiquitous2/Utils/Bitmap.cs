@@ -21,6 +21,9 @@ namespace UB.Utils
 
         public static Stream ToPngStream(this System.Windows.Controls.Image image)
         {
+            if (image.Source == null)
+                return null;
+
             MemoryStream memStream = new MemoryStream();
             PngBitmapEncoder encoder = new PngBitmapEncoder();
             encoder.Frames.Add(BitmapFrame.Create(image.Source as BitmapImage));

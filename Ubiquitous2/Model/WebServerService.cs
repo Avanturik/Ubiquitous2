@@ -73,12 +73,15 @@ namespace UB.Model
         {
             Uri uri = null;
 
-            if( Uri.TryCreate(url, UriKind.Relative, out uri))
+            if( Uri.TryCreate(url, UriKind.RelativeOrAbsolute, out uri))
             {
-                imageDataSource.GetImage(uri, 0,0, (image) => {
-                   SendStreamToClient( image.ToPngStream(), "image/png", httpProcessor);
-                },(img)=>{});
-
+                UI.Dispatch(() =>
+                {
+                    imageDataSource.GetImage(uri, 0, 0, (image) =>
+                    {
+                        SendStreamToClient(image.ToPngStream(), "image/png", httpProcessor);
+                    }, (img) => { });
+                });
             }
 
             return true;

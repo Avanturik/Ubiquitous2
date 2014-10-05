@@ -26,12 +26,12 @@ namespace UB.Utils
         {
             var checkUri = uri;
             if (!checkUri.IsAbsoluteUri)
-                if( Uri.TryCreate("http://loclahost/" + uri.OriginalString, UriKind.Absolute, out checkUri))
-                {
-                    var query = HttpUtility.ParseQueryString(checkUri.Query);
-                    return query[parameterName];
-                }
-            return String.Empty;
+            {
+                if (!Uri.TryCreate("http://loclahost/" + uri.OriginalString, UriKind.Absolute, out checkUri))
+                    return String.Empty;
+            }
+            var query = HttpUtility.ParseQueryString(checkUri.Query);
+            return query[parameterName];
         }
 
         public static Uri RemoveParameters( Uri uri, string[] parameters )

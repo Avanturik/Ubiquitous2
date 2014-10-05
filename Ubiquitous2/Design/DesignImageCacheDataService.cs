@@ -47,5 +47,11 @@ namespace UB.Design
         {
             throw new NotImplementedException();
         }
+
+
+        public void AddImage(Uri uri, Stream stream)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

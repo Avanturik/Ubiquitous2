@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Net.Cache;
 using System.Text;
@@ -21,8 +22,14 @@ namespace UB.Model
         private object cacheLock = new object();
         private object getLock = new object();
         private WebClientBase webClient = new WebClientBase();        
-        private Dictionary<String, WeakReference<ImageCacheItem>> bitmapImageCache = new Dictionary<string,WeakReference<ImageCacheItem>>();
+        private Dictionary<String, ImageCacheItem> bitmapImageCache = new Dictionary<string,ImageCacheItem>();
+        public void AddImage( Uri uri, Stream stream )
+        {
+            var item = new ImageCacheItem(stream);
+            lock (cacheLock)
+                bitmapImageCache.Add(uri.OriginalString, item);
 
+        }
         public void GetImage(Uri uri, int width, int height, Action<Image> callback, Action<Image> downloadComplete)
         {
             lock (getLock)
@@ -33,39 +40,47 @@ namespace UB.Model
                 {
                     int x = -1;
                     int y = -1;
+                    int w = -1;
+                    int h = -1;
                     //URL contains offset parameter ?
                     if (uri.OriginalString.Contains("ubx="))
                     {
                         var ubx = Url.GetParameter(uri, "ubx");
                         var uby = Url.GetParameter(uri, "uby");
-                        
-                        if( !Int32.TryParse(ubx, out x) || !Int32.TryParse(uby, out y))
+                        var ubw = Url.GetParameter(uri, "ubw");
+                        var ubh = Url.GetParameter(uri, "ubh");
+                        if( !Int32.TryParse(ubx, out x) ||
+                            !Int32.TryParse(uby, out y) ||
+                            !Int32.TryParse(ubw, out w) ||
+                            !Int32.TryParse(ubh, out h))
                         {
                             x = -1;
                             y = -1;
+                            w = -1;
+                            h = -1;
                         }
                         else
                         {
                             x = Math.Abs(x);
                             y = Math.Abs(y);
                         }
-                        image.Width = width;
-                        image.Height = height;
+                        image.Width = w;
+                        image.Height = h;
 
                         if (imageSource.IsDownloading)
                         {
                             imageSource.DownloadCompleted += (o, e) =>
                             {
-                                var cropped = new CroppedBitmap(imageSource, new Int32Rect(x, y, width, height));
+                                var cropped = new CroppedBitmap(imageSource, new Int32Rect(x, y, w, h));
                                 image.Source = cropped;
                             };
                             UI.Dispatch(() => callback(image));
                         }
                         else
                         {
-                            if( imageSource.PixelWidth >= width && imageSource.PixelHeight >= height)
+                            if( imageSource.PixelWidth > 1 && imageSource.PixelHeight > 1 && w > 0 && h > 0 )
                             {
-                                var cropped = new CroppedBitmap(imageSource, new Int32Rect(x, y, width, height));
+                                var cropped = new CroppedBitmap(imageSource, new Int32Rect(x, y, w, h));
                                 image.Source = cropped;
                                 UI.Dispatch(() => callback(image));
                             }
@@ -109,6 +124,9 @@ namespace UB.Model
         }
         public void GetImageSource(Uri uri, int width, int height, Image image, Action<BitmapImage> callback)
         {
+            if (String.IsNullOrWhiteSpace(uri.OriginalString))
+                return;
+
             bool forceSize = false;
 
             if (width <= 1)
@@ -124,16 +142,13 @@ namespace UB.Model
             {
                 FixImageSize(image, width);
             }
-            //if( uri.AbsoluteUri.Contains("ubx="))
-            //{
-            //    uri = Url.RemoveParameters(uri, new string[] { "ubx", "uby" });
-            //}
+
             if( uri.OriginalString.Contains("uburl="))
             {
                 Uri.TryCreate(HttpUtility.UrlDecode( Url.GetParameter(uri,"uburl")), UriKind.RelativeOrAbsolute, out uri);               
             }
             
-            if (!bitmapImageCache.ContainsKey(uri.OriginalString))
+            if (!bitmapImageCache.ContainsKey(uri.OriginalString) )
             {
                 var item = new ImageCacheItem(uri, width, height) { 
                     DownloadComplete = (cacheItem) =>
@@ -148,21 +163,16 @@ namespace UB.Model
                         });
                     }
                 };
-                var itemWeakRef = new WeakReference<ImageCacheItem>(item);
-
-               
+            
                 lock (cacheLock)
-                    bitmapImageCache.Add(uri.OriginalString, itemWeakRef);
+                    bitmapImageCache.Add(uri.OriginalString, item);
 
                 callback(item.Bitmap);
 
             }
             else
             {
-                var itemRef = bitmapImageCache[uri.OriginalString];
-
-                ImageCacheItem item;
-                itemRef.TryGetTarget(out item);
+                var item = bitmapImageCache[uri.OriginalString];
 
                 if (item == null)
                 {
@@ -184,20 +194,44 @@ namespace UB.Model
                 callback(item.Bitmap);
             }
 
-            foreach (var item in bitmapImageCache.Keys.ToList())
-            {
-                ImageCacheItem cacheItem;
-                bitmapImageCache[item].TryGetTarget(out cacheItem);
-                if (cacheItem == null || DateTime.Now.Subtract(cacheItem.LastAccessed).Seconds > 120)
-                    lock (cacheLock)
-                        bitmapImageCache.Remove(item);
-            }
+            //foreach (var item in bitmapImageCache.Keys.ToList())
+            //{
+            //    ImageCacheItem cacheItem;
+            //    cacheItem = bitmapImageCache[item];
+            //    if (cacheItem == null || DateTime.Now.Subtract(cacheItem.LastAccessed).Seconds > 120)
+            //        lock (cacheLock)
+            //            bitmapImageCache.Remove(item);
+            //}
 
             
         }
     }
     public class ImageCacheItem
     {
+        public ImageCacheItem( Stream inputStream )
+        {
+            LastAccessed = DateTime.Now;
+
+            Bitmap = new BitmapImage();
+            
+            IsDownloading = true;
+
+            Bitmap.BeginInit();
+            Bitmap.CacheOption = BitmapCacheOption.OnLoad;
+            Bitmap.CreateOptions = BitmapCreateOptions.None;
+            Bitmap.StreamSource = inputStream;
+            Bitmap.EndInit();
+            Width = Bitmap.PixelWidth;
+            Height = Bitmap.PixelHeight;
+
+            IsDownloading = false;
+            if (DownloadComplete != null)
+                DownloadComplete(this);
+
+            inputStream.Close();
+
+        }
+
         public ImageCacheItem(Uri uri, int width, int height)
         {
             LastAccessed = DateTime.Now;

@@ -104,6 +104,48 @@ namespace UB.Model
                 }
                 return String.Empty;
             }
+            public MemoryStream DownloadToMemoryStream( String url )
+            {
+                try
+                {
+                    lock (downloadLock)
+                    {
+                        var request = GetWebRequest(new Uri(url));
+                        var response = GetWebResponse(request);
+
+                        if (SuccessHandler != null)
+                            SuccessHandler();
+                        
+                        MemoryStream memoryStream = new MemoryStream();
+                        
+                        var stream = response.GetResponseStream();
+                        
+                        if( stream.CanRead )
+                        {
+                            byte[] result = new byte[response.ContentLength];
+                            byte[] buffer = new byte[4096];
+
+                            int bytesRead = 0;
+
+                            do
+                            {
+                                bytesRead = stream.Read(buffer, 0, buffer.Length);
+                                memoryStream.Write(buffer, 0, bytesRead);
+                            } while( bytesRead > 0);
+
+                            memoryStream.Position = 0;
+
+                            return memoryStream;
+                        }
+                    }
+                }
+                catch
+                {
+                    ErrorHandler(String.Format("Error downloading {0} to memorystream", url));
+                }
+                return null;
+
+            }
             public Stream DownloadToStream(String url, bool cache = false)
             {
                 try
@@ -117,7 +159,9 @@ namespace UB.Model
                         }
                         var response = GetWebResponse(request);
                         
-                        SuccessHandler();
+                        if( SuccessHandler != null )
+                            SuccessHandler();
+
                         return response.GetResponseStream();
                     }
                 }

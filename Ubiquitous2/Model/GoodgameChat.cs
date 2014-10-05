@@ -7,6 +7,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Web;
+using GalaSoft.MvvmLight.Ioc;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using UB.Utils;
@@ -533,6 +534,7 @@ namespace UB.Model
                 }
                 else
                 {
+                    string originalUrl = null;
                     foreach (Match match in matches)
                     {
                         if( match.Groups.Count >= 2)
@@ -542,10 +544,12 @@ namespace UB.Model
 
                             var background = Css.GetBackground(cssClassDefinition);
 
-                            if( background != null && !String.IsNullOrWhiteSpace(url) && background.width > 0 && background.height > 0)
+                            if( background != null && !String.IsNullOrWhiteSpace(background.url) && background.width > 0 && background.height > 0)
                             {
-                                var originalUrl = String.Format("http://goodgame.ru/{0}", background.url.Replace("../../", ""));
-                                var modifiedUrl = String.Format(@"/ubiquitous/cache?ubx={0}&uby={1}&uburl={2}", background.x, background.y, HttpUtility.UrlEncode(originalUrl));
+                                originalUrl = String.Format("http://goodgame.ru/{0}", background.url.Replace("../../", ""));
+                                var modifiedUrl = String.Format(@"/ubiquitous/cache?ubx={0}&uby={1}&ubw={2}&ubh={3}&uburl={4}", 
+                                    background.x, background.y, background.width, background.height, HttpUtility.UrlEncode(originalUrl));
+
                                 list.Add( new Emoticon(String.Format(":{0}:", smileName),
                                     modifiedUrl,
                                     background.width,
@@ -556,6 +560,14 @@ namespace UB.Model
                     }
                     if (list.Count > 0)
                     {
+                        Uri uri;
+                        if( !String.IsNullOrWhiteSpace(originalUrl) && Uri.TryCreate( originalUrl, UriKind.Absolute, out uri ))
+                        {
+                            var ddosCookieGet = GoodgameGet("http://goodgame.ru");
+
+                            var imageDataService = SimpleIoc.Default.GetInstance<IImageDataSource>();
+                            UI.Dispatch (() => imageDataService.AddImage( uri, webClient.DownloadToMemoryStream(originalUrl)));
+                        }
                         Emoticons = list;
                         if (isFallbackEmoticons)
                             isWebEmoticons = true;

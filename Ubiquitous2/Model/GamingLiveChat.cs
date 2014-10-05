@@ -581,6 +581,8 @@ namespace UB.Model
         }
         public void Join(Action<GamingLiveChannel> callback, string nickName, string channel, string authToken)
         {
+            JoinCallback = callback;
+
             isAnonymous = nickName == null || nickName.Equals("__$anonymous",StringComparison.InvariantCultureIgnoreCase) 
                 || String.IsNullOrWhiteSpace(nickName) 
                 || String.IsNullOrWhiteSpace(authToken);
@@ -593,13 +595,13 @@ namespace UB.Model
             ChannelName = "#" + channel.Replace("#", "");
             webSocket = new WebSocketBase();
             webSocket.Host = "54.76.144.150";
-            webSocket.PingInterval = 0;
+            //webSocket.PingInterval = 0;
             webSocket.Origin = "http://www.gaminglive.tv";
             webSocket.Path = String.Format("/chat/{0}?nick={1}&authToken={2}", ChannelName.Replace("#",""), nickName, authToken );
             webSocket.ConnectHandler = () =>
             {
-                if( callback != null )
-                    callback(this);
+                //if( callback != null )
+                //    callback(this);
             };
 
             webSocket.DisconnectHandler = () =>
@@ -610,8 +612,14 @@ namespace UB.Model
             webSocket.ReceiveMessageHandler = ReadRawMessage;
             webSocket.Connect();
         }
-        private void ReadRawMessage(string rawMessage)
+        private void ReadRawMessage(string rawMessage)        
         {
+            if( !_chat.Status.IsConnected )
+            {
+                if( JoinCallback!= null )
+                    JoinCallback(this);                
+                //_chat.Status.IsConnected = true;
+            }
             Log.WriteInfo("gaminglive raw message: {0}", rawMessage);
             if( !String.IsNullOrWhiteSpace(rawMessage))
             {
@@ -646,6 +654,7 @@ namespace UB.Model
         }
 
         public Action<GamingLiveChannel> LeaveCallback { get; set; }
+        public Action<GamingLiveChannel> JoinCallback { get; set; }
         public Action<ChatMessage> ReadMessage { get; set; }
         public void SendMessage( ChatMessage message )
         {
