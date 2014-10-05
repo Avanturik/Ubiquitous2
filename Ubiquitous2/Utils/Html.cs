@@ -34,13 +34,17 @@ namespace UB.Utils
         public static string ConvertUrlsToLinks(string msg)
         {
             var result = msg;
+            string removeAnchors = @"<\/*a.*?>";
+            result = Regex.Replace(msg, removeAnchors, "", RegexOptions.IgnoreCase);
+
             string regex = @"(?<!<[^>]*)((www\.|(http|https|ftp|news|file)+\:\/\/)[_.a-z0-9-]+\.[a-z0-9\/_;:@=.+?,##%&~-]*[^.|\'|\# |!|\(|?|,| |>|<|;|\)])";
             Regex r = new Regex(regex, RegexOptions.IgnoreCase);
-            var matches = r.Matches(msg);
+            var matches = r.Matches(result);
             foreach( Match match in matches )
             {
                 result = result.Replace(match.Value, String.Format("<a href=\"{0}\" target=\"_blank\">{0}</a>",GetTinyUrl(match.Value)));
             }
+
             return result.Replace("href=\"www", "href=\"http://www");
         }
 
