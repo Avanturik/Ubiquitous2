@@ -18,7 +18,8 @@ namespace UB.Model
     {
         UrlEncoded,
         UrlEncodedUTF8,
-        Multipart
+        Multipart,
+        JsonUTF8
     }
     public class WebClientBase : WebClient
     {
@@ -26,6 +27,7 @@ namespace UB.Model
             private readonly CookieContainer m_container = new CookieContainer();
             private const string userAgent = "Mozilla/5.0 (Windows NT 6.0; WOW64; rv:14.0) Gecko/20100101 Firefox/14.0.1";
             private Dictionary<ContentType, string> contentTypes = new Dictionary<ContentType,string>() {
+                 {ContentType.JsonUTF8, "application/json; charset=UTF-8"},
                  {ContentType.UrlEncodedUTF8, "application/x-www-form-urlencoded; charset=UTF-8"},
                  {ContentType.UrlEncoded, "application/x-www-form-urlencoded"},
                  {ContentType.Multipart, "multipart/form-data"},

@@ -21,6 +21,7 @@ namespace UB.Model
         private object channelsLock = new object();
         private List<WebPoller> counterWebPollers = new List<WebPoller>();
         private bool isAnonymous = false;
+        private object lockSearch = new object();
         public GamingLiveChat(ChatConfig config)
         {
             Config = config;
@@ -476,10 +477,13 @@ namespace UB.Model
 
         public void QueryGameList(string gameName, Action callback)
         {
-            Games.Clear();            
-            jsonGames.games.Where(game => game.name.ToLower().StartsWith(gameName.ToLower())).Select(game => new Game() { Id = game.id, Name = game.name }).ToList().ForEach( game => Games.Add(game));
-            if (callback != null)
-                UI.Dispatch(() => callback());
+            lock (lockSearch)
+            {
+                Games.Clear();
+                jsonGames.games.Where(game => game.name.ToLower().StartsWith(gameName.ToLower())).Select(game => new Game() { Id = game.id, Name = game.name }).ToList().ForEach(game => Games.Add(game));
+                if (callback != null)
+                    UI.Dispatch(() => callback());
+            }
         }
 
         JToken GetLiveStreamInfo()
@@ -487,7 +491,7 @@ namespace UB.Model
             var getUrl = @"https://api.gaminglive.tv/channels/{0}?authToken={1}";
             var userName = Config.GetParameterValue("Username") as string;
             var authToken = Config.GetParameterValue("AuthToken") as string;
-
+            loginWebClient.ContentType = ContentType.JsonUTF8;
             return this.With(x => loginWebClient.Download(String.Format(getUrl, HttpUtility.UrlEncode(userName.ToLower()), authToken)))
                             .With(x => JToken.Parse(x));
 
@@ -532,6 +536,8 @@ namespace UB.Model
         {
             var userName = Config.GetParameterValue("Username") as string;
             var authToken = Config.GetParameterValue("AuthToken") as string;
+            var gameId = this.With( x => jsonGames.games.FirstOrDefault( game => game.name.Equals(Info.CurrentGame.Name,StringComparison.InvariantCultureIgnoreCase) ))
+                            .With( x => x.id);
 
             var jsonInfo = new GamingLiveChannelUpdate
             {
@@ -539,7 +545,7 @@ namespace UB.Model
                 owner = userName.ToLower(),
                 name = Info.Topic,
                 authToken = authToken,
-                game = jsonGames.games.FirstOrDefault( game => game.name.Equals(Info.CurrentGame.Name,StringComparison.InvariantCultureIgnoreCase) ),
+                gameId = gameId,
             };
 
 
@@ -671,8 +677,8 @@ namespace UB.Model
         public string slug { get; set; }
         public string owner { get; set; }
         public string name { get; set; }
+        public string gameId { get; set; }
         public string authToken { get; set; }
-        public GamingLiveGame game { get; set; }
     }
 
     public class GamingLiveGame
