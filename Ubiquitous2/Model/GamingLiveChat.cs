@@ -610,7 +610,7 @@ namespace UB.Model
             webSocket.Path = String.Format("/chat/{0}?nick={1}&authToken={2}", ChannelName.Replace("#",""), nickName, authToken );
             webSocket.ConnectHandler = () =>
             {
-                webSocket.Send("{}");
+                //webSocket.Send("{}");
             };
 
             webSocket.DisconnectHandler = () =>
@@ -623,14 +623,11 @@ namespace UB.Model
             secondWebSocket = new WebSocketBase();
             secondWebSocket.Host = webSocket.Host;
             secondWebSocket.Origin = webSocket.Origin;
-            secondWebSocket.Path = webSocket.Path;
+            secondWebSocket.Path = String.Format("/chat/{0}?nick={1}&authToken={2}", ChannelName.Replace("#", ""), "__$anonymous", "__$anonymous");
 
-            //secondWebSocket.Connect();
             webSocket.Connect();
-
+            Thread.Sleep(500);
             secondWebSocket.Connect();
-
-
         }
         private void ReadRawMessage(string rawMessage)        
         {
