@@ -152,7 +152,8 @@ namespace UB.Model
                             Status.IsConnected = true;
                             lock(channelsLock)
                                 gamingLiveChannels.Add(glChannel);
-                            if (glChannel.ChannelName.Equals("#" + NickName, StringComparison.InvariantCultureIgnoreCase))
+
+                            if(!isAnonymous)
                                 Status.IsLoggedIn = true;
 
                             ChatChannels.RemoveAll(chan => chan == null);
@@ -201,7 +202,6 @@ namespace UB.Model
 
             if (!isAnonymous)
             {
-                Status.IsLoggedIn = true;
                 GetTopic();
                 GetGameList();
             }
