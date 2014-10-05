@@ -25,7 +25,11 @@ namespace UB.Model
         private Dictionary<String, ImageCacheItem> bitmapImageCache = new Dictionary<string,ImageCacheItem>();
         public void AddImage( Uri uri, Stream stream )
         {
+            if (bitmapImageCache.ContainsKey(uri.OriginalString))
+                return;
+
             var item = new ImageCacheItem(stream);
+            
             lock (cacheLock)
                 bitmapImageCache.Add(uri.OriginalString, item);
 
