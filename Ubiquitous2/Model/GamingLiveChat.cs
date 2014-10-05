@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Web;
 using Newtonsoft.Json;
@@ -581,12 +582,26 @@ namespace UB.Model
         private WebSocketBase webSocket;
         private IChat _chat;
         bool isAnonymous = false;
+        object lockConnect = new object();
+        private Timer disconnectTimer;
         public GamingLiveChannel(IChat chat)
         {
             _chat = chat;
         }
         public void Join(Action<GamingLiveChannel> callback, string nickName, string channel, string authToken)
         {
+            disconnectTimer = new Timer((sender) =>
+            {
+                _chat.Status.IsStarting = false;
+
+                if (_chat.Status.IsConnected)
+                    return;
+
+                if (LeaveCallback != null)
+                    LeaveCallback(this);
+
+            }, null, Timeout.Infinite, Timeout.Infinite);
+            
             JoinCallback = callback;
 
             isAnonymous = nickName == null || nickName.Equals("__$anonymous",StringComparison.InvariantCultureIgnoreCase) 
@@ -606,8 +621,7 @@ namespace UB.Model
             webSocket.Path = String.Format("/chat/{0}?nick={1}&authToken={2}", ChannelName.Replace("#",""), nickName, authToken );
             webSocket.ConnectHandler = () =>
             {
-                //if( callback != null )
-                //    callback(this);
+                  disconnectTimer.Change(1000, Timeout.Infinite);
             };
 
             webSocket.DisconnectHandler = () =>
@@ -622,6 +636,7 @@ namespace UB.Model
         {
             if( !_chat.Status.IsConnected )
             {
+                _chat.Status.IsStarting = false;
                 if( JoinCallback!= null )
                     JoinCallback(this);                
                 //_chat.Status.IsConnected = true;
