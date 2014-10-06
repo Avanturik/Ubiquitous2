@@ -41,7 +41,7 @@ namespace UB.Utils
                 if( uri.PathAndQuery.Length > 1 )
                 {
                    var result = webClient.Download(String.Format(@"http://tinyurl.com/api-create.php?url={0}", url));
-                   if( !String.IsNullOrWhiteSpace(result) && result.StartsWith("http://"))
+                   if( !String.IsNullOrWhiteSpace(result) && result.StartsWith("http://") && result.Length < url.Length)
                        return result;
                 }
             }

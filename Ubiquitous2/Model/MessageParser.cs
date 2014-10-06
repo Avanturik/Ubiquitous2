@@ -111,11 +111,14 @@ namespace UB.Model
                 {
                     if (words.Contains(emoticon.ExactWord))
                     {
-                        message.Text = message.Text.Replace(emoticon.ExactWord, emoticon.HtmlCode);
-                        if (emoticon.ExactWord == ":/" || emoticon.ExactWord == "://")
+                        if (message.Text == emoticon.ExactWord)
+                        {
+                            message.Text = emoticon.HtmlCode;
                             break;
+                        }
+                        message.Text = message.Text.Replace(" " + emoticon.ExactWord, emoticon.HtmlCode);
+                        message.Text = message.Text.Replace(emoticon.ExactWord + " ", emoticon.HtmlCode);
                     }
-
                 }
             }
         }

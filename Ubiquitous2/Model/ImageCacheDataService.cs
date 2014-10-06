@@ -239,6 +239,7 @@ namespace UB.Model
 
         public ImageCacheItem(Uri uri, int width, int height)
         {
+            
             LastAccessed = DateTime.Now;
 
             Bitmap = new BitmapImage();
