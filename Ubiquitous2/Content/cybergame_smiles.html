@@ -1,0 +1,1111 @@
+<!doctype html>
+<html><head>
+<!-- 14.04.2014 01 -->
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+   <!-- <script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
+    -->
+
+    <script type="text/javascript" src="http://cybergame.tv/js/jquery.min.js"></script>
+
+
+
+    <script src="/js/sockjs-0.3.min.js"></script>
+
+    <link href="http://cybergame.tv/css/bootstrap2.min.css" rel="stylesheet" type="text/css"/>
+
+    <script type="text/javascript" src="http://cybergame.tv/js/bootstrap2.min.js"></script>
+    <script type="text/javascript" src="http://cybergame.tv/js/bootstrap-tooltip2.js"></script>
+    <script type="text/javascript" src="http://cybergame.tv/js/bootstrap-popover2.js"></script>
+<style>
+
+html, body, .container{
+  /*24.03.2014*/
+  height: 100%;
+  min-height: 100%;
+}
+  
+body {
+  background-color: #F6F7F7;
+  color: #666;
+  overflow: hidden;
+}
+
+#demoPage, #chatPage{
+    position: relative;
+    margin-right: 251px;
+    min-height: 100%;
+    height: 100%;
+}
+
+.chatLog{
+overflow: auto;
+}
+
+.form-signin {
+  max-width: 330px;
+  padding: 15px;
+  margin: 0 auto;
+}
+.form-signin .form-signin-heading,
+.form-signin .checkbox {
+  margin-bottom: 10px;
+}
+.form-signin .checkbox {
+  font-weight: normal;
+}
+.form-signin .form-control {
+  position: relative;
+  font-size: 16px;
+  height: auto;
+  padding: 10px;
+  -webkit-box-sizing: border-box;
+     -moz-box-sizing: border-box;
+          box-sizing: border-box;
+}
+.form-signin .form-control:focus {
+  z-index: 2;
+}
+.form-signin input[type="text"] {
+  margin-bottom: -1px;
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+}
+.form-signin input[type="password"] {
+  margin-bottom: 10px;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+}
+
+
+#wrap {
+  min-height: 100%;
+  height: auto;
+  /* Negative indent footer by its height */
+  margin: 0 auto -60px;
+  /* Pad bottom by footer height */
+  padding: 0 0 60px;
+}
+
+
+/* Set the fixed height of the footer here */
+#footer {
+  position: absolute;
+  bottom:0px;
+  height: 60px;
+  background-color: #f5f5f5;
+}
+
+#inputChatGroup
+{
+  position: absolute;
+  bottom:0px;
+  left:0px;
+  width:100%;
+  display: table;
+  box-shadow: 0 0 5px rgba(0,0,0,0.3);
+}
+#inputChatGroup input{
+  display: block;
+  float:left;
+  width: 100%;
+  margin-bottom: 0px;
+  padding: 0px;
+  background: transparent;
+  box-shadow: none;
+  outline: none;
+  border: none;
+  height: 0px;
+  line-height: 12px;
+}
+#inputChatGroup input:focus{
+  box-shadow: none;
+}
+#inputChatGroup span{
+  display: table-cell;
+  position: relative;
+  white-space: nowrap;
+  width: 100%;
+  z-index: 3;
+  background: #444;
+}
+#inputChatGroup span>div{
+  padding: 1px 3px 3px 3px;
+  margin: 3px;
+  height: 14px;
+  background: #fff;
+  -moz-border-radius: 4px;
+  -webkit-border-radius: 4px;
+  border-radius: 4px;
+}
+#inputChatGroup span+span{
+  width: 1%;
+}
+
+#sideBar{
+  float: right;
+  width: 250px;
+  height: 100%;
+  background: #f0f0f0;
+  border-left: solid 1px #ddd;
+  z-index: 4;
+  overflow: auto;
+}
+#nickMenu
+{
+  position: absolute;
+  bottom:0px;
+  left:0px;
+  background-color: #ccc;
+  color:#fff;
+  width: 100%;
+  height: 100%;
+  /*width:350px;*/
+  /*height:200px;*/
+  z-index: 10;
+}
+
+#userList{
+  margin-bottom: 30px;
+}
+
+#userList .cmdnick{
+  display: block;
+  padding: 5px 10px;
+  color: #333;
+  text-decoration: none;
+  margin-left: 5px;
+}
+
+#userList .cmdnick.banned{
+  color: #888;
+}
+
+#userList .cmdnick.op{
+  color: #880000;
+}
+
+#userList a:hover.cmdnick{
+  background: #fff;
+  border-left: solid 5px #76B654;
+  margin-left: 0px;
+}
+
+#userList a:hover.cmdnick.banned{
+  border-color: #888;
+}
+
+#userList .title{
+  padding: 10px 15px 5px 15px;
+  color: #333;
+  font-weight: bold;
+}
+
+#userList .title.banned{
+  padding-top: 20px;
+}
+
+#showSB{
+  position: absolute;
+  right: -20px;
+  top: -20px;
+  width: 0px;
+  height: 0px;
+  padding: 20px;
+  background: #f6f7f7;
+  border: solid 1px #888;
+  -moz-border-radius: 20px;
+  -webkit-border-radius: 20px;
+  border-radius: 20px;
+  overflow: visible;
+  z-index: 10;
+  display: none;
+  color: #888;
+  text-decoration: none !important;
+}
+
+#showSB .icon-user{
+  margin-left: -13px;
+  margin-top: -2px;
+}
+
+@media screen and (max-width: 720px) {
+  #inputChatGroup span button{
+    display: none;
+  }
+  #inputChatGroup span+span{
+    width: 1px;
+  }
+  #inputChatGroup input{
+    border-radius: 3px;
+    border: none;
+  }
+  #inputChatGroup input, #inputChatGroup input:focus{
+    height: 14px;
+  }
+  #sideBar{
+    display: none;
+  }
+  #sideBar.vis{
+    display: block;
+    position: absolute;
+    top:0px;
+    right: 0px;
+    height: 100%;
+  }
+  #demoPage, #chatPage{
+    position: relative;
+    margin-right: 0px;
+  }
+  #showSB{
+    display:block;
+  }
+}
+
+#demoPanel, #loginPanel
+{
+  text-align: center;
+  position: fixed;
+  bottom:0px;
+  left:0px;
+  width:100%;  
+}
+
+.chatLog
+{
+  /*position:absolute;*/
+  left:0;
+  width:100%;
+  word-wrap: break-word; /* Internet Explorer 5.5+ */
+}
+.chatLog ul li
+{
+  font-size: 13px;
+}
+
+.input-append{
+  margin-bottom: 0px;
+}
+.input-append input:focus{
+  z-index: 2;
+}
+.input-append button{
+  z-index: 3;
+}
+
+.container{
+  width: 100%;
+}
+
+a.nick{
+  color: #2D6987;
+  text-decoration: none;
+}
+
+a.me{
+  color: #29833A;
+}
+
+#nickmnu{
+  position: absolute;
+  z-index: 20;
+  overflow: visible;
+}
+
+#nickmnu a.icon{
+  display: block;
+  background: rgba(0,0,0,0.65);
+  color: #fff !important;
+  text-decoration: none;
+  padding: 3px 5px;
+  white-space: nowrap;
+  -webkit-border-radius: 4px;
+  -moz-border-radius: 4px;
+  border-radius: 4px;
+}
+#nickmnu a.icon span{
+  margin-right: 5px;
+}
+#nickmnu a:hover.icon{
+  text-decoration: none;
+}
+
+
+</style>
+
+</head><body style="padding-left: 0px;padding-right:0px;">
+
+    <div class="container">
+
+      <a id="showSB" href="javascript:void(0)"><div class="icon-user"></div></a>
+      <div id="sideBar">
+        <div id="userList"></div>
+      </div>
+      <div id="initPage">
+        Загрузка...
+      </div>
+
+      <div id="loginPage" class="hide">
+        <div class="form-signin" onkeypress="if(event.keyCode=='13')signIn()">
+          <h2 class="form-signin-heading">Please sign in</h2>
+          <input type="text" class="form-control" id="userNick" placeholder="Nick" required autofocus>
+          <input type="password" class="form-control" id="userPass" placeholder="Password" required>
+          <label class="checkbox">
+            <input type="checkbox" value="remember-me"> Remember me
+          </label>
+          <button class="btn btn-lg btn-primary btn-block" onclick='signIn()'>Sign in</button>
+        </div>
+      </div>
+
+      <div id="chatPage" class="hide">
+        <div class="chatLog"><ul class="nav" style="padding-left:-10px;margin-left:0px;left:-10px;margin-bottom:2px;"></ul></div>
+          <div id="inputChatGroup" style="display:none;">
+            <span><div>
+
+  
+  <a href="javascript:void(0)" data-toggle="popover" container="body" trigger="click" id="smilesPopover" data-placement="top" data-html="true" data-content="<a href='javascript:void(0)' onclick='addSmile(event)'><img style='width:20px;height:20px;' src='smiles/smile_20.png' /></a>
+<a href='#' onclick='addSmile(event)'><img style='width:20px;height:20px;' src='smiles/sadsmile_20.png' /></a>
+<a href='#' onclick='addSmile(event)'><img style='width:20px;height:20px;' src='smiles/cool_20.png' /></a>
+<a href='#' onclick='addSmile(event)'><img style='width:20px;height:20px;' src='smiles/wink_20.png' /></a>
+<a href='#' onclick='addSmile(event)'><img style='width:20px;height:20px;' src='smiles/crying_20.png' /></a>
+<a href='#' onclick='addSmile(event)'><img style='width:20px;height:20px;' src='smiles/speechless_20.png' /></a>
+<a href='#' onclick='addSmile(event)'><img style='width:20px;height:20px;' src='smiles/peka.png' /></a>
+<a href='#' onclick='addSmile(event)'><img style='width:20px;height:20px;' src='smiles/thinking_20.png' /></a>
+<a href='#' onclick='addSmile(event)'><img style='width:20px;height:20px;' src='smiles/rofl_20.png' /></a>
+<a href='#' onclick='addSmile(event)'><img style='width:20px;height:20px;' src='smiles/yes_20.png' /></a>
+<a href='#' onclick='addSmile(event)'><img style='width:20px;height:20px;' src='smiles/no_20.png' /></a>
+<a href='#' onclick='addSmile(event)'><img style='width:20px;height:20px;' src='smiles/heart_20.png' /></a>
+<a href='#' onclick='addSmile(event)'><img style='width:20px;height:20px;' src='smiles/sunshine_20.png' /></a>" title="">
+  <img src="smiles/emotion_smile.png" style="width: 16px;height: 16px;margin-top:0px;position:absolute;">
+  </a>
+
+  <input class="form-control" style="height:20px;padding-left:20px;width: 240px;margin-top: -1px;" type="text" placeholder="" maxLength="255" id="inputChat" autocomplete="off" onkeypress="sendChatMessage(event)" autofocus>
+  <!-- </div> -->
+
+
+
+            </div></span>
+              <span><button style="display:none" class="btn btn-default icon-angle-right" type="button"></button></span>
+          </div><!-- /input-group -->
+          <div id="loginPanel"><a href="/login.php" target="_blank">Войти в чат</a></div>
+      </div>
+
+      <div id="demoPage" class="hide">
+        <div class="chatLog"><ul class="nav" style="padding-left:-10px;margin-left:0px;left:-10px;"></ul></div>
+        <div id="demoPanel"><a href="/login.php" target="_blank">Войти в чат</a></div>
+      </div>
+
+
+    </div>
+
+    <script>
+
+    //vars
+    var bannedArr = [];
+
+    
+
+    //smiles
+    smiles = {
+    ":)":"smiles/smile_20.png",
+    ":=)":"smiles/smile_20.png",
+    ":-)":"smiles/smile_20.png",
+
+    ":(":"smiles/sadsmile_20.png",
+    ":=(":"smiles/sadsmile_20.png",
+    ":-(":"smiles/sadsmile_20.png",
+
+    ":D":"smiles/bigsmile_20.png",
+    ":=D":"smiles/bigsmile_20.png",
+    ":-D":"smiles/bigsmile_20.png",
+    ":d":"smiles/bigsmile_20.png",
+    ":=d":"smiles/bigsmile_20.png",
+    ":-d":"smiles/bigsmile_20.png",
+
+    "8=)":"smiles/cool_20.png",
+    "8-)":"smiles/cool_20.png",
+    "B=)":"smiles/cool_20.png",
+    "B-)":"smiles/cool_20.png",
+    "(cool)":"smiles/cool_20.png",
+
+    ":o":"smiles/wink_20.png",
+    ":=o":"smiles/wink_20.png",
+    ":-o":"smiles/wink_20.png",
+    ":O":"smiles/wink_20.png",
+    ":=O":"smiles/wink_20.png",
+    ":-O":"smiles/wink_20.png",
+
+    ";(":"smiles/crying_20.png",
+    ";-(":"smiles/crying_20.png",
+    ";=(":"smiles/crying_20.png",
+
+    ":|":"smiles/speechless_20.png",
+    ":=|":"smiles/speechless_20.png",
+    ":-|":"smiles/speechless_20.png",
+
+
+    "peka":"smiles/peka.png",
+    ":peka:":"smiles/peka.png",
+
+    "(think)":"smiles/thinking_20.png",
+    ":?":"smiles/thinking_20.png",
+    ":-?":"smiles/thinking_20.png",
+    ":=?":"smiles/thinking_20.png",
+
+    "(rofl)":"smiles/rofl_20.png",
+
+    "(y)":"smiles/yes_20.png",
+    "(Y)":"smiles/yes_20.png",
+    "(ok)":"smiles/yes_20.png",
+
+    "(n)":"smiles/no_20.png",
+    "(N)":"smiles/no_20.png",
+
+    "(h)":"smiles/heart_20.png",
+    "(H)":"smiles/heart_20.png",
+    "(l)":"smiles/heart_20.png",
+    "(L)":"smiles/heart_20.png",
+
+    "(sun)":"smiles/sunshine_20.png"
+    };
+
+
+    mouseButton = 0;
+$(function ()
+{
+
+  $("#smilesPopover").popover();
+
+  //mouse
+  document.oncontextmenu = function() {return false;};
+});
+
+
+
+
+    function addSmile(event)
+    {
+      var smile_id = $(event.target.outerHTML)[0].src;
+      smile_id = smile_id.split("/");
+      smile_id = smile_id[smile_id.length-1];
+      // console.log(smile_id);
+      for(var smile in smiles)
+      {
+        if(smiles[smile] == "smiles/"+smile_id)
+        {
+          // console.log(smile);
+          $("#smilesPopover").popover('hide');
+          var curVal = $("#inputChat").val();
+          $("#inputChat").val(curVal+smile);
+          $("#inputChat").focus();
+          break;
+        }
+      }
+    }
+    //end smiles
+
+    var currentWindow = "#initPage";
+    var newWindow ="";
+    userLogin="You";
+    var warns =  {'noflood': 'Флуд запрещен', 'banned': 'Вы забанены на этом канале'};
+    var colors = {'noflood': '#880000', 'banned': '#880000'};
+    var banned = false;
+    var lastmsg = 0;
+    var iamop = false;
+    var winjmps = 0;
+
+    login="";
+    password="";
+    /*********settings*************/
+    var loginCookie="kname",passCookie="khash";
+    cookiesTimeLive = 604800;//in sec
+    /******************************/
+
+
+
+
+      function signIn()
+      {
+        var nick = $("input#userNick").val();
+        var pass = $("input#userPass").val();
+        if(nick!="" &&nick!=undefined && pass!="" && pass!=undefined)
+        {
+          login = nick;
+          password = pass;
+          userLogin = nick;
+          // console.log(nick);
+          var msg = {login:nick,password:pass};
+          msg = JSON.stringify(msg);
+          sendToServer('login',msg);
+        }
+      }
+
+function fmt(num, length) {
+    var r = "" + num;
+    while (r.length < length) {
+        r = "0" + r;
+    }
+    return r;
+}
+
+function getTime(dt){
+  if(dt == 0 || typeof dt === undefined)
+    var date = new Date();
+  else
+    var date = dt;
+  var m = fmt(date.getMonth()+1);
+  var d = fmt(date.getDate());
+  var Y = fmt(date.getFullYear());
+  var H = fmt(date.getHours(),2);
+  var i = fmt(date.getMinutes(),2);
+  var s = fmt(date.getSeconds(),2);
+  return d+'.'+m+'.'+Y+' '+H+':'+i+':'+s;
+}
+
+      function sendChatMessage(e)
+      {
+        if(e.keyCode !='13')return;
+        var now = new Date().getTime();
+        //console.log(now+' '+lastmsg);
+        if(now - lastmsg > 3000) {
+          //console.log("sendChatMessage");
+          var message = $("input#inputChat").val();
+          // console.log(message);
+
+          message = message.replace(/<(?:.|\n)*?>/gm, '');
+          var msg = JSON.stringify({message:message});
+          sendToServer('sendChatMessage',msg);
+
+          //smiles
+          // console.log("in 546: "+message);
+          for(var smile in smiles)
+          {
+            if( (typeof message) == "string" )
+            {
+              message = message.replace(smile,"<img style='width:20px;height:20px;' src='http://cybergame.tv/"+smiles[smile]+"'>");
+            }
+          }
+
+          var div = $(".chatLog ul");
+
+
+          div.append('<li><span class="msg"><a class="nick me" title="'+getTime(0)+'" href="javascript:void(0)"><span class="nickName">'+userLogin+"</span></a>: "+message+"</span></li>");
+          
+          $("input#inputChat").val("");
+
+          $(".chatLog").scrollTop(999999);
+          lastmsg = now;
+        }
+      }
+
+      function sendTest(e)
+      {
+        var now = new Date().getTime();
+        if(now - lastmsg > 3000)
+        {
+          var message = $("input#inputChat").val();
+
+          msg = JSON.stringify({'username':'redflasher',channel:location.hash,reason:'test del'});
+          sendToServer('delAllUserMessagesFromChannel',msg);
+        }
+      }
+
+
+      function delAllUserMessagesFromChannel(event)
+      {
+        var nick = $(event.target).attr("data-nick");
+        console.log("del if nick: "+nick);
+
+        msg = JSON.stringify({'username':nick,channel:location.hash,reason:'test del'});
+        sendToServer('delAllUserMessagesFromChannel',msg);
+
+        closeNickMenu();
+      }
+
+      function getUsers()
+      {
+
+        var msg = JSON.stringify({channel:location.hash});
+        sendToServer('getUsers',msg);
+      }
+
+
+        ///////SockJS
+        var sockjs_url = 'http://cybergame.tv:9090';
+        var sockjs = new SockJS(sockjs_url);
+
+
+        sockjs.onopen    = function()
+        {
+          // console.log('open');
+            login = getCookie(loginCookie),
+            password = getCookie(passCookie);
+
+/*            login = "irc_247",
+            password = "1234567890";*/
+            userLogin=login;
+
+            if((login == undefined || password == undefined) && false)
+            {
+              // newWindow = "#loginPage";
+              newWindow = "#demoPage";
+              $(currentWindow).addClass('hide');
+              $(newWindow).removeClass('hide');
+              currentWindow = newWindow;
+            }
+            else
+            {
+              /*if(typeof login == 'undefined' || typeof password == 'undefined' || login == '' || password == ''){
+                login = 'i99999999999999999999999999999';
+                password = '123';
+              }*/
+              // var msg = {login:login,password:password};
+              resize();
+              var msg = {login:login,password:password,channel:location.hash};
+              //console.log('login msg: ',msg);
+              
+              msg = JSON.stringify(msg);
+              sendToServer('login',msg); 
+            }
+        };
+        sockjs.onmessage = function(e)
+        {
+          readFromSockClient(e.data);
+        };
+        sockjs.onclose   = function()
+        {
+          // console.log('close');
+        };
+
+
+    function sendToServer(command,message)
+    {
+      var msg = JSON.stringify({command:command,message:message});
+      sockjs.send(msg);
+    }
+
+    $(document).mousemove(function(event) {
+        mx = event.pageX;
+        my = event.pageY;
+    });
+    var nmnu = false;
+    function shownickmnu(event,nick,banned)
+    {
+
+      console.log("click mouseButton: ",event.button);
+
+      if(event.button === 0)//left button
+      {
+        //add user nickname into input form
+        if($("#inputChat").val().indexOf(nick+", ") == -1)
+        {
+          $("#inputChat").val(nick+", "+$("#inputChat").val());
+        }
+      }
+      // else if(event.button === 1 || event.button === 2)//right or middle button
+      else
+      {
+        //show user menu
+        console.log("right mouse click");
+        if(nick == userLogin || !iamop)//если я не модер, то остановка
+        {
+          console.log("I'm not moder");
+          return;
+        }
+        if($('#nickmnu').length == 0)
+        {
+          $("body").append("<div id='nickMenu' >"+
+            "<div style='color:#000;padding-top:10px;margin-left:10px;'><b>"+nick+"</b><a href='javascript:closeNickMenu()' style='position:absolute;left:190px;'>закрыть</a></div>"+
+              "<div><ul class='nav' style='margin-left:10px;margin-top:10px;'>"+
+              "<li><input type='button' class='btn' onclick='userBan(event)' data-nick='"+nick+"' value='забанить / разбанить'/></li>"+
+              "<li><input type='button' class='btn' onclick='delAllUserMessagesFromChannel(event)' data-nick='"+nick+"' value='удалить все сообщения'/></li>"+
+              "</ul></div>"+
+            "</div>");
+        }
+      }
+
+      event.preventDefault();
+
+/*      $('#nickmnu').html(banned?'<a href="javascript:void(0)" class="icon unban"><span class="icon-unlock"></span>разбанить</a>':'<a href="javascript:void(0)" class="icon ban"><span class="icon-lock"></span>забанить</a>');
+      $('#nickmnu a.ban').off('click');
+      $('#nickmnu a.ban').click(function(){
+        if(confirm('Забанить пользователя '+nick+'?')){
+          var msg = {user: nick};
+          msg = JSON.stringify(msg);
+          sendToServer('ban', msg);
+        } else {
+          $('#nickmnu').hide();
+        }
+      });
+      $('#nickmnu a.unban').off('click');
+      $('#nickmnu a.unban').click(function(){
+        if(confirm('Разбанить пользователя '+nick+'?')){
+          var msg = {user: nick};
+          msg = JSON.stringify(msg);
+          sendToServer('unban', msg);
+        } else {
+          $('#nickmnu').hide();
+        }
+      });
+
+      return;
+      var thex = Math.min(mx-$(nickmnu).width()/2, $(window).width()-$(nickmnu).width());
+      var they = Math.min(my, $(window).width()-$(nickmnu).height());
+      $('#nickmnu').css({'left': thex+'px', 'top': they+'px', 'display': 'block'});
+      $(document).click(function(e){
+        if($(e.target).attr('id') != 'nickmnu' && !$(e.target).hasClass('cmdnick') && !$(e.target).hasClass('nick')){
+          $('#nickmnu').hide();
+          $(document).off('click');
+        }
+      });*/
+    }
+
+
+///nickMenu
+function closeNickMenu()
+{
+  $("#nickMenu").remove();
+}
+function userBan(event)
+{
+  var nick = $(event.target).attr("data-nick");
+
+  if(! bannedArr.hasOwnProperty(nick))//забаниваем
+  {
+    var msg = {user: nick};
+    msg = JSON.stringify(msg);
+    sendToServer('ban', msg);
+
+    bannedArr[nick] =  1;
+  }
+  else//разбаниваем
+  {
+    var msg = {user: nick};
+    msg = JSON.stringify(msg);
+    sendToServer('unban', msg);
+
+    delete bannedArr[nick];
+  }
+  console.log(bannedArr,nick);//ok
+
+  closeNickMenu();
+}//end userBan
+
+
+    var getHistory = false;
+    function readFromSockClient(message)
+    {
+      // console.log("readFromSockClient: "+message);
+      //try {
+
+        var msg = {};
+        try {  msg = JSON.parse(message); } catch(e){}
+        //console.log(msg);
+        // return;
+        if(typeof msg === 'undefined')return;
+
+        switch(msg.command)
+        {
+          case 'delAllUserMessagesFromChannel':
+          {
+            console.log('server command: delAllUserMessagesFromChannel');
+
+            $(".chatLog ul li").each(function(index,value)
+            {
+
+              var str = $(value.innerHTML)[0].innerHTML;
+              str = str.split('<span class="nickName">');
+
+              try
+              {
+                str = str[1].split("</span>");
+                str = str[0];
+              // console.log(str);//ok
+              // $(value).remove();//ok
+
+                if(str === msg.username)
+                {
+                  $(value).remove();
+                }
+              }
+              catch(e){console.log(e);}
+            });
+
+            break;
+          }
+          case 'changeWindow':
+          {
+            newWindow = "#"+msg.message.window;
+
+            if(newWindow === '#chatPage' && !getHistory)
+            {
+              // console.log('get history');
+              getHistory = true;
+
+              //запрашиваем историю
+              sendToServer('getHistory',location.hash);//отправляем канал для получения истории канала
+            }
+
+            //console.log(newWindow);
+            $(currentWindow).addClass('hide');
+            $(newWindow).removeClass('hide');
+
+            currentWindow = newWindow;
+
+            //
+            var date = new Date( new Date().getTime() + cookiesTimeLive*1000 );
+            document.cookie=loginCookie+"="+login+";expires="+date.toUTCString();
+            document.cookie=passCookie+"="+password+";expires="+date.toUTCString();
+            if(msg.message.window == 'chatPage' && winjmps == 2){
+              setTimeout(getUsers, 1);
+            }
+            winjmps++;
+            break;
+          }
+          case 'setUI':
+          {
+            uistat = msg.message.write;
+            if(uistat == true){
+              $('#inputChatGroup').show();
+              $('#loginPanel').hide();
+            } else {
+              $('#inputChatGroup').hide();
+              $('#loginPanel').show();
+            }
+            break;
+          }
+          case 'getHistory'://принимаем историю
+          {
+            // console.log('getHistory',msg.history);
+
+            var historyArr = msg.history;
+            // console.log("History is: ",historyArr);
+
+            //add to chat log
+            for(var i=0;i< historyArr.length;i++)
+            {
+              // var chatM = 
+              var div = $(".chatLog ul");
+
+              historyArr[i].msg = historyArr[i].msg.replace(/<(?:.|\n)*?>/gm, '');
+              var chat_msg = {from:historyArr[i].nick,text:historyArr[i].msg};
+
+
+            var chatMsg = chat_msg.text;
+            for(var smile in smiles)
+            {
+              if( (typeof chatMsg) == "string" )
+              {
+                chatMsg = chatMsg.replace(smile,"<img style='width:20px;height:20px;' src='http://cybergame.tv/"+smiles[smile]+"'>");
+              }
+            }
+
+
+              var date = new Date(historyArr[i].when);
+              div.append('<li><span class="msg"><a class="nick" onmousedown="shownickmnu(event,\''+chat_msg.from+'\', false)" title="'+getTime(date)+'" href="javascript:void(0)"><span class="nickName">'+chat_msg.from+'</span></a>: '+chatMsg+"</span></li>");
+              //$(document).scrollTop(999999);
+              $('.chatLog').scrollTop(999999);
+            }
+
+
+            break;
+          }
+          case 'chatMessage':
+          {
+            var div = $(".chatLog ul");
+            var msg = JSON.parse(msg.message);
+            //console.log(msg);
+            var date = new Date();
+
+            //for highlight
+            var userMessage = msg.text;
+            if(msg.from.indexOf(login) != -1)
+            {
+              userMessage = "<span style='color:#0a0;'>"+userMessage+"</span>";
+            }
+
+            for(var smile in smiles)
+            {
+              if( (typeof userMessage) == "string" )
+              {
+                userMessage = userMessage.replace(smile,"<img style='width:20px;height:20px;' src='http://cybergame.tv/"+smiles[smile]+"'>");
+              }
+            }
+
+
+            userMessage = userMessage.replace(/<(?:.|\n)*?>/gm, '');
+
+            div.append('<li><span class="msg"><a class="nick" onmousedown="shownickmnu(event,\''+msg.from+'\', false)" title="'+getTime(date)+'" href="javascript:void(0)"><span class="nickName">'+msg.from+'</span></a>: '+userMessage+"</span></li>");
+            //$(document).scrollTop(999999);
+            $('.chatLog').scrollTop(999999);
+            break;
+          }
+          case 'listUsers':
+          {
+            // console.log('gettedUsers',msg.message.nicklist);
+            /*if(winjmps < 2){
+              //winjmps = false;
+              winjmps++;
+              setTimeout(getUsers, 5000);
+              console.log('winjmps');
+              break;
+            }*/
+            $('#userList').html('');
+            var nicks = msg.message.nicklist;
+            var nick = '';
+            iamop = false;
+            if(nicks.length > 0)
+                $('#userList').append('<div class="title">Онлайн</div>');
+            for(i = 0; i < nicks.length;i++) if(nicks[i] != ''){
+              //console.log(nicks[i]);
+              nick = nicks[i].replace(/[@~!]/g, '');
+              if(nicks[i] == '@'+userLogin || nicks[i] == '~'+userLogin){
+                iamop = true;
+              }
+              if(!nick.match(/irc[0-9]+/))
+                $('#userList').append('<a data-nick="'+nick+'" class="cmdnick'+(nicks[i] == '~'+nick || nicks[i] == '@'+nick ? ' op':'')+' active" href="javascript:void(0)">'+nick+'</a>');
+            }
+            $('#userList a.cmdnick.active').each(function(){
+              $(this).click(function(e){
+                e.preventDefault();
+                shownickmnu(e,$(this).data('nick'),false);
+              })
+            });
+            if(iamop || true){
+              var nicks = msg.message.banlist;
+              if(nicks.length > 0)
+                $('#userList').append('<div class="title banned">Забаненные</div>');
+              var nick = '';
+              for(i = 0; i < nicks.length;i++) if(nicks[i] != ''){
+                //console.log(nicks[i]);
+                nick = nicks[i].replace(/[@~!]/g, '');
+                $('#userList').append('<a data-nick="'+nick+'" class="cmdnick'+(nicks[i] == '~'+nick ? ' op':'')+' banned" href="javascript:void(0)">'+nick+'</a>');
+              }
+              $('#userList a.cmdnick.banned').each(function(){
+                $(this).click(function(e){
+                  e.preventDefault();
+                  shownickmnu(e,$(this).data('nick'),true);
+                })
+              });
+            }
+            break;
+          }
+          /*case 'nicks':
+          {
+            var nicks = message.message;
+            console.log(nicks);
+            break;
+          }*/
+          case 'auth':
+          {
+            var authInfo = message.message;
+            //console.log(authInfo);
+
+            //connect to anonymous
+            sendToServer('getDemo',"");
+
+            newWindow = "#demoPage";
+            $(currentWindow).addClass('hide');
+            $(newWindow).removeClass('hide');
+            currentWindow = newWindow;
+
+            break;
+          }
+          case 'notify':
+          {
+            // console.log("notify");
+            switch(msg.message['text']){
+              case 'banned':
+              if(banned)
+                break;
+              banned = true;
+              $('#demoPanel a').hide();
+              var div = $(".chatLog ul");
+              div.append("<li>"+warns[msg.message['text']]+"</li>");
+              // div.append("<br>");
+              $('.chatLog').scrollTop(999999);
+              //$(document).scrollTop(999999);
+              sendToServer('getDemo',"");
+
+            newWindow = "#demoPage";
+            $(currentWindow).addClass('hide');
+            $(newWindow).removeClass('hide');
+            currentWindow = newWindow;
+              var msg = {login:"",password:"",channel:location.hash};
+              //console.log('login msg: ',msg);
+              
+              msg = JSON.stringify(msg);
+              sendToServer('login',msg); 
+
+              //sendToServer('login',msg);
+              break;
+
+              default:
+              var div = $(".chatLog ul");
+              div.append("<li>"+msg.message['text']+"</li>");
+              // div.append("<br>");
+              $('.chatLog').scrollTop(999999);
+              //$(document).scrollTop(999999);
+            }
+            break;
+          }
+        }
+      //}
+      //catch(e){}
+    }
+
+    // возвращает cookie с именем name, если есть, если нет, то undefined
+    function getCookie(name) {
+      var matches = document.cookie.match(new RegExp(
+        "(?:^|; )" + name.replace(/([\.$?*|{}\(\)\[\]\\\/\+^])/g, '\\$1') + "=([^;]*)"
+      ));
+      return matches ? decodeURIComponent(matches[1]) : undefined;
+    }
+
+  
+function changeWindow(newWindow)
+{
+  // newWindow = "#demoPage";
+  $(currentWindow).addClass('hide');
+  $(newWindow).removeClass('hide');
+  currentWindow = newWindow;
+  resize();
+}
+
+function resize(){
+    var h = $(window).height()-25;
+    $('.chatLog').height(h);
+    $('.chatLog').css('max-height', h+'px');
+    $('#sideBar').height(h+($(window).width()>=720?25:0));
+    $('#sideBar').css('max-height', (h+($(window).width()>=720?25:0))+'px');
+    $("#chatPage").scrollTop(999999);
+}
+
+$(document).ready(function(){
+  setTimeout(function(){
+    setInterval(function(){
+    getUsers();
+  }, 10000);
+  }, 1);
+  $(window).resize(function(){
+    resize();
+  });
+  $('#showSB').click(function(){
+    if($('#sideBar').hasClass('vis')){
+      $('#sideBar').removeClass('vis');
+    } else {
+      $('#sideBar').addClass('vis');
+    }
+  })
+});
+
+
+    </script>
+
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+<script src="http://getbootstrap.com/dist/js/bootstrap.min.js"></script>
+
+
+</body></html>

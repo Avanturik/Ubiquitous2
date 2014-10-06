@@ -21,8 +21,8 @@ namespace UB.Model
         private List<WebPoller> counterWebPollers = new List<WebPoller>();
         private List<CybergameChannel> cybergameChannels = new List<CybergameChannel>();
         private WebClientBase loginWebClient = new WebClientBase();
-        private string emoticonFallbackUrl = "";
-        private string emoticonUrl = "";
+        private string emoticonFallbackUrl = @"Content\cybergame_smiles.html";
+        private string emoticonUrl = "http://cybergame.tv/cgchat.htm?v=b";
         private object pollerLock = new object();
         private object channelsLock = new object();
         private object counterLock = new object();
@@ -529,7 +529,7 @@ namespace UB.Model
                 if (Emoticons == null)
                     Emoticons = new List<Emoticon>();
                 
-                var test = loginWebClient.Download("http://cybergame.tv/cgchat.htm?v=b");
+                var test = loginWebClient.Download(url);
                 if (test != null)
                     Log.WriteInfo("");
                 var emoticonsMatches = this.With( x => loginWebClient.Download("http://cybergame.tv/cgchat.htm?v=b"))

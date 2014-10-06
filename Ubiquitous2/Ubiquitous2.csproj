@@ -571,6 +571,9 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
+    <Content Include="Content\cybergame_smiles.html">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Content\goodgame_smiles.css">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
