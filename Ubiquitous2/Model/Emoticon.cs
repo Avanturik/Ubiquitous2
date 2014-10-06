@@ -12,7 +12,7 @@ namespace UB.Model
     {
         public Emoticon(string pattern, string url, int width, int height)
         {
-            if (string.IsNullOrWhiteSpace(url) || width <= 0 || height <= 0)
+            if (string.IsNullOrWhiteSpace(url))
                 return;
 
             if (!Re.IsMatch(pattern, @"\W"))

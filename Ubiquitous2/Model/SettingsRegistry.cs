@@ -17,6 +17,7 @@ namespace UB.Model
         public static string ChatTitleHitBox = "Hitbox.tv";
         public static string ChatTitleSteam = "Steam";
         public static string ChatTitleGoodgame = "Goodgame.ru";
+        public static string ChatTitleCybergame = "Cybergame.tv";
 
         //Service titles
         public static string ServiceTitleMusicTicker = "Music ticker";
@@ -193,6 +194,22 @@ namespace UB.Model
                             new ConfigField() {  Name = "AuthTokenCredentials", Label = "Auth token credentials", DataType = "Text", IsVisible = false, Value = String.Empty },
                         }
                     },
+                    //Cybergame.tv
+                    new ChatConfig()
+                    {
+                        ChatName = ChatTitleCybergame,
+                        IconURL = Icons.CybergameIcon,
+                        Enabled = false,
+                        Parameters = new List<ConfigField>() {
+                            new ConfigField() {  Name = "Username", Label = "Username", DataType = "Text", IsVisible = true, Value = String.Empty },
+                            new ConfigField() {  Name = "Password", Label = "Password", DataType = "Password", IsVisible = true, Value = String.Empty },
+                            new ConfigField() {  Name = "Channels", Label = "Channels", DataType = "Text", IsVisible = true, Value = "xedoc" },
+                            new ConfigField() {  Name = "AuthToken", Label = "AuthToken", DataType = "Text", IsVisible = false, Value = String.Empty },
+                            new ConfigField("Info1", "Leave username and password empty and fill channels if you need readonly access", "Info", true, null),
+                            new ConfigField("Info2", "Channels is comma separated list. Hashtag is optional. e.g: #xedoc, ipsum, #lorem", "Info", true, null),
+                            new ConfigField() {  Name = "AuthTokenCredentials", Label = "Auth token credentials", DataType = "Text", IsVisible = false, Value = String.Empty },
+                        }
+                    },
 
                 };
             }        
@@ -304,6 +321,15 @@ namespace UB.Model
                                                 {
                                                     ChatName = ChatTitleGoodgame,
                                                     IconURL = Icons.GoodgameIcon,
+                                                };
+                                             }},
+            //Cybergame
+            {ChatTitleCybergame, (config)=>
+                                            {
+                                                return new CybergameChat(config)
+                                                {
+                                                    ChatName = ChatTitleCybergame,
+                                                    IconURL = Icons.CybergameIcon,
                                                 };
                                              }},
 

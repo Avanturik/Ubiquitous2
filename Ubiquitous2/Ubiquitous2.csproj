@@ -158,6 +158,7 @@
     <Compile Include="Converter\BoolToScrollBarVisibility - Copy.cs" />
     <Compile Include="Converter\NonEmptyToVisibility.cs" />
     <Compile Include="Interactivity\UnclosableWindow.cs" />
+    <Compile Include="Model\CybergameChat.cs" />
     <Compile Include="Model\DummyChat.cs" />
     <Compile Include="Model\Game.cs" />
     <Compile Include="Model\GoodgameChat.cs" />
@@ -580,6 +581,9 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Resource>
     <Resource Include="Resources\goodgame16x16.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resources\cybergame.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Resource>
     <Content Include="web\favicon.ico">
