@@ -39,6 +39,7 @@
     -webkit-border-radius: 15px;
     -moz-border-radius: 15px;
     border-radius: 15px;
+    display:none;
 }
 /*Chat Icon*/
 #chat > div > img:nth-child(1){

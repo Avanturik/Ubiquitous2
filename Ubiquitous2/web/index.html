@@ -65,7 +65,8 @@
                                     };
 
                                     for (var i = 0; i < json.length; i++) {
-                                        $('#chat').json2html(json[i], transform, {prepend: true });
+                                        $('#chat').json2html(json[i], transform, { prepend: true });
+                                        $('#chat > div').fadeIn(500);
                                         lastMessageId = json[i].Id;
                                     }
 

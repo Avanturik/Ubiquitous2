@@ -35,9 +35,9 @@
 
 /*Message div*/
 #chat > div{
-
     padding: 10px;
     margin-bottom: 5px;
+    display:none;
 }
 /*Chat Icon*/
 #chat > div > img:nth-child(1){
