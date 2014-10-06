@@ -1,24 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
-using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Documents;
-using System.Windows.Media;
-using System.Windows.Media.Animation;
-using System.Windows.Media.Imaging;
-using System.Windows.Threading;
-using GalaSoft.MvvmLight.Threading;
 using HtmlAgilityPack;
 using Microsoft.Practices.ServiceLocation;
 using UB.Model;
-using UB.Utils;
-using WpfAnimatedGif;
 
 namespace UB.Converter
 {
@@ -86,6 +74,8 @@ namespace UB.Converter
                                     case "a":
                                         Hyperlink link = new Hyperlink(new Run(node.Attributes["href"].Value));
                                         url = node.Attributes["href"].Value;
+                                        var tooltip = node.Attributes["title"];
+
                                         link.IsEnabled = true;
                                         if (!url.Contains("://"))
                                             url = "http://" + url;
@@ -95,6 +85,7 @@ namespace UB.Converter
                                         {
                                             link.NavigateUri = linkUri;
                                             link.Focusable = false;
+                                            link.ToolTip = tooltip;
                                             link.RequestNavigate += (sender, e) =>
                                             {
                                                 Process.Start(e.Uri.ToString());
