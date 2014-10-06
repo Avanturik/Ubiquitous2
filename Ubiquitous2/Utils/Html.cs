@@ -42,7 +42,7 @@ namespace UB.Utils
             var matches = r.Matches(result);
             foreach( Match match in matches )
             {
-                result = result.Replace(match.Value, String.Format("<a href=\"{0}\" target=\"_blank\">{0}</a>",GetTinyUrl(match.Value)));
+                result = result.Replace(match.Value, String.Format("<a href=\"{0}\" title=\"{1}\" target=\"_blank\">{0}</a>",GetTinyUrl(match.Value),match.Value));
             }
 
             return result.Replace("href=\"www", "href=\"http://www");

@@ -7,6 +7,7 @@ using System.Windows.Documents;
 using HtmlAgilityPack;
 using Microsoft.Practices.ServiceLocation;
 using UB.Model;
+using UB.Utils;
 
 namespace UB.Converter
 {
@@ -74,7 +75,8 @@ namespace UB.Converter
                                     case "a":
                                         Hyperlink link = new Hyperlink(new Run(node.Attributes["href"].Value));
                                         url = node.Attributes["href"].Value;
-                                        var tooltip = node.Attributes["title"];
+                                        var tooltip = this.With( x =>  node.Attributes["title"])
+                                                        .With( x => x.Value);
 
                                         link.IsEnabled = true;
                                         if (!url.Contains("://"))
