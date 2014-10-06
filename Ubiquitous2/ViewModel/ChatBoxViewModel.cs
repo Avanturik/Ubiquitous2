@@ -62,7 +62,7 @@ namespace UB.ViewModel
                         }
                         item.ChatIconURL = Icons.MainIcon;
                         item.Text += " http://asdf.com";
-                        item.Text = Html.ConvertUrlsToLinks(item.Text);
+                        item.Text = MessageParser.ConvertUrlsToLinks(item.Text);
                         //item.Text += @" " + Html.CreateImageTag(Icons.MainHeadsetIcon, 24, 18);
                         Messages.Add(new ChatMessageViewModel(item));
 

@@ -47,7 +47,7 @@ namespace UB.Model
 
             Enabled = Config.Enabled;          
 
-            ContentParsers.Add(MessageParser.RemoveRedundantTags);
+            ContentParsers.Add(MessageParser.ConvertToPlainText);
             ContentParsers.Add(MessageParser.ParseURLs);
             ContentParsers.Add(MessageParser.ParseEmoticons);
 

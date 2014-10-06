@@ -18,11 +18,15 @@ namespace UB.Model
             result = Regex.Replace(result, @"<a[^>]*>(.*?)<\/a>", "$1");
             result = Regex.Replace(result, @"<a.*href=""(.*?)"".*>", "$1");
             result = Regex.Replace(result, @"<(http.*?)>", "$1");
-            result = Regex.Replace(result, @"<[^>]*>", "");
+            result = Regex.Replace(result, @"<http[^>]*>", "");
             if (String.IsNullOrWhiteSpace(result))
                 return message;
             else
                 return result;
+        }
+        public static void ConvertToPlainText( ChatMessage message, IChat chat)
+        {
+            message.Text = HtmlToPlainText(message.Text);
         }
         public static void RemoveRedundantTags( ChatMessage message, IChat chat)
         {
@@ -31,7 +35,7 @@ namespace UB.Model
         }
         public static void ParseURLs( ChatMessage message, IChat chat )
         {
-            message.Text = Html.ConvertUrlsToLinks(message.Text);
+            message.Text = ConvertUrlsToLinks(message.Text);
         }
         public static void ParseImageUrlsAsImages( ChatMessage message, IChat chat )
         {
@@ -114,6 +118,22 @@ namespace UB.Model
 
                 }
             }
+        }
+        public static string ConvertUrlsToLinks(string msg)
+        {
+            var result = msg;
+            string removeAnchors = @"<\/*a.*?>";
+            result = Regex.Replace(msg, removeAnchors, "", RegexOptions.IgnoreCase);
+
+            string regex = @"(?<!<[^>]*)((www\.|(http|https|ftp|news|file)+\:\/\/)[_.\p{L}0-9-]+\.[\p{L}0-9\/_;:@=.+?,##%&~-]*[^.|\'|\# |!|\(|?|,| |>|<|;|\)])";
+            Regex r = new Regex(regex, RegexOptions.IgnoreCase);
+            var matches = r.Matches(result);
+            foreach (Match match in matches)
+            {
+                result = result.Replace(match.Value, String.Format("<a href=\"{0}\" title=\"{1}\" target=\"_blank\">{0}</a>", Html.GetTinyUrl(match.Value), match.Value));
+            }
+
+            return result.Replace("href=\"www", "href=\"http://www");
         }
 
     }
