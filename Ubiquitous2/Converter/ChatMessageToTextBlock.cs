@@ -57,10 +57,14 @@ namespace UB.Converter
                                         if (node.Attributes["height"] != null)
                                             int.TryParse(node.Attributes["height"].Value, out height);
 
+                                        var imgTooltip = this.With(x => node.Attributes["alt"])
+                                                        .With(x => x.Value);
+
                                         Uri imageUri;
                                         if( Uri.TryCreate(url, UriKind.RelativeOrAbsolute, out imageUri) )
                                         {
                                             dataService.GetImage(imageUri, width, height, (image) => {
+                                                image.ToolTip = imgTooltip;
                                                 textBlock.Inlines.Add(image);
                                             }, null);
                                         }
@@ -70,7 +74,6 @@ namespace UB.Converter
                                             textBlock.Inlines.Add(url);
                                         }
                                         
-
                                         break;
                                     case "a":
                                         Hyperlink link = new Hyperlink(new Run(node.Attributes["href"].Value));

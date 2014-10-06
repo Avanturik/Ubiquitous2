@@ -15,7 +15,7 @@ namespace UB.Utils
     {
         private static WebClientBase webClient = new WebClientBase();
 
-        public static String CreateImageTag(String src, int width, int height)
+        public static String CreateImageTag(String src, int width, int height, string altText = "")
         {
             using( StringWriter stringWriter = new StringWriter() )
             {
@@ -24,6 +24,7 @@ namespace UB.Utils
                     htmlWriter.AddAttribute(HtmlTextWriterAttribute.Src, src, false);
                     htmlWriter.AddAttribute(HtmlTextWriterAttribute.Width, width.ToString());
                     htmlWriter.AddAttribute(HtmlTextWriterAttribute.Height, height.ToString());
+                    htmlWriter.AddAttribute(HtmlTextWriterAttribute.Alt, altText);
                     htmlWriter.RenderBeginTag(HtmlTextWriterTag.Img);
                     htmlWriter.RenderEndTag();
                 }

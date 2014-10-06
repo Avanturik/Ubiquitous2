@@ -27,7 +27,7 @@ namespace UB.Model
             Uri uri;
             if (Uri.TryCreate(url, UriKind.RelativeOrAbsolute, out uri))
             {
-                HtmlCode = Html.CreateImageTag(url, width, height);
+                HtmlCode = Html.CreateImageTag(url, width, height, String.IsNullOrWhiteSpace(ExactWord)?Pattern:ExactWord);
                 Uri = uri;
             }
 
