@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Web;
 using Newtonsoft.Json;
@@ -21,6 +22,7 @@ namespace UB.Model
         private object channelsLock = new object();
         private List<WebPoller> counterWebPollers = new List<WebPoller>();
         private bool isAnonymous = false;
+        private object lockSearch = new object();
         public GamingLiveChat(ChatConfig config)
         {
             Config = config;
@@ -151,7 +153,8 @@ namespace UB.Model
                             Status.IsConnected = true;
                             lock(channelsLock)
                                 gamingLiveChannels.Add(glChannel);
-                            if (glChannel.ChannelName.Equals("#" + NickName, StringComparison.InvariantCultureIgnoreCase))
+
+                            if(!isAnonymous)
                                 Status.IsLoggedIn = true;
 
                             ChatChannels.RemoveAll(chan => chan == null);
@@ -200,7 +203,6 @@ namespace UB.Model
 
             if (!isAnonymous)
             {
-                Status.IsLoggedIn = true;
                 GetTopic();
                 GetGameList();
             }
@@ -476,10 +478,13 @@ namespace UB.Model
 
         public void QueryGameList(string gameName, Action callback)
         {
-            Games.Clear();            
-            jsonGames.games.Where(game => game.name.ToLower().StartsWith(gameName.ToLower())).Select(game => new Game() { Id = game.id, Name = game.name }).ToList().ForEach( game => Games.Add(game));
-            if (callback != null)
-                UI.Dispatch(() => callback());
+            lock (lockSearch)
+            {
+                Games.Clear();
+                jsonGames.games.Where(game => game.name.ToLower().StartsWith(gameName.ToLower())).Select(game => new Game() { Id = game.id, Name = game.name }).ToList().ForEach(game => Games.Add(game));
+                if (callback != null)
+                    UI.Dispatch(() => callback());
+            }
         }
 
         JToken GetLiveStreamInfo()
@@ -487,7 +492,7 @@ namespace UB.Model
             var getUrl = @"https://api.gaminglive.tv/channels/{0}?authToken={1}";
             var userName = Config.GetParameterValue("Username") as string;
             var authToken = Config.GetParameterValue("AuthToken") as string;
-
+            loginWebClient.ContentType = ContentType.JsonUTF8;
             return this.With(x => loginWebClient.Download(String.Format(getUrl, HttpUtility.UrlEncode(userName.ToLower()), authToken)))
                             .With(x => JToken.Parse(x));
 
@@ -532,6 +537,8 @@ namespace UB.Model
         {
             var userName = Config.GetParameterValue("Username") as string;
             var authToken = Config.GetParameterValue("AuthToken") as string;
+            var gameId = this.With( x => jsonGames.games.FirstOrDefault( game => game.name.Equals(Info.CurrentGame.Name,StringComparison.InvariantCultureIgnoreCase) ))
+                            .With( x => x.id);
 
             var jsonInfo = new GamingLiveChannelUpdate
             {
@@ -539,7 +546,7 @@ namespace UB.Model
                 owner = userName.ToLower(),
                 name = Info.Topic,
                 authToken = authToken,
-                game = jsonGames.games.FirstOrDefault( game => game.name.Equals(Info.CurrentGame.Name,StringComparison.InvariantCultureIgnoreCase) ),
+                gameId = gameId,
             };
 
 
@@ -573,14 +580,18 @@ namespace UB.Model
     {
 
         private WebSocketBase webSocket;
+        private WebSocketBase secondWebSocket;
         private IChat _chat;
         bool isAnonymous = false;
+        object lockConnect = new object();
         public GamingLiveChannel(IChat chat)
         {
             _chat = chat;
         }
         public void Join(Action<GamingLiveChannel> callback, string nickName, string channel, string authToken)
         {
+            JoinCallback = callback;
+
             isAnonymous = nickName == null || nickName.Equals("__$anonymous",StringComparison.InvariantCultureIgnoreCase) 
                 || String.IsNullOrWhiteSpace(nickName) 
                 || String.IsNullOrWhiteSpace(authToken);
@@ -591,15 +602,15 @@ namespace UB.Model
                 authToken = "__$anonymous";
             }
             ChannelName = "#" + channel.Replace("#", "");
+
             webSocket = new WebSocketBase();
             webSocket.Host = "54.76.144.150";
-            webSocket.PingInterval = 0;
+            //webSocket.PingInterval = 0;
             webSocket.Origin = "http://www.gaminglive.tv";
             webSocket.Path = String.Format("/chat/{0}?nick={1}&authToken={2}", ChannelName.Replace("#",""), nickName, authToken );
             webSocket.ConnectHandler = () =>
             {
-                if( callback != null )
-                    callback(this);
+                //webSocket.Send("{}");
             };
 
             webSocket.DisconnectHandler = () =>
@@ -608,10 +619,24 @@ namespace UB.Model
                     LeaveCallback(this);
             };
             webSocket.ReceiveMessageHandler = ReadRawMessage;
+
+            secondWebSocket = new WebSocketBase();
+            secondWebSocket.Host = webSocket.Host;
+            secondWebSocket.Origin = webSocket.Origin;
+            secondWebSocket.Path = String.Format("/chat/{0}?nick={1}&authToken={2}", ChannelName.Replace("#", ""), "__$anonymous", "__$anonymous");
+
             webSocket.Connect();
+            Thread.Sleep(500);
+            secondWebSocket.Connect();
         }
-        private void ReadRawMessage(string rawMessage)
+        private void ReadRawMessage(string rawMessage)        
         {
+            if( !_chat.Status.IsConnected )
+            {
+                _chat.Status.IsStarting = false;
+                if( JoinCallback!= null )
+                    JoinCallback(this);                
+            }
             Log.WriteInfo("gaminglive raw message: {0}", rawMessage);
             if( !String.IsNullOrWhiteSpace(rawMessage))
             {
@@ -646,6 +671,7 @@ namespace UB.Model
         }
 
         public Action<GamingLiveChannel> LeaveCallback { get; set; }
+        public Action<GamingLiveChannel> JoinCallback { get; set; }
         public Action<ChatMessage> ReadMessage { get; set; }
         public void SendMessage( ChatMessage message )
         {
@@ -662,8 +688,8 @@ namespace UB.Model
         public string slug { get; set; }
         public string owner { get; set; }
         public string name { get; set; }
+        public string gameId { get; set; }
         public string authToken { get; set; }
-        public GamingLiveGame game { get; set; }
     }
 
     public class GamingLiveGame

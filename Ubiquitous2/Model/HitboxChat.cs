@@ -615,7 +615,7 @@ namespace UB.Model
 
         public void GetTopic()
         {
-            if( !Status.IsLoggedIn )
+            if( !Status.IsLoggedIn || !Enabled)
                 return;
 
             Task.Factory.StartNew(() =>
@@ -647,12 +647,13 @@ namespace UB.Model
 
         JToken GetLiveStreamInfo()
         {
+
             var getUrl = @"https://www.hitbox.tv/api/media/live/{0}/list?authToken={1}&filter=newfirst&nocache=true&showHidden=true";
             var userName = Config.GetParameterValue("Username") as string;
             var authToken = Config.GetParameterValue("AuthToken") as string;
 
             return this.With(x => loginWebClient.Download(String.Format(getUrl, HttpUtility.UrlEncode(userName.ToLower()), authToken)))
-                            .With(x => JToken.Parse(x));
+                .With(x => !String.IsNullOrWhiteSpace(x)?JToken.Parse(x):null);
             
         }
 

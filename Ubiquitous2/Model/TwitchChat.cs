@@ -302,9 +302,7 @@ namespace UB.Model
         }
         public override void DownloadEmoticons(string url)
         {
-            if (isFallbackEmoticons)
-                return;
-            if (isWebEmoticons)
+            if (isFallbackEmoticons && isWebEmoticons )
                 return;
 
             lock(iconParseLock )
@@ -338,6 +336,7 @@ namespace UB.Model
                     }
                     if (list.Count > 0)
                     {
+
                         sharedEmoticons = list.ToList();
                         Emoticons = sharedEmoticons;
                         if (isFallbackEmoticons)
@@ -466,6 +465,9 @@ namespace UB.Model
         }
         public void GetTopic()
         {
+            if (!Enabled || String.IsNullOrWhiteSpace(LoginInfo.UserName) )
+                return;
+
             Task.Factory.StartNew(() => {
                 var json = this.With(x => webClient.Download(String.Format("http://api.twitch.tv/api/channels/{0}/ember?on_site=1", HttpUtility.UrlEncode(LoginInfo.UserName.ToLower()))))
                                .With(x => JToken.Parse(x));

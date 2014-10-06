@@ -40,3 +40,10 @@ C:\Users\meshkov\Source\Repos\Ubiquitous2\dotIRC\obj\Debug\dotIRC.csproj.Generat
 C:\Users\meshkov\Source\Repos\Ubiquitous2\dotIRC\obj\Debug\dotIRC.dll
 C:\Users\meshkov\Source\Repos\Ubiquitous2\dotIRC\obj\Debug\dotIRC.pdb
 C:\Users\meshkov\Source\Repos\Ubiquitous2\dotIRC\obj\Debug\dotIRC.csprojResolveAssemblyReference.cache
+C:\Users\Anton\Source\Repos\Ubiquitous2\dotIRC\bin\Debug\net40\dotIRC.dll
+C:\Users\Anton\Source\Repos\Ubiquitous2\dotIRC\bin\Debug\net40\dotIRC.pdb
+C:\Users\Anton\Source\Repos\Ubiquitous2\dotIRC\obj\Debug\dotIRC.csprojResolveAssemblyReference.cache
+C:\Users\Anton\Source\Repos\Ubiquitous2\dotIRC\obj\Debug\dotIRC.Properties.Resources.resources
+C:\Users\Anton\Source\Repos\Ubiquitous2\dotIRC\obj\Debug\dotIRC.csproj.GenerateResource.Cache
+C:\Users\Anton\Source\Repos\Ubiquitous2\dotIRC\obj\Debug\dotIRC.dll
+C:\Users\Anton\Source\Repos\Ubiquitous2\dotIRC\obj\Debug\dotIRC.pdb

@@ -7,6 +7,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Web;
+using GalaSoft.MvvmLight.Ioc;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using UB.Utils;
@@ -513,9 +514,7 @@ namespace UB.Model
 
             lock (iconParseLock)
             {
-                if (isFallbackEmoticons)
-                    return;
-                if (isWebEmoticons)
+                if (isFallbackEmoticons && isWebEmoticons)
                     return;
 
                 var list = new List<Emoticon>();
@@ -525,7 +524,7 @@ namespace UB.Model
 
                 var content = GoodgameGet(url);
 
-                MatchCollection matches = Regex.Matches(content, @"\.smiles\.smile-([^{|\s|\n|\t]*)\s*\{\s*([^}]*)\s*}", RegexOptions.IgnoreCase);
+                MatchCollection matches = Regex.Matches(content, @"}[^\.]*\.smile-([^-|\s]*)\s*{(.*?)}", RegexOptions.IgnoreCase);
 
                 if (matches.Count <= 0 )
                 {
@@ -533,6 +532,7 @@ namespace UB.Model
                 }
                 else
                 {
+                    string originalUrl = null;
                     foreach (Match match in matches)
                     {
                         if( match.Groups.Count >= 2)
@@ -542,11 +542,11 @@ namespace UB.Model
 
                             var background = Css.GetBackground(cssClassDefinition);
 
-                            if( background != null && !String.IsNullOrWhiteSpace(url) && background.width > 0 && background.height > 0)
+                            if( background != null && !String.IsNullOrWhiteSpace(background.url) && background.width > 0 && background.height > 0)
                             {
-                                var originalUrl = String.Format("http://goodgame.ru/{0}", background.url.Replace("../../", ""));
-                                var modifiedUrl = Url.AppendParameter(originalUrl, "ubx", background.x);
-                                modifiedUrl = Url.AppendParameter(modifiedUrl, "uby", background.y);
+                                originalUrl = String.Format("http://goodgame.ru/{0}", background.url.Replace("../../", ""));
+                                var modifiedUrl = String.Format(@"/ubiquitous/cache?ubx={0}&uby={1}&ubw={2}&ubh={3}&uburl={4}", 
+                                    background.x, background.y, background.width, background.height, HttpUtility.UrlEncode(originalUrl));
 
                                 list.Add( new Emoticon(String.Format(":{0}:", smileName),
                                     modifiedUrl,
@@ -558,6 +558,14 @@ namespace UB.Model
                     }
                     if (list.Count > 0)
                     {
+                        Uri uri;
+                        if( !String.IsNullOrWhiteSpace(originalUrl) && Uri.TryCreate( originalUrl, UriKind.Absolute, out uri ))
+                        {
+                            var ddosCookieGet = GoodgameGet("http://goodgame.ru");
+
+                            var imageDataService = SimpleIoc.Default.GetInstance<IImageDataSource>();
+                            UI.Dispatch (() => imageDataService.AddImage( uri, webClient.DownloadToMemoryStream(originalUrl)));
+                        }
                         Emoticons = list;
                         if (isFallbackEmoticons)
                             isWebEmoticons = true;
@@ -692,6 +700,7 @@ namespace UB.Model
         private void SendChannelJoin()
         {
 
+            Log.WriteInfo("Goodgame serializing join packet. ChannelId: {0}", ChannelId);
             var joinPacket = new GoodgamePacket()
             {
                 Type = "join",
@@ -745,7 +754,7 @@ namespace UB.Model
                     FromUserName = data.UserName,
                     HighlyImportant = false,
                     IsSentByMe = false,
-                    Text = data.Text,
+                    Text = HttpUtility.HtmlDecode(data.Text),
                 });
         }
 
@@ -930,7 +939,7 @@ namespace UB.Model
         [DataMember(Name = "reason", EmitDefaultValue = false, IsRequired = false)]
         public string Reason { get; set; }
         [DataMember(Name = "payments", EmitDefaultValue = false, IsRequired = false)]
-        public UInt32 Payments { get; set; }
+        public double Payments { get; set; }
         [DataMember(Name = "paidsmiles", EmitDefaultValue = false, IsRequired = false)]
         public object[] PaidSmiles { get; set; }
         [DataMember(Name = "user_rights", EmitDefaultValue = false, IsRequired = false)]
