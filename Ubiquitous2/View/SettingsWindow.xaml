@@ -132,7 +132,7 @@
                             </CheckBox>
                             <TextBlock TextWrapping="Wrap" FontSize="9" Margin="20,0,0,0" FontStyle="Italic">
                             </TextBlock>
-                            <CheckBox IsEnabled="{Binding AppConfig.EnableTransparency,Mode=OneWay}" IsChecked="{Binding AppConfig.MouseTransparency, Mode=TwoWay}" Content="Click-through window. Hold Ctrl to disable." FontWeight="Bold"/>
+                            <CheckBox IsChecked="{Binding AppConfig.MouseTransparency, Mode=TwoWay}" Content="Click-through window. Hold Ctrl to disable." FontWeight="Bold"/>
                             <GroupBox Header="Background opacity control" VerticalAlignment="Top" FontWeight="Bold" Margin="0,10,0,0">
                                 <StackPanel Margin="7,13,0,0">
                                     <StackPanel Orientation="Horizontal" Margin="0,-9,0,0">
