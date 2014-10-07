@@ -441,7 +441,7 @@ namespace UB.Model
                         lock (channelsLock)
                             cybergameChannels.Add(cybChannel);
 
-                        ChatChannels.RemoveAll(chan => chan.Equals(cybChannel.ChannelName, StringComparison.InvariantCultureIgnoreCase));
+                        ChatChannels.RemoveAll(chan => !String.IsNullOrWhiteSpace(chan) && chan.Equals(cybChannel.ChannelName, StringComparison.InvariantCultureIgnoreCase));
                         ChatChannels.Add((cybChannel.ChannelName));
                         if (AddChannel != null)
                             AddChannel(cybergameChannel.ChannelName, this);
