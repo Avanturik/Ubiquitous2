@@ -130,6 +130,8 @@ namespace UB.Model
                 {
                     StopCounterPoller(chan.ChannelName);
                     chan.Leave();
+                    if (RemoveChannel != null)
+                        RemoveChannel(chan.ChannelName, this);
                 });
             }
             ChatChannels.Clear();
@@ -162,6 +164,7 @@ namespace UB.Model
                     message.FromUserName = NickName;
                 }
                 Task.Factory.StartNew(() => cybergameChannel.SendMessage(message));
+                ReadMessage(message);
             }
             return true;
         }
