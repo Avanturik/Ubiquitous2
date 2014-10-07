@@ -83,7 +83,7 @@ namespace UB.Model
             Log.WriteInfo("Starting Gaminglive.tv chat");
             Status.ResetToDefault();
             Status.IsStarting = true;
-
+            ChatChannels.Clear();
             if( Login() )
             {
                 Status.IsConnecting = true;
@@ -137,7 +137,7 @@ namespace UB.Model
                     ChatChannels.RemoveAll(chan => chan == null);
                     ChatChannels.RemoveAll(chan => chan.Equals(glChannel.ChannelName, StringComparison.InvariantCultureIgnoreCase));
 
-                    Log.WriteInfo("Add gaminglive channel {0}", glChannel.ChannelName);
+                    Log.WriteInfo("Remove gaminglive channel {0}", glChannel.ChannelName);
 
                     if (RemoveChannel != null)
                         RemoveChannel(glChannel.ChannelName, this);
@@ -152,11 +152,12 @@ namespace UB.Model
                             return;
                         Status.IsConnected = true;
 
-                        lock(channelsLock)
-                            gamingLiveChannels.Add(glChannel);
 
                         if(!isAnonymous)
                             Status.IsLoggedIn = true;
+
+                        if (RemoveChannel != null)
+                            RemoveChannel(glChannel.ChannelName, this);
 
                         ChatChannels.RemoveAll(chan => chan == null);
                         ChatChannels.RemoveAll(chan => chan.Equals(glChannel.ChannelName, StringComparison.InvariantCultureIgnoreCase));
@@ -169,6 +170,9 @@ namespace UB.Model
                         WatchChannelStats(glChannel.ChannelName);
 
                     }, NickName, channel, (String)Config.GetParameterValue("AuthToken"));
+
+                    lock (channelsLock)
+                        gamingLiveChannels.Add(gamingLiveChannel);
                 }
             }
         }
@@ -309,7 +313,9 @@ namespace UB.Model
             lock(channelsLock)
                 gamingLiveChannels.ForEach(chan => {
                     StopCounterPoller(chan.ChannelName);
-                    chan.Leave(); 
+                    chan.Leave();
+                    if (RemoveChannel != null)
+                        RemoveChannel(chan.ChannelName, this);
                 });
             ChatChannels.Clear();
             return true;
@@ -634,9 +640,11 @@ namespace UB.Model
             if( !_chat.Status.IsConnected )
             {
                 _chat.Status.IsStarting = false;
-                if( JoinCallback!= null )
-                    JoinCallback(this);                
             }
+            
+            if (JoinCallback != null)
+                JoinCallback(this);
+            
             Log.WriteInfo("gaminglive raw message: {0}", rawMessage);
             if( !String.IsNullOrWhiteSpace(rawMessage))
             {

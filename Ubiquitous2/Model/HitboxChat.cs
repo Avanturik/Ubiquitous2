@@ -455,6 +455,10 @@ namespace UB.Model
                     lock (channelsLock)
                         hitboxChannels.Add(hbChannel);
 
+
+                    if (RemoveChannel != null)
+                        RemoveChannel(hbChannel.ChannelName, this);
+
                     ChatChannels.RemoveAll(chan => chan.Equals(hbChannel.ChannelName, StringComparison.InvariantCultureIgnoreCase));
                     ChatChannels.Add((hbChannel.ChannelName));
                     if (AddChannel != null)

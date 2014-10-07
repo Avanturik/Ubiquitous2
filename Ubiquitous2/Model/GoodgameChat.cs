@@ -406,6 +406,10 @@ namespace UB.Model
                         lock (channelsLock)
                             goodgameChannels.Add(ggChannel);
 
+
+                        if (RemoveChannel != null)
+                            RemoveChannel(ggChannel.ChannelName, this);
+
                         ChatChannels.RemoveAll(chan => chan.Equals(ggChannel.ChannelName, StringComparison.InvariantCultureIgnoreCase));
                         ChatChannels.Add((ggChannel.ChannelName));
                         if (AddChannel != null)
