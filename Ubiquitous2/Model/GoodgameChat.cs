@@ -378,7 +378,7 @@ namespace UB.Model
                     ChatChannels.RemoveAll(chan => chan == null);
                     ChatChannels.RemoveAll(chan => chan.Equals(ggChannel.ChannelName, StringComparison.InvariantCultureIgnoreCase));
                     if (RemoveChannel != null)
-                        RemoveChannel(goodgameChannel.ChannelName, this);
+                        RemoveChannel(ggChannel.ChannelName, this);
 
                     if (!Status.IsStarting && !Status.IsStopping)
                     {
@@ -409,9 +409,9 @@ namespace UB.Model
                         ChatChannels.RemoveAll(chan => chan.Equals(ggChannel.ChannelName, StringComparison.InvariantCultureIgnoreCase));
                         ChatChannels.Add((ggChannel.ChannelName));
                         if (AddChannel != null)
-                            AddChannel(goodgameChannel.ChannelName, this);
+                            AddChannel(ggChannel.ChannelName, this);
 
-                        WatchChannelStats(goodgameChannel.ChannelName, goodgameChannel.ChannelId.ToString());
+                        WatchChannelStats(ggChannel.ChannelName, ggChannel.ChannelId.ToString());
 
                     }, NickName, channel, chatToken);
                 }

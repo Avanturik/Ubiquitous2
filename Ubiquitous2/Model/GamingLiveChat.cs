@@ -136,37 +136,39 @@ namespace UB.Model
                         gamingLiveChannels.RemoveAll(item => item.ChannelName == glChannel.ChannelName);
                     ChatChannels.RemoveAll(chan => chan == null);
                     ChatChannels.RemoveAll(chan => chan.Equals(glChannel.ChannelName, StringComparison.InvariantCultureIgnoreCase));
+
+                    Log.WriteInfo("Add gaminglive channel {0}", glChannel.ChannelName);
+
                     if (RemoveChannel != null)
-                        RemoveChannel(gamingLiveChannel.ChannelName, this);
+                        RemoveChannel(glChannel.ChannelName, this);
 
                     if (!Status.IsStarting && !Status.IsStopping)
                         Restart();
                 };
-                lock(channelsLock)
+                if( !gamingLiveChannels.Any(c => c.ChannelName == channel ))
                 {
+                    gamingLiveChannel.Join((glChannel) => {
+                        if (Status.IsStopping)
+                            return;
+                        Status.IsConnected = true;
 
-                    if( !gamingLiveChannels.Any(c => c.ChannelName == channel ))
-                    {
-                        gamingLiveChannel.Join((glChannel) => {
-                            if (Status.IsStopping)
-                                return;
-                            Status.IsConnected = true;
-                            lock(channelsLock)
-                                gamingLiveChannels.Add(glChannel);
+                        lock(channelsLock)
+                            gamingLiveChannels.Add(glChannel);
 
-                            if(!isAnonymous)
-                                Status.IsLoggedIn = true;
+                        if(!isAnonymous)
+                            Status.IsLoggedIn = true;
 
-                            ChatChannels.RemoveAll(chan => chan == null);
-                            ChatChannels.RemoveAll(chan => chan.Equals(glChannel.ChannelName, StringComparison.InvariantCultureIgnoreCase));
-                            ChatChannels.Add((glChannel.ChannelName));
-                            if (AddChannel != null)
-                                AddChannel(gamingLiveChannel.ChannelName, this);
+                        ChatChannels.RemoveAll(chan => chan == null);
+                        ChatChannels.RemoveAll(chan => chan.Equals(glChannel.ChannelName, StringComparison.InvariantCultureIgnoreCase));
+                        ChatChannels.Add((glChannel.ChannelName));
 
-                            WatchChannelStats(gamingLiveChannel.ChannelName);
+                        Log.WriteInfo("Add gaminglive channel {0}", glChannel.ChannelName);
+                        if (AddChannel != null)
+                            AddChannel(glChannel.ChannelName, this);
 
-                        }, NickName, channel, (String)Config.GetParameterValue("AuthToken"));
-                    }
+                        WatchChannelStats(glChannel.ChannelName);
+
+                    }, NickName, channel, (String)Config.GetParameterValue("AuthToken"));
                 }
             }
         }
@@ -441,13 +443,11 @@ namespace UB.Model
             set;
         }
 
-
         public Func<string, object> RequestData
         {
             get;
             set;
         }
-
 
         public bool HideViewersCounter
         {

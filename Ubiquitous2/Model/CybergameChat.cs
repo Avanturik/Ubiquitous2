@@ -423,7 +423,7 @@ namespace UB.Model
                     ChatChannels.RemoveAll(chan => chan == null);
                     ChatChannels.RemoveAll(chan => chan.Equals(cybChannel.ChannelName, StringComparison.InvariantCultureIgnoreCase));
                     if (RemoveChannel != null)
-                        RemoveChannel(cybergameChannel.ChannelName, this);
+                        RemoveChannel(cybChannel.ChannelName, this);
 
                     if (!Status.IsStarting && !Status.IsStopping)
                     {
@@ -444,9 +444,9 @@ namespace UB.Model
                         ChatChannels.RemoveAll(chan => !String.IsNullOrWhiteSpace(chan) && chan.Equals(cybChannel.ChannelName, StringComparison.InvariantCultureIgnoreCase));
                         ChatChannels.Add((cybChannel.ChannelName));
                         if (AddChannel != null)
-                            AddChannel(cybergameChannel.ChannelName, this);
+                            AddChannel(cybChannel.ChannelName, this);
 
-                        WatchChannelStats(cybergameChannel.ChannelName);
+                        WatchChannelStats(cybChannel.ChannelName);
 
                     }, NickName, channel, (String)Config.GetParameterValue("AuthToken"));
             }
