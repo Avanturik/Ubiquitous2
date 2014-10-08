@@ -85,7 +85,6 @@ namespace UB.Model
 
         public bool Start()
         {
-
             if (Status.IsStarting || Status.IsConnected || Status.IsLoggedIn || Config == null)
             {
                 return true;
@@ -212,7 +211,7 @@ namespace UB.Model
         {
             try
             {
-                if (!LoginWithToken())
+                if (LoginWithToken())
                 {
                     if (!LoginWithUsername())
                     {
@@ -906,23 +905,38 @@ namespace UB.Model
                         case "guest":
                             if (!isAnonymous)
                             {
-                                HitboxChannelStatus.IsLoggedIn = false;
-                                HitboxChannelStatus.IsLoginFailed = true;
+                                _chat.Status.IsLoggedIn = false;
+                                if( !_chat.Status.IsLoginFailed )
+                                {
+                                    _chat.Status.IsConnected = false;
+                                    _chat.Status.IsLoggedIn = false;
+                                    _chat.Status.IsLoginFailed = true;
+                                    _chat.Status.IsStarting = false;
+                                    _chat.Config.SetParameterValue("AuthToken", String.Empty);
+                                    _chat.Restart();
+                                }
                             }
                             else
                             {
-                                HitboxChannelStatus.IsLoginFailed = false;
-                                HitboxChannelStatus.IsLoggedIn = true;
+                                _chat.Status.IsLoggedIn = true;
+                                _chat.Status.IsLoginFailed = false;
                             }
+
                             break;
                         case "admin":
                             {
-                                HitboxChannelStatus.IsLoggedIn = true;
-                                HitboxChannelStatus.IsLoginFailed = false;
+                                _chat.Status.IsLoggedIn = true;
+                                _chat.Status.IsLoginFailed = false;
+                            }
+                            break;
+                        case "anon":
+                            {
+                                _chat.Status.IsLoggedIn = true;
+                                _chat.Status.IsLoginFailed = false;
                             }
                             break;
                         default:
-                            break;
+                           break;
                     }
                     SendCredentials(NickName, ChannelName, AuthToken);
                 }
