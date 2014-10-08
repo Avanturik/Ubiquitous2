@@ -170,6 +170,16 @@ namespace UB.Model
                         var searchItem = ChatChannels.FirstOrDefault(item => item.ChatName == fromChat.ChatName && item.ChannelName == channel && item.ChatIconURL == fromChat.IconURL);
                         if (searchItem != null)
                             ChatChannels.Remove(searchItem);
+
+                        if (ChatChannels.Count <= 0)
+                        {
+                            if( !chat.Status.IsStopping )
+                            {
+                                chat.Status.IsConnected = false;
+                                chat.Status.IsLoggedIn = false;
+                                chat.Restart();
+                            }
+                        }
                     });
                 };
                 if (chat.Enabled)
