@@ -437,7 +437,7 @@ namespace UB.Model
                     ChatChannels.RemoveAll(chan => chan == null);
                     ChatChannels.RemoveAll(chan => chan.Equals(hbChannel.ChannelName, StringComparison.InvariantCultureIgnoreCase));
                     if (RemoveChannel != null)
-                        RemoveChannel(hitboxChannel.ChannelName, this);
+                        RemoveChannel(hbChannel.ChannelName, this);
 
                     if (!Status.IsStarting && !Status.IsStopping)
                     {
@@ -455,12 +455,16 @@ namespace UB.Model
                     lock (channelsLock)
                         hitboxChannels.Add(hbChannel);
 
+
+                    if (RemoveChannel != null)
+                        RemoveChannel(hbChannel.ChannelName, this);
+
                     ChatChannels.RemoveAll(chan => chan.Equals(hbChannel.ChannelName, StringComparison.InvariantCultureIgnoreCase));
                     ChatChannels.Add((hbChannel.ChannelName));
                     if (AddChannel != null)
-                        AddChannel(hitboxChannel.ChannelName, this);
+                        AddChannel(hbChannel.ChannelName, this);
 
-                    WatchChannelStats(hitboxChannel.ChannelName);
+                    WatchChannelStats(hbChannel.ChannelName);
 
                 }, NickName, channel, (String)Config.GetParameterValue("AuthToken"));
             }

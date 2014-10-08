@@ -130,6 +130,8 @@ namespace UB.Model
                 {
                     StopCounterPoller(chan.ChannelName);
                     chan.Leave();
+                    if (RemoveChannel != null)
+                        RemoveChannel(chan.ChannelName, this);
                 });
             }
             ChatChannels.Clear();
@@ -162,6 +164,7 @@ namespace UB.Model
                     message.FromUserName = NickName;
                 }
                 Task.Factory.StartNew(() => cybergameChannel.SendMessage(message));
+                ReadMessage(message);
             }
             return true;
         }
@@ -420,7 +423,7 @@ namespace UB.Model
                     ChatChannels.RemoveAll(chan => chan == null);
                     ChatChannels.RemoveAll(chan => chan.Equals(cybChannel.ChannelName, StringComparison.InvariantCultureIgnoreCase));
                     if (RemoveChannel != null)
-                        RemoveChannel(cybergameChannel.ChannelName, this);
+                        RemoveChannel(cybChannel.ChannelName, this);
 
                     if (!Status.IsStarting && !Status.IsStopping)
                     {
@@ -438,12 +441,16 @@ namespace UB.Model
                         lock (channelsLock)
                             cybergameChannels.Add(cybChannel);
 
-                        ChatChannels.RemoveAll(chan => chan.Equals(cybChannel.ChannelName, StringComparison.InvariantCultureIgnoreCase));
+
+                        if (RemoveChannel != null)
+                            RemoveChannel(cybChannel.ChannelName, this);
+
+                        ChatChannels.RemoveAll(chan => !String.IsNullOrWhiteSpace(chan) && chan.Equals(cybChannel.ChannelName, StringComparison.InvariantCultureIgnoreCase));
                         ChatChannels.Add((cybChannel.ChannelName));
                         if (AddChannel != null)
-                            AddChannel(cybergameChannel.ChannelName, this);
+                            AddChannel(cybChannel.ChannelName, this);
 
-                        WatchChannelStats(cybergameChannel.ChannelName);
+                        WatchChannelStats(cybChannel.ChannelName);
 
                     }, NickName, channel, (String)Config.GetParameterValue("AuthToken"));
             }
@@ -457,7 +464,7 @@ namespace UB.Model
                 Id = channel,
                 Uri = new Uri(String.Format(@"http://api.cybergame.tv/p/statusv2/?channel={0}", channel.Replace("#", ""))),
             };
-
+            Log.WriteInfo(poller.Uri.OriginalString);
             UI.Dispatch(() =>
             {
                 lock (toolTipLock)
@@ -469,16 +476,18 @@ namespace UB.Model
                     Status.ToolTips.Add(new ToolTip(poller.Id, ""));
             });
 
-            poller.ReadStream = (stream) =>
+            poller.ReadString = (stream) =>
             {
                 lock (counterLock)
                 {
-                    var channelInfo = Json.DeserializeStream<CybergameChannelStatus>(stream);
+                    var channelInfo = JsonConvert.DeserializeObject<CybergameChannelStatus>(stream);
                     poller.LastValue = channelInfo;
                     var viewers = 0;
                     foreach (var webPoller in counterWebPollers.ToList())
                     {
                         var streamInfo = (CybergameChannelStatus)webPoller.LastValue;
+                        int streamInfoViewers = 0;
+
 
                         lock (toolTipLock)
                         {
@@ -486,11 +495,11 @@ namespace UB.Model
                             if (tooltip == null)
                                 return;
 
-                            if (streamInfo != null)
+                            if (streamInfo != null && int.TryParse(streamInfo.spectators, out streamInfoViewers))
                             {
-                                viewers += streamInfo.spectators;
-                                tooltip.Text = streamInfo.spectators.ToString();
-                                tooltip.Number = streamInfo.spectators;
+                                viewers += streamInfoViewers;
+                                tooltip.Text = streamInfo.spectators;
+                                tooltip.Number = streamInfoViewers;
                             }
                             else
                             {
@@ -756,13 +765,16 @@ namespace UB.Model
 
     }
 
-    [DataContract]
     public class CybergameChannelStatus
     {
+        [DataMember(Name = "online")]
         public string online { get; set; }
-        public int spectators { get; set; }
+        [DataMember(Name = "spectators")]
+        public string spectators { get; set; }
+        [DataMember(Name = "followers")]
         public string followers { get; set; }
-        public object[] donates { get; set; }
+        [DataMember(Name = "donates")]
+        public List<object> donates { get; set; }
     }
 
     [DataContract]

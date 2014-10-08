@@ -12,8 +12,9 @@ namespace UB.Interactivity
 {
     public class ClickThroughBehavior :Behavior<Window>
     {
-        const int WS_EX_TRANSPARENT = 0x00000020;
-        const int NOT_WS_EX_TRANSPARENT = 0x7FFFFFDF;
+        const int WS_EX_TRANSPARENT = 0x00080020;
+        const int NOT_WS_EX_TRANSPARENT = 0x7FF7FFDF;
+        
         const int GWL_EXSTYLE = (-20);
 
         [DllImport("user32.dll")]
