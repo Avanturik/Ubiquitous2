@@ -681,7 +681,7 @@ namespace UB.Model
 
         private void ReadRawMessage(string rawMessage)
         {
-            Log.WriteInfo("Cybergame raw message: {0}", rawMessage);
+            //Log.WriteInfo("Cybergame raw message: {0}", rawMessage);
             if( rawMessage.Equals("o") )
             {
                 SendCredentials();

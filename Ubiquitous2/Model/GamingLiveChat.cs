@@ -584,7 +584,8 @@ namespace UB.Model
 
     public class GamingLiveChannel
     {
-
+        private Timer pingTimer;
+        private const int pingInterval = 60000;
         private WebSocketBase webSocket;
         private WebSocketBase secondWebSocket;
         private IChat _chat;
@@ -609,6 +610,8 @@ namespace UB.Model
             }
             ChannelName = "#" + channel.Replace("#", "");
 
+
+
             webSocket = new WebSocketBase();
             webSocket.Host = "54.76.144.150";
             //webSocket.PingInterval = 0;
@@ -625,15 +628,20 @@ namespace UB.Model
                     LeaveCallback(this);
             };
             webSocket.ReceiveMessageHandler = ReadRawMessage;
-
-            secondWebSocket = new WebSocketBase();
-            secondWebSocket.Host = webSocket.Host;
-            secondWebSocket.Origin = webSocket.Origin;
-            secondWebSocket.Path = String.Format("/chat/{0}?nick={1}&authToken={2}", ChannelName.Replace("#", ""), "__$anonymous", "__$anonymous");
-
             webSocket.Connect();
-            Thread.Sleep(500);
-            secondWebSocket.Connect();
+
+            pingTimer = new Timer((sender) =>
+            {
+                secondWebSocket = new WebSocketBase();
+                secondWebSocket.Host = webSocket.Host;
+                secondWebSocket.Origin = webSocket.Origin;
+                secondWebSocket.Path = String.Format("/chat/{0}?nick={1}&authToken={2}", ChannelName.Replace("#", ""), "__$anonymous", "__$anonymous");
+                secondWebSocket.Connect();
+                Thread.Sleep(5000);
+                secondWebSocket.Disconnect();
+
+            }, this, 500, pingInterval);
+
         }
         private void ReadRawMessage(string rawMessage)        
         {
@@ -645,7 +653,7 @@ namespace UB.Model
             if (JoinCallback != null)
                 JoinCallback(this);
             
-            Log.WriteInfo("gaminglive raw message: {0}", rawMessage);
+            //Log.WriteInfo("gaminglive raw message: {0}", rawMessage);
             if( !String.IsNullOrWhiteSpace(rawMessage))
             {
                 var json = JToken.Parse(rawMessage);
@@ -653,7 +661,10 @@ namespace UB.Model
                 var text = json.Value<string>("message");
                 var memberType = json.Value<string>("mtype");
                 if (memberType != null && memberType.Equals("BOT", StringComparison.InvariantCultureIgnoreCase))
+                {
+                    Log.WriteInfo("Gaminglive bot greeting from {0} on {1}", nickName, ChannelName);
                     return;
+                }
 
                 if (String.IsNullOrWhiteSpace(nickName) || String.IsNullOrWhiteSpace(text))
                     return;

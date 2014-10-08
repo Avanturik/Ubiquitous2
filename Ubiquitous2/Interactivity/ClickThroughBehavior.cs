@@ -46,10 +46,16 @@ namespace UB.Interactivity
         {
             var hwnd = new WindowInteropHelper(window).Handle;
             var extendedStyle = GetWindowLong(hwnd, GWL_EXSTYLE);
-            if( isTransparent )
+            if (isTransparent)
+            {
                 SetWindowLong(hwnd, GWL_EXSTYLE, extendedStyle | WS_EX_TRANSPARENT);
+                window.IsHitTestVisible = false;
+            }
             else
+            {
                 SetWindowLong(hwnd, GWL_EXSTYLE, extendedStyle & NOT_WS_EX_TRANSPARENT);
+                window.IsHitTestVisible = true;
+            }
         }
 
         /// <summary>

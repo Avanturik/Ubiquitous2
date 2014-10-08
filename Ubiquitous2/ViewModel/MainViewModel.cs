@@ -641,7 +641,7 @@ namespace UB.ViewModel
         {
             get
             {
-                return _enableMouseTransparency && AppConfig.EnableTransparency;
+                return _enableMouseTransparency;
             }
 
             set

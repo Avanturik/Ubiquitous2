@@ -474,7 +474,7 @@ namespace UB.Model
                                 return;
 
                             viewers += viewersCount;
-                            tooltip.Text = viewersCountText;
+                            tooltip.Text = String.IsNullOrWhiteSpace(viewersCountText)?"0":viewersCountText;
                             tooltip.Number = viewersCount;
                         }
 
@@ -819,7 +819,7 @@ namespace UB.Model
         }
         private void ReadRawMessage(string rawMessage)
         {
-            Log.WriteInfo("Goodgame raw message received: {0}", rawMessage);
+            //Log.WriteInfo("Goodgame raw message received: {0}", rawMessage);
             if( rawMessage.StartsWith("a"))
             {
                 var packet = this.With( x => JArray.Parse(rawMessage.Substring(1)))
