@@ -219,21 +219,24 @@ namespace UB.Model
 
             Bitmap = new BitmapImage();
             
-            IsDownloading = true;
 
-            Bitmap.BeginInit();
-            Bitmap.CacheOption = BitmapCacheOption.OnLoad;
-            Bitmap.CreateOptions = BitmapCreateOptions.None;
-            Bitmap.StreamSource = inputStream;
-            Bitmap.EndInit();
-            Width = Bitmap.PixelWidth;
-            Height = Bitmap.PixelHeight;
+            if (inputStream != null)
+            {
+                IsDownloading = true;
+                Bitmap.BeginInit();
+                Bitmap.CacheOption = BitmapCacheOption.OnLoad;
+                Bitmap.CreateOptions = BitmapCreateOptions.None;
+                Bitmap.StreamSource = inputStream;
+                Bitmap.EndInit();
+                Width = Bitmap.PixelWidth;
+                Height = Bitmap.PixelHeight;
+                IsDownloading = false;
+                if (DownloadComplete != null)
+                    DownloadComplete(this);
 
-            IsDownloading = false;
-            if (DownloadComplete != null)
-                DownloadComplete(this);
+                inputStream.Close();
+            }
 
-            inputStream.Close();
 
         }
 

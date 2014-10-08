@@ -45,7 +45,7 @@ namespace UB.Model
             Status.ResetToDefault();
             Users = new Dictionary<string, ChatUser>();
 
-            Enabled = Config.Enabled;          
+            UI.Dispatch( () => Enabled = Config.Enabled);          
 
             ContentParsers.Add(MessageParser.ConvertToPlainText);
             ContentParsers.Add(MessageParser.ParseURLs);
@@ -108,10 +108,9 @@ namespace UB.Model
             Log.WriteInfo("Starting Goodgame.ru chat");
             Status.ResetToDefault();
             Status.IsStarting = true;
-
+            Status.IsConnecting = true;
             if (Login())
             {
-                Status.IsConnecting = true;
                 Task.Factory.StartNew(() => JoinChannels());
             }
 
@@ -566,9 +565,15 @@ namespace UB.Model
                         if( !String.IsNullOrWhiteSpace(originalUrl) && Uri.TryCreate( originalUrl, UriKind.Absolute, out uri ))
                         {
                             var ddosCookieGet = GoodgameGet("http://goodgame.ru");
-
-                            var imageDataService = SimpleIoc.Default.GetInstance<IImageDataSource>();
-                            UI.Dispatch (() => imageDataService.AddImage( uri, webClient.DownloadToMemoryStream(originalUrl)));
+                            if( ddosCookieGet != null )
+                            {
+                                var imageDataService = SimpleIoc.Default.GetInstance<IImageDataSource>();
+                                UI.Dispatch (() => imageDataService.AddImage( uri, webClient.DownloadToMemoryStream(originalUrl)));
+                            }
+                            else
+                            {
+                                //get local image
+                            }
                         }
                         Emoticons = list;
                         if (isFallbackEmoticons)
