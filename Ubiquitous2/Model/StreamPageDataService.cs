@@ -61,7 +61,7 @@ namespace UB.Model
         }
         public void UpdateTopicsOnWeb()
         {
-            GetStreamTopics((streams) => streams.ForEach(stream => stream.SetTopic()));
+            GetStreamTopics((streams) => streams.Where(stream => (stream as IChat).Enabled).ToList().ForEach(stream => Task.Factory.StartNew(()=> stream.SetTopic())));
         }
         public void RemovePreset(StreamInfoPreset preset)
         {

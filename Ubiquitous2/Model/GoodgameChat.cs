@@ -5,6 +5,7 @@ using System.Linq;
 using System.Runtime.Serialization;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Web;
 using GalaSoft.MvvmLight.Ioc;
@@ -38,6 +39,8 @@ namespace UB.Model
         public GoodgameChat(ChatConfig config)
         {
             Config = config;
+            Enabled = Config.Enabled;
+
             ContentParsers = new List<Action<ChatMessage, IChat>>();
             ChatChannels = new List<string>();
             Emoticons = new List<Emoticon>();
@@ -45,7 +48,6 @@ namespace UB.Model
             Status.ResetToDefault();
             Users = new Dictionary<string, ChatUser>();
 
-            UI.Dispatch( () => Enabled = Config.Enabled);          
 
             ContentParsers.Add(MessageParser.ConvertToPlainText);
             ContentParsers.Add(MessageParser.ParseURLs);
@@ -116,7 +118,7 @@ namespace UB.Model
 
             isFallbackEmoticons = false;
             isWebEmoticons = false;
-            InitEmoticons();
+            Task.Factory.StartNew( ()=> InitEmoticons());
 
             return true;
         }

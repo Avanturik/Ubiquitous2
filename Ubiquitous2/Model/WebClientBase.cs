@@ -80,7 +80,7 @@ namespace UB.Model
                     {
                         webRequest.AddRange(StartPos, EndPos);
                     }
-
+                    webRequest.Timeout = 5000;
                     webRequest.CookieContainer = m_container;
                     webRequest.UserAgent = userAgent;
                     webRequest.Proxy = null;

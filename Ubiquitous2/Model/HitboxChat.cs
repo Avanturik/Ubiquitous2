@@ -34,6 +34,7 @@ namespace UB.Model
         public HitboxChat(ChatConfig config)
         {
             Config = config;
+            Enabled = Config.Enabled;
             ContentParsers = new List<Action<ChatMessage, IChat>>();
             ChatChannels = new List<string>();
             Emoticons = new List<Emoticon>();
@@ -54,9 +55,6 @@ namespace UB.Model
             };
 
             Games = new ObservableCollection<Game>();
-
-
-            Enabled = Config.Enabled;
         }
         #region IChat implementation
         public string ChatName
@@ -661,6 +659,9 @@ namespace UB.Model
 
         public void SetTopic()
         {
+            if (!Status.IsLoggedIn)
+                return;
+
             var currentInfo = GetLiveStreamInfo();
             var livestream = this.With( x => currentInfo )
                             .With(x => x["livestream"])

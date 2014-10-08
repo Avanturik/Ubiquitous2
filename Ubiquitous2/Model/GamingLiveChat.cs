@@ -541,6 +541,9 @@ namespace UB.Model
         }
         public void SetTopic()
         {
+            if (!Status.IsLoggedIn)
+                return;
+
             var userName = Config.GetParameterValue("Username") as string;
             var authToken = Config.GetParameterValue("AuthToken") as string;
             var gameId = this.With( x => jsonGames.games.FirstOrDefault( game => game.name.Equals(Info.CurrentGame.Name,StringComparison.InvariantCultureIgnoreCase) ))
