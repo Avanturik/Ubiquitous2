@@ -470,7 +470,7 @@ namespace UB.Model
 
             Task.Factory.StartNew(() => {
                 var json = this.With(x => webClient.Download(String.Format("http://api.twitch.tv/api/channels/{0}/ember?on_site=1", HttpUtility.UrlEncode(LoginInfo.UserName.ToLower()))))
-                               .With(x => JToken.Parse(x));
+                    .With(x => !String.IsNullOrWhiteSpace(x)?JToken.Parse(x):null);
 
                 if (json == null || Info == null)
                     return;
