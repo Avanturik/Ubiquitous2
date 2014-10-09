@@ -394,6 +394,7 @@ namespace UB.ViewModel
                 {
                     return;
                 }
+                _isFocused = value;
                 RaisePropertyChanged(IsFocusedPropertyName);
             }
         }
