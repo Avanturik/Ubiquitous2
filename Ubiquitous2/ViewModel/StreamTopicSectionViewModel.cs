@@ -63,8 +63,6 @@ namespace UB.ViewModel
                 {
                     return;
                 }
-
-                RaisePropertyChanging(EnableGameSuggestionPropertyName);
                 _enableGameSuggestion = value;
                 RaisePropertyChanged(EnableGameSuggestionPropertyName);
             }
@@ -118,7 +116,6 @@ namespace UB.ViewModel
                     return;
                 }
 
-                RaisePropertyChanging(GameSuggestionsPropertyName);
                 _gameSuggestions = value;
                 RaisePropertyChanged(GameSuggestionsPropertyName);
             }
@@ -148,8 +145,6 @@ namespace UB.ViewModel
                 {
                     return;
                 }
-
-                RaisePropertyChanging(ChannelIconPropertyName);
                 _channelIcon = value;
                 RaisePropertyChanged(ChannelIconPropertyName);
             }
@@ -179,8 +174,6 @@ namespace UB.ViewModel
                 {
                     return;
                 }
-
-                RaisePropertyChanging(StreamInfoPropertyName);
                 _streamInfo = value;
                 RaisePropertyChanged(StreamInfoPropertyName);
             }

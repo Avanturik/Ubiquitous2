@@ -236,7 +236,6 @@ namespace UB.ViewModel
                     return;
                 }
 
-                RaisePropertyChanging(MessagesPropertyName);
                 _myProperty = value;
                 RaisePropertyChanged(MessagesPropertyName);
             }
@@ -266,8 +265,6 @@ namespace UB.ViewModel
                 {
                     return;
                 }
-
-                RaisePropertyChanging(IsMessageAddedPropertyName);
                 _isMessageAdded = value;
                 RaisePropertyChanged(IsMessageAddedPropertyName);
             }
@@ -297,7 +294,6 @@ namespace UB.ViewModel
                 {
                     return;
                 }
-                RaisePropertyChanging(EnableAutoScrollPropertyName);
                 _enableAutoScroll = value;
                 IsScrollBarVisible = !_enableAutoScroll;
                 RaisePropertyChanged(EnableAutoScrollPropertyName);
@@ -328,8 +324,6 @@ namespace UB.ViewModel
                 {
                     return;
                 }
-
-                RaisePropertyChanging(IsScrollBarVisiblePropertyName);
                 _isScrollBarVisible = value;
                 RaisePropertyChanged(IsScrollBarVisiblePropertyName);
             }
@@ -359,8 +353,6 @@ namespace UB.ViewModel
                 {
                     return;
                 }
-
-                RaisePropertyChanging(ChatToImagePathPropertyName);
                 _chatToImagePath = value;
                 imageService.Config.SetParameterValue("Filename", _chatToImagePath);
                 RaisePropertyChanged(ChatToImagePathPropertyName);
@@ -393,7 +385,6 @@ namespace UB.ViewModel
                     return;
                 }
 
-                RaisePropertyChanging(ChatToImageConfigPropertyName);
                 _chatToImageConfig = value;
                 RaisePropertyChanged(ChatToImageConfigPropertyName);
             }
@@ -423,8 +414,6 @@ namespace UB.ViewModel
                 {
                     return;
                 }
-
-                RaisePropertyChanging(AppConfigPropertyName);
                 _appConfig = value;
                 RaisePropertyChanged(AppConfigPropertyName);
             }
@@ -455,7 +444,6 @@ namespace UB.ViewModel
                     return;
                 }
 
-                RaisePropertyChanging(ChatBoxWidthPropertyName);
                 _chatBoxWidth = value;
                 (Application.Current as App).ChatBoxWidth = _chatBoxWidth;
 
@@ -488,8 +476,6 @@ namespace UB.ViewModel
                 {
                     return;
                 }
-
-                RaisePropertyChanging(ChatBoxHeightPropertyName);
                 _chatBoxHeight = value;
                 (Application.Current as App).ChatBoxHeight = _chatBoxHeight;
                 RaisePropertyChanged(ChatBoxHeightPropertyName);

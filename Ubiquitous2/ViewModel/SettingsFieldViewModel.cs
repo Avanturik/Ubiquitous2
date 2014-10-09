@@ -124,8 +124,6 @@ namespace UB.ViewModel
                 {
                     return;
                 }
-
-                RaisePropertyChanging(SmallRangeStepPropertyName);
                 _smallRangeStep = value;
                 if (_configField != null)
                     _configField.Value = RangeToString();
@@ -157,8 +155,6 @@ namespace UB.ViewModel
                 {
                     return;
                 }
-
-                RaisePropertyChanging(LargeRangeStepPropertyName);
                 _largeRangeStep = value;
                 if (_configField != null)
                     _configField.Value = RangeToString();
@@ -190,8 +186,6 @@ namespace UB.ViewModel
                 {
                     return;
                 }
-
-                RaisePropertyChanging(MaximumRangePropertyName);
                 _maximumRange = value;
                 if (_configField != null)
                     _configField.Value = RangeToString();
@@ -223,8 +217,6 @@ namespace UB.ViewModel
                 {
                     return;
                 }
-
-                RaisePropertyChanging(MinimumRangePropertyName);
                 _minimumRange = value;
                 if (_configField != null)
                     _configField.Value = RangeToString();
@@ -249,8 +241,6 @@ namespace UB.ViewModel
                 {
                     return;
                 }
-
-                RaisePropertyChanging(DataTypePropertyName);
                 _dataType = value;
                 RaisePropertyChanged(DataTypePropertyName);
             }
@@ -283,7 +273,6 @@ namespace UB.ViewModel
                 if( _configField != null )
                     _configField.Value = value;
 
-                RaisePropertyChanging(TextPropertyName);
                 _text = value;
                 RaisePropertyChanged(TextPropertyName);
             }
@@ -313,8 +302,6 @@ namespace UB.ViewModel
                 {
                     return;
                 }
-
-                RaisePropertyChanging(LabelTextPropertyName);
                 _labelText  = value;
                 RaisePropertyChanged(LabelTextPropertyName);
             }
@@ -349,8 +336,6 @@ namespace UB.ViewModel
                 {
                     return;
                 }
-
-                RaisePropertyChanging(IsTruePropertyName);                
                 if (_configField != null)
                     _configField.Value = value;
                 _isTrue = value;

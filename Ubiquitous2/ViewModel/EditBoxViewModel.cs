@@ -55,7 +55,6 @@ namespace UB.ViewModel
                     return;
                 }
 
-                RaisePropertyChanging(SuggestionsPropertyName);
                 _suggestions = value;
                 RaisePropertyChanged(SuggestionsPropertyName);
             }
@@ -85,8 +84,6 @@ namespace UB.ViewModel
                 {
                     return;
                 }
-
-                RaisePropertyChanging(WatermarkPropertyName);
                 _string = value;
                 RaisePropertyChanged(WatermarkPropertyName);
             }
@@ -116,8 +113,6 @@ namespace UB.ViewModel
                 {
                     return;
                 }
-
-                RaisePropertyChanging(TextPropertyName);
                 _text = value;
                 RaisePropertyChanged(TextPropertyName);
 
@@ -165,7 +160,6 @@ namespace UB.ViewModel
                     return;
                 }
 
-                RaisePropertyChanging(SelectedSuggestionPropertyName);
                 _selectedSuggestion = value;
                 RaisePropertyChanged(SelectedSuggestionPropertyName);
 

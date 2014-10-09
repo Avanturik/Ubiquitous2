@@ -46,7 +46,6 @@ namespace UB.ViewModel
                     return;
                 }
 
-                RaisePropertyChanging(IsPlaceHolderVisiblePropertyName);
                 _isPlaceHolderVisible = value;
                 RaisePropertyChanged(IsPlaceHolderVisiblePropertyName);
             }

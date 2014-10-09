@@ -92,8 +92,6 @@ namespace UB.ViewModel
                 {
                     return;
                 }
-
-                RaisePropertyChanging(AppConfigPropertyName);
                 _appConfig = value;
                 RaisePropertyChanged(AppConfigPropertyName);
             }
@@ -123,8 +121,6 @@ namespace UB.ViewModel
                 {
                     return;
                 }
-
-                RaisePropertyChanging(IsNeedSavePropertyName);
                 _isNeedSave = value;
                 RaisePropertyChanged(IsNeedSavePropertyName);
             }
@@ -154,8 +150,6 @@ namespace UB.ViewModel
                 {
                     return;
                 }
-
-                RaisePropertyChanging(ImageServiceConfigPropertyName);
                 _chatToImageService = value;
                 RaisePropertyChanged(ImageServiceConfigPropertyName);
             }
@@ -185,8 +179,6 @@ namespace UB.ViewModel
                 {
                     return;
                 }
-
-                RaisePropertyChanging(ConfigPropertyName);
                 _config = value;
                 RaisePropertyChanged(ConfigPropertyName);
             }
@@ -216,8 +208,6 @@ namespace UB.ViewModel
                 {
                     return;
                 }
-
-                RaisePropertyChanging(CurrentTrackPropertyName);
                 _currentTrack = value;
                 _currentTrack.PropertyChanged += (o, e) =>
                 {
@@ -258,8 +248,6 @@ namespace UB.ViewModel
                 {
                     return;
                 }
-
-                RaisePropertyChanging(MusicTickerToImagePathPropertyName);
                 _musicTickerToImagePath = value;
                 imageService.Config.SetParameterValue("FilenameMusic", _musicTickerToImagePath);
                 RaisePropertyChanged(MusicTickerToImagePathPropertyName);

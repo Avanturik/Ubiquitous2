@@ -43,7 +43,6 @@ namespace UB.ViewModel
                     return;
                 }
 
-                RaisePropertyChanging(ChatPropertyName);
                 _chat = value;
                 RaisePropertyChanged(ChatPropertyName);
             }

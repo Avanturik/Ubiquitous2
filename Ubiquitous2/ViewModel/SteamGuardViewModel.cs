@@ -85,8 +85,6 @@ namespace UB.ViewModel
                 {
                     return;
                 }
-
-                RaisePropertyChanging(CodePropertyName);
                 _code = value;
                 RaisePropertyChanged(CodePropertyName);
             }

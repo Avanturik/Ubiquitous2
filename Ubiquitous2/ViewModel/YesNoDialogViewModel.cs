@@ -53,8 +53,6 @@ namespace UB.ViewModel
                 {
                     return;
                 }
-
-                RaisePropertyChanging(RequestPropertyName);
                 _request = value;
                 RaisePropertyChanged(RequestPropertyName);
             }
@@ -85,7 +83,6 @@ namespace UB.ViewModel
                     return;
                 }
 
-                RaisePropertyChanging(IsVisiblePropertyName);
                 _isVisible = value;
                 RaisePropertyChanged(IsVisiblePropertyName);
             }

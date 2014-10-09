@@ -112,8 +112,6 @@ namespace UB.ViewModel
                 {
                     return;
                 }
-
-                RaisePropertyChanging(AppConfigPropertyName);
                 _appConfig = value;
                 RaisePropertyChanged(AppConfigPropertyName);
             }

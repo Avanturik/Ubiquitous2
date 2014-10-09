@@ -93,8 +93,6 @@ namespace UB.ViewModel
                 {
                     return;
                 }
-
-                RaisePropertyChanging(ImageServiceConfigPropertyName);
                 _imageServiceConfig = value;
                 RaisePropertyChanged(ImageServiceConfigPropertyName);
             }
@@ -124,8 +122,6 @@ namespace UB.ViewModel
                 {
                     return;
                 }
-
-                RaisePropertyChanging(IsNeedSavePropertyName);
                 _isNeedSave = value;
                 RaisePropertyChanged(IsNeedSavePropertyName);
             }
@@ -156,7 +152,6 @@ namespace UB.ViewModel
                     return;
                 }
 
-                RaisePropertyChanging(StatusToImagePathPropertyName);
                 _statusToImagePath = value;
                 RaisePropertyChanged(StatusToImagePathPropertyName);
             }
@@ -186,8 +181,6 @@ namespace UB.ViewModel
                 {
                     return;
                 }
-
-                RaisePropertyChanging(ChatsPropertyName);
                 _chats = value;
                 RaisePropertyChanged(ChatsPropertyName);
             }

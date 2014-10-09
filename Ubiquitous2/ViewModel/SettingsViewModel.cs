@@ -69,8 +69,6 @@ namespace UB.ViewModel
                 {
                     return;
                 }
-
-                RaisePropertyChanging(CurrentThemePropertyName);
                 _currentTheme = value;
                 RaisePropertyChanged(CurrentThemePropertyName);
             }
@@ -142,8 +140,6 @@ namespace UB.ViewModel
                 {
                     return;
                 }
-
-                RaisePropertyChanging(AppConfigPropertyName);
                 _appConfig = value;
                 RaisePropertyChanged(AppConfigPropertyName);
             }
@@ -173,8 +169,6 @@ namespace UB.ViewModel
                 {
                     return;
                 }
-
-                RaisePropertyChanging(PersonalizationFieldsPropertyName);
                 _personalizationFields = value;
                 RaisePropertyChanged(PersonalizationFieldsPropertyName);
             }
@@ -205,7 +199,6 @@ namespace UB.ViewModel
                     return;
                 }
 
-                RaisePropertyChanging(ServiceItemViewModelsPropertyName);
                 _serviceItemViewModels = value;
                 RaisePropertyChanged(ServiceItemViewModelsPropertyName);
             }
@@ -235,8 +228,6 @@ namespace UB.ViewModel
                 {
                     return;
                 }
-
-                RaisePropertyChanging(ChatsPropertyName);
                 _chats = value;
                 RaisePropertyChanged(ChatsPropertyName);
             }

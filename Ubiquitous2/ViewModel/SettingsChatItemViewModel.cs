@@ -90,8 +90,6 @@ namespace UB.ViewModel
                 {
                     return;
                 }
-
-                RaisePropertyChanging(StatusPropertyName);
                 _status = value;
                 RaisePropertyChanged(StatusPropertyName);
             }
@@ -121,8 +119,6 @@ namespace UB.ViewModel
                 {
                     return;
                 }
-
-                RaisePropertyChanging(NamePropertyName);
                 _name = value;
                 RaisePropertyChanged(NamePropertyName);
             }
@@ -151,8 +147,6 @@ namespace UB.ViewModel
                 {
                     return;
                 }
-
-                RaisePropertyChanging(CalculatedHeightPropertyName);
                 _calculatedHeight = value;
                 RaisePropertyChanged(CalculatedHeightPropertyName);
             }
@@ -182,8 +176,6 @@ namespace UB.ViewModel
                 {
                     return;
                 }
-
-                RaisePropertyChanging(SettingsFieldsPropertyName);
                 _settingsFields = value;
                 RaisePropertyChanged(SettingsFieldsPropertyName);
             }
@@ -257,8 +249,6 @@ namespace UB.ViewModel
                 {
                     return;
                 }
-
-                RaisePropertyChanging(EditLinkTitlePropertyName);
                 _editLinkTitle = value;
                 RaisePropertyChanged(EditLinkTitlePropertyName);
             }
@@ -288,7 +278,6 @@ namespace UB.ViewModel
                 {
                     return;
                 }
-                RaisePropertyChanging(ExpandedPropertyName);
                 _expanded = value;
                 EditLinkTitle = _expanded == true ? "done" : "edit";
                 RaisePropertyChanged(ExpandedPropertyName);
@@ -319,8 +308,6 @@ namespace UB.ViewModel
                 {
                     return;
                 }
-
-                RaisePropertyChanging(EnabledPropertyName);
                 _enabled = value;
                 IsLoaderVisible = true;
                 if (chatConfig != null)
@@ -359,8 +346,6 @@ namespace UB.ViewModel
                 {
                     return;
                 }
-
-                RaisePropertyChanging(IsLoaderVisiblePropertyName);
                 _isLoaderVisible = value;
                 RaisePropertyChanged(IsLoaderVisiblePropertyName);
             }
@@ -390,8 +375,6 @@ namespace UB.ViewModel
                 {
                     return;
                 }
-
-                RaisePropertyChanging(IconURLPropertyName);
                 _iconURL = value;
                 RaisePropertyChanged(IconURLPropertyName);
             }

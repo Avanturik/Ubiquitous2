@@ -153,7 +153,6 @@ namespace UB.ViewModel
                     return;
                 }
 
-                RaisePropertyChanging(IsWindowReopenPropertyName);
                 _isWindowReopen = value;
                 RaisePropertyChanged(IsWindowReopenPropertyName);
             }
@@ -269,7 +268,6 @@ namespace UB.ViewModel
                     return;
                 }
 
-                RaisePropertyChanging(IsOverlayVisiblePropertyName);
                 _isOverlayVisible = value;
                 MessengerInstance.Send<bool>(!_isOverlayVisible, "EnableAutoScroll");
                 RaisePropertyChanged(IsOverlayVisiblePropertyName);
@@ -299,8 +297,6 @@ namespace UB.ViewModel
                 {
                     return;
                 }
-
-                RaisePropertyChanging(IsMouseOverPropertyName);
                 _isMouseOver = value;
                 RaisePropertyChanged(IsMouseOverPropertyName);
             }
@@ -369,8 +365,6 @@ namespace UB.ViewModel
                 {
                     return;
                 }
-
-                RaisePropertyChanging(SendTextPropertyName);
                 _sendText = value;
                 RaisePropertyChanged(SendTextPropertyName);
             }
@@ -400,9 +394,6 @@ namespace UB.ViewModel
                 {
                     return;
                 }
-
-                RaisePropertyChanging(IsFocusedPropertyName);
-                _isFocused = value;
                 RaisePropertyChanged(IsFocusedPropertyName);
             }
         }
@@ -469,8 +460,6 @@ namespace UB.ViewModel
                 {
                     return;
                 }
-
-                RaisePropertyChanging(ChatListPropertyName);
                 _chatList = value;
                 RaisePropertyChanged(ChatListPropertyName);
             }
@@ -507,7 +496,6 @@ namespace UB.ViewModel
                     return;
                 }
                 SelectedChannelName = value.ChannelName;
-                RaisePropertyChanging(SelectedChatChannelPropertyName);
                 _selectedChat = value;
                 RaisePropertyChanged(SelectedChatChannelPropertyName);
             }
@@ -537,8 +525,6 @@ namespace UB.ViewModel
                 {
                     return;
                 }
-
-                RaisePropertyChanging(SelectedChannelNamePropertyName);
                 _selectedChannelName = value;
                 RaisePropertyChanged(SelectedChannelNamePropertyName);
             }
@@ -619,8 +605,6 @@ namespace UB.ViewModel
                 {
                     return;
                 }
-
-                RaisePropertyChanging(SendTextEditModePropertyName);
                 _sendTextEditMode = value;
                 RaisePropertyChanged(SendTextEditModePropertyName);
             }
@@ -651,7 +635,6 @@ namespace UB.ViewModel
                     return;
                 }
 
-                RaisePropertyChanging(EnableMouseTransparencyPropertyName);
                 _enableMouseTransparency = value;
                 RaisePropertyChanged(EnableMouseTransparencyPropertyName);
             }
@@ -681,8 +664,6 @@ namespace UB.ViewModel
                 {
                     return;
                 }
-
-                RaisePropertyChanging(AppConfigPropertyName);
                 _appConfig = value;
                 RaisePropertyChanged(AppConfigPropertyName);
             }

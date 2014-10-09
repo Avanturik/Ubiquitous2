@@ -219,7 +219,6 @@ namespace UB.ViewModel
                     return;
                 }
 
-                RaisePropertyChanging(TopicPresetsPropertyName);
                 _topicPresets = value;
                 RaisePropertyChanged(TopicPresetsPropertyName);
             }
@@ -249,8 +248,6 @@ namespace UB.ViewModel
                 {
                     return;
                 }
-
-                RaisePropertyChanging(StreamTopicsPropertyName);
                 _streamTopics = value;
                 RaisePropertyChanged(StreamTopicsPropertyName);
             }
