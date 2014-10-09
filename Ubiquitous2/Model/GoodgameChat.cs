@@ -357,6 +357,8 @@ namespace UB.Model
             if (Status.IsStopping)
                 return;
 
+            var serverUri = GetServerUri();
+
             var channels = Config.Parameters.StringArrayValue("Channels").Select(chan => "#" + chan.ToLower().Replace("#", "")).ToArray();
 
             if (!String.IsNullOrWhiteSpace( NickName) )
@@ -369,6 +371,7 @@ namespace UB.Model
             {
 
                 var goodgameChannel = new GoodgameChannel(this);
+                goodgameChannel.ServerUri = serverUri;
                 goodgameChannel.ReadMessage = ReadMessage;
                 goodgameChannel.LeaveCallback = (ggChannel) =>
                 {
@@ -595,6 +598,21 @@ namespace UB.Model
             Task.Factory.StartNew(() => DownloadEmoticons(emoticonUrl));
         }
 
+        private Uri GetServerUri()
+        {
+            var re = @"this\.server=.*?""(.*?)""";
+            var serverUrl = this.With(x => GoodgameGet("http://goodgame.ru/js/minified/chat.js"))
+                .With(x => Re.GetSubString(x, re));
+
+            Uri uri;
+
+            if( Uri.TryCreate( serverUrl, UriKind.Absolute, out uri))
+                return uri;
+            else
+                return null;
+
+        }
+
         public ChatConfig Config
         {
             get;
@@ -685,7 +703,7 @@ namespace UB.Model
         public UInt32 ChannelId { get; set; }
 
         public bool IsAnonymous { get; set; }
-
+        public Uri ServerUri { get; set; }
         private static void WelcomeHandler(GoodgameChannel channel, GoodGameData data)
         {
             Log.WriteInfo("Goodgame protocol version: {0}", data.ProtocolVersion);
@@ -818,10 +836,18 @@ namespace UB.Model
         private void Connect()
         {
             Status.ResetToDefault();
-
-            webSocket.Path = String.Format("/chat/{0}/{1}/websocket", Rnd.RandomWebSocketServerNum(0x1e3), Rnd.RandomWebSocketString());
-            webSocket.Port = "8081";
-            webSocket.Host = "chat.goodgame.ru";
+            if( ServerUri == null )
+            {
+                webSocket.Path = String.Format("/chat/{0}/{1}/websocket", Rnd.RandomWebSocketServerNum(0x1e3), Rnd.RandomWebSocketString());
+                webSocket.Port = "8081";
+                webSocket.Host = "chat.goodgame.ru";
+            }
+            else
+            {
+                webSocket.Path = String.Format("{0}/{1}/{2}/websocket", ServerUri.AbsolutePath, Rnd.RandomWebSocketServerNum(0x1e3), Rnd.RandomWebSocketString());
+                webSocket.Port = ServerUri.Port.ToString();
+                webSocket.Host = ServerUri.Host;
+            }
             webSocket.Connect();
         }
         private void ReadRawMessage(string rawMessage)
