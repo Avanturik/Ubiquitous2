@@ -592,6 +592,7 @@ namespace UB.Model
         private WebSocketBase webSocket;
         private WebSocketBase secondWebSocket;
         private IChat _chat;
+        private bool isJoined = false;
         bool isAnonymous = false;
         object lockConnect = new object();
         public GamingLiveChannel(IChat chat)
@@ -648,13 +649,17 @@ namespace UB.Model
         }
         private void ReadRawMessage(string rawMessage)        
         {
-            if( !_chat.Status.IsConnected )
+            if (!_chat.Status.IsConnected)
             {
                 _chat.Status.IsStarting = false;
+                _chat.Status.IsConnected = true;
             }
-            
-            if (JoinCallback != null)
+
+            if (!isJoined && JoinCallback != null)
+            {
                 JoinCallback(this);
+                isJoined = true;
+            }
             
             //Log.WriteInfo("gaminglive raw message: {0}", rawMessage);
             if( !String.IsNullOrWhiteSpace(rawMessage))
