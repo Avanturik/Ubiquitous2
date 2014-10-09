@@ -54,7 +54,7 @@ namespace UB.Utils
         }
         public static T DeserializeStream<T>(Stream stream) where T : class
         {
-            if (stream == null)
+            if (stream == null || !stream.CanRead)
                 return null;
 
             using (StreamReader streamReader = new StreamReader(stream))
