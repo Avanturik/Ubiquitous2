@@ -820,7 +820,7 @@ namespace UB.Model
             Status.ResetToDefault();
 
             webSocket.Path = String.Format("/chat/{0}/{1}/websocket", Rnd.RandomWebSocketServerNum(0x1e3), Rnd.RandomWebSocketString());
-            webSocket.Port = "8080";
+            webSocket.Port = "8081";
             webSocket.Host = "chat.goodgame.ru";
             webSocket.Connect();
         }
