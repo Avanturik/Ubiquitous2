@@ -24,6 +24,8 @@ namespace UB.Model
         //private const string emoticonUrl = @"http://goodgame.ru/css/compiled/smiles.css";
         private const string emoticonImageUrl = @"http://goodgame.ru/images/generated/smiles.png";
         private const string emoticonFallbackUrl = @"Content\goodgame_smiles.css";
+        private string ownChannel;
+        private string ownChannelId;
         private List<GoodgameChannel> goodgameChannels = new List<GoodgameChannel>();
         private List<WebPoller> counterWebPollers = new List<WebPoller>();
         private object iconParseLock = new object();
@@ -202,6 +204,9 @@ namespace UB.Model
             }
             else
             {
+                isAnonymous = false;
+                Info.CanBeRead = true;
+                Info.CanBeChanged = true;
                 Config.SetParameterValue("AuthToken", authToken);
                 Config.SetParameterValue("AuthTokenCredentials", userName + password);
             }
@@ -650,17 +655,71 @@ namespace UB.Model
 
         public void QueryGameList(string gameName, Action callback)
         {
+            Games.Clear();
 
+            webClient.ContentType = ContentType.UrlEncodedUTF8;
+            webClient.Headers["X-Requested-With"] = "XMLHttpRequest";
+
+            this.With(x => GoodgameGet(String.Format("http://goodgame.ru/ajax/games/?q={0}&limit=10", HttpUtility.UrlEncode(gameName))))
+                .With(x => String.IsNullOrWhiteSpace(x) ? null : x)
+                .With(x => JArray.Parse(x))
+                .With(x => x.Count >= 3 ? x : null)
+                .With(x => x.Select(game => new Game() { Id = game[2].ToString(), Name = game[0].ToString() }))
+                .ToList()
+                .ForEach( g => Games.Add(g));
+
+            if (callback != null)
+                UI.Dispatch(() => callback());
         }
 
         public void GetTopic()
         {
+            if (!Status.IsLoggedIn || !Enabled)
+                return;
 
+            Task.Factory.StartNew(() =>
+            {
+                var content = GoodgameGet("http://goodgame.ru/");
+                ownChannel = Re.GetSubString(content, @"\/channel\/([^\/]+)\/add");
+
+                content = GoodgameGet(String.Format("http://goodgame.ru/chat/{0}/", ownChannel));
+                ownChannelId = Re.GetSubString(content, @"channelId:[^\d]*(\d+)");
+
+                if( !String.IsNullOrWhiteSpace(ownChannel) )
+                {
+                    webClient.ContentType = ContentType.UrlEncodedUTF8;
+                    content = GoodgameGet(String.Format(@"http://goodgame.ru/channel/{0}",ownChannel));
+                    if (!String.IsNullOrWhiteSpace(content))
+                    {
+                        Info.Topic = Re.GetSubString(content, @"<title>([^<]*)</title>");
+                        Info.CurrentGame.Name = this.With(x => Re.GetSubString(content, @"StreamTitleEdit[^,]*,[^,]*,[^,]*,[^,]*,[^']*'([^']*)'"))
+                            .With(x => x.Trim());
+                        Info.CurrentGame.Id = this.With(x => Re.GetSubString(content, @"StreamTitleEdit[^,]*,[^,]*,[^,]*,([^,]*),[^']*'[^']*'"))
+                            .With(x => x.Trim());
+                    }
+                }
+            });
         }
 
         public void SetTopic()
         {
+            if (string.IsNullOrWhiteSpace(ownChannelId) || !Status.IsLoggedIn)
+                return;
 
+            var searchGame = Games.FirstOrDefault(game => game.Name.Equals(Info.CurrentGame.Name, StringComparison.InvariantCultureIgnoreCase));
+            if (searchGame == null)
+            {
+                QueryGameList(Info.CurrentGame.Name, null);
+                searchGame = Games.FirstOrDefault(game => game.Name.Equals(Info.CurrentGame.Name, StringComparison.InvariantCultureIgnoreCase));
+            }
+
+            if (searchGame != null)
+                Info.CurrentGame.Id = searchGame.Id;
+
+            var parameters = String.Format("objType=7&objId={0}&title={1}&gameId={2}", ownChannelId, HttpUtility.UrlEncode(Info.Topic), Info.CurrentGame.Id);
+            webClient.ContentType = ContentType.UrlEncodedUTF8;
+            webClient.Headers["X-Requested-With"] = "XMLHttpRequest";
+            webClient.Upload("http://goodgame.ru/ajax/channel/update_title/", parameters);
         }
 
         public Action StreamTopicAcquired

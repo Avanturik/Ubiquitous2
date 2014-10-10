@@ -300,7 +300,7 @@ namespace UB.Model
 
         public void SetTopic()
         {
-            if (profileFormParams == null)
+            if (profileFormParams == null || !Status.IsLoggedIn)
                 return;
 
             String param = "a=save_profile&channel_game={0}&channel_desc={1}&channel={2}&display_name={3}&channel_name={4}";
@@ -312,6 +312,8 @@ namespace UB.Model
             loginWebClient.ContentType = ContentType.UrlEncodedUTF8;
             loginWebClient.Headers["X-Requested-With"] = "XMLHttpRequest";
 
+            Info.CurrentGame.Id = webGameList.FirstOrDefault(game => game.Value.Equals(Info.CurrentGame.Name, StringComparison.InvariantCultureIgnoreCase)).Key;
+           
             loginWebClient.Upload(String.Format(@"http://cybergame.tv/my_profile_edit/?mode=async&rand={0}", Time.UnixTimestamp()),
                 String.Format(param, Info.CurrentGame.Id, HttpUtility.UrlEncode(Info.Topic), webChannelId, HttpUtility.UrlEncode(displayName), HttpUtility.UrlEncode(channelName)));
         }
