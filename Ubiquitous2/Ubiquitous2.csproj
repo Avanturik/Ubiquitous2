@@ -153,6 +153,9 @@
     </Compile>
     <Compile Include="Controls\EditComboBox\EditComboBoxActions.cs" />
     <Compile Include="Controls\EditComboBox\EditComboBoxItem.cs" />
+    <Compile Include="Controls\RollingFadingText.xaml.cs">
+      <DependentUpon>RollingFadingText.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\SmoothPanel\DataBindHelper.cs" />
     <Compile Include="Controls\SmoothPanel\IHeightMeasurer.cs" />
     <Compile Include="Controls\SmoothPanel\SmoothPanel.cs" />
@@ -167,6 +170,9 @@
     <Compile Include="Model\DummyChat.cs" />
     <Compile Include="Model\Game.cs" />
     <Compile Include="Model\GoodgameChat.cs" />
+    <Compile Include="Model\Greeting.cs" />
+    <Compile Include="Model\GreetingsDataService.cs" />
+    <Compile Include="Model\IGreetingsDataService.cs" />
     <Compile Include="Model\IStreamPageDataService.cs" />
     <Compile Include="Model\IStreamTopic.cs" />
     <Compile Include="Model\OBSRemoteService.cs" />
@@ -189,6 +195,7 @@
     <Compile Include="ViewModel\HelloPlaceHolderViewModel.cs" />
     <Compile Include="ViewModel\EditBoxViewModel.cs" />
     <Compile Include="ViewModel\StreamTopicSectionViewModel.cs" />
+    <Compile Include="ViewModel\SubFollowDonationViewModel.cs" />
     <Compile Include="View\DashBoardWindow.xaml.cs">
       <DependentUpon>DashBoardWindow.xaml</DependentUpon>
     </Compile>
@@ -200,6 +207,9 @@
     </Compile>
     <Compile Include="View\StreamTopicSectionView.xaml.cs">
       <DependentUpon>StreamTopicSectionView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\SubFollowDonationView.xaml.cs">
+      <DependentUpon>SubFollowDonationView.xaml</DependentUpon>
     </Compile>
     <Compile Include="View\YesNoDialogView.xaml.cs">
       <DependentUpon>YesNoDialogView.xaml</DependentUpon>
@@ -438,6 +448,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Controls\RollingFadingText.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Skins\Shared\YesNoDialogSkin.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -456,6 +470,10 @@
     </Page>
     <Page Include="View\StreamTopicSectionView.xaml">
       <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\SubFollowDonationView.xaml">
+      <SubType>Form</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="View\YesNoDialogView.xaml">
@@ -585,6 +603,16 @@
     <Content Include="Content\goodgame_smiles.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <BlendEmbeddedFont Include="Fonts\ROCCB___.TTF">
+      <IsSystemFont>True</IsSystemFont>
+      <All>True</All>
+      <AutoFill>True</AutoFill>
+    </BlendEmbeddedFont>
+    <BlendEmbeddedFont Include="Fonts\ROCC____.TTF">
+      <IsSystemFont>True</IsSystemFont>
+      <All>True</All>
+      <AutoFill>True</AutoFill>
+    </BlendEmbeddedFont>
     <Resource Include="Resources\obs.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Resource>
@@ -857,6 +885,7 @@
 	</PostBuildEvent>
   </PropertyGroup>
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" />
+  <Import Project="$(MSBuildExtensionsPath)\Microsoft\Expression\Blend\.NETFramework\v4.5\Microsoft.Expression.Blend.WPF.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

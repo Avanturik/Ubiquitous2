@@ -1,0 +1,21 @@
+﻿<UserControl x:Class="UB.View.SubFollowDonationView"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:ignore="http://www.ignore.com"
+        xmlns:Controls="clr-namespace:UB.Controls"
+        xmlns:Devart="clr-namespace:Devart.Controls"
+        mc:Ignorable="d ignore"
+        DataContext="{Binding SubFollowDonation, Source={StaticResource Locator}}" d:DesignWidth="546.133" d:DesignHeight="361.395" HorizontalContentAlignment="Center" VerticalContentAlignment="Center">
+
+    <Grid Visibility="{Binding ShowGreeting, Converter={StaticResource boolToVisibilityConverter}}">
+        <ItemsControl ItemsSource="{Binding Greetings}">
+            <ItemsControl.ItemTemplate>
+                <DataTemplate>
+                    <Controls:RollingFadingText Title="{Binding Title}" Message="{Binding Message}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+        </ItemsControl>
+    </Grid>
+</UserControl>
