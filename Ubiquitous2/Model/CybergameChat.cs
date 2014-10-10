@@ -21,16 +21,22 @@ namespace UB.Model
         private List<WebPoller> counterWebPollers = new List<WebPoller>();
         private List<CybergameChannel> cybergameChannels = new List<CybergameChannel>();
         private WebClientBase loginWebClient = new WebClientBase();
+        private List<KeyValuePair<string, string>> webGameList = new List<KeyValuePair<string, string>>();
+        private List<KeyValuePair<String, String>> profileFormParams;
         private string emoticonFallbackUrl = @"Content\cybergame_smiles.html";
         private string emoticonUrl = "http://cybergame.tv/cgchat.htm?v=b";
+        private string webChannelId;
         private object pollerLock = new object();
         private object channelsLock = new object();
         private object counterLock = new object();
         private object toolTipLock = new object();
         private object iconParseLock = new object();
+        private object lockSearch = new object();
         private bool isWebEmoticons = false;
         private bool isFallbackEmoticons = false;
         private bool isAnonymous = true;
+
+
         public CybergameChat(ChatConfig config)
         {
             Config = config;
@@ -255,17 +261,59 @@ namespace UB.Model
 
         public void QueryGameList(string gameName, Action callback)
         {
-           
+            lock (lockSearch)
+            {
+                Games.Clear();
+                webGameList.Where(game => game.Value.ToLower()
+                    .StartsWith(gameName.ToLower()))
+                    .Select(game => new Game() { Id = game.Key, Name = game.Value })
+                    .ToList()
+                    .ForEach(game => Games.Add(game));
+
+                if (callback != null)
+                    UI.Dispatch(() => callback());
+            }
         }
 
         public void GetTopic()
         {
-           
+            if (!Status.IsLoggedIn || !Enabled)
+                return;
+
+            Task.Factory.StartNew(() =>
+            {
+                loginWebClient.ContentType = ContentType.UrlEncodedUTF8;
+                var content = loginWebClient.Download(String.Format(@"http://cybergame.tv/my_profile_edit/?rand={0}", Time.UnixTimestamp()));
+                Info.Topic = Html.GetInnerText(@"//textarea[@name='channel_desc']", content);
+                Info.CurrentGame.Name = Html.GetSiblingInnerText(@"//select/option[@selected='selected']", content);
+                webGameList = Html.GetOptions(@"//select[@name='channel_game']/option", content);
+                webChannelId = Html.GetAttribute(@"//input[@name='channel']", "value", content);
+                profileFormParams = Html.FormParams(@"", content);
+                Info.CurrentGame.Id = webGameList.Where(v => v.Value.Equals(Info.CurrentGame.Name,StringComparison.InvariantCultureIgnoreCase)).Select(g => g.Key).FirstOrDefault();
+                Info.CanBeRead = true;
+                Info.CanBeChanged = true;
+
+                if (StreamTopicAcquired != null)
+                    UI.Dispatch(() => StreamTopicAcquired());
+            });
         }
 
         public void SetTopic()
         {
-            
+            if (profileFormParams == null)
+                return;
+
+            String param = "a=save_profile&channel_game={0}&channel_desc={1}&channel={2}&display_name={3}&channel_name={4}";
+            var displayName = profileFormParams.Where(k => k.Key.StartsWith("display_name_", StringComparison.CurrentCultureIgnoreCase)).Select(v => v.Value).FirstOrDefault();
+            var channelName = profileFormParams.Where(k => k.Key.StartsWith("channel_name_", StringComparison.CurrentCultureIgnoreCase)).Select(v => v.Value).FirstOrDefault();
+            if (String.IsNullOrEmpty(displayName))
+                displayName = NickName;
+
+            loginWebClient.ContentType = ContentType.UrlEncodedUTF8;
+            loginWebClient.Headers["X-Requested-With"] = "XMLHttpRequest";
+
+            loginWebClient.Upload(String.Format(@"http://cybergame.tv/my_profile_edit/?mode=async&rand={0}", Time.UnixTimestamp()),
+                String.Format(param, Info.CurrentGame.Id, HttpUtility.UrlEncode(Info.Topic), webChannelId, HttpUtility.UrlEncode(displayName), HttpUtility.UrlEncode(channelName)));
         }
 
         public Action StreamTopicAcquired
