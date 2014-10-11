@@ -160,6 +160,7 @@ namespace UB.Model
                 var newHref = Re.GetSubString( content, @"location\.href=""(.*?)""");
                 if( !String.IsNullOrWhiteSpace(cookieName) && !String.IsNullOrWhiteSpace(cookieValue) && !String.IsNullOrWhiteSpace(newHref))
                 {
+                    webClient.Encoding = System.Text.Encoding.UTF8;
                     webClient.SetCookie( cookieName, cookieValue, "goodgame.ru");
                     content = webClient.Download( newHref );
                 }
@@ -663,7 +664,6 @@ namespace UB.Model
             this.With(x => GoodgameGet(String.Format("http://goodgame.ru/ajax/games/?q={0}&limit=10", HttpUtility.UrlEncode(gameName))))
                 .With(x => String.IsNullOrWhiteSpace(x) ? null : x)
                 .With(x => JArray.Parse(x))
-                .With(x => x.Count >= 3 ? x : null)
                 .With(x => x.Select(game => new Game() { Id = game[2].ToString(), Name = game[0].ToString() }))
                 .ToList()
                 .ForEach( g => Games.Add(g));
@@ -687,7 +687,7 @@ namespace UB.Model
 
                 if( !String.IsNullOrWhiteSpace(ownChannel) )
                 {
-                    webClient.ContentType = ContentType.UrlEncodedUTF8;
+                    
                     content = GoodgameGet(String.Format(@"http://goodgame.ru/channel/{0}",ownChannel));
                     if (!String.IsNullOrWhiteSpace(content))
                     {
@@ -717,7 +717,7 @@ namespace UB.Model
                 Info.CurrentGame.Id = searchGame.Id;
 
             var parameters = String.Format("objType=7&objId={0}&title={1}&gameId={2}", ownChannelId, HttpUtility.UrlEncode(Info.Topic), Info.CurrentGame.Id);
-            webClient.ContentType = ContentType.UrlEncodedUTF8;
+            webClient.ContentType = ContentType.UrlEncoded;
             webClient.Headers["X-Requested-With"] = "XMLHttpRequest";
             webClient.Upload("http://goodgame.ru/ajax/channel/update_title/", parameters);
         }

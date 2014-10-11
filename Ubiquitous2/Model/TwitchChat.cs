@@ -222,8 +222,8 @@ namespace UB.Model
                 else // Login with OAuth token
                 {
                     var oauthToken = Config.Parameters.StringValue("OAuthToken");
-                    var oauthTokenCredentials = Config.Parameters.StringValue("AuthTokenCredentials");
-                    
+                    var oauthTokenCredentials = Config.Parameters.StringValue("AuthTokenCredentials");                  
+
                     if ( LoginInfo.UserName + LoginInfo.Password != oauthTokenCredentials)
                         oauthToken = null;
 
@@ -397,7 +397,9 @@ namespace UB.Model
             webClient.Headers["Twitch-Api-Token"] = apiToken;
             webClient.Headers["X-CSRF-Token"] = csrfToken;
             webClient.Headers["Accept"] = "*/*";
-            afterAction();
+            
+            if( afterAction != null )
+                afterAction();
         }
 
         private string GetCSRFToken()
@@ -412,7 +414,8 @@ namespace UB.Model
 
             if (String.IsNullOrWhiteSpace(csrfToken)) 
                 Authenticate(() => {});
-
+            
+            webClient.Headers["X-CSRF-Token"] = csrfToken;
             webClient.ContentType = ContentType.UrlEncodedUTF8;
             return webClient.Upload(url, parameters);
         }
@@ -469,6 +472,7 @@ namespace UB.Model
                 return;
 
             Task.Factory.StartNew(() => {
+                webClient.ContentType = ContentType.UrlEncodedUTF8;
                 var json = this.With(x => webClient.Download(String.Format("http://api.twitch.tv/api/channels/{0}/ember?on_site=1", HttpUtility.UrlEncode(LoginInfo.UserName.ToLower()))))
                     .With(x => !String.IsNullOrWhiteSpace(x)?JToken.Parse(x):null);
 
@@ -490,14 +494,14 @@ namespace UB.Model
 
             Task.Factory.StartNew(() => {
                 var url = String.Format(@"http://www.twitch.tv/{0}/update", LoginInfo.UserName.ToLower());
-                var parameters = String.Format( @"title={0}&meta_game={1}", HttpUtility.UrlEncode( Info.Topic), HttpUtility.UrlEncode(Info.CurrentGame.Name) );
+                var parameters = String.Format(@"status={0}&game={1}", HttpUtility.UrlEncode(Info.Topic), HttpUtility.UrlEncode(Info.CurrentGame.Name));
                 var result = TwitchPost( url,parameters);
                 
                 // Did you just login on Web and your session cookie is invalid now ? Okay, let's authenticate again...
-                if (!result.Contains(@"""ok"""))
+                if (!result.Contains(Info.Topic))
                 {
                     Authenticate(delegate { });
-                    TwitchPost( url,parameters );
+                    result = TwitchPost( url,parameters );
                 }
             });
         }
