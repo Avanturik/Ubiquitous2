@@ -55,9 +55,11 @@ namespace UB.ViewModel
         public void Initialize()
         {
             //watch Ctrl down to switch click-through
+#if !DEBUG
             keyboardListener = new KeyboardListener();
             keyboardListener.KeyDown += keyboardListener_KeyDown;
             keyboardListener.KeyUp += keyboardListener_KeyUp;
+#endif
             AppConfig.PropertyChanged += AppConfig_PropertyChanged;
 
             Win.ShowStatus();
@@ -689,7 +691,9 @@ namespace UB.ViewModel
         public override void Cleanup()
         {
             // Clean up if needed
+#if !DEBUG
             keyboardListener.Dispose();
+#endif
             MessengerInstance.Unregister<bool>(this, "ReopenMainWindow");
             MessengerInstance.Unregister<ChatMessage>(this, "SetChannel");
 

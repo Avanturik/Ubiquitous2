@@ -366,11 +366,14 @@ namespace UB.Model
             RaiseMessageReceive( message.Text, message.Channel, LoginInfo.UserName, important:true, isSentByMe:true );
             return base.SendMessage(message);
         }
-        public void Authenticate( Action afterAction)
+        public void Authenticate( Action afterAction)        
         {
-            webClient.Headers["X-Requested-With"] = "XMLHttpRequest";
+            webClient.Headers.Clear();
+            webClient.SetCookie("api_token", null, "twitch.tv");
+            webClient.SetCookie("csrf_token", null, "twitch.tv");
 
             var csrfToken = GetCSRFToken();
+
 
             if (csrfToken == null)
             {
@@ -380,6 +383,8 @@ namespace UB.Model
 
             webClient.SetCookie("csrf_token", csrfToken, "twitch.tv");
             webClient.ContentType = ContentType.UrlEncoded;
+            webClient.Headers["X-Requested-With"] = "XMLHttpRequest";
+            webClient.Headers["X-CSRF-Token"] = csrfToken;
             webClient.Headers["Accept"] = "text/html, application/xhtml+xml, */*";
 
             var apiToken = this.With(x => webClient.Upload("https://secure.twitch.tv/user/login", String.Format(
@@ -394,7 +399,7 @@ namespace UB.Model
                 Log.WriteError("Twitch: Can't get API token");
                 return;
             }
-            webClient.Headers["Twitch-Api-Token"] = apiToken;
+            //webClient.Headers["Twitch-Api-Token"] = apiToken;
             webClient.Headers["X-CSRF-Token"] = csrfToken;
             webClient.Headers["Accept"] = "*/*";
             
@@ -414,8 +419,8 @@ namespace UB.Model
 
             if (String.IsNullOrWhiteSpace(csrfToken)) 
                 Authenticate(() => {});
-            
-            webClient.Headers["X-CSRF-Token"] = csrfToken;
+
+            webClient.Headers["X-CSRF-Token"] = webClient.CookieValue("csrf_token", "http://twitch.tv");
             webClient.ContentType = ContentType.UrlEncodedUTF8;
             return webClient.Upload(url, parameters);
         }
@@ -489,6 +494,7 @@ namespace UB.Model
         }
         public void SetTopic()
         {
+
             if (!Status.IsLoggedIn)
                 return;
 

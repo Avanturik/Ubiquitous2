@@ -89,7 +89,6 @@ namespace UB.Model
                 }
                 return request;
             }
-
             public String Download(String url)
             {
                 try
