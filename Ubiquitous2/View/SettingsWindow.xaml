@@ -29,7 +29,7 @@
         <Converter:StringToIsChecked x:Key="stringToIsCheckedConverter"/>
     </Window.Resources>
     <Grid>
-        <fluent:BackstageTabControl SelectedIndex="3" Background="#FF323232" Style="{DynamicResource SettingsStyle}">
+        <fluent:BackstageTabControl SelectedIndex="0" Background="#FF323232" Style="{DynamicResource SettingsStyle}">
             <fluent:BackstageTabItem Header="Chats">
                 <Grid>
                     <ItemsControl ItemsSource="{Binding Chats}"
@@ -105,6 +105,12 @@
                                 <Image Width="150" Source="/Ubiquitous2;component/Resources/SimpleThemeThumbnail.png" DockPanel.Dock="Right" HorizontalAlignment="Right"/>
                             </Grid>
                         </RadioButton>
+                        <!--<RadioButton Command="{Binding SelectTheme}" CommandParameter="Perspective" Style="{DynamicResource ThemeRadioButton}" GroupName="ThemeButtons" IsChecked="{Binding CurrentTheme, Converter={StaticResource stringToIsCheckedConverter}, ConverterParameter=Perspective}" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Center">
+                            <Grid>
+                                <TextBlock VerticalAlignment="Center" Margin="0,0,8,0" HorizontalAlignment="Left">Perspective</TextBlock>
+                                <Image Width="150" Source="/Ubiquitous2;component/Resources/SimpleThemeThumbnail.png" DockPanel.Dock="Right" HorizontalAlignment="Right"/>
+                            </Grid>
+                        </RadioButton>-->
                     </VirtualizingStackPanel>
                 </ScrollViewer>
             </fluent:BackstageTabItem>

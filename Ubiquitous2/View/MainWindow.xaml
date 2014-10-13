@@ -6,7 +6,7 @@
         xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
         xmlns:Custom="http://www.galasoft.ch/mvvmlight"
         xmlns:Settings="clr-namespace:UB.Properties"
-        xmlns:Interactivity="clr-namespace:UB.Interactivity"
+        xmlns:Interactivity="clr-namespace:UB.Interactivity" x:Name="window"
         x:Class="UB.MainWindow"        
         mc:Ignorable="d ignore"
         UseLayoutRounding="True"
@@ -19,8 +19,7 @@
         ResizeMode="NoResize"
         Margin="0" 
         TextOptions.TextRenderingMode="Aliased"
-        Padding="0" Icon="/Ubiquitous2;component/Resources/ubiquitous smile.ico" 
-        d:DesignWidth="275" d:DesignHeight="394" Width="275" Height="394"
+        Padding="0" Icon="/Ubiquitous2;component/Resources/ubiquitous smile.ico" d:DesignHeight="394" Width="286" Height="394"
         >
     <i:Interaction.Behaviors>
         <Interactivity:WindowPersistentLocationBehavior WindowName="MainWindow"/>

@@ -188,11 +188,11 @@ namespace UB.Model
                         var c = chat;
                         c.Start();
 
-                        //while (ChatStatusHandler == null && waitChatStatus > 0 )
-                        //{
-                        //    waitChatStatus -= 50;
-                        //    Thread.Sleep(100);
-                        //}
+                        while (ChatStatusHandler == null && waitChatStatus > 0)
+                        {
+                            waitChatStatus -= 50;
+                            Thread.Sleep(100);
+                        }
 
                         if( ChatStatusHandler != null )
                             ChatStatusHandler(c);
