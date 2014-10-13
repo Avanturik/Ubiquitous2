@@ -13,7 +13,7 @@ using UB.Utils;
 
 namespace UB.Model
 {
-    public class HitboxChat : IChat, IStreamTopic
+    public class HitboxChat : IChat, IStreamTopic, IFollowersProvider
     {
         public event EventHandler<ChatServiceEventArgs> MessageReceived;
         private WebClientBase loginWebClient = new WebClientBase();
@@ -30,6 +30,8 @@ namespace UB.Model
         private object pollerLock = new object();
         private object toolTipLock = new object();
         private object lockSearch = new object();
+        private WebPoller followerPoller = new WebPoller();
+        private HitboxFollowers currentFollowers = new HitboxFollowers();
 
         public HitboxChat(ChatConfig config)
         {
@@ -98,7 +100,7 @@ namespace UB.Model
                 Task.Factory.StartNew(() => JoinChannels());
             }
             InitEmoticons();
-
+            PollFollowers();
             return false;
         }
 
@@ -716,6 +718,58 @@ namespace UB.Model
             set;
         }
         #endregion
+
+        #region IFollowerProvider
+        public Action<ChatUser> AddFollower
+        {
+            get;
+            set;
+        }
+
+        public Action<ChatUser> RemoveFollower
+        {
+            get;
+            set;
+        }
+        private void PollFollowers()
+        {
+
+            var getUrl = @"https://www.hitbox.tv/api/followers/user/{0}?limit=50";
+            var userName = Config.GetParameterValue("Username") as string;
+            
+            followerPoller.Id = "followersPoller";
+            followerPoller.Interval = 10000;
+            followerPoller.Uri = new Uri(String.Format(getUrl, HttpUtility.UrlEncode(userName.ToLower())));
+            followerPoller.ReadStream = (stream) =>
+            {
+                var followers = Json.DeserializeStream<HitboxFollowers>(stream);
+                if (followers != null && followers.followers != null)
+                {
+                    if (currentFollowers.followers == null)
+                    {
+                        currentFollowers.followers = followers.followers.ToList();
+                    }
+                    else if (followers.followers.Count > 0)
+                    {
+                        var newFollowers = followers.followers.Take(25).Except(currentFollowers.followers, new LambdaComparer<HitboxFollower>((x, y) => x.user_name.Equals(y.user_name)));
+                        foreach (var follower in newFollowers)
+                        {
+                            if (AddFollower != null)
+                                AddFollower(new ChatUser()
+                                {
+                                    NickName = follower.user_name,
+                                    ChatName = ChatName
+                                });
+                        }
+
+                        currentFollowers.followers = followers.followers.ToList();
+                    }
+                }
+
+            };
+            followerPoller.Start();
+        }
+        #endregion
     }
 
     public class HitboxChannel
@@ -1090,6 +1144,26 @@ namespace UB.Model
     {
         public string name { get; set; }
         public List<HitboxArg> args { get; set; }
+    }
+
+    public class HitboxFollower
+    {
+        public string followers { get; set; }
+        public string user_name { get; set; }
+        public string user_id { get; set; }
+        public string user_logo { get; set; }
+        public string user_logo_small { get; set; }
+        public string follow_id { get; set; }
+        public string follower_user_id { get; set; }
+        public string follower_notify { get; set; }
+        public string date_added { get; set; }
+    }
+
+    public class HitboxFollowers
+    {
+        public dynamic request { get; set; }
+        public List<HitboxFollower> followers { get; set; }
+        public string max_results { get; set; }
     }
     #endregion
 }
