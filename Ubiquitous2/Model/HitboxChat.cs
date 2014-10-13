@@ -647,8 +647,7 @@ namespace UB.Model
 
         JToken GetLiveStreamInfo()
         {
-
-            var getUrl = @"https://www.hitbox.tv/api/media/live/{0}/list?authToken={1}&filter=newfirst&nocache=true&showHidden=true";
+            var getUrl = @"https://www.hitbox.tv/api/media/live/{0}/list?authToken={1}&filter=recent&hiddenOnly=false&limit=10&nocache=true&publicOnly=false&search=&showHidden=true&yt=false&_" + Time.UnixTimestamp().ToString(); ;
             var userName = Config.GetParameterValue("Username") as string;
             var authToken = Config.GetParameterValue("AuthToken") as string;
 
@@ -661,6 +660,8 @@ namespace UB.Model
         {
             if (!Status.IsLoggedIn)
                 return;
+
+            LoginWithUsername();
 
             var currentInfo = GetLiveStreamInfo();
             var livestream = this.With( x => currentInfo )

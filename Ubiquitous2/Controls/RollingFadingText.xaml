@@ -84,17 +84,19 @@
                 </TransformGroup>
             </Border.RenderTransform>
             <!--<TextBlock x:Name="textBlock" Text="{Binding Message, RelativeSource={RelativeSource AncestorType=UserControl}}" Margin="0" TextWrapping="Wrap" TextAlignment="Center" FontStretch="Condensed" FontSize="48" FontWeight="Bold" FontFamily="Rockwell Condensed"></TextBlock>-->
-            <TextBlock x:Name="messageTextBlock" Text="{Binding Message, RelativeSource={RelativeSource AncestorType=UserControl}}" Margin="0" TextAlignment="Center" FontStretch="ExtraCondensed" FontSize="48" FontFamily="/Ubiquitous2;component/Fonts/#Rockwell Condensed" Foreground="#FFFFB516" Padding="5,0">
-                <TextBlock.Effect>
-                    <DropShadowEffect ShadowDepth="0" Color="#5AFBF5BA" BlurRadius="8" Direction="284" Opacity="0.68"/>
-                </TextBlock.Effect>
-                <TextBlock.Background>
-                    <RadialGradientBrush RadiusY="0.763" RadiusX="0.877" GradientOrigin="0.499,1.341">
-                        <GradientStop Color="#4C000000" Offset="1"/>
-                        <GradientStop Color="#4CFFFFFF"/>
-                    </RadialGradientBrush>
-                </TextBlock.Background>
-            </TextBlock>
+            <Viewbox>
+                <TextBlock x:Name="messageTextBlock" Text="{Binding Message, RelativeSource={RelativeSource AncestorType=UserControl}}" Margin="0" TextAlignment="Center" FontStretch="ExtraCondensed" FontSize="48" FontFamily="/Ubiquitous2;component/Fonts/#Rockwell Condensed" Foreground="#FFFFB516" Padding="5,0">
+                    <TextBlock.Effect>
+                        <DropShadowEffect ShadowDepth="0" Color="#5AFBF5BA" BlurRadius="8" Direction="284" Opacity="0.68"/>
+                    </TextBlock.Effect>
+                    <TextBlock.Background>
+                        <RadialGradientBrush RadiusY="0.763" RadiusX="0.877" GradientOrigin="0.499,1.341">
+                            <GradientStop Color="#4C000000" Offset="1"/>
+                            <GradientStop Color="#4CFFFFFF"/>
+                        </RadialGradientBrush>
+                    </TextBlock.Background>
+                </TextBlock>
+            </Viewbox>
         </Border>
     </Grid>
 </UserControl>
