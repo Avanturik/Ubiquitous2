@@ -2,6 +2,7 @@
 using System.Threading;
 using GalaSoft.MvvmLight;
 using UB.Model;
+using UB.Utils;
 
 namespace UB.ViewModel
 {
@@ -14,17 +15,21 @@ namespace UB.ViewModel
     public class SubFollowDonationViewModel : ViewModelBase
     {
         private IGreetingsDataService dataService;
+        private Timer greetingTimer;
         /// <summary>
         /// Initializes a new instance of the SubFollowDonationViewModel class.
         /// </summary>
         public SubFollowDonationViewModel( IGreetingsDataService dataService  )
         {
             this.dataService = dataService;
-            this.dataService.GetGreetings( (greetings) => {
-                ShowGreeting = false;
-                ShowGreeting = true;
-                greetings.ForEach(greet => Greetings.Add(new Greeting(greet.Title, greet.Message)));
-            });
+            greetingTimer = new Timer((sender) => {
+                this.dataService.GetGreetings((greeting) =>
+                {
+                    ShowGreeting = false;
+                    ShowGreeting = true;
+                    UI.Dispatch(() => Greetings.Add(greeting));
+                });
+            }, this, 10000, 10000);
         }
 
         /// <summary>
@@ -32,13 +37,13 @@ namespace UB.ViewModel
         /// </summary>
         public const string GreetingsPropertyName = "Greetings";
 
-        private ObservableCollection<dynamic> _greetings = new ObservableCollection<dynamic>();
+        private ObservableCollection<Greeting> _greetings = new ObservableCollection<Greeting>();
 
         /// <summary>
         /// Sets and gets the Greetings property.
         /// Changes to that property's value raise the PropertyChanged event. 
         /// </summary>
-        public ObservableCollection<dynamic> Greetings
+        public ObservableCollection<Greeting> Greetings
         {
             get
             {

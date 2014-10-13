@@ -11,7 +11,7 @@ using System.Web;
 
 namespace UB.Model
 {
-    public class TwitchChat : IRCChatBase, IStreamTopic
+    public class TwitchChat : IRCChatBase, IStreamTopic, IFollowersProvider
     {
         private const string ircDomain = "irc.twitch.tv";
         private const int ircPort = 6667;
@@ -26,8 +26,11 @@ namespace UB.Model
         private static bool isFallbackEmoticons = false;
         private static bool isWebEmoticons = false;
         private object counterLock = new object();
+        private object authenticationLock = new object();
+        private TwitchFollowers currentFollowers = new TwitchFollowers();
 
         private List<WebPoller> counterWebPollers = new List<WebPoller>();
+        private WebPoller followerPoller = new WebPoller();
 
         public TwitchChat(ChatConfig config) : 
             base(new IRCLoginInfo() {
@@ -235,7 +238,7 @@ namespace UB.Model
                     {
                         Task.Factory.StartNew(() => Authenticate(() =>
                         {
-                            Status.IsGotAuthenticationInfo = true;
+                            
                             oauthToken = ReadOAuthToken();
                             if( !String.IsNullOrWhiteSpace(oauthToken) )
                             {
@@ -250,6 +253,8 @@ namespace UB.Model
                         }));
                     }
                 }
+
+                PollFollowers();
 
             }
             else if( isAnonymous )
@@ -368,43 +373,48 @@ namespace UB.Model
         }
         public void Authenticate( Action afterAction)        
         {
-            webClient.Headers.Clear();
-            webClient.SetCookie("api_token", null, "twitch.tv");
-            webClient.SetCookie("csrf_token", null, "twitch.tv");
-
-            var csrfToken = GetCSRFToken();
-
-
-            if (csrfToken == null)
+            lock( authenticationLock )
             {
-                Log.WriteError("Twitch: Can't get CSRF token. Twitch web layout changed ?");
-                return;
+                webClient.Headers.Clear();
+                webClient.SetCookie("api_token", null, "twitch.tv");
+                webClient.SetCookie("csrf_token", null, "twitch.tv");
+
+                var csrfToken = GetCSRFToken();
+
+
+                if (csrfToken == null)
+                {
+                    Log.WriteError("Twitch: Can't get CSRF token. Twitch web layout changed ?");
+                    return;
+                }
+
+                webClient.SetCookie("csrf_token", csrfToken, "twitch.tv");
+                webClient.ContentType = ContentType.UrlEncoded;
+                webClient.Headers["X-Requested-With"] = "XMLHttpRequest";
+                webClient.Headers["X-CSRF-Token"] = csrfToken;
+                webClient.Headers["Accept"] = "text/html, application/xhtml+xml, */*";
+
+                var apiToken = this.With(x => webClient.Upload("https://secure.twitch.tv/user/login", String.Format(
+                        "utf8=%E2%9C%93&authenticity_token={0}%3D&redirect_on_login=&embed_form=false&user%5Blogin%5D={1}&user%5Bpassword%5D={2}",
+                        csrfToken,
+                        Config.Parameters.StringValue("Username"),
+                        Config.Parameters.StringValue("Password"))))
+                    .With(x => webClient.CookieValue("api_token", "http://twitch.tv"));
+
+                if (String.IsNullOrWhiteSpace(apiToken))
+                {
+                    Log.WriteError("Twitch: Can't get API token");
+                    return;
+                }
+                //webClient.Headers["Twitch-Api-Token"] = apiToken;
+                webClient.Headers["X-CSRF-Token"] = csrfToken;
+                webClient.Headers["Accept"] = "*/*";
+
+                Status.IsGotAuthenticationInfo = true;
+
+                if (afterAction != null)
+                    afterAction();
             }
-
-            webClient.SetCookie("csrf_token", csrfToken, "twitch.tv");
-            webClient.ContentType = ContentType.UrlEncoded;
-            webClient.Headers["X-Requested-With"] = "XMLHttpRequest";
-            webClient.Headers["X-CSRF-Token"] = csrfToken;
-            webClient.Headers["Accept"] = "text/html, application/xhtml+xml, */*";
-
-            var apiToken = this.With(x => webClient.Upload("https://secure.twitch.tv/user/login", String.Format(
-                    "utf8=%E2%9C%93&authenticity_token={0}%3D&redirect_on_login=&embed_form=false&user%5Blogin%5D={1}&user%5Bpassword%5D={2}",
-                    csrfToken,
-                    Config.Parameters.StringValue("Username"),
-                    Config.Parameters.StringValue("Password"))))
-                .With( x => webClient.CookieValue("api_token", "http://twitch.tv"));
-
-            if( String.IsNullOrWhiteSpace(apiToken))
-            {
-                Log.WriteError("Twitch: Can't get API token");
-                return;
-            }
-            //webClient.Headers["Twitch-Api-Token"] = apiToken;
-            webClient.Headers["X-CSRF-Token"] = csrfToken;
-            webClient.Headers["Accept"] = "*/*";
-            
-            if( afterAction != null )
-                afterAction();
         }
 
         private string GetCSRFToken()
@@ -524,6 +534,59 @@ namespace UB.Model
         #endregion IStreamTopic
 
 
+        #region IFollowerProvider
+        public Action<ChatUser> AddFollower
+        {
+            get;
+            set;
+        }
+
+        public Action<ChatUser> RemoveFollower
+        {
+            get;
+            set;
+        }
+        private void PollFollowers()
+        {
+
+            if (!Status.IsGotAuthenticationInfo)
+                Authenticate( null );
+
+            followerPoller.Id = "followersPoller";
+            followerPoller.Interval = 10000;
+            followerPoller.Uri = new Uri(String.Format(@"http://api.twitch.tv/kraken/channels/{0}/follows?limit=50&offset=0&on_site=1", LoginInfo.UserName.ToLower()));
+            followerPoller.ReadStream = (stream) =>
+            {
+                var followers = Json.DeserializeStream<TwitchFollowers>(stream);
+                if( followers != null && followers.follows != null)
+                {
+                    if (currentFollowers.follows == null )
+                    {
+                        currentFollowers.follows = followers.follows.ToList();
+                    }
+                    else if( followers.follows.Count > 0)
+                    {
+                        var newFollowers = followers.follows.Take(25).Except(currentFollowers.follows, new LambdaComparer<TwitchFollow>((x, y) => x.user.display_name.Equals(y.user.display_name)));
+                        foreach( var follower in newFollowers)
+                        {
+                            if (AddFollower != null)
+                                AddFollower(new ChatUser()
+                                {
+                                    NickName = follower.user.display_name,
+                                    ChatName = ChatName                                    
+                                });
+                        }
+
+                        currentFollowers.follows = followers.follows.ToList();
+                    }
+                }
+
+            };
+            followerPoller.Start();
+        }
+        #endregion
+
+
     }
 
 
@@ -624,6 +687,31 @@ namespace UB.Model
         public TwitchLinks _links { get; set; }
         public TwitchStream stream { get; set; }    
     }
+    public class TwitchFollow
+    {
+        public string created_at { get; set; }
+        public dynamic _links { get; set; }
+        public TwitchUser user { get; set; }
+    }
+    public class TwitchFollowers
+    {
+        public List<TwitchFollow> follows { get; set; }
+        public int _total { get; set; }
+        public dynamic _links { get; set; }
+    }
+    public class TwitchUser
+    {
+        public int _id { get; set; }
+        public string name { get; set; }
+        public string created_at { get; set; }
+        public string updated_at { get; set; }
+        public dynamic _links { get; set; }
+        public string display_name { get; set; }
+        public string logo { get; set; }
+        public string bio { get; set; }
+        public string type { get; set; }
+    }
+
 #endregion
 
 }

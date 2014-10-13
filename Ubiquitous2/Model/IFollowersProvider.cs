@@ -6,8 +6,9 @@ using System.Threading.Tasks;
 
 namespace UB.Model
 {
-    public interface IGreetingsDataService
+    public interface IFollowersProvider
     {
-        void GetGreetings(Action<Greeting> callback);
+        Action<ChatUser> AddFollower {get;set;}
+        Action<ChatUser> RemoveFollower { get; set; }
     }
 }
