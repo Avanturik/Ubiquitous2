@@ -113,8 +113,16 @@ namespace UB.LastFM.Services
 			
 			if (Lib.Proxy != null)
 				request.Proxy = Lib.Proxy;
-			
-			Stream writeStream = request.GetRequestStream();
+            
+            Stream writeStream;
+            try
+            {
+                writeStream = request.GetRequestStream();
+            }
+            catch
+            {
+                return null;
+            }
 			writeStream.Write(data, 0, data.Length);
 			writeStream.Close();
 			

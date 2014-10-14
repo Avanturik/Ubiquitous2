@@ -23,6 +23,7 @@ namespace UB.Model
         private List<WebPoller> counterWebPollers = new List<WebPoller>();
         private bool isAnonymous = false;
         private object lockSearch = new object();
+        private object pollerLock = new object();
         public GamingLiveChat(ChatConfig config)
         {
             Config = config;
@@ -94,11 +95,13 @@ namespace UB.Model
         void StopCounterPoller(string channelName)
         {
             UI.Dispatch(() => Status.ToolTips.RemoveAll(t => t.Header == channelName));
-            var poller = counterWebPollers.FirstOrDefault(p => p.Id == channelName);
+            WebPoller poller;
+            lock( pollerLock )
+                poller = counterWebPollers.FirstOrDefault(p => p.Id == channelName);
             if( poller != null)
             {
                 poller.Stop();
-                lock(counterLock)
+                lock(pollerLock)
                     counterWebPollers.Remove(poller);
             }
         }
@@ -311,7 +314,7 @@ namespace UB.Model
             Status.IsStarting = false;
 
             lock(channelsLock)
-                gamingLiveChannels.ForEach(chan => {
+                gamingLiveChannels.ToList().ForEach(chan => {
                     StopCounterPoller(chan.ChannelName);
                     chan.Leave();
                     if (RemoveChannel != null)
@@ -334,10 +337,13 @@ namespace UB.Model
 
         public bool SendMessage(ChatMessage message)
         {
-            var gamingLiveChannel = gamingLiveChannels.FirstOrDefault(channel => channel.ChannelName.Equals(message.Channel, StringComparison.InvariantCultureIgnoreCase));
-            if (gamingLiveChannel != null)
+            lock( channelsLock)
             {
-                Task.Factory.StartNew(() => gamingLiveChannel.SendMessage(message));
+                var gamingLiveChannel = gamingLiveChannels.FirstOrDefault(channel => channel.ChannelName.Equals(message.Channel, StringComparison.InvariantCultureIgnoreCase));
+                if (gamingLiveChannel != null)
+                {
+                    Task.Factory.StartNew(() => gamingLiveChannel.SendMessage(message));
+                }
             }
                 
 

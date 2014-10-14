@@ -438,7 +438,10 @@ namespace UB.Model
                 lock (toolTipLock)
                     Status.ToolTips.RemoveAll(t => t.Header == channelName);
             });
-            var poller = counterWebPollers.FirstOrDefault(p => p.Id == channelName);
+            WebPoller poller;
+            lock( pollerLock)
+                poller = counterWebPollers.FirstOrDefault(p => p.Id == channelName);
+            
             if (poller != null)
             {
                 poller.Stop();

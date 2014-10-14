@@ -523,6 +523,9 @@ namespace UB.LastFM.Services
 			p["limit"] = "1";
 			
 			XmlDocument doc = request("user.getRecentTracks", p);
+            if (doc == null)
+                return null;
+
 			XmlNode node = doc.GetElementsByTagName("track")[0];
             if (node == null)
                 return null; 

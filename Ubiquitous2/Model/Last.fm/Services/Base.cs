@@ -61,16 +61,22 @@ namespace UB.LastFM.Services
 		
 		internal string extract(XmlNode node, string name)
 		{
+            if (node == null)
+                return String.Empty;
 			return extract((XmlElement)node, name, 0);
 		}
 		
 		internal string extract(XmlDocument document, string name)
 		{
+            if (document == null)
+                return String.Empty;
 			return extract(document.DocumentElement, name);
 		}
 		
 		internal string extract(XmlDocument document, string name, int index)
 		{
+            if (document == null)
+                return String.Empty;
 			return extract(document.DocumentElement, name, index);
 		}
 		
@@ -102,11 +108,16 @@ namespace UB.LastFM.Services
 		
 		internal string[] extractAll(XmlDocument document, string name)
 		{
+            if (document == null)
+                return new string[] { };
+
 			return extractAll(document.DocumentElement, name);
 		}
 		
 		internal string[] extractAll(XmlDocument document, string name, int limitCount)
 		{
+            if (document == null)
+                return new string[] { };
 			return extractAll(document.DocumentElement, name, limitCount);
 		}
 		

@@ -26,9 +26,8 @@ namespace UB.Model
         private string emoticonFallbackUrl = @"Content\cybergame_smiles.html";
         private string emoticonUrl = "http://cybergame.tv/cgchat.htm?v=b";
         private string webChannelId;
-        private object pollerLock = new object();
         private object channelsLock = new object();
-        private object counterLock = new object();
+        private object pollerLock = new object();
         private object toolTipLock = new object();
         private object iconParseLock = new object();
         private object lockSearch = new object();
@@ -527,7 +526,7 @@ namespace UB.Model
 
             poller.ReadString = (stream) =>
             {
-                lock (counterLock)
+                lock (pollerLock)
                 {
                     var channelInfo = JsonConvert.DeserializeObject<CybergameChannelStatus>(stream);
                     poller.LastValue = channelInfo;
@@ -633,7 +632,9 @@ namespace UB.Model
                 lock (toolTipLock)
                     Status.ToolTips.RemoveAll(t => t.Header == channelName);
             });
-            var poller = counterWebPollers.FirstOrDefault(p => p.Id == channelName);
+            WebPoller poller;
+            lock(pollerLock)
+                poller = counterWebPollers.FirstOrDefault(p => p.Id == channelName);
             if (poller != null)
             {
                 poller.Stop();

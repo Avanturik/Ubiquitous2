@@ -82,7 +82,11 @@ namespace UB.Model
         void stopCounterPoller( string channelName )
         {
             UI.Dispatch(() => Status.ToolTips.RemoveAll(t => t.Header == channelName));
-            var poller = counterWebPollers.FirstOrDefault(p => p.Id == channelName);
+            WebPoller poller;
+            
+            lock(counterLock)
+                poller = counterWebPollers.FirstOrDefault(p => p.Id == channelName);
+            
             poller.Stop();
             counterWebPollers.Remove(poller);
         }
