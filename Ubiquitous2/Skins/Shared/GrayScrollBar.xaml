@@ -1,0 +1,10 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:sys="clr-namespace:System;assembly=mscorlib"
+                    >
+
+    <SolidColorBrush x:Key="ScrollBarColor" Color="#FF787878"/>
+    <SolidColorBrush x:Key="RBMouseOverColor" Color="#FFA0A0A0"/>
+    <SolidColorBrush x:Key="RBNormalColor" Color="#FF787878"/>
+
+</ResourceDictionary>
