@@ -53,7 +53,7 @@
                             <RowDefinition/>
                         </Grid.RowDefinitions>
                         <DockPanel Focusable="False" Grid.Row="0" HorizontalAlignment="Stretch">
-                            <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                            <StackPanel Orientation="Horizontal" VerticalAlignment="Stretch">
                                 <Image Focusable="False" gif:ImageBehavior.AnimatedSource="{Binding Message.ChatIconURL, Mode=OneTime}" gif:ImageBehavior.RepeatBehavior="Forever" Stretch="Fill" Margin ="5,0" Width="12" Height="12" VerticalAlignment="Center" HorizontalAlignment="Left">
                                     <Image.Effect>
                                         <DropShadowEffect BlurRadius="2" Opacity="0.2" ShadowDepth="2"/>
@@ -61,10 +61,10 @@
                                 </Image>
                                 <TextBlock ToolTip="Click to set as active channel" Focusable="False" VerticalAlignment="Center" Margin="0,0,5,0" HorizontalAlignment="Left">
                                     <Hyperlink Focusable="False" Command="{Binding SetActiveChannel}" Cursor="Hand">
-                                        <TextBlock Focusable="False" FontSize="11" Text="{Binding Message.Channel}" Margin="0" HorizontalAlignment="Left" FontWeight="Bold" VerticalAlignment="Center"/>
+                                        <TextBlock Focusable="False" FontSize="12" Text="{Binding Message.Channel}" Margin="0" HorizontalAlignment="Left" FontWeight="ExtraLight" VerticalAlignment="Center" Foreground="#FFF7941D" FontFamily="/Ubiquitous2;component/Fonts/#Orbitron" TextOptions.TextHintingMode="Fixed"/>
                                     </Hyperlink>
                                 </TextBlock>
-                                <TextBlock ToolTip="Right click for options" Cursor="Hand" Focusable="False" FontSize="11" Text="{Binding Message.FromUserName}" Margin="0,0,5,0" Foreground="#FFFFC042" HorizontalAlignment="Left" FontWeight="Bold" OverridesDefaultStyle="False" VerticalAlignment="Center">
+                                <TextBlock ToolTip="Right click for options" Cursor="Hand" Focusable="False" FontSize="12" Text="{Binding Message.FromUserName}" Margin="0,0,5,0" Foreground="#FFF7941D" HorizontalAlignment="Left" FontWeight="ExtraLight" OverridesDefaultStyle="False" VerticalAlignment="Center" FontFamily="/Ubiquitous2;component/Fonts/#Orbitron" TextOptions.TextHintingMode="Fixed">
                                     <TextBlock.ContextMenu>
                                         <ContextMenu Name="userNameMenu" Style="{DynamicResource ContextMenuStyle}">
                                             <MenuItem Header="Add to ignore list" Command="{Binding IgnoreUser}"  CommandParameter="{Binding Message}" Foreground="#FFFFC042" VerticalContentAlignment="Center" VerticalAlignment="Center">
@@ -81,9 +81,9 @@
                                     </i:Interaction.Triggers>-->
                                 </TextBlock>
                             </StackPanel>
-                            <TextBlock Focusable="False" Text="{Binding Message.TimeStamp}" FontSize="11" Foreground="#FFD69B33" TextAlignment="Right" DockPanel.Dock="Right" Margin="0" FontWeight="Bold" VerticalAlignment="Center" FontFamily="Segoe UI"/>
+                            <TextBlock Focusable="False" Text="{Binding Message.TimeStamp}" FontSize="10.667" Foreground="#FFF7941D" TextAlignment="Right" DockPanel.Dock="Right" Margin="0,3,0,0" FontWeight="ExtraLight" VerticalAlignment="Center" FontFamily="/Ubiquitous2;component/Fonts/#Orbitron" Height="15" TextOptions.TextHintingMode="Fixed"/>
                         </DockPanel>
-                        <TextBlock  Grid.Row="1" Focusable="False" TextAlignment="Left" Margin="1,1,1,1" TextWrapping="Wrap" FontSize="14" Foreground="#FFCDCDCD" Interactivity:TextBlockAttached.InlineList="{Binding Message, Converter={StaticResource ResourceKey=textConverter}}"  UseLayoutRounding="True" FontFamily="Segoe UI">
+                        <TextBlock  Grid.Row="1" Focusable="False" TextAlignment="Left" Margin="1,1,1,1" TextWrapping="Wrap" FontSize="13.333" Foreground="#FF4AD3C6" Interactivity:TextBlockAttached.InlineList="{Binding Message, Converter={StaticResource ResourceKey=textConverter}}"  UseLayoutRounding="True" FontFamily="/Ubiquitous2;component/Fonts/#Orbitron" FontWeight="Normal">
                             <TextBlock.Background>
                                 <SolidColorBrush Opacity="{Binding AppConfig.IndividualMessageBackgroundOpacity}">
                                 </SolidColorBrush>

@@ -44,11 +44,11 @@
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type Window}">
-                    <Border BorderThickness="1" BorderBrush="#FF323232" >
+                    <Border BorderThickness="1" >
                     	<Border.LayoutTransform>
                     		<TransformGroup>
                     			<ScaleTransform/>
-                    			<SkewTransform AngleY="4"/>
+                    			<SkewTransform AngleY="3"/>
                     			<RotateTransform/>
                     			<TranslateTransform/>
                     		</TransformGroup>
@@ -65,7 +65,7 @@
                                 <ColumnDefinition Width="15" />
                             </Grid.ColumnDefinitions>
 
-                            <Rectangle Fill="#FF1E1E1E" Panel.ZIndex="-10" Opacity="{Binding AppConfig.BackgroundOpacity}" Grid.RowSpan="3" Grid.ColumnSpan="3" />
+                            <Rectangle Fill="#FF335559" Panel.ZIndex="-10" Opacity="{Binding AppConfig.BackgroundOpacity}" Grid.RowSpan="3" Grid.ColumnSpan="3" />
                             <Grid Grid.RowSpan="3" Grid.ColumnSpan="3" Margin="5">
                                 <DockPanel Focusable="False" d:DesignHeight="300" d:DesignWidth="500">
                                     <Grid Focusable="False">

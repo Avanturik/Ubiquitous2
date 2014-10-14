@@ -4,6 +4,7 @@
 
     <ResourceDictionary.MergedDictionaries>
         <ResourceDictionary Source="/Skins/Shared/Shared.xaml"/>
+        <ResourceDictionary Source="/Skins/Shared/BlueScrollViewer.xaml"/>
         <ResourceDictionary Source="/Skins/Perspective/ChatMessageSkin.xaml"/>
         <ResourceDictionary Source="/Skins/Perspective/ChatBoxSkin.xaml"/>
         <ResourceDictionary Source="/Skins/Perspective/MainWindowSkin.xaml"/>

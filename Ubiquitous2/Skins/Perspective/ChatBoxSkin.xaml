@@ -17,7 +17,7 @@
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type UserControl}">
                     <Grid Margin="0,0,0,0">
-                        <Rectangle Fill="#FF1E1E1E" Opacity="{Binding AppConfig.MessageBackgroundOpacity}"/>
+                        <Rectangle Opacity="{Binding AppConfig.MessageBackgroundOpacity}" Fill="#FF335559"/>
                         <Border Padding="8" Margin="-7,-2,-10,-9">
                             
                             <ItemsControl Focusable="False" ItemsSource="{Binding Messages}" Padding="0" Margin="0">
@@ -27,7 +27,7 @@
                                             <ubview:HelloPlaceHolderView Grid.Row="1" Panel.ZIndex="2" VerticalAlignment="Stretch"/>
                                             <ubview:YesNoDialogView Panel.ZIndex="10" Grid.Row="1" Grid.ColumnSpan="3"/>
                                             <ubview:SubFollowDonationView Panel.ZIndex="9" Grid.Row="1" Grid.ColumnSpan="3"/>
-                                            <ScrollViewer VerticalScrollBarVisibility="Visible" Focusable="False" d:DesignHeight="200" d:DesignWidth="500"  Template="{DynamicResource ScrollStyle}" CanContentScroll="True">
+                                            <ScrollViewer VerticalScrollBarVisibility="Visible" Focusable="False" d:DesignHeight="200" d:DesignWidth="500"  Template="{DynamicResource BlueScrollViewerStyle}" CanContentScroll="True">
                                                 <i:Interaction.Triggers>
                                                     <Interactivity:DataEventTrigger EventName="MessageAdded" d:EventName="">
                                                         <Interactivity:AutoScrollAction Duration="100" EnableAutoScroll="{Binding EnableAutoScroll}"/>
