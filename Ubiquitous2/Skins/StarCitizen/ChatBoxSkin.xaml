@@ -27,7 +27,7 @@
                                             <ubview:HelloPlaceHolderView Grid.Row="1" Panel.ZIndex="2" VerticalAlignment="Stretch"/>
                                             <ubview:YesNoDialogView Panel.ZIndex="10" Grid.Row="1" Grid.ColumnSpan="3"/>
                                             <ubview:SubFollowDonationView Panel.ZIndex="9" Grid.Row="1" Grid.ColumnSpan="3"/>
-                                            <ScrollViewer VerticalScrollBarVisibility="Visible" Focusable="False" d:DesignHeight="200" d:DesignWidth="500"  Template="{DynamicResource BlueScrollViewerStyle}" CanContentScroll="True">
+                                            <ScrollViewer VerticalScrollBarVisibility="Visible" Focusable="False" d:DesignHeight="200" d:DesignWidth="500"  Template="{DynamicResource ScrollStyle}" CanContentScroll="True">
                                                 <i:Interaction.Triggers>
                                                     <Interactivity:DataEventTrigger EventName="MessageAdded" d:EventName="">
                                                         <Interactivity:AutoScrollAction Duration="100" EnableAutoScroll="{Binding EnableAutoScroll}"/>

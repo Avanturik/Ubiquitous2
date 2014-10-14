@@ -7,10 +7,6 @@
     <sys:Double x:Key="{x:Static SystemParameters.VerticalScrollBarThumbHeightKey}">12</sys:Double>
     <sys:Double x:Key="{x:Static SystemParameters.VerticalScrollBarButtonHeightKey}">100</sys:Double>
 
-    <SolidColorBrush x:Key="ScrollBarColor" Color="#FF787878"/>
-    <SolidColorBrush x:Key="RBMouseOverColor" Color="#FFA0A0A0"/>
-    <SolidColorBrush x:Key="RBNormalColor" Color="#FF787878"/>
-
     <Style x:Key="ScrollBarLineButtonStyle" TargetType="{x:Type RepeatButton}">
         <Setter Property="OverridesDefaultStyle" Value="True"/>
         <Setter Property="Focusable" Value="False"/>
@@ -23,10 +19,10 @@
                     </Canvas>
                     <ControlTemplate.Triggers>
                         <Trigger Property="IsMouseOver" Value="true">
-                            <Setter TargetName="Triangle" Property="Fill" Value="{StaticResource RBMouseOverColor}"></Setter>
+                            <Setter TargetName="Triangle" Property="Fill" Value="{DynamicResource RBMouseOverColor}"></Setter>
                         </Trigger>
                         <Trigger Property="IsMouseOver" Value="false">
-                            <Setter TargetName="Triangle" Property="Fill" Value="{StaticResource RBNormalColor}"></Setter>
+                            <Setter TargetName="Triangle" Property="Fill" Value="{DynamicResource RBNormalColor}"></Setter>
                         </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
@@ -47,10 +43,10 @@
                     </Canvas>
                     <ControlTemplate.Triggers>
                         <Trigger Property="IsMouseOver" Value="true">
-                            <Setter TargetName="Triangle" Property="Fill" Value="{StaticResource RBMouseOverColor}"></Setter>
+                            <Setter TargetName="Triangle" Property="Fill" Value="{DynamicResource RBMouseOverColor}"></Setter>
                         </Trigger>
                         <Trigger Property="IsMouseOver" Value="false">
-                            <Setter TargetName="Triangle" Property="Fill" Value="{StaticResource RBNormalColor}"></Setter>
+                            <Setter TargetName="Triangle" Property="Fill" Value="{DynamicResource RBNormalColor}"></Setter>
                         </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
@@ -83,10 +79,10 @@
                     <Rectangle  x:Name="ThumbRectangle" Fill="{DynamicResource ScrollBarColor}" Margin="1,0,1,0" RadiusX="4" RadiusY="4"></Rectangle>
                     <ControlTemplate.Triggers>
                         <Trigger Property="IsMouseOver" Value="true">
-                            <Setter TargetName="ThumbRectangle" Property="Fill" Value="{StaticResource RBMouseOverColor}"></Setter>
+                            <Setter TargetName="ThumbRectangle" Property="Fill" Value="{DynamicResource RBMouseOverColor}"></Setter>
                         </Trigger>
                         <Trigger Property="IsMouseOver" Value="false">
-                            <Setter TargetName="ThumbRectangle" Property="Fill" Value="{StaticResource RBNormalColor}"></Setter>
+                            <Setter TargetName="ThumbRectangle" Property="Fill" Value="{DynamicResource RBNormalColor}"></Setter>
                         </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>

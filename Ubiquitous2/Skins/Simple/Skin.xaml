@@ -3,6 +3,7 @@
                     >
 
     <ResourceDictionary.MergedDictionaries>
+        <ResourceDictionary Source="/Skins/Shared/GrayScrollBar.xaml"/>
         <ResourceDictionary Source="/Skins/Shared/Shared.xaml"/>
         <ResourceDictionary Source="/Skins/Simple/ChatMessageSkin.xaml"/>
         <ResourceDictionary Source="/Skins/Simple/ChatBoxSkin.xaml"/>

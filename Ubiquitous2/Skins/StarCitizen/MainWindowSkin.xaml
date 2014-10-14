@@ -44,7 +44,7 @@
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type Window}">
-                    <Border BorderThickness="1" >
+                    <Border BorderThickness="1">
                     	<Border.LayoutTransform>
                     		<TransformGroup>
                     			<ScaleTransform/>
@@ -161,6 +161,7 @@
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
+        <Setter Property="Background" Value="#FF335559"/>
 
 
     </Style>
