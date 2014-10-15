@@ -79,16 +79,14 @@
                                     </TextBlock.ContextMenu>
                                 </TextBlock>
 
-                                <TextBlock DockPanel.Dock="Right" Focusable="False" Text="{Binding Message.TimeStamp}" FontSize="10" Foreground="#FFD69B33" TextAlignment="Right" Margin="0,0,8,0" FontWeight="Bold" Padding="0" VerticalAlignment="Center"/>
+                                <TextBlock DockPanel.Dock="Right" Focusable="False" Text="{Binding Message.TimeStamp}" FontSize="11" Foreground="#FFD69B33" TextAlignment="Right" Margin="0,0,8,0" FontWeight="Bold" Padding="0" VerticalAlignment="Center"/>
                             </DockPanel>
                             <Border Panel.ZIndex="-1" Focusable="False" Grid.ColumnSpan="2" Grid.Row="1" CornerRadius="0,0,10,10" BorderThickness="4,0,4,4" Padding="2,1" Margin="0,0,0,2" BorderBrush="#FF444444">
                                 <Border.Background>
                                     <SolidColorBrush Opacity="{Binding AppConfig.IndividualMessageBackgroundOpacity}" Color="#303030"/>
                                 </Border.Background>
-                                <TextBlock Focusable="False" TextAlignment="Justify" Margin="1,1,1,1" TextWrapping="Wrap" FontSize="14" Foreground="#FFCDCDCD" Interactivity:TextBlockAttached.InlineList="{Binding Message, Converter={StaticResource ResourceKey=textConverter}}"  UseLayoutRounding="True">
-
-                                </TextBlock>
-                            </Border>                            
+                            <TextBlock TextOptions.TextFormattingMode="Display" Focusable="False" TextAlignment="Left" Margin="1,1,1,1" TextWrapping="Wrap" FontSize="16" Foreground="#FFCDCDCD" Interactivity:TextBlockAttached.InlineList="{Binding Message, Converter={StaticResource ResourceKey=textConverter}}" FontFamily="Calibri" TextOptions.TextHintingMode="Fixed" FontWeight="Normal"/>
+                        </Border>                            
                         </Grid>
                 </ControlTemplate>
             </Setter.Value>

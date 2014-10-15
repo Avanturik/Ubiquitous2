@@ -21,7 +21,7 @@
             var currentThemeName = "main";
             try {
                 $(document).ready(function () {
-                    var interval = 1000;
+                    var interval = 1500;
                     var refresh = function () {
                         //$.ajax({
                         //    url: "/statusbar.htm",
@@ -44,7 +44,7 @@
                                         currentThemeName = themeName;
                                     }
                                 },
-                                timeout : 3000,
+                                timeout: 59000
                             });
                             $.ajax({
                                 url: "/messages.json" + (lastMessageId == "" ? "" : "?id=" + lastMessageId),
@@ -74,7 +74,7 @@
                                         refresh();
                                     }, interval);
                                 },
-                                timeout: 3000,
+                                timeout: 59000,
                                 error: function()
                                 {
                                     setTimeout(function () {

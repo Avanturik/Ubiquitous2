@@ -11,6 +11,8 @@ using UB.Properties;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Threading;
+using System.Threading;
+using Newtonsoft.Json;
 
 namespace UB.ViewModel
 {
@@ -24,8 +26,10 @@ namespace UB.ViewModel
     {
         public event EventHandler<EventArgs> MessageAdded;
         public event EventHandler<EventArgs> MessageSent;
+        private string lastSettings = null;
         private bool firstMessageReceived = false;
         private object lockReadMessages = new object();
+
         private IService imageService;
         IChatDataService _dataService;
         IGeneralDataService _generalDataService;
@@ -128,8 +132,8 @@ namespace UB.ViewModel
                             var parameters = HttpUtility.ParseQueryString(uri.Query);
                             var lastMessageId = parameters["id"];
                             ChatMessage[] messages = null;
-                    
-                            ChatMessageViewModel previousMessage = Messages.FirstOrDefault(m => lastMessageId != null && m.Message.Id.ToString().Equals(lastMessageId.ToString(),StringComparison.InvariantCultureIgnoreCase));
+
+                            ChatMessageViewModel previousMessage = Messages.FirstOrDefault(m => lastMessageId != null && m.Message.Id.ToString().Equals(lastMessageId.ToString(), StringComparison.InvariantCultureIgnoreCase));
                             if (previousMessage == null )
                                 lastMessageId = null;
 
@@ -140,10 +144,21 @@ namespace UB.ViewModel
                             }
                             else
                             {
+
                                 var guid = lastMessageId.ToString();
                                 var skipCount = Messages.IndexOf( previousMessage )+1;
 
-                                messages = Messages.Skip(skipCount).Select(m => m.Message).ToArray();
+                                int waitSteps = 55;
+                                while( waitSteps > 0 )
+                                {
+                                    messages = Messages.Skip(skipCount).Select(m => m.Message).ToArray();
+                                    if (messages.Count() > 0)
+                                        break;
+
+                                    Thread.Sleep(1000);
+                                    waitSteps--;
+
+                                }
                             }
                             if( messages != null )
                             {
@@ -156,6 +171,15 @@ namespace UB.ViewModel
                         }
                         else if (uri.LocalPath.Equals("/settings.json",StringComparison.InvariantCultureIgnoreCase))
                         {
+                            int waitSteps = 55;
+                            while( waitSteps > 0  )
+                            {
+                                if (!JsonConvert.SerializeObject(Ubiquitous.Default.Config.AppConfig).Equals(lastSettings, StringComparison.InvariantCultureIgnoreCase))
+                                    break;
+
+                                Thread.Sleep(1000);
+                                waitSteps--;
+                            }
                             Json.SerializeToStream(Ubiquitous.Default.Config.AppConfig, (stream) =>
                                 {
                                     webServer.SendJsonToClient(stream,httpProcessor);
