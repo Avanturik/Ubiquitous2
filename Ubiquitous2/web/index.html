@@ -66,9 +66,12 @@
 
                                     for (var i = 0; i < json.length; i++) {
                                         var element = $('#chat').json2html(json[i], transform, { prepend: true });
-                                        $('#chat > div:hidden').fadeIn(500);
                                         lastMessageId = json[i].Id;
                                     }
+                                    $('#chat > div:hidden').fadeIn(500);
+
+                                    while ($('#chat > div').length > 300)
+                                        $('#chat > div:last-child').remove();
 
                                     setTimeout(function () {
                                         refresh();
