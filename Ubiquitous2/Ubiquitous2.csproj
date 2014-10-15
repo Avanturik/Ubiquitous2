@@ -673,6 +673,9 @@
       <Numbers>True</Numbers>
       <Punctuation>True</Punctuation>
     </BlendEmbeddedFont>
+    <Content Include="web\fonts\electrolize.svg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="web\fonts\electrolize.woff2">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
