@@ -681,6 +681,9 @@
       <All>True</All>
       <AutoFill>True</AutoFill>
     </BlendEmbeddedFont>
+    <Content Include="web\fonts\electrolize.ttf">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Resource Include="Resources\obs.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Resource>

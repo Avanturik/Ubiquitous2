@@ -35,7 +35,9 @@ namespace UB.Model
                 new KeyValuePair<string,string>(".ico", "image/x-icon"),
                 new KeyValuePair<string,string>(".json", "application/json"),
                 new KeyValuePair<string,string>(".woff2", "font/woff2"),
+                new KeyValuePair<string,string>(".ttf", "application/octet-stream"),
                 new KeyValuePair<string,string>(".css", "text/css")
+                
                 
         };
         public Func<Uri, HttpProcessor,bool> GetUserHandler { get; set; }
