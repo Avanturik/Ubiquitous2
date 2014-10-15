@@ -1,0 +1,103 @@
+﻿html,body {
+	margin : 0px;
+	font-family: Electrolize;
+	font-size:14px;
+	font-weight:bold;
+	color:#00AA00;
+	background-color:#1E1E1E;
+}
+
+@font-face {
+  font-family: 'Electrolize';
+  font-style: normal;
+  font-weight: 400;
+  src: local('Electrolize'), local('Electrolize-Regular'), url(/fonts/electrolize.woff2) format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2212, U+2215, U+E0FF, U+EFFD, U+F000;
+}
+
+#chat {
+	margin: 0;
+	overflow : auto;
+}
+
+.fixed
+{
+	position:fixed;	
+	
+}
+#statusbar
+{
+	background-color:rgba(70,70,70,0.75);
+	-moz-border-radius: 7px;
+	border-radius: 7px;
+	width:320px;
+	padding:5px;
+	height:18px;	
+}
+
+#chat > div div {
+	position:relative;
+	font-size: 8pt;	
+	float:left;
+}
+
+/*Message div*/
+#chat > div{
+    padding: 10px;
+    margin-bottom: 5px;
+    display:none;
+}
+/*Chat Icon*/
+#chat > div > img:nth-child(1){
+	float:left;
+	margin-top: -5px;
+	margin-left: -5px;
+    width:11px;
+    height:11px;
+   	-webkit-filter: drop-shadow(1px 1px 1px #222);
+    filter: url(drop-shadow.svg#drop-shadow);
+}
+/*Channel name*/
+#chat > div div:nth-child(2){
+	color:#D69B33;
+	margin-top:-6px;
+	margin-right:5px;
+	margin-left:5px;
+}
+/*Username*/
+#chat > div div:nth-child(3){
+	color:#FFC042;
+	margin-top: -6px;
+}
+/*Timestamp*/
+#chat > div div:nth-child(4){
+	color:#D69B33;
+	float:right;
+	margin-top:-6px;
+	margin-right:5px;
+	margin-left:5px;
+}
+/*Text*/
+#chat > div div:nth-child(5){	
+    -webkit-border-radius: 15px;
+    -moz-border-radius: 15px;
+    border-radius: 15px;
+	margin-top:8px;
+	margin-left:-8px;
+	margin-bottom:-8px;
+	margin-right:-8px;
+	padding:5px;
+	clear:left;
+	font-size:10pt;
+	color:#9C9C9C;
+	float:none;
+}
+a {
+	color: #D69B33;	
+	text-decoration:none;
+	font-size:9pt;
+}
+a:hover{
+	color: #FFC042;	
+	text-decoration:none;
+}
