@@ -2,9 +2,8 @@
 	margin : 0px;
 	font-family: Electrolize;
 	font-size:14px;
-	font-weight:bold;
-	color:#00AA00;
-	background-color:#1E1E1E;
+	color:#42B1A8;
+	background-color:#294447;
 }
 
 @font-face {
@@ -59,19 +58,19 @@
 }
 /*Channel name*/
 #chat > div div:nth-child(2){
-	color:#D69B33;
+	color:#F7941D;
 	margin-top:-6px;
 	margin-right:5px;
 	margin-left:5px;
 }
 /*Username*/
 #chat > div div:nth-child(3){
-	color:#FFC042;
+	color:#F7941D;
 	margin-top: -6px;
 }
 /*Timestamp*/
 #chat > div div:nth-child(4){
-	color:#D69B33;
+	color:#F7941D;
 	float:right;
 	margin-top:-6px;
 	margin-right:5px;
@@ -89,11 +88,10 @@
 	padding:5px;
 	clear:left;
 	font-size:10pt;
-	color:#9C9C9C;
 	float:none;
 }
 a {
-	color: #D69B33;	
+	color: #F7941D;	
 	text-decoration:none;
 	font-size:9pt;
 }
