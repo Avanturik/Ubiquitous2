@@ -8,7 +8,7 @@
              Focusable="False"
              Margin="0,0,0,6"
              xmlns:m="clr-namespace:UB.ViewModel"
-             TextOptions.TextFormattingMode="Display"
+             TextOptions.TextFormattingMode="Ideal"
              DataContext="{Binding Path=ChatMessage, Source={StaticResource Locator}}"
              d:DesignHeight="89" d:DesignWidth="300" Style="{DynamicResource ChatMessageTemplate}" >
 

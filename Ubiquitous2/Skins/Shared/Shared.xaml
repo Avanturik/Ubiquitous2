@@ -11,6 +11,7 @@
         <Setter Property="TextElement.FontFamily" Value="Segoe UI"/>
     </Style>
     <ResourceDictionary.MergedDictionaries>
+        <ResourceDictionary Source="/Skins/Shared/Icons.xaml"/>
         <ResourceDictionary Source="/Skins/Shared/ContextMenuSkin.xaml"/>
         <ResourceDictionary Source="/Skins/Shared/ScrollViewerSkin.xaml"/>
         <ResourceDictionary Source="/Skins/Shared/SettingsWindowSkin.xaml"/>

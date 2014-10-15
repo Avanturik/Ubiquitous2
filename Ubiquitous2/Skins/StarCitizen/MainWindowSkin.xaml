@@ -31,10 +31,17 @@
     </Style>
     <Style x:Key="OverlayHyperlink"  TargetType="{x:Type Hyperlink}">
         <Setter Property="TextDecorations" Value="None"/>
-        <Setter Property="Foreground" Value="#FF474747"/>
+    </Style>
+	<Style x:Key="OverlayIcon"  TargetType="{x:Type Path}">
+        <Setter Property="Fill" Value="#FF4AD3C6"/>
         <Style.Triggers>
             <Trigger Property="IsMouseOver" Value="True">
-                <Setter Property="Foreground" Value="White"/>
+                <Setter Property="Fill" Value="#FF4EFFFF"/>
+				<Setter Property="Effect">
+					<Setter.Value>
+						<DropShadowEffect ShadowDepth="0" Color="#FF49F8F9"/>
+					</Setter.Value>
+				</Setter>
                 <Setter Property="Cursor" Value="Hand"/>
             </Trigger>
         </Style.Triggers>
@@ -80,29 +87,35 @@
                                             </i:Interaction.Behaviors>
 
                                             <DockPanel HorizontalAlignment="Stretch" VerticalAlignment="Center">
-                                                <TextBlock DockPanel.Dock="Right" HorizontalAlignment="Right" VerticalAlignment="Center">
-                                                    <Hyperlink Style="{StaticResource OverlayHyperlink}" Focusable="False" Command="{Binding ExitApplication}">
-                                                        <Image Style="{StaticResource TopBarIcon}" DockPanel.Dock="Right" Width="11" Source="/Ubiquitous2;component/Resources/close.ico" HorizontalAlignment="Right" VerticalAlignment="Center">
-                                                        </Image>
-                                                    </Hyperlink>
-                                                </TextBlock>
-                                                <TextBlock DockPanel.Dock="Right" HorizontalAlignment="Right" VerticalAlignment="Center">
-                                                    <Hyperlink Style="{StaticResource OverlayHyperlink}" Focusable="False" Command="{Binding Minimize}">
-                                                        <Image Margin="0,0,14,0" Style="{StaticResource TopBarIcon}" DockPanel.Dock="Right" Width="11" Source="/Ubiquitous2;component/Resources/minimize.ico" HorizontalAlignment="Right" VerticalAlignment="Center">
-                                                        </Image>
-                                                    </Hyperlink>
-                                                </TextBlock>
+                                                <Path Width="16" Height="16" DockPanel.Dock="Left" Data="{DynamicResource TriangleLeftToRight}" Fill="#FF4AD3C6" VerticalAlignment="Center" Stretch="Uniform">
+													<Path.Effect>
+														<DropShadowEffect ShadowDepth="0" Color="#FF49F8F9"/>
+													</Path.Effect>
+												</Path>
+                                                <TextBlock FontFamily="/Ubiquitous2;component/Fonts/#Orbitron" Background="{x:Null}" Foreground="#FF4AD3C6" FontWeight="Bold" Margin="5,0,0,0" FontSize="16" VerticalAlignment="Center">
+													COMM-LINK
+												</TextBlock>
 
-                                                <TextBlock DockPanel.Dock="Right" HorizontalAlignment="Right" VerticalAlignment="Center">
+                                                <TextBlock DockPanel.Dock="Right" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="5,0">
+                                                    <Hyperlink Style="{StaticResource OverlayHyperlink}" Focusable="False" Command="{Binding ExitApplication}">
+														<Path  Style="{StaticResource OverlayIcon}" Stretch="Uniform" Width="16" Height="16" Data="{DynamicResource CloseIcon}" VerticalAlignment="Center"/>
+													</Hyperlink>
+												</TextBlock>
+                                                <TextBlock DockPanel.Dock="Right" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="5,0">
+                                                    <Hyperlink Style="{StaticResource OverlayHyperlink}" Focusable="False" Command="{Binding Minimize}">
+														<Path  Style="{StaticResource OverlayIcon}" Stretch="Uniform" Width="16" Height="16" Data="{DynamicResource MinimizeIcon}" VerticalAlignment="Bottom"/>
+													</Hyperlink>
+												</TextBlock>
+                                                <TextBlock DockPanel.Dock="Right" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="5,0">
                                                     <Hyperlink Style="{StaticResource OverlayHyperlink}" Focusable="False" Command="{Binding ShowSettings}">
-                                                            <Image Margin="0,0,14,0" Style="{StaticResource TopBarIcon}" DockPanel.Dock="Right" Width="12" Source="/Ubiquitous2;component/Resources/settings.ico" HorizontalAlignment="Right" VerticalAlignment="Center"/>
-                                                    </Hyperlink>
-                                                </TextBlock>
-                                                <TextBlock DockPanel.Dock="Right" HorizontalAlignment="Right" VerticalAlignment="Center">
+														<Path  Style="{StaticResource OverlayIcon}" Stretch="Uniform" Width="16" Height="16" Data="{DynamicResource SettingsIcon}" VerticalAlignment="Center"/>
+													</Hyperlink>
+												</TextBlock>
+                                                <TextBlock DockPanel.Dock="Right" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="5,0">
                                                     <Hyperlink Style="{StaticResource OverlayHyperlink}" Focusable="False" Command="{Binding ShowDashboard}">
-                                                        <Image Margin="0,0,14,0" Style="{StaticResource TopBarIcon}" DockPanel.Dock="Right" Width="14" Source="/Ubiquitous2;component/Resources/dashboard.png" HorizontalAlignment="Right" VerticalAlignment="Center"/>
-                                                    </Hyperlink>
-                                                </TextBlock>
+														<Path  Style="{StaticResource OverlayIcon}" Stretch="Uniform" Width="16" Height="16" Data="{DynamicResource DashboardIcon}" VerticalAlignment="Center"/>
+													</Hyperlink>
+												</TextBlock>
                                             </DockPanel>
                                         </Border>
                                         <View:ChatBoxView Focusable="False" Grid.Row="1" Margin="0,4,0,0" RenderTransformOrigin="1,0" OverridesDefaultStyle="True" Padding="0">

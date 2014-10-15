@@ -21,6 +21,9 @@
         TextOptions.TextRenderingMode="Aliased"
         Padding="0" Icon="/Ubiquitous2;component/Resources/ubiquitous smile.ico" d:DesignHeight="394" Width="286" Height="394"
         >
+	<Window.Effect>
+		<DropShadowEffect ShadowDepth="0" Color="#FF4EFFFF" BlurRadius="8"/>
+	</Window.Effect>
     <i:Interaction.Behaviors>
         <Interactivity:WindowPersistentLocationBehavior WindowName="MainWindow"/>
         <Interactivity:ClickThroughBehavior EnableMouseTransparency="{Binding EnableMouseTransparency}"/>
@@ -45,6 +48,5 @@
             <i:InvokeCommandAction Command="{Binding SetUnFocused}"/>
         </i:EventTrigger>
 
-    </i:Interaction.Triggers>
-    
+    </i:Interaction.Triggers>    
 </Window>

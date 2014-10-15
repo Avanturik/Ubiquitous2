@@ -211,6 +211,9 @@
     <Compile Include="View\SubFollowDonationView.xaml.cs">
       <DependentUpon>SubFollowDonationView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="View\TestView.xaml.cs">
+      <DependentUpon>TestView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="View\YesNoDialogView.xaml.cs">
       <DependentUpon>YesNoDialogView.xaml</DependentUpon>
     </Compile>
@@ -460,6 +463,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Page Include="Skins\Shared\Icons.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Skins\Shared\YesNoDialogSkin.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -499,6 +506,10 @@
     <Page Include="View\SubFollowDonationView.xaml">
       <SubType>Form</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\TestView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="View\YesNoDialogView.xaml">
       <SubType>Designer</SubType>
@@ -732,6 +743,7 @@
     <Content Include="Content\hitboxemoticons.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <None Include="Design\projectGuides.guides" />
     <None Include="packages.config" />
     <None Include="Resources\favicon.ico" />
     <Resource Include="Resources\gaminglivedark.ico">
@@ -923,6 +935,7 @@
     </Content>
     <None Include="ubiquitous2.snk" />
     <None Include="Ubiquitous2_TemporaryKey.pfx" />
+    <Resource Include="View\icons_Images\Layer 2.png" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="ubiquitous smile.ico">
