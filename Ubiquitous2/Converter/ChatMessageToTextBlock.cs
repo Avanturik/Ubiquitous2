@@ -63,10 +63,11 @@ namespace UB.Converter
                                         Uri imageUri;
                                         if( Uri.TryCreate(url, UriKind.RelativeOrAbsolute, out imageUri) )
                                         {
-                                            dataService.GetImage(imageUri, width, height, (image) => {
+                                            dataService.GetImage(imageUri, width, height, (image) =>
+                                            {
                                                 image.ToolTip = imgTooltip;
                                                 textBlock.Inlines.Add(image);
-                                            }, null);
+                                            }, null);                                            
                                         }
                                         else
                                         {

@@ -20,6 +20,7 @@ namespace UB.Interactivity
     {
         private UIElement visual;
         private Timer saveTimer;
+        private VisualBrush visualBrush = new VisualBrush();
         private int sureSaveSteps = 2;
         private object lockSave = new object();
         public ElementToPng()
@@ -48,7 +49,7 @@ namespace UB.Interactivity
         protected override void OnAttached()
         {
             visual = AssociatedObject as UIElement;
-            
+            visualBrush.Visual = visual;
         }
 
         public void SaveVisualToPng()
@@ -66,10 +67,18 @@ namespace UB.Interactivity
 
                 if( width == 0 || height == 0 )
                     return;
-                
-                RenderTargetBitmap rtb = new RenderTargetBitmap((Int32)width, (Int32)height, 96, 96, PixelFormats.Pbgra32);
 
-                rtb.Render(visual);
+                var stopWatch = Stopwatch.StartNew();
+
+                RenderTargetBitmap rtb = new RenderTargetBitmap((Int32)width, (Int32)height, 96, 96, PixelFormats.Pbgra32);
+                
+                DrawingVisual drawingVisual = new DrawingVisual();
+                using (DrawingContext drawingContext = drawingVisual.RenderOpen())
+                {
+                    drawingContext.DrawRectangle(visualBrush, null, new Rect(new Point(), new Size(width, height)));
+                }
+
+                rtb.Render(drawingVisual);
                 
                 PngBitmapEncoder png = new PngBitmapEncoder();
 
@@ -78,6 +87,9 @@ namespace UB.Interactivity
                 if (frame == null)
                     return;
 
+                stopWatch.Stop();
+                var ms = stopWatch.ElapsedMilliseconds;
+                Log.WriteInfo("Frame captured in {0}ms", ms);
                 png.Frames.Add(frame);
 
                 if (String.IsNullOrWhiteSpace(FileName))

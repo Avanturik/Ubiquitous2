@@ -19,7 +19,7 @@
         ResizeMode="NoResize"
         Margin="0" 
         TextOptions.TextRenderingMode="Aliased"
-        Padding="0" Icon="/Ubiquitous2;component/Resources/ubiquitous smile.ico" d:DesignHeight="394" Width="202.424" Height="394"
+        Padding="0" Icon="/Ubiquitous2;component/Resources/ubiquitous smile.ico" d:DesignHeight="394" Width="202.424" Height="394" Foreground="{x:Null}"
         >
 	<Window.Effect>
 		<DropShadowEffect ShadowDepth="0" Color="#FF4EFFFF" BlurRadius="8"/>
