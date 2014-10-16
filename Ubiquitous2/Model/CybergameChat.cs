@@ -345,7 +345,6 @@ namespace UB.Model
             if (!isAnonymous)
             {
                 Status.IsLoggedIn = true;
-                GetTopic();
             }
 
             return true;

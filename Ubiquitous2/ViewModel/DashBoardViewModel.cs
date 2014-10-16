@@ -8,6 +8,7 @@ using UB.Properties;
 using GalaSoft.MvvmLight.Command;
 using System.Collections.Generic;
 using UB.Utils;
+using System.Threading.Tasks;
 
 namespace UB.ViewModel
 {
@@ -29,6 +30,9 @@ namespace UB.ViewModel
         {
             _dataService = dataService;
             _streamDataService = streamDataService;
+            //Task.Factory.StartNew(() => {
+            //    _streamDataService.LoadTopicsFromWeb();
+            //});
             Initialize();
         }
 

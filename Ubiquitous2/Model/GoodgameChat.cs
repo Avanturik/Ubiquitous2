@@ -145,7 +145,6 @@ namespace UB.Model
             if (!isAnonymous)
             {
                 Status.IsLoggedIn = true;
-                GetTopic();
             }
 
             return true;
@@ -582,7 +581,7 @@ namespace UB.Model
                             if( ddosCookieGet != null )
                             {
                                 var imageDataService = SimpleIoc.Default.GetInstance<IImageDataSource>();
-                                UI.Dispatch (() => imageDataService.AddImage( uri, webClient.DownloadToMemoryStream(originalUrl)));
+                                imageDataService.AddImage( uri, webClient.DownloadToMemoryStream(originalUrl));
                             }
                             else
                             {

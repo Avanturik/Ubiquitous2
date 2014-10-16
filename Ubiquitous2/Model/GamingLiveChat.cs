@@ -210,12 +210,6 @@ namespace UB.Model
                 return false;
             }
 
-            if (!isAnonymous)
-            {
-                GetTopic();
-                GetGameList();
-            }
-
             return true;
         }
         public bool LoginWithUsername()
@@ -513,6 +507,8 @@ namespace UB.Model
         {
             if (!Status.IsLoggedIn)
                 return;
+            
+            GetGameList();
 
             Task.Factory.StartNew(() =>
             {

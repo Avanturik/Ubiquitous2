@@ -275,7 +275,6 @@ namespace UB.Model
         private void StartWithToken(string oauthToken)
         {
             LoginInfo.Password = "oauth:" + oauthToken;
-            GetTopic();
             base.Start();
         }
         private void StartAnonymously()

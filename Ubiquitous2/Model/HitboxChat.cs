@@ -228,7 +228,6 @@ namespace UB.Model
             if (!isAnonymous)
             {
                 Status.IsLoggedIn = true;
-                GetTopic();
             }
 
             return true;
@@ -244,7 +243,7 @@ namespace UB.Model
             if (tokenCredentials != userName + password)
                 return false;
 
-            if( String.IsNullOrEmpty(userName))
+            if( String.IsNullOrEmpty(userName) || userName.Equals("unknownsoldier",StringComparison.InvariantCultureIgnoreCase))
             {
                 isAnonymous = true;
                 return true;
@@ -977,7 +976,6 @@ namespace UB.Model
                             }
                             else
                             {
-                                _chat.Status.IsLoggedIn = true;
                                 _chat.Status.IsLoginFailed = false;
                             }
 

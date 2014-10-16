@@ -24,7 +24,7 @@
     <Style x:Key="WindowBorder" TargetType="{x:Type Border}">
         <Setter Property="Panel.ZIndex" Value="-1"/>
         <Setter Property="Opacity" Value="0.01"/>
-        <Setter Property="BorderBrush" Value="#FF1E1E1E"/>
+        <Setter Property="BorderBrush" Value="{x:Null}"/>
         <Setter Property="BorderThickness" Value="0"/>
         <Setter Property="Background" Value="#011F3E1D"/>
 
@@ -32,26 +32,30 @@
     <Style x:Key="OverlayHyperlink"  TargetType="{x:Type Hyperlink}">
         <Setter Property="TextDecorations" Value="None"/>
     </Style>
-	<Style x:Key="OverlayIcon"  TargetType="{x:Type Path}">
+    <Style x:Key="OverlayIcon"  TargetType="{x:Type Path}">
         <Setter Property="Fill" Value="#FF4AD3C6"/>
+    </Style>
+    <Style x:Key="OverlayIconBorder"  TargetType="{x:Type Border}">
+        <Setter Property="Background" Value="Transparent"/>
         <Style.Triggers>
             <Trigger Property="IsMouseOver" Value="True">
-                <Setter Property="Fill" Value="#FF4EFFFF"/>
-				<Setter Property="Effect">
-					<Setter.Value>
-						<DropShadowEffect ShadowDepth="0" Color="#FF49F8F9"/>
-					</Setter.Value>
-				</Setter>
+                <Setter Property="Background" Value="Transparent"/>
+                <Setter Property="Effect">
+                    <Setter.Value>
+                        <DropShadowEffect ShadowDepth="0" Color="#FF49F8F9"/>
+                    </Setter.Value>
+                </Setter>
                 <Setter Property="Cursor" Value="Hand"/>
             </Trigger>
         </Style.Triggers>
     </Style>
     <Style x:Key="MainWindowStyle" TargetType="{x:Type Window}">
         <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.WindowTextBrushKey}}"/>
+        <Setter Property="MinWidth" Value="205"/>
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type Window}">
-                    <Border BorderThickness="1">
+                    <Border BorderThickness="0">
                     	<Border.LayoutTransform>
                     		<TransformGroup>
                     			<ScaleTransform/>
@@ -87,34 +91,42 @@
                                             </i:Interaction.Behaviors>
 
                                             <DockPanel HorizontalAlignment="Stretch" VerticalAlignment="Center">
-                                                <Path Width="16" Height="16" DockPanel.Dock="Left" Data="{DynamicResource TriangleLeftToRight}" Fill="#FF4AD3C6" VerticalAlignment="Center" Stretch="Uniform">
+                                                <Path Width="12" Height="12" DockPanel.Dock="Left" Data="{DynamicResource TriangleLeftToRight}" Fill="#FF4AD3C6" VerticalAlignment="Center" Stretch="Uniform">
 													<Path.Effect>
 														<DropShadowEffect ShadowDepth="0" Color="#FF49F8F9"/>
 													</Path.Effect>
 												</Path>
-                                                <TextBlock FontFamily="/Ubiquitous2;component/Fonts/#Orbitron" Background="{x:Null}" Foreground="#FF4AD3C6" FontWeight="Bold" Margin="5,0,0,0" FontSize="16" VerticalAlignment="Center">
+                                                <TextBlock FontFamily="/Ubiquitous2;component/Fonts/#Orbitron" Background="{x:Null}" Foreground="#FF4AD3C6" FontWeight="Bold" Margin="5,0,0,0" FontSize="12" VerticalAlignment="Center">
 													COMM-LINK
 												</TextBlock>
 
-                                                <TextBlock DockPanel.Dock="Right" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="5,0">
+                                                <TextBlock DockPanel.Dock="Right" HorizontalAlignment="Right" VerticalAlignment="Stretch" Margin="5,0">
                                                     <Hyperlink Style="{StaticResource OverlayHyperlink}" Focusable="False" Command="{Binding ExitApplication}">
-														<Path  Style="{StaticResource OverlayIcon}" Stretch="Uniform" Width="16" Height="16" Data="{DynamicResource CloseIcon}" VerticalAlignment="Center"/>
+                                                        <Border Style="{StaticResource OverlayIconBorder}" Background="Transparent">
+                                                            <Path Style="{StaticResource OverlayIcon}" Stretch="Uniform" Width="12" Height="12" Data="{DynamicResource CloseIcon}" VerticalAlignment="Center"/>                                                            
+                                                        </Border>
 													</Hyperlink>
 												</TextBlock>
-                                                <TextBlock DockPanel.Dock="Right" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="5,0">
+                                                <TextBlock DockPanel.Dock="Right" HorizontalAlignment="Right" VerticalAlignment="Stretch" Margin="5,0">
                                                     <Hyperlink Style="{StaticResource OverlayHyperlink}" Focusable="False" Command="{Binding Minimize}">
-														<Path  Style="{StaticResource OverlayIcon}" Stretch="Uniform" Width="16" Height="16" Data="{DynamicResource MinimizeIcon}" VerticalAlignment="Bottom"/>
-													</Hyperlink>
+                                                        <Border Style="{StaticResource OverlayIconBorder}"  Background="Transparent">
+														<Path  Style="{StaticResource OverlayIcon}" Stretch="Uniform" Width="12" Height="12" Data="{DynamicResource MinimizeIcon}" VerticalAlignment="Bottom"/>
+													    </Border>
+                                                     </Hyperlink>
 												</TextBlock>
-                                                <TextBlock DockPanel.Dock="Right" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="5,0">
+                                                <TextBlock DockPanel.Dock="Right" HorizontalAlignment="Right" VerticalAlignment="Stretch" Margin="5,0">
                                                     <Hyperlink Style="{StaticResource OverlayHyperlink}" Focusable="False" Command="{Binding ShowSettings}">
-														<Path  Style="{StaticResource OverlayIcon}" Stretch="Uniform" Width="16" Height="16" Data="{DynamicResource SettingsIcon}" VerticalAlignment="Center"/>
+														<Border Style="{StaticResource OverlayIconBorder}" Background="Transparent">
+                                                        <Path  Style="{StaticResource OverlayIcon}" Stretch="Uniform" Width="12" Height="12" Data="{DynamicResource SettingsIcon}" VerticalAlignment="Center"/>
+                                                        </Border>
 													</Hyperlink>
 												</TextBlock>
-                                                <TextBlock DockPanel.Dock="Right" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="5,0">
+                                                <TextBlock DockPanel.Dock="Right" HorizontalAlignment="Right" VerticalAlignment="Stretch" Margin="5,0">
                                                     <Hyperlink Style="{StaticResource OverlayHyperlink}" Focusable="False" Command="{Binding ShowDashboard}">
-														<Path  Style="{StaticResource OverlayIcon}" Stretch="Uniform" Width="16" Height="16" Data="{DynamicResource DashboardIcon}" VerticalAlignment="Center"/>
-													</Hyperlink>
+														<Border Style="{StaticResource OverlayIconBorder}" Background="Transparent">
+                                                        <Path  Style="{StaticResource OverlayIcon}" Stretch="Uniform" Width="12" Height="12" Data="{DynamicResource DashboardIcon}" VerticalAlignment="Center"/>
+													    </Border>
+                                                    </Hyperlink>
 												</TextBlock>
                                             </DockPanel>
                                         </Border>
