@@ -175,6 +175,7 @@
     <Compile Include="Model\GreetingsDataService.cs" />
     <Compile Include="Model\IFollowersProvider.cs" />
     <Compile Include="Model\IGreetingsDataService.cs" />
+    <Compile Include="Model\ImageData.cs" />
     <Compile Include="Model\IOBSPluginService.cs" />
     <Compile Include="Model\IStreamPageDataService.cs" />
     <Compile Include="Model\IStreamTopic.cs" />

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Runtime.Serialization;
 using System.ServiceModel;
@@ -12,46 +13,53 @@ using UB.Utils;
 
 namespace UB.Model
 {
-    //[ServiceBehavior(InstanceContextMode = InstanceContextMode.Single)]
-    //[ServiceBehavior(ConcurrencyMode = ConcurrencyMode.Multiple, InstanceContextMode = InstanceContextMode.Single)]
-    //[ServiceBehavior(ConcurrencyMode = ConcurrencyMode.Multiple)]
-    //[ServiceBehavior(InstanceContextMode = InstanceContextMode.Single)]
-    
     public class OBSPluginService : IOBSPluginService   
     {
         private ServiceHost serviceHost;
         private object lockSave = new object();
-        
+        private static ImageData imageData = new ImageData();
+        private static Size currentSize = new Size();
+        private static bool imageChanged = false;
+
         [DataMember]
         private static RenderTargetBitmap renderTarget;
         
-        public byte[] GetImage()
+        public ImageData GetImage()
         {
-            //Log.WriteInfo("ElementToOBSPlugin: image requested");
             lock (lockSave)
             {
-                if (RenderTarget != null)
+                if ( imageChanged && RenderTarget != null)
                 {
                     WriteableBitmap wb = new WriteableBitmap(RenderTarget);
-                    return wb.ConvertToByteArray();
+                    currentSize.Width = wb.PixelWidth;
+                    currentSize.Height = wb.PixelHeight;
+                    imageData.Size = currentSize;
+                    imageData.Pixels = wb.ConvertToByteArray();
+                    return imageData;
                 }
                 else
                 {
-                    return null;
+                    return imageData;
                 }
 
             }
         }
         [DataMember]
         public RenderTargetBitmap RenderTarget {
-            get { 
-                lock(lockSave)
+            get {
+                lock (lockSave)
+                {
+                    imageChanged = false;
                     return renderTarget;             
+                }
             }
             set
             {
                 lock (lockSave)
+                {
                     renderTarget = value;
+                    imageChanged = true;
+                }
             }
         
         }
@@ -75,4 +83,6 @@ namespace UB.Model
             serviceHost.Close();
         }
     }
+
+
 }

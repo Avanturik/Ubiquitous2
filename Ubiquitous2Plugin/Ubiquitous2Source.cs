@@ -7,6 +7,7 @@ using CLROBS;
 using System.ServiceModel;
 using UB.Model;
 using System.Diagnostics;
+using System.Drawing;
 
 namespace Ubiquitous2Plugin
 {
@@ -14,7 +15,10 @@ namespace Ubiquitous2Plugin
     {
         private ChannelFactory<IOBSPluginService> pipeFactory;
         private Texture texture;
+        private Size currentSize = new Size(100, 100);
         private IOBSPluginService pipeProxy;
+        private ImageData imageData;
+        private object imageLock = new object();
         public Ubiquitous2Source(XElement configElement)
         {
             UpdateSettings();
@@ -38,48 +42,68 @@ namespace Ubiquitous2Plugin
             {
                 Debug.Print("OBSPlugin: pipe proxy is null");
             }
-
-            texture = GS.CreateTexture(100, 100, GSColorFormat.GS_BGRA, null, false, false);
+            imageData = pipeProxy.GetImage();
+            if( imageData == null )
+            {
+                texture = GS.CreateTexture(100, 100, GSColorFormat.GS_BGRA, null, false, false);
+                Size.X = 100;
+                Size.Y = 100;
+            }
+            else
+            {
+                UpdateSettings();
+            }
 
         }
 
         public override void Render(float x, float y, float width, float height)
         {
-            byte[] bytes = null;
             try
             {
-                bytes = pipeProxy.GetImage();
+                lock(imageLock)
+                {
+                    imageData = pipeProxy.GetImage();
+                    if (imageData == null)
+                        return;
+                }
             }
             catch(Exception e)
             {
                 Debug.Print("OBSPlugin GetImage exception: {0}", e.Message);
             }
-            if (bytes == null)
-            {
-                Debug.Print("OBSPlugin got null image");
-            }
+            
+            if (texture == null)
+                Debug.Print("OBSPlugin: failed to create texture");
             else
             {
-                if (texture == null)
-                    Debug.Print("OBSPlugin: failed to create texture");
-                else
+                lock(imageLock)
                 {
-                    texture.SetImage(bytes, GSImageFormat.GS_IMAGEFORMAT_BGRA, (UInt32)(100 * 4));
+                    UpdateSettings();
+                    texture.SetImage(imageData.Pixels, GSImageFormat.GS_IMAGEFORMAT_BGRA, (UInt32)(imageData.Size.Width * 4));
                 }
-
-                if (texture != null)
-                    GS.DrawSprite(texture, 0xFFFFFFFF, x,y, width,height);
-                else
-                    Debug.Print("OBSPlugin: null texture");
-
-
             }
+
+            if (texture != null)
+                GS.DrawSprite(texture, 0xFFFFFFFF, x, y, x + width, y + height);
+            else
+                Debug.Print("OBSPlugin: null texture");
+
         }
 
         public override void UpdateSettings()
         {
-            Size.X = 100;
-            Size.Y = 100;
+            if( imageData == null )
+                return;
+
+            if (currentSize.Width != imageData.Size.Width ||
+            currentSize.Height != imageData.Size.Height)
+            {
+                currentSize.Height = imageData.Size.Height;
+                currentSize.Width = imageData.Size.Width;
+                Size.X = currentSize.Width;
+                Size.Y = currentSize.Height;
+                texture = GS.CreateTexture((uint)imageData.Size.Width, (uint)imageData.Size.Height, GSColorFormat.GS_BGRA, null, false, false);
+            }
         }
     }
 }

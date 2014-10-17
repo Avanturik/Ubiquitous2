@@ -62,7 +62,7 @@ namespace UB.Interactivity
                 if (visual == null || !visual.IsArrangeValid)
                     return;
 
-                var width = visual.RenderSize.Width;
+                var width = visual.RenderSize.Width + SystemParameters.VerticalScrollBarWidth;
                 var height = visual.RenderSize.Height;
 
                 if( width == 0 || height == 0 )

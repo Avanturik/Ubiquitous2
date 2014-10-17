@@ -11,6 +11,6 @@ namespace UB.Model
     public interface IOBSPluginService
     {
         [OperationContract]
-        byte[] GetImage();
+        ImageData GetImage();
     }
 }

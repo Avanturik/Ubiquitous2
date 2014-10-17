@@ -23,7 +23,6 @@ namespace UB.Interactivity
     {
         private UIElement visual;
         private Timer saveTimer;      
-        private VisualBrush visualBrush = new VisualBrush();
         private object lockSave = new object();
         private OBSPluginService obsPluginService = new OBSPluginService();
         
@@ -47,8 +46,14 @@ namespace UB.Interactivity
         protected override void OnAttached()
         {
             visual = AssociatedObject as UIElement;
-            visualBrush.Visual = visual;
-            obsPluginService.Start();
+            try
+            {
+                obsPluginService.Start();
+            }
+            catch
+            {
+
+            }
         }
 
         public void CaptureImage()
@@ -64,25 +69,12 @@ namespace UB.Interactivity
                 if (width == 0 || height == 0)
                     return;
 
-                var stopWatch = Stopwatch.StartNew();
+                RenderTargetBitmap renderTarget = new RenderTargetBitmap((Int32)width, (Int32)height, 96, 96, PixelFormats.Pbgra32);
 
-                //RenderTargetBitmap renderTarget = new RenderTargetBitmap((Int32)width, (Int32)height, 96, 96, PixelFormats.Pbgra32);
-                RenderTargetBitmap renderTarget = new RenderTargetBitmap(100,100, 96, 96, PixelFormats.Pbgra32);
-
-                DrawingVisual drawingVisual = new DrawingVisual();
-                using (DrawingContext drawingContext = drawingVisual.RenderOpen())
-                {
-                    //drawingContext.DrawRectangle(visualBrush, null, new Rect(new Point(), new Size(width, height)));
-                    drawingContext.DrawRectangle(visualBrush, null, new Rect(new Point(), new Size(100,100)));
-                }
-
-                renderTarget.Render(drawingVisual);
+                renderTarget.Render(visual);
 
                 obsPluginService.RenderTarget = renderTarget;
 
-                stopWatch.Stop();
-                var ms = stopWatch.ElapsedMilliseconds;
-                //Log.WriteInfo("Frame captured in {0}ms", ms);
             }
         }
 
