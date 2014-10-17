@@ -8,6 +8,7 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Threading;
+using System.Diagnostics;
 
 namespace Ubiquitous2Plugin
 {
@@ -44,7 +45,6 @@ namespace Ubiquitous2Plugin
             LoadLibrary(Path.Combine(libraryDirectory, "ffmpegsumo.dll"));
             LoadLibrary(Path.Combine(libraryDirectory, "icudt.dll"));
             LoadLibrary(Path.Combine(libraryDirectory, "libcef.dll"));
-
 
             API.Instance.AddImageSourceFactory(new Ubiquitous2Factory());
             //API.Instance.AddSettingsPane(new Ubiquitous2SettingsPane());

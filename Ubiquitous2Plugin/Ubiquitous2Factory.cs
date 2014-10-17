@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Diagnostics;
 
 namespace Ubiquitous2Plugin
 {
@@ -17,7 +18,9 @@ namespace Ubiquitous2Plugin
 
         public override bool ShowConfiguration(XElement data)
         {
-            return true;
+                data.Parent.SetFloat("cx", 100);
+                data.Parent.SetFloat("cy", 100);
+                return true;
         }
 
         public override ImageSource Create(XElement data)

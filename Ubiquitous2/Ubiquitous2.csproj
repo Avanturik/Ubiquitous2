@@ -114,6 +114,7 @@
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.ServiceModel" />
     <Reference Include="System.Web" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Windows.Interactivity, Version=4.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
@@ -164,6 +165,7 @@
     <Compile Include="Controls\SmoothPanel\SmoothPanelViewCache.cs" />
     <Compile Include="Converter\BoolToScrollBarVisibility - Copy.cs" />
     <Compile Include="Converter\NonEmptyToVisibility.cs" />
+    <Compile Include="Interactivity\ElementToOBSPlugin.cs" />
     <Compile Include="Interactivity\UnclosableWindow.cs" />
     <Compile Include="Model\CybergameChat.cs" />
     <Compile Include="Model\DummyChat.cs" />
@@ -173,8 +175,10 @@
     <Compile Include="Model\GreetingsDataService.cs" />
     <Compile Include="Model\IFollowersProvider.cs" />
     <Compile Include="Model\IGreetingsDataService.cs" />
+    <Compile Include="Model\IOBSPluginService.cs" />
     <Compile Include="Model\IStreamPageDataService.cs" />
     <Compile Include="Model\IStreamTopic.cs" />
+    <Compile Include="Model\OBSPluginService.cs" />
     <Compile Include="Model\OBSRemoteService.cs" />
     <Compile Include="Model\StreamInfo.cs" />
     <Compile Include="Model\StreamInfoPreset.cs" />
