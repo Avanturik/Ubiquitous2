@@ -22,7 +22,7 @@ namespace Ubiquitous2Plugin
         public Ubiquitous2Source(XElement configElement)
         {
             UpdateSettings();
-
+            
             pipeFactory =
                 new ChannelFactory<IOBSPluginService>(
                 new NetNamedPipeBinding() { MaxReceivedMessageSize = 8294400*2, MaxBufferSize = 8294400*2 },
