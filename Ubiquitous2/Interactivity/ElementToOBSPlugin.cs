@@ -24,6 +24,7 @@ namespace UB.Interactivity
         private UIElement visual;
         private Timer saveTimer;      
         private object lockSave = new object();
+        private bool isChanged = false;
         private OBSPluginService obsPluginService = new OBSPluginService();
         
         public ElementToOBSPlugin()
@@ -46,6 +47,7 @@ namespace UB.Interactivity
         protected override void OnAttached()
         {
             visual = AssociatedObject as UIElement;
+            visual.LayoutUpdated += visual_LayoutUpdated;
             try
             {
                 obsPluginService.Start();
@@ -56,12 +58,23 @@ namespace UB.Interactivity
             }
         }
 
+        void visual_LayoutUpdated(object sender, EventArgs e)
+        {
+            isChanged = true;
+        }
+
         public void CaptureImage()
         {
+            if (!isChanged)
+                return;
+            
             lock (lockSave)
             {
+                isChanged = false;
+
                 if (visual == null || !visual.IsArrangeValid)
                     return;
+
 
                 var width = visual.RenderSize.Width;
                 var height = visual.RenderSize.Height;

@@ -39,7 +39,7 @@ namespace UB.Model
                 }
                 else
                 {
-                    return imageData;
+                    return null;
                 }
 
             }

@@ -63,31 +63,22 @@ namespace Ubiquitous2Plugin
                 lock(imageLock)
                 {
                     imageData = pipeProxy.GetImage();
-                    if (imageData == null)
-                        return;
                 }
             }
             catch(Exception e)
             {
                 Debug.Print("OBSPlugin GetImage exception: {0}", e.Message);
             }
-            
-            if (texture == null)
-                Debug.Print("OBSPlugin: failed to create texture");
-            else
+
+            if (imageData!= null && texture != null)
             {
-                lock(imageLock)
+                lock (imageLock)
                 {
                     UpdateSettings();
                     texture.SetImage(imageData.Pixels, GSImageFormat.GS_IMAGEFORMAT_BGRA, (UInt32)(imageData.Size.Width * 4));
                 }
             }
-
-            if (texture != null)
-                GS.DrawSprite(texture, 0xFFFFFFFF, x, y, x + width, y + height);
-            else
-                Debug.Print("OBSPlugin: null texture");
-
+            GS.DrawSprite(texture, 0xFFFFFFFF, x, y, x + width, y + height);
         }
 
         public override void UpdateSettings()
