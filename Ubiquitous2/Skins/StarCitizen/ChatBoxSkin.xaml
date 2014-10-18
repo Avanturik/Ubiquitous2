@@ -18,7 +18,7 @@
                 <ControlTemplate TargetType="{x:Type UserControl}">
                     <Grid Margin="0,0,0,0">
                         <Rectangle Opacity="{Binding AppConfig.MessageBackgroundOpacity}" Fill="#FF335559"/>
-                        <Border Padding="8" Margin="-7,-2,-10,-9">
+                        <Border>
                             
                             <ItemsControl Focusable="False" ItemsSource="{Binding Messages}" Padding="0" Margin="0">
                             <ItemsControl.Template>

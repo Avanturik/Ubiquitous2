@@ -98,9 +98,10 @@
                                                 </TextBlock>
                                             </DockPanel>
                                         </Border>
-                                        <View:ChatBoxView Focusable="False" Grid.Row="1" Margin="0,4,0,0" RenderTransformOrigin="1,0" OverridesDefaultStyle="True" Padding="0">
+                                        <Border Grid.Row="1" Margin="0" Padding="0">
+                                            <View:ChatBoxView Focusable="False" Grid.Row="1" OverridesDefaultStyle="True" Padding="0"/>
+                                        </Border>
                                             <!--<MouseBinding Gesture="LeftClick" Command="{Binding ShowOverlay}"/>-->
-                                        </View:ChatBoxView>
                                         <Border CornerRadius="0,0,10,10" Focusable="False" Grid.Row="2" Padding="24,0,5,0" VerticalAlignment="Bottom" HorizontalAlignment="Stretch" Panel.ZIndex="1" Visibility="{Binding IsOverlayVisible, Converter={StaticResource boolToVisibilityConverter}}" BorderBrush="#FF1E1E1E" BorderThickness="1" Margin="0" Height="36">
                                             <DockPanel Focusable="False" VerticalAlignment="Bottom" Background="Transparent" Margin="0">
                                                 <ComboBox Focusable="False" Style="{DynamicResource ReplyComboStyle}" Name="replyCombo" ItemsSource="{Binding ChannelList}" SelectedItem="{Binding SelectedChatChannel}" ItemTemplate="{DynamicResource ReplyComboTemplate}" IsReadOnly="True" IsEditable="False" Margin="-18,1,61,6" VerticalAlignment="Stretch"/>
