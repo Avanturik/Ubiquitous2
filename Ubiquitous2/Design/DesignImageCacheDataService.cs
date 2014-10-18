@@ -37,19 +37,14 @@ namespace UB.Design
         }
 
 
-        public void GetImageSource(Uri uri, int width, int height, Action<BitmapImage> callback)
-        {
-            
-        }
 
-
-        public void GetImageSource(Uri uri, int width, int height, Image image, Action<BitmapImage> callback)
+        public void AddImage(Uri uri, Stream stream)
         {
             throw new NotImplementedException();
         }
 
 
-        public void AddImage(Uri uri, Stream stream)
+        public void GetImageSource(Uri uri, int width, int height, Image image, Action<ImageCacheItem> callback)
         {
             throw new NotImplementedException();
         }

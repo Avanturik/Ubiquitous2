@@ -388,8 +388,11 @@ namespace UB.Model
             
             lock( pollerLock )
             {
-                counterWebPollers.RemoveAll(p => p.Id == poller.Id);
-                counterWebPollers.Add(poller);
+                if( !poller.Id.Equals("#unknownsoldier",StringComparison.InvariantCultureIgnoreCase))
+                {
+                    counterWebPollers.RemoveAll(p => p.Id == poller.Id);
+                    counterWebPollers.Add(poller);
+                }
             }
         }
         void StopCounterPoller(string channelName)
@@ -735,9 +738,11 @@ namespace UB.Model
         }
         private void PollFollowers()
         {
-
             var getUrl = @"https://www.hitbox.tv/api/followers/user/{0}?limit=50";
             var userName = Config.GetParameterValue("Username") as string;
+
+            if (userName.Equals("unknownsoldier", StringComparison.InvariantCultureIgnoreCase))
+                return;
             
             followerPoller.Id = "followersPoller";
             followerPoller.Interval = 10000;

@@ -12,7 +12,7 @@ namespace UB.Model
     interface IImageDataSource
     {
         void GetImage(Uri uri, int width, int height, Action<Image> callback, Action<Image> downloadComplete);
-        void GetImageSource(Uri uri, int width, int height, Image image, Action<BitmapImage> callback);
+        void GetImageSource(Uri uri, int width, int height, Image image, Action<ImageCacheItem> callback);
         void AddImage(Uri uri, Stream stream);
     }
 }

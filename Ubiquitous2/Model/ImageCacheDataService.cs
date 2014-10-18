@@ -31,11 +31,9 @@ namespace UB.Model
 
                 if (bitmapImageCache.ContainsKey(uri.OriginalString))
                     return;
-
-                var item = new ImageCacheItem(stream);
             
                 lock (cacheLock)
-                    bitmapImageCache.Add(uri.OriginalString, item);
+                    bitmapImageCache.Add(uri.OriginalString, new ImageCacheItem(stream));
             }
 
         }
@@ -79,30 +77,34 @@ namespace UB.Model
                             }
                             image.Width = w;
                             image.Height = h;
-
-                            if (imageSource.IsDownloading)
+                            try
                             {
-                                imageSource.DownloadCompleted += (o, e) =>
+                                if (imageSource.IsDownloading)
                                 {
-                                    var cropped = new CroppedBitmap(imageSource, new Int32Rect(x, y, w, h));
-                                    image.Source = cropped;
-                                };
-                                UI.Dispatch(() => callback(image));
-                            }
-                            else
-                            {
-                                if (imageSource.PixelWidth > 1 && imageSource.PixelHeight > 1 && w > 0 && h > 0)
-                                {
-                                    var cropped = new CroppedBitmap(imageSource, new Int32Rect(x, y, w, h));
-                                    image.Source = cropped;
+                                    imageSource.Bitmap.DownloadCompleted += (o, e) =>
+                                    {
+                                        var cropped = new CroppedBitmap(imageSource.Bitmap, new Int32Rect(x, y, w, h));
+                                        image.Source = cropped;
+                                    };
                                     UI.Dispatch(() => callback(image));
                                 }
+                                else
+                                {
+                                    if (imageSource.Bitmap.PixelWidth > 1 && imageSource.Bitmap.PixelHeight > 1 && w > 0 && h > 0)
+                                    {
+                                        var cropped = new CroppedBitmap(imageSource.Bitmap, new Int32Rect(x, y, w, h));
+                                        image.Source = cropped;
+                                        UI.Dispatch(() => callback(image));
+                                    }
+                                }
+
                             }
+                            catch { }
 
                         }
                         else
                         {
-                            image.Source = imageSource;
+                            image.Source = imageSource.Bitmap;
                             UI.Dispatch(() => callback(image));
                         }
                     }
@@ -137,7 +139,7 @@ namespace UB.Model
             }
 
         }
-        public void GetImageSource(Uri uri, int width, int height, Image image, Action<BitmapImage> callback)
+        public void GetImageSource(Uri uri, int width, int height, Image image, Action<ImageCacheItem> callback)
         {
             if (String.IsNullOrWhiteSpace(uri.OriginalString))
                 return;
@@ -185,7 +187,7 @@ namespace UB.Model
                     lock (cacheLock)
                         bitmapImageCache.Add(uri.OriginalString, item);
 
-                    callback(item.Bitmap);
+                    callback(item);
                 }
                 else
                 {
@@ -209,7 +211,7 @@ namespace UB.Model
                             SetupGifAnimation(image, item.Bitmap);
                         }
                     }
-                    callback(item.Bitmap);
+                    callback(item);
                 }
             }
 
@@ -242,6 +244,7 @@ namespace UB.Model
                 Bitmap.CreateOptions = BitmapCreateOptions.None;
                 Bitmap.StreamSource = inputStream;
                 Bitmap.EndInit();
+                Bitmap.Freeze();
                 Width = Bitmap.PixelWidth;
                 Height = Bitmap.PixelHeight;
                 IsDownloading = false;
@@ -249,6 +252,7 @@ namespace UB.Model
                     DownloadComplete(this);
 
                 inputStream.Close();
+                inputStream = null;
             }
 
 
