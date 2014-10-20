@@ -15,6 +15,130 @@ namespace UB.Model
         }
 
         /// <summary>
+        /// The <see cref="FontSizeTimestamp" /> property's name.
+        /// </summary>
+        public const string FontSizeTimestampPropertyName = "FontSizeTimestamp";
+
+        private double _fontSizeTimestamp = 11;
+
+        /// <summary>
+        /// Sets and gets the FontSizeTimestamp property.
+        /// Changes to that property's value raise the PropertyChanged event. 
+        /// </summary>
+        public double FontSizeTimestamp
+        {
+            get
+            {
+                return _fontSizeTimestamp;
+            }
+
+            set
+            {
+                if (_fontSizeTimestamp == value)
+                {
+                    return;
+                }
+
+                RaisePropertyChanging(FontSizeTimestampPropertyName);
+                _fontSizeTimestamp = value;
+                RaisePropertyChanged(FontSizeTimestampPropertyName);
+            }
+        }
+
+        /// <summary>
+        /// The <see cref="FontSizeNickName" /> property's name.
+        /// </summary>
+        public const string FontSizeNickNamePropertyName = "FontSizeNickName";
+
+        private double _fontSizeNickName = 11;
+
+        /// <summary>
+        /// Sets and gets the FontSizeNickName property.
+        /// Changes to that property's value raise the PropertyChanged event. 
+        /// </summary>
+        public double FontSizeNickName
+        {
+            get
+            {
+                return _fontSizeNickName;
+            }
+
+            set
+            {
+                if (_fontSizeNickName == value)
+                {
+                    return;
+                }
+
+                RaisePropertyChanging(FontSizeNickNamePropertyName);
+                _fontSizeNickName = value;
+                RaisePropertyChanged(FontSizeNickNamePropertyName);
+            }
+        }
+
+        /// <summary>
+        /// The <see cref="FontSizeChannel" /> property's name.
+        /// </summary>
+        public const string FontSizeChannelPropertyName = "FontSizeChannel";
+
+        private double _fontSizeChannel = 11;
+
+        /// <summary>
+        /// Sets and gets the FontSizeChannel property.
+        /// Changes to that property's value raise the PropertyChanged event. 
+        /// </summary>
+        public double FontSizeChannel
+        {
+            get
+            {
+                return _fontSizeChannel;
+            }
+
+            set
+            {
+                if (_fontSizeChannel == value)
+                {
+                    return;
+                }
+
+                RaisePropertyChanging(FontSizeChannelPropertyName);
+                _fontSizeChannel = value;
+                RaisePropertyChanged(FontSizeChannelPropertyName);
+            }
+        }
+
+        /// <summary>
+        /// The <see cref="FontSizeMessage" /> property's name.
+        /// </summary>
+        public const string FontSizeMessagePropertyName = "FontSizeMessage";
+
+        private double _fontSizeMessage = 16;
+
+        /// <summary>
+        /// Sets and gets the FontSizeMessage property.
+        /// Changes to that property's value raise the PropertyChanged event. 
+        /// </summary>
+        public double FontSizeMessage
+        {
+            get
+            {
+                return _fontSizeMessage;
+            }
+
+            set
+            {
+                if (_fontSizeMessage == value)
+                {
+                    return;
+                }
+
+                RaisePropertyChanging(FontSizeMessagePropertyName);
+                _fontSizeMessage = value;
+                RaisePropertyChanged(FontSizeMessagePropertyName);
+            }
+        }
+
+        /// <summary>
         /// The <see cref="MouseTransparency" /> property's name.
         /// </summary>
         public const string MouseTransparencyPropertyName = "MouseTransparency";

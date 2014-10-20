@@ -16,7 +16,7 @@
         SnapsToDevicePixels="True"
         UseLayoutRounding="True"
         Topmost="True"
-        Title="SettingsWindow" Icon="..\ubiquitous smile.ico" MinWidth="400" Width="500" MinHeight="250" WindowStartupLocation="Manual" Height="400">
+        Title="SettingsWindow" Icon="..\ubiquitous smile.ico" MinWidth="400" Width="500" MinHeight="250" WindowStartupLocation="Manual" Height="413">
     <i:Interaction.Behaviors>
         <Interactivity:WindowPersistentLocationBehavior WindowName="SettingsWindow"/>
         <Interactivity:UnclosableWindow/>
@@ -177,6 +177,41 @@
 
                                     </StackPanel>
                                     <Label FontSize="10" Margin="0,-7,0,0" FontStyle="Italic" Content="* main window opacity doesn't affect PNG background)" VerticalAlignment="Top" HorizontalAlignment="Left" FontWeight="Normal"/>
+                                </StackPanel>
+                            </GroupBox>
+                            <GroupBox Header="Font size" VerticalAlignment="Top" FontWeight="Bold" Margin="0,10,0,0">
+                                <StackPanel Margin="7,13,0,0">
+                                    <StackPanel Orientation="Horizontal" Margin="0,-9,0,0">
+                                        <StackPanel>
+                                            <TextBlock FontWeight="Normal" VerticalAlignment="Top" HorizontalAlignment="Center" TextAlignment="Center">
+                                                Message
+                                            </TextBlock>
+                                            <Label HorizontalAlignment="Center" VerticalAlignment="Top" FontSize="9" Margin="0,-3,0,-6" Content="{Binding AppConfig.FontSizeMessage, StringFormat=D}" FontWeight="Normal"/>
+                                            <Slider IsSnapToTickEnabled="True"  Value="{Binding AppConfig.FontSizeMessage, Mode=TwoWay}" Maximum="24" SmallChange="0.5" TickFrequency="1" TickPlacement="BottomRight" LargeChange="1" Minimum="6" Orientation="Vertical" VerticalAlignment="Top" HorizontalAlignment="Center" Height="80"/>
+                                        </StackPanel>
+                                        <StackPanel Margin="4,0,0,0">
+                                            <TextBlock VerticalAlignment="Top" HorizontalAlignment="Center" FontWeight="Normal" TextAlignment="Center">
+                                                Channel
+                                            </TextBlock>
+                                            <Label HorizontalAlignment="Center" VerticalAlignment="Top" FontSize="9" Margin="0,-3,0,-6" Content="{Binding AppConfig.FontSizeChannel, StringFormat=D}" FontWeight="Normal"/>
+                                            <Slider IsSnapToTickEnabled="True"  Value="{Binding AppConfig.FontSizeChannel, Mode=TwoWay}" Maximum="24" SmallChange="0.5" TickFrequency="1" TickPlacement="BottomRight" LargeChange="1" Minimum="6" Orientation="Vertical" VerticalAlignment="Top" HorizontalAlignment="Center" Height="80" Margin="7,0,0,0"/>
+                                        </StackPanel>
+                                        <StackPanel Margin="7,0,0,0">
+                                            <TextBlock VerticalAlignment="Top" HorizontalAlignment="Center" FontWeight="Normal" TextAlignment="Center">
+                                                Nickname
+                                            </TextBlock>
+                                            <Label HorizontalAlignment="Center" VerticalAlignment="Top" FontSize="9" Margin="0,-3,0,-6" Content="{Binding AppConfig.FontSizeNickName, StringFormat=D}" FontWeight="Normal"/>
+                                            <Slider IsSnapToTickEnabled="True"  Value="{Binding AppConfig.FontSizeNickName, Mode=TwoWay}" Maximum="24" SmallChange="0.5" TickFrequency="1" TickPlacement="BottomRight" LargeChange="1" Minimum="6" Orientation="Vertical" VerticalAlignment="Top" HorizontalAlignment="Center" Height="80" Margin="4,0,0,0"/>
+                                        </StackPanel>
+
+                                        <StackPanel Margin="11,0,0,0">
+                                            <TextBlock VerticalAlignment="Top" HorizontalAlignment="Center" FontWeight="Normal" TextAlignment="Center">
+                                               Time
+                                            </TextBlock>
+                                            <Label HorizontalAlignment="Center" VerticalAlignment="Top" FontSize="9" Margin="0,-3,0,-6" Content="{Binding AppConfig.FontSizeTimestamp, StringFormat=D}" FontWeight="Normal"/>
+                                            <Slider IsSnapToTickEnabled="True"  Value="{Binding AppConfig.FontSizeTimestamp, Mode=TwoWay}" Maximum="24" SmallChange="0.5" TickFrequency="1" TickPlacement="BottomRight" LargeChange="1" Minimum="6" Orientation="Vertical" VerticalAlignment="Top" HorizontalAlignment="Center" Height="80" Margin="5,0,0,0"/>
+                                        </StackPanel>
+                                    </StackPanel>
                                 </StackPanel>
                             </GroupBox>
 
