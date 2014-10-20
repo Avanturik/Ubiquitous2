@@ -16,7 +16,7 @@
         SnapsToDevicePixels="True"
         UseLayoutRounding="True"
         Topmost="True"
-        Title="SettingsWindow" Icon="..\ubiquitous smile.ico" MinWidth="400" Width="500" MinHeight="250" WindowStartupLocation="Manual" Height="413">
+        Title="Ubiquitous2 Settings" Icon="..\ubiquitous smile.ico" MinWidth="400" Width="500" MinHeight="250" WindowStartupLocation="Manual" Height="413">
     <i:Interaction.Behaviors>
         <Interactivity:WindowPersistentLocationBehavior WindowName="SettingsWindow"/>
         <Interactivity:UnclosableWindow/>
