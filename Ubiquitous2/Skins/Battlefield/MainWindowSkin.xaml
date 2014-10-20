@@ -1,0 +1,162 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+                    xmlns:Custom="http://www.galasoft.ch/mvvmlight"
+                    xmlns:Interactivity="clr-namespace:UB.Interactivity"
+                    xmlns:dc="clr-namespace:Devart.Controls"
+                    xmlns:View="clr-namespace:UB.View" 
+                    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+                    xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+                    mc:Ignorable="d"                    
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <BooleanToVisibilityConverter x:Key="boolToVisibilityConverter"></BooleanToVisibilityConverter>
+
+    <Style x:Key="TopBarIcon" TargetType="{x:Type Image}">
+        <Style.Triggers>
+            <Trigger Property="IsMouseOver" Value="True">
+                <Setter Property="Opacity" Value="1"/>
+            </Trigger>
+            <Trigger Property="IsMouseOver" Value="False">
+                <Setter Property="Opacity" Value="0.3"/>
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+    <Style x:Key="WindowBorder" TargetType="{x:Type Border}">
+        <Setter Property="Panel.ZIndex" Value="-1"/>
+        <Setter Property="Opacity" Value="0.01"/>
+        <Setter Property="BorderBrush" Value="#FF1E1E1E"/>
+        <Setter Property="BorderThickness" Value="0"/>
+        <Setter Property="Background" Value="#011F3E1D"/>
+
+    </Style>
+    <Style x:Key="OverlayHyperlink"  TargetType="{x:Type Hyperlink}">
+        <Setter Property="TextDecorations" Value="None"/>
+        <Setter Property="Foreground" Value="#FF474747"/>
+        <Style.Triggers>
+            <Trigger Property="IsMouseOver" Value="True">
+                <Setter Property="Foreground" Value="White"/>
+                <Setter Property="Cursor" Value="Hand"/>
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+    <Style x:Key="MainWindowStyle" TargetType="{x:Type Window}">
+        <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.WindowTextBrushKey}}"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type Window}">
+                    <Border BorderThickness="1" BorderBrush="#FF323232" >
+
+                        <Grid Margin="0">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="15" />
+                                <RowDefinition Height="*" />
+                                <RowDefinition Height="15" />
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="15" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="15" />
+                            </Grid.ColumnDefinitions>
+
+                            <Rectangle Fill="#FF1E1E1E" Panel.ZIndex="-10" Opacity="{Binding AppConfig.BackgroundOpacity}" Grid.RowSpan="3" Grid.ColumnSpan="3" />
+                            <Grid Grid.RowSpan="3" Grid.ColumnSpan="3" Margin="5">
+                                <DockPanel Focusable="False" d:DesignHeight="300" d:DesignWidth="500">
+                                    <Grid Focusable="False">
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition/>
+                                            <RowDefinition Height="Auto"/>
+                                        </Grid.RowDefinitions>
+                                        <Border Background="#011E1E1E" BorderThickness="0" CornerRadius="0" Focusable="False" Grid.Row="0" Padding="1" VerticalAlignment="Top" HorizontalAlignment="Stretch" Panel.ZIndex="1">
+                                            <i:Interaction.Behaviors>
+                                                <Interactivity:DragThumb/>
+                                            </i:Interaction.Behaviors>
+
+                                            <DockPanel HorizontalAlignment="Stretch" VerticalAlignment="Center">
+                                                <TextBlock DockPanel.Dock="Right" HorizontalAlignment="Right" VerticalAlignment="Center">
+                                                    <Hyperlink Style="{StaticResource OverlayHyperlink}" Focusable="False" Command="{Binding ExitApplication}">
+                                                        <Image Style="{StaticResource TopBarIcon}" DockPanel.Dock="Right" Width="11" Source="/Ubiquitous2;component/Resources/close.ico" HorizontalAlignment="Right" VerticalAlignment="Center">
+                                                        </Image>
+                                                    </Hyperlink>
+                                                </TextBlock>
+                                                <TextBlock DockPanel.Dock="Right" HorizontalAlignment="Right" VerticalAlignment="Center">
+                                                    <Hyperlink Style="{StaticResource OverlayHyperlink}" Focusable="False" Command="{Binding Minimize}">
+                                                        <Image Margin="0,0,14,0" Style="{StaticResource TopBarIcon}" DockPanel.Dock="Right" Width="11" Source="/Ubiquitous2;component/Resources/minimize.ico" HorizontalAlignment="Right" VerticalAlignment="Center">
+                                                        </Image>
+                                                    </Hyperlink>
+                                                </TextBlock>
+
+                                                <TextBlock DockPanel.Dock="Right" HorizontalAlignment="Right" VerticalAlignment="Center">
+                                                    <Hyperlink Style="{StaticResource OverlayHyperlink}" Focusable="False" Command="{Binding ShowSettings}">
+                                                            <Image Margin="0,0,14,0" Style="{StaticResource TopBarIcon}" DockPanel.Dock="Right" Width="12" Source="/Ubiquitous2;component/Resources/settings.ico" HorizontalAlignment="Right" VerticalAlignment="Center"/>
+                                                    </Hyperlink>
+                                                </TextBlock>
+                                                <TextBlock DockPanel.Dock="Right" HorizontalAlignment="Right" VerticalAlignment="Center">
+                                                    <Hyperlink Style="{StaticResource OverlayHyperlink}" Focusable="False" Command="{Binding ShowDashboard}">
+                                                        <Image Margin="0,0,14,0" Style="{StaticResource TopBarIcon}" DockPanel.Dock="Right" Width="14" Source="/Ubiquitous2;component/Resources/dashboard.png" HorizontalAlignment="Right" VerticalAlignment="Center"/>
+                                                    </Hyperlink>
+                                                </TextBlock>
+                                            </DockPanel>
+                                        </Border>
+                                        <Border Grid.Row="1" Margin="0" Padding="0">
+                                            <View:ChatBoxView Focusable="False" Grid.Row="1" OverridesDefaultStyle="True" Padding="0"/>
+                                        </Border>
+                                            <!--<MouseBinding Gesture="LeftClick" Command="{Binding ShowOverlay}"/>-->
+                                        <Border CornerRadius="0,0,10,10" Focusable="False" Grid.Row="2" Padding="24,0,5,0" VerticalAlignment="Bottom" HorizontalAlignment="Stretch" Panel.ZIndex="1" Visibility="{Binding IsOverlayVisible, Converter={StaticResource boolToVisibilityConverter}}" BorderBrush="#FF1E1E1E" BorderThickness="1" Margin="0" Height="36">
+                                            <DockPanel Focusable="False" VerticalAlignment="Bottom" Background="Transparent" Margin="0">
+                                                <ComboBox Focusable="False" Style="{DynamicResource ReplyComboStyle}" Name="replyCombo" ItemsSource="{Binding ChannelList}" SelectedItem="{Binding SelectedChatChannel}" ItemTemplate="{DynamicResource ReplyComboTemplate}" IsReadOnly="True" IsEditable="False" Margin="-18,1,61,6" VerticalAlignment="Stretch"/>
+                                                <Border Focusable="False" CornerRadius="7" Background="#FF303030" Padding="6,0" Margin="-55,-24,1,-19" Height="22">
+                                                    <Grid Focusable="False" Margin="0">
+                                                        <TextBox FocusManager.IsFocusScope="True" x:Name="ReplyTextBox" Panel.ZIndex="1" TextWrapping="Wrap" Margin="0" Background="#7F303030" Foreground="#FFBDBDBD" BorderThickness="0" Text="{Binding SendText,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" Padding="5,2,5,0" MaxHeight="54" ScrollViewer.CanContentScroll="True" VerticalScrollBarVisibility="Auto" MinHeight="20">
+                                                            <TextBox.InputBindings>
+                                                                <KeyBinding Key="Enter" Command="{Binding EnterCommand}"/>
+                                                            </TextBox.InputBindings>
+                                                        </TextBox>
+                                                        <TextBlock Focusable="False" Panel.ZIndex="0" MaxHeight="54" Margin="0,-3,0,0" Padding="5" Foreground="#66CFCFCF" Text="{Binding SelectedChatChannel.ChannelName}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Visibility="{Binding ElementName=ReplyTextBox, Path=Text.IsEmpty, Converter={StaticResource boolToVisibilityConverter}}" FontStyle="Italic"></TextBlock>
+                                                    </Grid>
+                                                </Border>
+                                            </DockPanel>
+                                        </Border>
+                                    </Grid>
+
+                                </DockPanel>
+                            </Grid>
+
+
+                            <Border Name="topLeft" Style="{StaticResource WindowBorder}"/>
+                            <Border Name="top" Style="{StaticResource WindowBorder}" Grid.Column="1" Padding="0" Margin="-7,0" />
+                            <Border Name="topRight" Style="{StaticResource WindowBorder}" Grid.Column="2" />
+                            <Border Name="right" Style="{StaticResource WindowBorder}" Grid.Row="1" Grid.Column="2" Margin="0,-7" />
+                            <Border Name="bottomRight" Style="{StaticResource WindowBorder}" Grid.Row="2" Grid.Column="2"  />
+                            <Border Name="bottom" Style="{StaticResource WindowBorder}" Grid.Row="2" Grid.Column="1" Margin="-7,0" />
+                            <Border Name="bottomLeft" Style="{StaticResource WindowBorder}" Grid.Row="2" />
+                            <Border Name="left" Style="{StaticResource WindowBorder}" Grid.Row="1" Margin="0,-7" />
+
+                            <i:Interaction.Behaviors>
+                                <Interactivity:WindowResizeBehavior
+                                TopLeftGrip="{Binding ElementName=topLeft}"
+                                TopGrip="{Binding ElementName=top}"
+                                TopRightGrip="{Binding ElementName=topRight}"
+                                RightGrip="{Binding ElementName=right}"
+                                BottomRightGrip="{Binding ElementName=bottomRight}"
+                                BottomGrip="{Binding ElementName=bottom}"
+                                BottomLeftGrip="{Binding ElementName=bottomLeft}"
+                                LeftGrip="{Binding ElementName=left}"/>
+                            </i:Interaction.Behaviors>
+
+                        </Grid>
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <DataTrigger Binding="{Binding SendTextEditMode}" Value="True">
+                            <Setter TargetName="ReplyTextBox" Property="FocusManager.FocusedElement" Value="{Binding ElementName=ReplyTextBox}"/>
+                            <Setter TargetName="ReplyTextBox" Property="FocusManager.FocusedElement" Value="{Binding ElementName=ReplyTextBox}"/>
+                        </DataTrigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+
+
+    </Style>
+
+</ResourceDictionary>

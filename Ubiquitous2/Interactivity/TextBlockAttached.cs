@@ -6,12 +6,13 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
+using UB.Utils;
 
 namespace UB.Interactivity
 {
     public class TextBlockAttached
     {
-        private object lockInlines = new object();
+        private static object lockInlines = new object();
         /// <summary>
         /// The InlineList attached property's name.
         /// </summary>
@@ -58,7 +59,6 @@ namespace UB.Interactivity
                     foreach (Inline inline in inlines.ToList())
                     {
                         textBlock.Inlines.Add(inline);
-
                     }
                 }
             }));

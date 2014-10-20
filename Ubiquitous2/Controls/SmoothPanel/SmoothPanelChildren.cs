@@ -12,6 +12,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Windows;
 using System.Windows.Controls;
+using System.Linq;
 using UB.Model;
 
 namespace Devart.Controls
@@ -184,45 +185,52 @@ namespace Devart.Controls
             /// <returns>A <see cref="FrameworkElement"/> that already added and measured.</returns>
             public FrameworkElement GetMeasuredChild(System.Collections.IList items, int index)
             {
-                FrameworkElement element = null;
-                DataBindHelper.PerformWithInstantBinding(() =>
+                try
                 {
-                    element = _elementsByIndex[index];
-                    if (element == null)
+                    FrameworkElement element = null;
+                    DataBindHelper.PerformWithInstantBinding(() =>
                     {
-                        // Get or create element from cache
-                        var item = items[index];
-                        var viewCache = GetViewCache(item);
-                        element = viewCache.GetElement();
-                        element.DataContext = item;
-                        _elementsByIndex[index] = element;
-                    }
-
-                    if (!Children.Contains(element))
-                    {
-                        // Determine index to insert in Children collection.
-                        int visualElementIndex = Children.Count;
-                        var lastCreatedIndex = GetItemIndex(items, visualElementIndex - 1);
-
-                        if (index < lastCreatedIndex)
+                        element = _elementsByIndex[index];
+                        if (element == null)
                         {
-                            for (visualElementIndex = 0; visualElementIndex < Children.Count; visualElementIndex++)
-                            {
-                                if (GetItemIndex(items, visualElementIndex) > index)
-                                {
-                                    break;
-                                }
-                            }
+                            // Get or create element from cache
+                            var item = items[index];
+                            var viewCache = GetViewCache(item);
+                            element = viewCache.GetElement();
+                            element.DataContext = item;
+                            _elementsByIndex[index] = element;
                         }
 
-                        // Add child element to panel.
-                        _panel.InsertInternalChild(visualElementIndex, element);
-                    }
-                });
+                        if (!Children.Contains(element))
+                        {
+                            // Determine index to insert in Children collection.
+                            int visualElementIndex = Children.Count;
+                            var lastCreatedIndex = GetItemIndex(items, visualElementIndex - 1);
 
-                // Measure and return element
-                element.Measure(new Size(AvailableWidth, double.PositiveInfinity));
-                return element;
+                            if (index < lastCreatedIndex)
+                            {
+                                for (visualElementIndex = 0; visualElementIndex < Children.Count; visualElementIndex++)
+                                {
+                                    if (GetItemIndex(items, visualElementIndex) > index)
+                                    {
+                                        break;
+                                    }
+                                }
+                            }
+
+                            // Add child element to panel.
+                            _panel.InsertInternalChild(visualElementIndex, element);
+                        }
+                    });
+
+                    // Measure and return element
+                    element.Measure(new Size(AvailableWidth, double.PositiveInfinity));
+                    return element;
+                }
+                catch {
+
+                    return null;
+                }
             }
 
             /// <summary>

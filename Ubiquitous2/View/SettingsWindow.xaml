@@ -111,6 +111,12 @@
                                 <Image Width="150" Source="/Ubiquitous2;component/Resources/StarCitizenThemeThumbnail.png" DockPanel.Dock="Right" HorizontalAlignment="Right"/>
                             </Grid>
                         </RadioButton>
+                        <RadioButton Command="{Binding SelectTheme}" CommandParameter="Battlefield" Style="{DynamicResource ThemeRadioButton}" GroupName="ThemeButtons" IsChecked="{Binding CurrentTheme, Converter={StaticResource stringToIsCheckedConverter}, ConverterParameter=Battlefield}" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Center">
+                            <Grid>
+                                <TextBlock VerticalAlignment="Center" Margin="0,0,8,0" HorizontalAlignment="Left">Battlefield</TextBlock>
+                                <Image Width="150" Source="/Ubiquitous2;component/Resources/StarCitizenThemeThumbnail.png" DockPanel.Dock="Right" HorizontalAlignment="Right"/>
+                            </Grid>
+                        </RadioButton>
                     </VirtualizingStackPanel>
                 </ScrollViewer>
             </fluent:BackstageTabItem>
