@@ -116,10 +116,16 @@ namespace UB.Model
             UI.Dispatch(() =>
             {
                 if (ImageBehavior.GetAnimatedSource(image) == ImageBehavior.AnimatedSourceProperty.DefaultMetadata.DefaultValue)
-                {
+                {                    
                     ImageBehavior.SetRepeatBehavior(image, RepeatBehavior.Forever);
                     ImageBehavior.SetAutoStart(image, true);
                     ImageBehavior.SetAnimatedSource(image, bitmap);
+                    image.Unloaded += (obj,args) => {
+                        var img = obj as Image;
+                        img.Source = null;
+                        ImageBehavior.SetAnimatedSource(img, null);
+                        img = null;
+                    };
                     image.Measure(new Size(bitmap.PixelWidth, bitmap.PixelHeight));
                 }
             });
@@ -169,25 +175,19 @@ namespace UB.Model
             {
                 if (!bitmapImageCache.ContainsKey(uri.OriginalString) )
                 {
+                    var item = new ImageCacheItem(webClient.DownloadToByteArray(uri.OriginalString));
 
-                    var item = new ImageCacheItem(uri, width, height) { 
-                        DownloadComplete = (cacheItem) =>
-                        {
-                            UI.Dispatch(() => {
-                                if (!forceSize || width > (Application.Current as App).ChatBoxWidth)
-                                    FixImageSize(image, cacheItem.Width);
-                                if (uri.OriginalString.ToLower().Contains(".gif"))
-                                {
-                                    SetupGifAnimation(image, cacheItem.Bitmap);
-                                }
-                            });
-                        }
-                    };
-            
+                    if (!forceSize || width > (Application.Current as App).ChatBoxWidth)
+                        FixImageSize(image, item.Width);
+
+                    if (uri.OriginalString.ToLower().Contains(".gif"))
+                        SetupGifAnimation(image, item.Bitmap);
+
                     lock (cacheLock)
                         bitmapImageCache.Add(uri.OriginalString, item);
 
                     callback(item);
+            
                 }
                 else
                 {
@@ -229,6 +229,39 @@ namespace UB.Model
     }
     public class ImageCacheItem
     {
+        public ImageCacheItem(byte[] bytes)
+        {
+            LastAccessed = DateTime.Now;
+
+            Bitmap = new BitmapImage();
+
+            if (bytes != null && bytes.Length > 0 )
+            {
+                IsDownloading = true;
+                Bitmap.BeginInit();
+                Bitmap.CacheOption = BitmapCacheOption.OnLoad;
+                Bitmap.CreateOptions = BitmapCreateOptions.None;
+                Bitmap.StreamSource = new MemoryStream(bytes);
+                Bitmap.EndInit();
+                //Bitmap.Freeze();
+                Width = Bitmap.PixelWidth;
+                Height = Bitmap.PixelHeight;
+                IsDownloading = false;
+                if (DownloadComplete != null)
+                    DownloadComplete(this);
+
+                bytes = null;
+            }
+            else
+            {
+                IsDownloading = false;
+                if (DownloadComplete != null)
+                    DownloadComplete(this);
+            }
+
+
+        }
+
         public ImageCacheItem( Stream inputStream )
         {
             LastAccessed = DateTime.Now;

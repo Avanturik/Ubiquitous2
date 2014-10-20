@@ -105,6 +105,22 @@ namespace UB.Model
                 }
                 return String.Empty;
             }
+            public byte[] DownloadToByteArray( String url )
+            {
+                try
+                {
+                    lock (downloadLock)
+                    {
+                        SuccessHandler();
+                        return DownloadData(new Uri(url));
+                    }
+                }
+                catch
+                {
+                    ErrorHandler(String.Format("Error downloading to byte array from {0}", url));
+                }
+                return new byte[] {};
+            }
             public MemoryStream DownloadToMemoryStream( String url )
             {
                 try
@@ -123,7 +139,6 @@ namespace UB.Model
                         
                         if( stream.CanRead )
                         {
-                            byte[] result = new byte[response.ContentLength];
                             byte[] buffer = new byte[4096];
 
                             int bytesRead = 0;
