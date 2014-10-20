@@ -13,6 +13,12 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using UB.Utils;
 
+//TODO: change viewers number source from http poll to websocket query
+//Request viewers counter
+//{"type":"getviewers","data":{"channel":"1234"}}
+//Receive viewers counter
+//{"viewers":"123"}
+
 namespace UB.Model
 {
     public class GoodgameChat : IChat, IStreamTopic
@@ -494,7 +500,7 @@ namespace UB.Model
                     UI.Dispatch(() => Status.ViewersCount = viewers);
                 }
             };
-            poller.Start();
+            //poller.Start();
 
             lock (pollerLock)
             {
