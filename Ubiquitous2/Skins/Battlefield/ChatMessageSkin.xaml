@@ -62,15 +62,14 @@
                         <Grid Visibility="Hidden">
                             <TextBlock x:Name="prefixBlock" HorizontalAlignment="Left" Margin="0,0,5,0" Foreground="#FFE4FFFF" FontFamily="/Ubiquitous2;component/Fonts/#Purista">                                
                                 <Run>[</Run>
-								<TextBlock x:Name="channelTextBlock" FontSize="{Binding AppConfig.FontSizeMessage}" VerticalAlignment="Top" Margin="-2,0" FontFamily="/Ubiquitous2;component/Fonts/#Purista Light">
+								<!--<TextBlock x:Name="channelTextBlock" FontSize="{Binding AppConfig.FontSizeMessage}" VerticalAlignment="Top" Margin="-2,0" FontFamily="/Ubiquitous2;component/Fonts/#Purista Light">-->
 								    <Hyperlink ToolTip="Click to set as active channel"  Focusable="False" Command="{Binding SetActiveChannel}" Cursor="Hand">
-									    <Run Focusable="False" FontSize="{Binding AppConfig.FontSizeMessage}" Text="{Binding Message.Channel}" />
+									    <Run Focusable="False" FontSize="{Binding AppConfig.FontSizeMessage}" Text="{Binding Message.Channel}"  FontFamily="/Ubiquitous2;component/Fonts/#Purista Light"/>
 								    </Hyperlink>
-                                </TextBlock>
+                                <!--</TextBlock>-->
 								<Run>]</Run>
-                                <TextBlock Style="{StaticResource ResourceKey=NickStyle}" x:Name="nickTextBlock" VerticalAlignment="Top" Margin="0,0,-2,0" HorizontalAlignment="Right" FontFamily="/Ubiquitous2;component/Fonts/#Purista Medium">
-								    <Run ToolTip="Right click for options" Cursor="Hand" Focusable="False" FontSize="{Binding AppConfig.FontSizeMessage}" Text="{Binding Message.FromUserName}"  OverridesDefaultStyle="False">
-                                        <Run.ContextMenu>
+                                <TextBlock FontSize="{Binding AppConfig.FontSizeMessage}" Text="{Binding Message.FromUserName}"  Cursor="Hand" ToolTip="Right click for options" Style="{StaticResource ResourceKey=NickStyle}" x:Name="nickTextBlock" VerticalAlignment="Top" Margin="0,0,-2,0" HorizontalAlignment="Right" FontFamily="/Ubiquitous2;component/Fonts/#Purista Medium">
+                                    <TextBlock.ContextMenu>
                                             <ContextMenu Name="userNameMenu" Style="{DynamicResource ContextMenuStyle}">
                                                 <MenuItem Header="Add to ignore list" Command="{Binding IgnoreUser}"  CommandParameter="{Binding Message}" Foreground="#FFFFC042" VerticalContentAlignment="Center" VerticalAlignment="Center">
                                                     <MenuItem.Icon>
@@ -78,8 +77,7 @@
                                                     </MenuItem.Icon>
                                                 </MenuItem>
                                             </ContextMenu>
-                                        </Run.ContextMenu>
-                                    </Run>
+                                        </TextBlock.ContextMenu>
                                 </TextBlock>
 								<Run>:</Run>
                             </TextBlock>
