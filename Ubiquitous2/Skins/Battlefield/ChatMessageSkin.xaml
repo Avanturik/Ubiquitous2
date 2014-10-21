@@ -51,56 +51,6 @@
                                     <DropShadowEffect Color="#FFC4FF00" BlurRadius="11" ShadowDepth="2"/>
                                 </Setter.Value>
                             </Setter>
-                            <!--<Style.Triggers>
-								--><!--<DataTrigger Binding="{Binding Message.ChatName}" Value="Twitch.tv(event)">
-									<Setter Property="Foreground" Value="#FFf3f5fD" />
-									<Setter Property="Effect">
-										<Setter.Value>
-                        					<DropShadowEffect Color="#FFA200FF" BlurRadius="11" ShadowDepth="2"/>
-										</Setter.Value>
-									</Setter>
-								</DataTrigger>								
-								<DataTrigger Binding="{Binding Message.ChatName}" Value="Twitch.tv">
-									<Setter Property="Foreground" Value="#FFf3f5fD" />
-									<Setter Property="Effect">
-										<Setter.Value>
-                        					<DropShadowEffect Color="#FFA200FF" BlurRadius="11" ShadowDepth="2"/>
-										</Setter.Value>
-									</Setter>
-								</DataTrigger>								
-								<DataTrigger Binding="{Binding Message.ChatName}" Value="Goodgame.ru">
-									<Setter Property="Foreground" Value="#FFf3f5fD" />
-									<Setter Property="Effect">
-										<Setter.Value>
-                        					<DropShadowEffect Color="#FF3D5D86" BlurRadius="11" ShadowDepth="2"/>
-										</Setter.Value>
-									</Setter>
-								</DataTrigger>								
-								<DataTrigger Binding="{Binding Message.ChatName}" Value="Cybergame.tv">
-									<Setter Property="Foreground" Value="#FFf3f5fD" />
-									<Setter Property="Effect">
-										<Setter.Value>
-                        					<DropShadowEffect Color="#FF7BB952" BlurRadius="11" ShadowDepth="2"/>
-										</Setter.Value>
-									</Setter>
-								</DataTrigger>
-								<DataTrigger Binding="{Binding Message.ChatName}" Value="Hitbox.tv">
-									<Setter Property="Foreground" Value="#FFf3f5fD" />
-									<Setter Property="Effect">
-										<Setter.Value>
-                        					<DropShadowEffect Color="#FFC4FF00" BlurRadius="11" ShadowDepth="2"/>
-										</Setter.Value>
-									</Setter>
-								</DataTrigger>
-								<DataTrigger Binding="{Binding Message.ChatName}" Value="Gaminglive.tv">
-									<Setter Property="Foreground" Value="#FFf3f5fD" />
-									<Setter Property="Effect">
-										<Setter.Value>
-                        					<DropShadowEffect Color="#FFFFFFFF" BlurRadius="11" ShadowDepth="2"/>
-										</Setter.Value>
-									</Setter>
-								</DataTrigger>--><!--
-							</Style.Triggers>-->
 						</Style>
                         <Style TargetType="{x:Type Image}">
                             <Setter Property="RenderOptions.BitmapScalingMode" Value="HighQuality"/>
@@ -118,7 +68,7 @@
 								    </Hyperlink>
                                 </TextBlock>
 								<Run>]</Run>
-                                <TextBlock Style="{StaticResource NickStyle}" OverridesDefaultStyle="True" x:Name="nickTextBlock" VerticalAlignment="Top" Margin="0,0,-2,0" HorizontalAlignment="Right" FontFamily="/Ubiquitous2;component/Fonts/#Purista">
+                                <TextBlock Style="{StaticResource ResourceKey=NickStyle}" x:Name="nickTextBlock" VerticalAlignment="Top" Margin="0,0,-2,0" HorizontalAlignment="Right" FontFamily="/Ubiquitous2;component/Fonts/#Purista Medium">
 								    <Run ToolTip="Right click for options" Cursor="Hand" Focusable="False" FontSize="{Binding AppConfig.FontSizeMessage}" Text="{Binding Message.FromUserName}"  OverridesDefaultStyle="False">
                                         <Run.ContextMenu>
                                             <ContextMenu Name="userNameMenu" Style="{DynamicResource ContextMenuStyle}">
