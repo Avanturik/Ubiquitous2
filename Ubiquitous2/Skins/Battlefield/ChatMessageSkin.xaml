@@ -112,7 +112,7 @@
                         <Grid Visibility="Hidden">
                             <TextBlock x:Name="prefixBlock" HorizontalAlignment="Left" Margin="0,0,5,0" Foreground="#FFE4FFFF" FontFamily="/Ubiquitous2;component/Fonts/#Purista">                                
                                 <Run>[</Run>
-								<TextBlock x:Name="channelTextBlock" FontSize="{Binding AppConfig.FontSizeMessage}" VerticalAlignment="Top" Margin="-2,0" FontFamily="Purista Light">
+								<TextBlock x:Name="channelTextBlock" FontSize="{Binding AppConfig.FontSizeMessage}" VerticalAlignment="Top" Margin="-2,0" FontFamily="/Ubiquitous2;component/Fonts/#Purista Light">
 								    <Hyperlink ToolTip="Click to set as active channel"  Focusable="False" Command="{Binding SetActiveChannel}" Cursor="Hand">
 									    <Run Focusable="False" FontSize="{Binding AppConfig.FontSizeMessage}" Text="{Binding Message.Channel}" />
 								    </Hyperlink>
@@ -138,7 +138,7 @@
                         </Grid>
                         <TextBlock Foreground="White" TextWrapping="Wrap" Focusable="False" HorizontalAlignment="Stretch"
                                    Interactivity:TextBlockAttached.InlineList="{Binding Message, Converter={StaticResource textConverter}}"
-                                   Interactivity:TextBlockAttached.InlineListPrefix="{Binding ElementName=prefixBlock, Converter={StaticResource textConverter}}" FontFamily="Purista Light" FontSize="{Binding AppConfig.FontSizeMessage}" FontWeight="Thin"
+                                   Interactivity:TextBlockAttached.InlineListPrefix="{Binding ElementName=prefixBlock, Converter={StaticResource textConverter}}" FontFamily="/Ubiquitous2;component/Fonts/#Purista Light" FontSize="{Binding AppConfig.FontSizeMessage}" FontWeight="Thin"
                                    >
                         	<TextBlock.Effect>
                         		<DropShadowEffect Color="#FF69879F" BlurRadius="7" ShadowDepth="0"/>
