@@ -71,11 +71,12 @@
 
                         </Grid>
                         <TextBlock Foreground="White" TextWrapping="Wrap" Focusable="False" HorizontalAlignment="Stretch">
-                            <Interactivity:TextBlockAttached.InlineList>
-                                <MultiBinding Converter="{DynamicResource ResourceKey=textConverter}">
-                                    <Binding ElementName="channelTextBlock"/>
-                                    <Binding Source="{Binding}" Path="Message"/>
-                                </MultiBinding>                                
+                            <Interactivity:TextBlockAttached.InlineList>  
+                                <MultiBinding Converter="{StaticResource ResourceKey=textConverter}" PresentationTraceSources.TraceLevel="High">
+                                    <Binding ElementName="channelTextBlock" PresentationTraceSources.TraceLevel="High"/>
+                                    <Binding ElementName="nickTextBlock" PresentationTraceSources.TraceLevel="High"/>
+                                    <Binding Path="Message" PresentationTraceSources.TraceLevel="High"/>
+                                </MultiBinding>
                             </Interactivity:TextBlockAttached.InlineList>
                         </TextBlock>
                     </Grid>

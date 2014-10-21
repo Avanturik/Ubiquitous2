@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
 using System.Windows;
@@ -32,16 +33,23 @@ namespace UB.Converter
         {
             lock (lockConvert)
             {
-
                 TextBlock textBlock = new TextBlock();
+
+                if (values == null || values.Count() <= 0)
+                    return textBlock.Inlines;
+
                 foreach (object value in values.ToList())
                 {
 
                     if( value is ChatMessage )
                     {
-                        foreach( var inline in (ChatMessageToInlinesCollection(value as ChatMessage)).ToList())
+                        var messageInlines = ChatMessageToInlinesCollection(value as ChatMessage);
+                        if( messageInlines != null )
                         {
-                            textBlock.Inlines.Add(inline);
+                            foreach (var inline in messageInlines.ToList())
+                            {
+                                textBlock.Inlines.Add(inline);
+                            }
                         }
                     }
                     else if( value is FrameworkElement)
@@ -54,8 +62,6 @@ namespace UB.Converter
                         }
                     }
                 }
-                if (textBlock.Inlines.Count == 0)
-                    textBlock.Inlines.Add(new Run());
 
                 return textBlock.Inlines;
             }
@@ -67,6 +73,9 @@ namespace UB.Converter
             TextBlock textBlock = new TextBlock();
             textBlock.AllowDrop = false;
             textBlock.Focusable = false;
+
+            if (message == null)
+                return textBlock.Inlines;
 
             if (!String.IsNullOrEmpty(message.Text))
             {
@@ -102,11 +111,12 @@ namespace UB.Converter
                                     Uri imageUri;
                                     if (Uri.TryCreate(url, UriKind.RelativeOrAbsolute, out imageUri))
                                     {
-                                        dataService.GetImage(imageUri, width, height, (image) =>
-                                        {
-                                            image.ToolTip = imgTooltip;
-                                            textBlock.Inlines.Add(image);
-                                        }, null);
+                                        if( dataService != null )
+                                            dataService.GetImage(imageUri, width, height, (image) =>
+                                            {
+                                                image.ToolTip = imgTooltip;
+                                                textBlock.Inlines.Add(image);
+                                            }, null);
                                     }
                                     else
                                     {

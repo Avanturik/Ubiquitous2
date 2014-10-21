@@ -50,6 +50,8 @@ namespace UB.Interactivity
             typeof(InlineCollection),
             typeof(TextBlockAttached),
             new UIPropertyMetadata(null, (obj,e) => {
+                if (obj == null)
+                    return;
                 var textBlock = obj as TextBlock;
                 var inlines = e.NewValue as InlineCollection;
                 var oldInlines = e.OldValue as InlineCollection;
@@ -60,6 +62,10 @@ namespace UB.Interactivity
                     {
                         textBlock.Inlines.Add(inline);
                     }
+                }
+                else
+                {
+                    textBlock.Inlines.Add(new Run());
                 }
             }));
     }
