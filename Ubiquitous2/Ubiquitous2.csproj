@@ -705,7 +705,19 @@
       <Numbers>True</Numbers>
       <Punctuation>True</Punctuation>
     </BlendEmbeddedFont>
-    <Content Include="Resources\StarCitizenThemeThumbnail.png">
+    <Resource Include="Resources\MainThemeThumbnail.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resources\SimpleThemeThumbnail.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resources\StarCitizenThemeThumbnail.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resources\BattlefieldThemeThumbnail.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+    <Content Include="web\css\battlefield.css">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="web\fonts\electrolize.svg">
@@ -722,6 +734,11 @@
     <Content Include="web\fonts\electrolize.ttf">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <BlendEmbeddedFont Include="Fonts\Purista Medium.otf">
+      <IsSystemFont>True</IsSystemFont>
+      <All>True</All>
+      <AutoFill>True</AutoFill>
+    </BlendEmbeddedFont>
     <Resource Include="Resources\obs.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Resource>
@@ -749,9 +766,6 @@
     <Resource Include="Resources\minimize.ico">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Resource>
-    <Resource Include="Resources\MainThemeThumbnail.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Resource>
     <Resource Include="Resources\lastfm.ico">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Resource>
@@ -777,9 +791,6 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Resource>
     <Resource Include="Resources\steam.ico">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Resource>
-    <Resource Include="Resources\SimpleThemeThumbnail.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Resource>
     <Resource Include="Resources\png.png">
@@ -956,7 +967,6 @@
     </Content>
     <None Include="ubiquitous2.snk" />
     <None Include="Ubiquitous2_TemporaryKey.pfx" />
-    <Resource Include="View\icons_Images\Layer 2.png" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="ubiquitous smile.ico">

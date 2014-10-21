@@ -124,9 +124,6 @@
   <data name="loader" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\loader.gif;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="MainThemeThumbnail" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\MainThemeThumbnail.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
   <data name="minimize" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\minimize.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
@@ -138,9 +135,6 @@
   </data>
   <data name="ubiquitous_smile" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\ubiquitous smile.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="SimpleThemeThumbnail" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\SimpleThemeThumbnail.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="lastfm" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\lastfm.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
@@ -193,7 +187,16 @@
   <data name="cybergame" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\cybergame.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="MainThemeThumbnail" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\MainThemeThumbnail.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="SimpleThemeThumbnail" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\SimpleThemeThumbnail.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
   <data name="StarCitizenThemeThumbnail" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\StarCitizenThemeThumbnail.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="BattlefieldThemeThumbnail" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\BattlefieldThemeThumbnail.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
 </root>

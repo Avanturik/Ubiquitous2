@@ -426,7 +426,7 @@ namespace UB.Model
                             RemoveChannel(ggChannel.ChannelName, this);
 
                         ChatChannels.RemoveAll(chan => chan.Equals(ggChannel.ChannelName, StringComparison.InvariantCultureIgnoreCase));
-                        ChatChannels.Add((ggChannel.ChannelName));
+                        ChatChannels.Add(ggChannel.ChannelName);
                         if (AddChannel != null)
                             AddChannel(ggChannel.ChannelName, this);
 

@@ -25,7 +25,31 @@ namespace UB.Converter
         {
             lock( lockConvert )
             {
-                return ChatMessageToInlinesCollection(value as ChatMessage);
+                if( value is ChatMessage )                    
+                {
+                    return ChatMessageToInlinesCollection(value as ChatMessage);
+                }
+                else 
+                {
+                    TextBlock textBlock = new TextBlock();
+
+                    var element = value as FrameworkElement;
+
+                    if (element == null)
+                        return textBlock.Inlines;
+
+                    if (element.Parent is Grid)
+                    {
+                        (element.Parent as Grid).Children.Remove(element);
+                        textBlock.Inlines.Add(element);
+                    }
+                    else if( element.Parent is TextBlock )
+                    {
+                        (element.Parent as TextBlock).Inlines.Remove(value as Inline);
+                        textBlock.Inlines.Add(element);
+                    }
+                    return textBlock.Inlines;
+                }
             }
         }
 

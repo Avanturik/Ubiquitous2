@@ -67,7 +67,7 @@
                                             <RowDefinition/>
                                             <RowDefinition Height="Auto"/>
                                         </Grid.RowDefinitions>
-                                        <Border Background="#011E1E1E" BorderThickness="0" CornerRadius="0" Focusable="False" Grid.Row="0" Padding="1" VerticalAlignment="Top" HorizontalAlignment="Stretch" Panel.ZIndex="1">
+                                        <Border Background="#011E1E1E" BorderThickness="0" CornerRadius="0" Focusable="False" Grid.Row="0" Padding="1,1,1,5" VerticalAlignment="Top" HorizontalAlignment="Stretch" Panel.ZIndex="1">
                                             <i:Interaction.Behaviors>
                                                 <Interactivity:DragThumb/>
                                             </i:Interaction.Behaviors>

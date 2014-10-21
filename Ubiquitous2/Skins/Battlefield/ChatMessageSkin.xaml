@@ -27,7 +27,11 @@
                             <Setter Property="TextDecorations" Value="None"/>                          
                             <Style.Triggers>
                                 <Trigger Property="IsMouseOver" Value="True">
-                                    <Setter Property="Foreground" Value="#FFFFC042"/>
+                                    <Setter Property="Foreground" Value="#FFE4FF00"/>
+                                    <Setter Property="Cursor" Value="Hand"/>
+                                </Trigger>
+                                <Trigger Property="IsMouseOver" Value="False">
+                                    <Setter Property="Foreground" Value="#FFE4FFFF"/>
                                     <Setter Property="Cursor" Value="Hand"/>
                                 </Trigger>
                             </Style.Triggers>
@@ -40,7 +44,64 @@
                             <Setter Property="TextOptions.TextRenderingMode" Value="Aliased"/>
                             <Setter Property="TextWrapping" Value="Wrap"/>
                         </Style>
-
+						<Style TargetType="{x:Type TextBlock}" x:Key="NickStyle">
+                            <Setter Property="Foreground" Value="#FFf3f5fD" />
+                            <Setter Property="Effect">
+                                <Setter.Value>
+                                    <DropShadowEffect Color="#FFC4FF00" BlurRadius="11" ShadowDepth="2"/>
+                                </Setter.Value>
+                            </Setter>
+                            <!--<Style.Triggers>
+								--><!--<DataTrigger Binding="{Binding Message.ChatName}" Value="Twitch.tv(event)">
+									<Setter Property="Foreground" Value="#FFf3f5fD" />
+									<Setter Property="Effect">
+										<Setter.Value>
+                        					<DropShadowEffect Color="#FFA200FF" BlurRadius="11" ShadowDepth="2"/>
+										</Setter.Value>
+									</Setter>
+								</DataTrigger>								
+								<DataTrigger Binding="{Binding Message.ChatName}" Value="Twitch.tv">
+									<Setter Property="Foreground" Value="#FFf3f5fD" />
+									<Setter Property="Effect">
+										<Setter.Value>
+                        					<DropShadowEffect Color="#FFA200FF" BlurRadius="11" ShadowDepth="2"/>
+										</Setter.Value>
+									</Setter>
+								</DataTrigger>								
+								<DataTrigger Binding="{Binding Message.ChatName}" Value="Goodgame.ru">
+									<Setter Property="Foreground" Value="#FFf3f5fD" />
+									<Setter Property="Effect">
+										<Setter.Value>
+                        					<DropShadowEffect Color="#FF3D5D86" BlurRadius="11" ShadowDepth="2"/>
+										</Setter.Value>
+									</Setter>
+								</DataTrigger>								
+								<DataTrigger Binding="{Binding Message.ChatName}" Value="Cybergame.tv">
+									<Setter Property="Foreground" Value="#FFf3f5fD" />
+									<Setter Property="Effect">
+										<Setter.Value>
+                        					<DropShadowEffect Color="#FF7BB952" BlurRadius="11" ShadowDepth="2"/>
+										</Setter.Value>
+									</Setter>
+								</DataTrigger>
+								<DataTrigger Binding="{Binding Message.ChatName}" Value="Hitbox.tv">
+									<Setter Property="Foreground" Value="#FFf3f5fD" />
+									<Setter Property="Effect">
+										<Setter.Value>
+                        					<DropShadowEffect Color="#FFC4FF00" BlurRadius="11" ShadowDepth="2"/>
+										</Setter.Value>
+									</Setter>
+								</DataTrigger>
+								<DataTrigger Binding="{Binding Message.ChatName}" Value="Gaminglive.tv">
+									<Setter Property="Foreground" Value="#FFf3f5fD" />
+									<Setter Property="Effect">
+										<Setter.Value>
+                        					<DropShadowEffect Color="#FFFFFFFF" BlurRadius="11" ShadowDepth="2"/>
+										</Setter.Value>
+									</Setter>
+								</DataTrigger>--><!--
+							</Style.Triggers>-->
+						</Style>
                         <Style TargetType="{x:Type Image}">
                             <Setter Property="RenderOptions.BitmapScalingMode" Value="HighQuality"/>
                             <Setter Property="UseLayoutRounding" Value="True"/>
@@ -49,35 +110,39 @@
                     </ControlTemplate.Resources>
                     <Grid>
                         <Grid Visibility="Hidden">
-                            <TextBlock x:Name="channelTextBlock" FontSize="{Binding AppConfig.FontSizeMessage}" Foreground="#FFCDCDCD" VerticalAlignment="Top">
-								<Hyperlink ToolTip="Click to set as active channel"  Focusable="False" Command="{Binding SetActiveChannel}" Cursor="Hand">
-									<Run Focusable="False" FontSize="{Binding AppConfig.FontSizeChannel}" Text="{Binding Message.Channel}" />
-								</Hyperlink>
-                            </TextBlock>
-                            <TextBlock x:Name="nickTextBlock" VerticalAlignment="Top">								
-								<Run ToolTip="Right click for options" Cursor="Hand" Focusable="False" FontSize="{Binding AppConfig.FontSizeNickName}" Text="{Binding Message.FromUserName}"  OverridesDefaultStyle="False">
-                                    <Run.ContextMenu>
-                                        <ContextMenu Name="userNameMenu" Style="{DynamicResource ContextMenuStyle}">
-                                            <MenuItem Header="Add to ignore list" Command="{Binding IgnoreUser}"  CommandParameter="{Binding Message}" Foreground="#FFFFC042" VerticalContentAlignment="Center" VerticalAlignment="Center">
-                                                <MenuItem.Icon>
-                                                    <Image Width="16" Source="/Ubiquitous2;component/Resources/ignore.png" HorizontalAlignment="Left" VerticalAlignment="Center"/>
-                                                </MenuItem.Icon>
-                                            </MenuItem>
-                                        </ContextMenu>
-                                    </Run.ContextMenu>
-                                </Run>
+                            <TextBlock x:Name="prefixBlock" HorizontalAlignment="Left" Margin="0,0,5,0" Foreground="#FFE4FFFF" FontFamily="/Ubiquitous2;component/Fonts/#Purista">                                
+                                <Run>[</Run>
+								<TextBlock x:Name="channelTextBlock" FontSize="{Binding AppConfig.FontSizeMessage}" VerticalAlignment="Top" Margin="-2,0" FontFamily="Purista Light">
+								    <Hyperlink ToolTip="Click to set as active channel"  Focusable="False" Command="{Binding SetActiveChannel}" Cursor="Hand">
+									    <Run Focusable="False" FontSize="{Binding AppConfig.FontSizeMessage}" Text="{Binding Message.Channel}" />
+								    </Hyperlink>
+                                </TextBlock>
+								<Run>]</Run>
+                                <TextBlock Style="{StaticResource NickStyle}" OverridesDefaultStyle="True" x:Name="nickTextBlock" VerticalAlignment="Top" Margin="0,0,-2,0" HorizontalAlignment="Right" FontFamily="/Ubiquitous2;component/Fonts/#Purista">
+								    <Run ToolTip="Right click for options" Cursor="Hand" Focusable="False" FontSize="{Binding AppConfig.FontSizeMessage}" Text="{Binding Message.FromUserName}"  OverridesDefaultStyle="False">
+                                        <Run.ContextMenu>
+                                            <ContextMenu Name="userNameMenu" Style="{DynamicResource ContextMenuStyle}">
+                                                <MenuItem Header="Add to ignore list" Command="{Binding IgnoreUser}"  CommandParameter="{Binding Message}" Foreground="#FFFFC042" VerticalContentAlignment="Center" VerticalAlignment="Center">
+                                                    <MenuItem.Icon>
+                                                        <Image Width="16" Source="/Ubiquitous2;component/Resources/ignore.png" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+                                                    </MenuItem.Icon>
+                                                </MenuItem>
+                                            </ContextMenu>
+                                        </Run.ContextMenu>
+                                    </Run>
+                                </TextBlock>
+								<Run>:</Run>
                             </TextBlock>
 
 
                         </Grid>
-                        <TextBlock Foreground="White" TextWrapping="Wrap" Focusable="False" HorizontalAlignment="Stretch">
-                            <Interactivity:TextBlockAttached.InlineList>  
-                                <MultiBinding Converter="{StaticResource ResourceKey=textConverter}" PresentationTraceSources.TraceLevel="High">
-                                    <Binding ElementName="channelTextBlock" PresentationTraceSources.TraceLevel="High"/>
-                                    <Binding ElementName="nickTextBlock" PresentationTraceSources.TraceLevel="High"/>
-                                    <Binding Path="Message" PresentationTraceSources.TraceLevel="High"/>
-                                </MultiBinding>
-                            </Interactivity:TextBlockAttached.InlineList>
+                        <TextBlock Foreground="White" TextWrapping="Wrap" Focusable="False" HorizontalAlignment="Stretch"
+                                   Interactivity:TextBlockAttached.InlineList="{Binding Message, Converter={StaticResource textConverter}}"
+                                   Interactivity:TextBlockAttached.InlineListPrefix="{Binding ElementName=prefixBlock, Converter={StaticResource textConverter}}" FontFamily="Purista Light" FontSize="{Binding AppConfig.FontSizeMessage}" FontWeight="Thin"
+                                   >
+                        	<TextBlock.Effect>
+                        		<DropShadowEffect Color="#FF69879F" BlurRadius="7" ShadowDepth="0"/>
+                        	</TextBlock.Effect>                            
                         </TextBlock>
                     </Grid>
                 </ControlTemplate>
