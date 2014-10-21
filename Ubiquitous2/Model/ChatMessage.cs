@@ -25,6 +25,7 @@ namespace UB.Model
             UnixTimeStamp = Time.UnixTimestamp();
             HighlyImportant = false;
             FormatString = "%from @%chatname: %text";
+            IsNew = true;
         }
         public String ChatName { get; set; }
         public string FormatString { get; set; }
@@ -76,5 +77,6 @@ namespace UB.Model
         public bool HighlyImportant { get; set; }
         public bool IsSentByMe { get; set; }
         public long UnixTimeStamp { get; set; }
+        public bool IsNew { get; set; }
     }
 }

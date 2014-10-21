@@ -269,8 +269,10 @@ namespace Devart.Controls
                 // Get first items until them fitted in available area
                 for (int i = 0; i < items.Count; i++)
                 {
-                    var child = GetMeasuredChild(items, i);
+                    var child = GetMeasuredChild(items, i);                    
                     _topmostElementsCount++;
+                    if (child == null)
+                        continue;
                     firstItemsHeight += child.DesiredSize.Height;
                     if (firstItemsHeight >= availableSize.Height)
                     {

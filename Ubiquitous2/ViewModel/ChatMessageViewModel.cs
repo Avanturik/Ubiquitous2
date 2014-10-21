@@ -61,7 +61,6 @@ namespace UB.ViewModel
         {
 
             Message = message;
-
             if (Message.ChatIconURL == null)
                 Message.ChatIconURL = Icons.MainIcon;
 
@@ -114,6 +113,25 @@ namespace UB.ViewModel
                 }
                 _appConfig = value;
                 RaisePropertyChanged(AppConfigPropertyName);
+            }
+        }
+
+
+        private RelayCommand _setExpiration;
+
+        /// <summary>
+        /// Gets the SetExpiration.
+        /// </summary>
+        public RelayCommand SetExpiration
+        {
+            get
+            {
+                return _setExpiration
+                    ?? (_setExpiration = new RelayCommand(
+                    () =>
+                    {
+                        Message.IsNew = false;
+                    }));
             }
         }
 

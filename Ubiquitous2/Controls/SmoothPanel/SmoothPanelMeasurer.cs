@@ -276,6 +276,8 @@ namespace Devart.Controls
                     {
                         top = -child.DesiredSize.Height * FirstItemClippedRatio;
                     }
+                    if (child == null)
+                        continue;
 
                     double childHeight = child.DesiredSize.Height;
                     top += childHeight;
@@ -299,6 +301,9 @@ namespace Devart.Controls
                 for (int i = _lastItemIndex; i >= 0; i--)
                 {
                     var child = _children.GetMeasuredChild(_items, i);
+                    if (child == null)
+                        continue;
+
                     double childHeight = child.DesiredSize.Height;
                     if (i == _lastItemIndex)
                     {

@@ -13,6 +13,7 @@ using System.Windows;
 using System.Windows.Threading;
 using System.Threading;
 using Newtonsoft.Json;
+using GalaSoft.MvvmLight.Command;
 
 namespace UB.ViewModel
 {
@@ -217,8 +218,9 @@ namespace UB.ViewModel
                 {               
                     foreach( var msg in messages)
                     {
+                        var newMessage = new ChatMessageViewModel(msg);
                         Messages.Add(
-                            new ChatMessageViewModel(msg)
+                            newMessage
                         );
                     }
 

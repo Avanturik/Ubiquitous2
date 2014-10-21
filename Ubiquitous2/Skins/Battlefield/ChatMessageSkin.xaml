@@ -6,95 +6,106 @@
                     xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
                     xmlns:ei="http://schemas.microsoft.com/expression/2010/interactions"
                     xmlns:gif="http://wpfanimatedgif.codeplex.com"
+                    xmlns:ee="http://schemas.microsoft.com/expression/2010/effects"
                     >
-    <Converter:ChatMessageToInlines x:Key="textConverter" />
+	<Converter:ChatMessageToInlines x:Key="textConverter" />
    
-    <Style TargetType="{x:Type TextBlock}">
-        <Setter Property="FontFamily" Value="Segoe UI"/>
-    </Style>
-    <Style TargetType="{x:Type Window}">
-        <Setter Property="FontFamily" Value="Segoe UI"/>
-    </Style>
-    <Style TargetType="{x:Type UserControl}">
-        <Setter Property="TextElement.FontFamily" Value="Segoe UI"/>
-    </Style>
-    <Style x:Key="ChatMessageTemplate" TargetType="{x:Type UserControl}">
-        <Setter Property="Template">
-            <Setter.Value>
-                <ControlTemplate TargetType="{x:Type UserControl}">
-                    <ControlTemplate.Resources>
-                        <Style x:Key="{x:Type Hyperlink}" TargetType="{x:Type Hyperlink}">
-                            <Setter Property="TextDecorations" Value="None"/>                          
-                            <Style.Triggers>
-                                <Trigger Property="IsMouseOver" Value="True">
-                                    <Setter Property="Foreground" Value="#FFE4FF00"/>
-                                    <Setter Property="Cursor" Value="Hand"/>
-                                </Trigger>
-                                <Trigger Property="IsMouseOver" Value="False">
-                                    <Setter Property="Foreground" Value="#FFE4FFFF"/>
-                                    <Setter Property="Cursor" Value="Hand"/>
-                                </Trigger>
-                            </Style.Triggers>
-                        </Style>
-                        <Style TargetType="{x:Type TextBox}">
-                            <Setter Property="Background" Value="Transparent"/>
-                            <Setter Property="BorderThickness" Value="0"/>
-                            <Setter Property="IsReadOnly" Value="True"/>
-                            <Setter Property="RenderOptions.EdgeMode" Value="Aliased"/>
-                            <Setter Property="TextOptions.TextRenderingMode" Value="Aliased"/>
-                            <Setter Property="TextWrapping" Value="Wrap"/>
-                        </Style>
+	<Style TargetType="{x:Type TextBlock}">
+		<Setter Property="FontFamily" Value="Segoe UI"/>
+	</Style>
+	<Style TargetType="{x:Type Window}">
+		<Setter Property="FontFamily" Value="Segoe UI"/>
+	</Style>
+	<Style TargetType="{x:Type UserControl}">
+		<Setter Property="TextElement.FontFamily" Value="Segoe UI"/>
+	</Style>
+	<Style x:Key="ChatMessageTemplate" TargetType="{x:Type UserControl}">
+		<Setter Property="Template">
+			<Setter.Value>
+				<ControlTemplate TargetType="{x:Type UserControl}">
+					<ControlTemplate.Resources>
+						<Style x:Key="{x:Type Hyperlink}" TargetType="{x:Type Hyperlink}">
+							<Setter Property="TextDecorations" Value="None"/>                          
+							<Style.Triggers>
+								<Trigger Property="IsMouseOver" Value="True">
+									<Setter Property="Foreground" Value="#FFE4FF00"/>
+									<Setter Property="Cursor" Value="Hand"/>
+								</Trigger>
+								<Trigger Property="IsMouseOver" Value="False">
+									<Setter Property="Foreground" Value="#FFE4FFFF"/>
+									<Setter Property="Cursor" Value="Hand"/>
+								</Trigger>
+							</Style.Triggers>
+						</Style>
+						<Style TargetType="{x:Type TextBox}">
+							<Setter Property="Background" Value="Transparent"/>
+							<Setter Property="BorderThickness" Value="0"/>
+							<Setter Property="IsReadOnly" Value="True"/>
+							<Setter Property="RenderOptions.EdgeMode" Value="Aliased"/>
+							<Setter Property="TextOptions.TextRenderingMode" Value="Aliased"/>
+							<Setter Property="TextWrapping" Value="Wrap"/>
+						</Style>
 						<Style TargetType="{x:Type TextBlock}" x:Key="NickStyle">
-                            <Setter Property="Foreground" Value="#FFf3f5fD" />
-                            <Setter Property="Effect">
-                                <Setter.Value>
-                                    <DropShadowEffect Color="#FFC4FF00" BlurRadius="11" ShadowDepth="2"/>
-                                </Setter.Value>
-                            </Setter>
+							<Setter Property="Foreground" Value="#FFf3f5fD" />
+							<Setter Property="Effect">
+								<Setter.Value>
+									<DropShadowEffect Color="#FFC4FF00" BlurRadius="11" ShadowDepth="2"/>
+								</Setter.Value>
+							</Setter>
 						</Style>
                         <Style TargetType="{x:Type Image}">
                             <Setter Property="RenderOptions.BitmapScalingMode" Value="HighQuality"/>
                             <Setter Property="UseLayoutRounding" Value="True"/>
                             <Setter Property="Stretch" Value="Fill"/>
                         </Style>
+                        <Storyboard x:Key="MessageAnimation">
+                        	<DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Effect).(BlurEffect.Radius)" Storyboard.TargetName="mainGrid">
+                        		<EasingDoubleKeyFrame KeyTime="0:0:0" Value="26"/>
+                        		<EasingDoubleKeyFrame KeyTime="0:0:0.5" Value="0"/>
+                        	</DoubleAnimationUsingKeyFrames>
+                        </Storyboard>
+
                     </ControlTemplate.Resources>
-                    <Grid>
+					<ControlTemplate.Triggers>
+						<DataTrigger Binding="{Binding Message.IsNew}" Value="True">
+							<DataTrigger.EnterActions>
+								<BeginStoryboard Storyboard="{StaticResource MessageAnimation}"/>								
+							</DataTrigger.EnterActions>
+						</DataTrigger>						
+					</ControlTemplate.Triggers>
+                    <Grid x:Name="mainGrid">
+                    	<Grid.Effect>
+                    		<BlurEffect Radius="0"/>
+                    	</Grid.Effect>
                         <Grid Visibility="Hidden">
-                            <TextBlock x:Name="prefixBlock" HorizontalAlignment="Left" Margin="0,0,5,0" Foreground="#FFE4FFFF" FontFamily="/Ubiquitous2;component/Fonts/#Purista">                                
-                                <Run>[</Run>
-								<!--<TextBlock x:Name="channelTextBlock" FontSize="{Binding AppConfig.FontSizeMessage}" VerticalAlignment="Top" Margin="-2,0" FontFamily="/Ubiquitous2;component/Fonts/#Purista Light">-->
-								    <Hyperlink ToolTip="Click to set as active channel"  Focusable="False" Command="{Binding SetActiveChannel}" Cursor="Hand">
-									    <Run Focusable="False" FontSize="{Binding AppConfig.FontSizeMessage}" Text="{Binding Message.Channel}"  FontFamily="/Ubiquitous2;component/Fonts/#Purista Light"/>
-								    </Hyperlink>
-                                <!--</TextBlock>-->
-								<Run>]</Run>
-                                <TextBlock FontSize="{Binding AppConfig.FontSizeMessage}" Text="{Binding Message.FromUserName}"  Cursor="Hand" ToolTip="Right click for options" Style="{StaticResource ResourceKey=NickStyle}" x:Name="nickTextBlock" VerticalAlignment="Top" Margin="0,0,-2,0" HorizontalAlignment="Right" FontFamily="/Ubiquitous2;component/Fonts/#Purista Medium">
-                                    <TextBlock.ContextMenu>
-                                            <ContextMenu Name="userNameMenu" Style="{DynamicResource ContextMenuStyle}">
-                                                <MenuItem Header="Add to ignore list" Command="{Binding IgnoreUser}"  CommandParameter="{Binding Message}" Foreground="#FFFFC042" VerticalContentAlignment="Center" VerticalAlignment="Center">
-                                                    <MenuItem.Icon>
-                                                        <Image Width="16" Source="/Ubiquitous2;component/Resources/ignore.png" HorizontalAlignment="Left" VerticalAlignment="Center"/>
-                                                    </MenuItem.Icon>
-                                                </MenuItem>
-                                            </ContextMenu>
-                                        </TextBlock.ContextMenu>
-                                </TextBlock>
-								<Run>:</Run>
-                            </TextBlock>
+							<TextBlock x:Name="prefixBlock" HorizontalAlignment="Left" Margin="0,0,5,0" Foreground="#FFE4FFFF" FontFamily="/Ubiquitous2;component/Fonts/#Purista"><Run Text="["/><Run Text=" "/><!--<TextBlock x:Name="channelTextBlock" FontSize="{Binding AppConfig.FontSizeMessage}" VerticalAlignment="Top" Margin="-2,0" FontFamily="/Ubiquitous2;component/Fonts/#Purista Light">--><Hyperlink ToolTip="Click to set as active channel"  Focusable="False" Command="{Binding SetActiveChannel}" Cursor="Hand"><Run Focusable="False" FontSize="{Binding AppConfig.FontSizeMessage}" Text="{Binding Message.Channel}"  FontFamily="/Ubiquitous2;component/Fonts/#Purista Light"/></Hyperlink><Run Text=" "/><!--</TextBlock>--><Run Text="]"/><Run Text=" "/><InlineUIContainer>
+									<TextBlock FontSize="{Binding AppConfig.FontSizeMessage}" Text="{Binding Message.FromUserName}"  Cursor="Hand" ToolTip="Right click for options" Style="{StaticResource ResourceKey=NickStyle}" x:Name="nickTextBlock" VerticalAlignment="Top" Margin="0,0,-2,0" HorizontalAlignment="Right" FontFamily="/Ubiquitous2;component/Fonts/#Purista Medium">
+										<TextBlock.ContextMenu>
+											<ContextMenu x:Name="userNameMenu" Style="{DynamicResource ContextMenuStyle}">
+												<MenuItem Header="Add to ignore list" Command="{Binding IgnoreUser}"  CommandParameter="{Binding Message}" Foreground="#FFFFC042" VerticalContentAlignment="Center" VerticalAlignment="Center">
+													<MenuItem.Icon>
+														<Image Width="16" Source="/Ubiquitous2;component/Resources/ignore.png" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+													</MenuItem.Icon>
+												</MenuItem>
+											</ContextMenu>
+										</TextBlock.ContextMenu>
+									</TextBlock>
+								</InlineUIContainer><Run Text=" "/><Run Text=":"/></TextBlock>
 
 
-                        </Grid>
-                        <TextBlock Foreground="White" TextWrapping="Wrap" Focusable="False" HorizontalAlignment="Stretch"
-                                   Interactivity:TextBlockAttached.InlineList="{Binding Message, Converter={StaticResource textConverter}}"
-                                   Interactivity:TextBlockAttached.InlineListPrefix="{Binding ElementName=prefixBlock, Converter={StaticResource textConverter}}" FontFamily="/Ubiquitous2;component/Fonts/#Purista Light" FontSize="{Binding AppConfig.FontSizeMessage}" FontWeight="Thin"
+						</Grid>
+						<TextBlock Foreground="White" TextWrapping="Wrap" Focusable="False" HorizontalAlignment="Stretch"
+							Interactivity:TextBlockAttached.InlineList="{Binding Message, Converter={StaticResource textConverter}}"
+							Interactivity:TextBlockAttached.InlineListPrefix="{Binding Converter={StaticResource textConverter}, ElementName=prefixBlock}" FontFamily="/Ubiquitous2;component/Fonts/#Purista Light" FontSize="{Binding AppConfig.FontSizeMessage}" FontWeight="Thin"
                                    >
-                        	<TextBlock.Effect>
-                        		<DropShadowEffect Color="#FF69879F" BlurRadius="7" ShadowDepth="0"/>
-                        	</TextBlock.Effect>                            
-                        </TextBlock>
-                    </Grid>
-                </ControlTemplate>
-            </Setter.Value>
-        </Setter>
-    </Style>
+							<TextBlock.Effect>
+								<DropShadowEffect Color="#FF69879F" BlurRadius="7" ShadowDepth="0"/>
+							</TextBlock.Effect>                            
+
+						</TextBlock>
+					</Grid>
+				</ControlTemplate>
+			</Setter.Value>
+		</Setter>
+	</Style>
 </ResourceDictionary>
