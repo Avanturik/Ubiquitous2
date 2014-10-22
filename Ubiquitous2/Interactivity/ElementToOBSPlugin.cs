@@ -16,6 +16,7 @@ using UB.Utils;
 using System.ServiceModel;
 using System.Runtime.Serialization;
 using System.Windows.Media.Animation;
+using System.Windows.Controls;
 
 
 namespace UB.Interactivity
@@ -26,6 +27,8 @@ namespace UB.Interactivity
         private Timer saveTimer;
         private object lockSave = new object();
         private bool isChanged = false;
+        private double horizontalDpi;
+        private double verticalDpi;
         private OBSPluginService obsPluginService = new OBSPluginService();
         
         public ElementToOBSPlugin()
@@ -46,7 +49,9 @@ namespace UB.Interactivity
         {
             visual = AssociatedObject as UIElement;
             visual.LayoutUpdated += visual_LayoutUpdated;
-            
+            horizontalDpi = (Double)DeviceHelper.PixelsPerInch(Orientation.Horizontal);
+            verticalDpi = (Double)DeviceHelper.PixelsPerInch(Orientation.Vertical);
+
             try
             {
                 obsPluginService.Start();
@@ -66,22 +71,28 @@ namespace UB.Interactivity
         {
             if (!isChanged || !obsPluginService.IsConnected )
                 return;
-            
+
+
             lock (lockSave)
-            {                
+            {
+                isChanged = false;
 
                 if (visual == null || !visual.IsArrangeValid)
                     return;
-
-                isChanged = false;
 
                 var width = visual.RenderSize.Width;
                 var height = visual.RenderSize.Height;
 
                 if (width == 0 || height == 0)
                     return;
+
                 UI.Dispatch( () => {
-                    RenderTargetBitmap renderTarget = new RenderTargetBitmap((Int32)width, (Int32)height, 96, 96, PixelFormats.Pbgra32);
+                    RenderTargetBitmap renderTarget = new RenderTargetBitmap((Int32)Math.Ceiling(width), 
+                        (Int32)Math.Ceiling(height),
+                        horizontalDpi, 
+                        verticalDpi, 
+                        PixelFormats.Pbgra32);
+                    
                     renderTarget.Render(visual);
                     obsPluginService.RenderTarget = renderTarget;
                 });
