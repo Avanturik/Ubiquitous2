@@ -19,7 +19,6 @@
                     <Grid Margin="0,0,0,0">
                         <Rectangle Opacity="{Binding AppConfig.MessageBackgroundOpacity}" Fill="#FF335559"/>
                         <Border>
-                            
                             <ItemsControl Focusable="False" ItemsSource="{Binding Messages}" Padding="0" Margin="0">
                             <ItemsControl.Template>
                                 <ControlTemplate>
