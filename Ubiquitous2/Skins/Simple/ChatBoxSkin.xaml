@@ -42,7 +42,7 @@
                             </ItemsControl.Template>
                             <ItemsControl.ItemsPanel>
                                 <ItemsPanelTemplate>
-                                        <dc:SmoothPanel  TrackTopMost="true" VirtualizingPanel.VirtualizationMode="Recycling" VirtualizingPanel.CacheLength="5" VirtualizingPanel.CacheLengthUnit="Page">
+                                        <dc:SmoothPanel Margin="7,0" TrackTopMost="true" VirtualizingPanel.VirtualizationMode="Recycling" VirtualizingPanel.CacheLength="5" VirtualizingPanel.CacheLengthUnit="Page">
                                             <dc:SmoothPanel.Templates>
                                                 <dc:SmoothPanelTemplate ViewModel="{x:Type ubviewmodel:ChatMessageViewModel}" View="{x:Type ubview:ChatMessageView}" />
                                             </dc:SmoothPanel.Templates>
