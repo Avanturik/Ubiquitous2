@@ -126,10 +126,12 @@ namespace UB.Interactivity
                 switch( inlineKind )
                 {
                     case "main":
-                        textBlockMain.Inlines.Add(inline);
+                        if (mainInlines == null || mainInlines.Count <= 0)
+                            textBlockMain.Inlines.Add(inline);
                         break;
                     case "prefix":
-                        textBlockPrefix.Inlines.Add(inline);
+                        if (prefixInlines == null || prefixInlines.Count <= 0)
+                            textBlockPrefix.Inlines.Add(inline);
                         break;
                 }
 

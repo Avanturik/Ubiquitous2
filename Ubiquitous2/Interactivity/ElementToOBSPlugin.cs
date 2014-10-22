@@ -15,6 +15,7 @@ using UB.Model;
 using UB.Utils;
 using System.ServiceModel;
 using System.Runtime.Serialization;
+using System.Windows.Media.Animation;
 
 
 namespace UB.Interactivity
@@ -22,7 +23,8 @@ namespace UB.Interactivity
     public class ElementToOBSPlugin : Behavior<UIElement>
     {
         private UIElement visual;
-        private Timer saveTimer;      
+        private Timer saveTimer;
+        private Timer resetIsChangedTimer;
         private object lockSave = new object();
         private bool isChanged = false;
         private OBSPluginService obsPluginService = new OBSPluginService();
@@ -48,6 +50,7 @@ namespace UB.Interactivity
         {
             visual = AssociatedObject as UIElement;
             visual.LayoutUpdated += visual_LayoutUpdated;
+            
             try
             {
                 obsPluginService.Start();
@@ -61,6 +64,10 @@ namespace UB.Interactivity
         void visual_LayoutUpdated(object sender, EventArgs e)
         {
             isChanged = true;
+            resetIsChangedTimer = new Timer((obj) =>
+            {
+                isChanged = false;
+            }, null, 1000, Timeout.Infinite);
         }
 
         public void CaptureImage()
@@ -69,8 +76,7 @@ namespace UB.Interactivity
                 return;
             
             lock (lockSave)
-            {
-                isChanged = false;
+            {                
 
                 if (visual == null || !visual.IsArrangeValid)
                     return;
