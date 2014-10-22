@@ -31,6 +31,9 @@ namespace UB
                     new FrameworkPropertyMetadata { DefaultValue = 20 });
 
             WebRequest.DefaultWebProxy = null;
+
+            //var testSQL = new DatabaseService();
+            //testSQL.GetViewersCountToday(() => { });
             //RenderOptions.ProcessRenderMode = RenderMode.SoftwareOnly; 
         }
 

@@ -189,11 +189,13 @@
     <Compile Include="Interactivity\ElementToOBSPlugin.cs" />
     <Compile Include="Interactivity\UnclosableWindow.cs" />
     <Compile Include="Model\CybergameChat.cs" />
+    <Compile Include="Model\DatabaseService.cs" />
     <Compile Include="Model\DummyChat.cs" />
     <Compile Include="Model\Game.cs" />
     <Compile Include="Model\GoodgameChat.cs" />
     <Compile Include="Model\Greeting.cs" />
     <Compile Include="Model\GreetingsDataService.cs" />
+    <Compile Include="Model\IDatabase.cs" />
     <Compile Include="Model\IFollowersProvider.cs" />
     <Compile Include="Model\IGreetingsDataService.cs" />
     <Compile Include="Model\ImageData.cs" />
@@ -205,6 +207,7 @@
     <Compile Include="Model\StreamInfo.cs" />
     <Compile Include="Model\StreamInfoPreset.cs" />
     <Compile Include="Model\StreamPageDataService.cs" />
+    <Compile Include="Model\UbiquitousContext.cs" />
     <Compile Include="Model\YesNoDialog.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -827,6 +830,9 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Resource>
     <Content Include="Content\hitboxemoticons.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="database\ubiquitous.sqlite">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <None Include="Design\projectGuides.guides" />
