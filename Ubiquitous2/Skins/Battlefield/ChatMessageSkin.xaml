@@ -66,20 +66,25 @@
                         </Storyboard>
 
                     </ControlTemplate.Resources>
-					<ControlTemplate.Triggers>
+					<!--<ControlTemplate.Triggers>
 						<DataTrigger Binding="{Binding Message.IsNew}" Value="True">
 							<DataTrigger.EnterActions>
 								<BeginStoryboard Storyboard="{StaticResource MessageAnimation}"/>								
 							</DataTrigger.EnterActions>
 						</DataTrigger>						
-					</ControlTemplate.Triggers>
+					</ControlTemplate.Triggers>-->
                     <Grid x:Name="mainGrid">
-                    	<Grid.Effect>
+                    	<!--<Grid.Effect>
                     		<BlurEffect Radius="0"/>
-                    	</Grid.Effect>
+                    	</Grid.Effect>-->
                         <Grid Visibility="Hidden">
-							<TextBlock x:Name="prefixBlock" HorizontalAlignment="Left" Margin="0,0,5,0" Foreground="#FFE4FFFF" FontFamily="/Ubiquitous2;component/Fonts/#Purista"><Run Text="["/><Run Text=" "/><!--<TextBlock x:Name="channelTextBlock" FontSize="{Binding AppConfig.FontSizeMessage}" VerticalAlignment="Top" Margin="-2,0" FontFamily="/Ubiquitous2;component/Fonts/#Purista Light">--><Hyperlink ToolTip="Click to set as active channel"  Focusable="False" Command="{Binding SetActiveChannel}" Cursor="Hand"><Run Focusable="False" FontSize="{Binding AppConfig.FontSizeMessage}" Text="{Binding Message.Channel}"  FontFamily="/Ubiquitous2;component/Fonts/#Purista Light"/></Hyperlink><Run Text=" "/><!--</TextBlock>--><Run Text="]"/><Run Text=" "/><InlineUIContainer>
-									<TextBlock FontSize="{Binding AppConfig.FontSizeMessage}" Text="{Binding Message.FromUserName}"  Cursor="Hand" ToolTip="Right click for options" Style="{StaticResource ResourceKey=NickStyle}" x:Name="nickTextBlock" VerticalAlignment="Top" Margin="0,0,-2,0" HorizontalAlignment="Right" FontFamily="/Ubiquitous2;component/Fonts/#Purista Medium">
+							<TextBlock x:Name="prefixBlock" HorizontalAlignment="Left" Margin="0,0,5,0" Foreground="#FFE4FFFF" FontFamily="/Ubiquitous2;component/Fonts/#Purista">
+                                <ub:ServiceLogo Width="12" DataContext="{Binding Message.ChatName}" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+                                <Run Text="["/>
+                                <Hyperlink ToolTip="Click to set as active channel"  Focusable="False" Command="{Binding SetActiveChannel}" Cursor="Hand"><Run Focusable="False" FontSize="{Binding AppConfig.FontSizeMessage}" Text="{Binding Message.Channel}"  FontFamily="/Ubiquitous2;component/Fonts/#Purista Light"/></Hyperlink>
+                                <Run Text="]"/>
+                                <InlineUIContainer>
+                                    <TextBlock FontSize="{Binding AppConfig.FontSizeMessage}" Text="{Binding Message.FromUserName}"  Cursor="Hand" ToolTip="Right click for options" Style="{StaticResource ResourceKey=NickStyle}" x:Name="nickTextBlock" VerticalAlignment="Top" Margin="0,0,-2,0" HorizontalAlignment="Right" FontFamily="/Ubiquitous2;component/Fonts/#Purista Medium">
 										<TextBlock.ContextMenu>
 											<ContextMenu x:Name="userNameMenu" Style="{DynamicResource ContextMenuStyle}">
 												<MenuItem Header="Add to ignore list" Command="{Binding IgnoreUser}"  CommandParameter="{Binding Message}" Foreground="#FFFFC042" VerticalContentAlignment="Center" VerticalAlignment="Center">
@@ -90,16 +95,18 @@
 											</ContextMenu>
 										</TextBlock.ContextMenu>
 									</TextBlock>
-								</InlineUIContainer><Run Text=" "/><Run Text=":"/></TextBlock>
+								</InlineUIContainer>
+                                <Run Text=" "/><Run Text=":"/></TextBlock>
 
 
 						</Grid>
 						<TextBlock Foreground="White" TextWrapping="Wrap" Focusable="False" HorizontalAlignment="Stretch"
+
 							Interactivity:TextBlockAttached.InlineList="{Binding Message, Converter={StaticResource textConverter}}"
 							Interactivity:TextBlockAttached.InlineListPrefix="{Binding Converter={StaticResource textConverter}, ElementName=prefixBlock}" FontFamily="/Ubiquitous2;component/Fonts/#Purista Light" FontSize="{Binding AppConfig.FontSizeMessage}" FontWeight="Thin"
                                    >
 							<TextBlock.Effect>
-								<DropShadowEffect Color="#FF69879F" BlurRadius="7" ShadowDepth="0"/>
+                                <DropShadowEffect Color="#FF69879F" BlurRadius="7" ShadowDepth="0"/>
 							</TextBlock.Effect>                            
 
 						</TextBlock>

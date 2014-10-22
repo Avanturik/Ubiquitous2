@@ -23,23 +23,21 @@ namespace UB.Interactivity
         private VisualBrush visualBrush = new VisualBrush();
         private int sureSaveSteps = 2;
         private object lockSave = new object();
+        private static bool imageChanged = false;
+
         public ElementToPng()
         {
             saveTimer = new Timer((obj) => {
-                UI.Dispatch(() =>
-                {
-                    SaveVisualToPng();
-                    if( SaveOnDemand )
-                    {
-                        sureSaveSteps--;
-                        if (sureSaveSteps <= 0)
-                        {
-                            saveTimer.Change(Timeout.Infinite, Timeout.Infinite);
-                            sureSaveSteps = 2;
-                        }
-                    }
-                });
-
+                SaveVisualToPng();
+                //if( SaveOnDemand )
+                //{
+                //    sureSaveSteps--;
+                //    if (sureSaveSteps <= 0)
+                //    {
+                //        saveTimer.Change(Timeout.Infinite, Timeout.Infinite);
+                //        sureSaveSteps = 2;
+                //    }
+                //}
             }, null, Timeout.Infinite, Timeout.Infinite);
         }
         protected override void OnDetaching()
@@ -49,68 +47,75 @@ namespace UB.Interactivity
         protected override void OnAttached()
         {
             visual = AssociatedObject as UIElement;
+            visual.LayoutUpdated += visual_LayoutUpdated;
             visualBrush.Visual = visual;
+        }
+
+        void visual_LayoutUpdated(object sender, EventArgs e)
+        {
+            imageChanged = true;
         }
 
         public void SaveVisualToPng()
         {
-            if (String.IsNullOrWhiteSpace(FileName))
+            if (!imageChanged )
                 return;
+
+            imageChanged = false;
 
             lock(lockSave)
             {
                 if (visual == null || !visual.IsArrangeValid)
                     return;
-
-                var width = visual.RenderSize.Width + SystemParameters.VerticalScrollBarWidth;
-                var height = visual.RenderSize.Height;
-
-                if( width == 0 || height == 0 )
-                    return;
-
-                var stopWatch = Stopwatch.StartNew();
-
-                RenderTargetBitmap rtb = new RenderTargetBitmap((Int32)width, (Int32)height, 96, 96, PixelFormats.Pbgra32);
-                
-                DrawingVisual drawingVisual = new DrawingVisual();
-                using (DrawingContext drawingContext = drawingVisual.RenderOpen())
+                UI.Dispatch(() =>
                 {
-                    drawingContext.DrawRectangle(visualBrush, null, new Rect(new Point(), new Size(width, height)));
-                }
+                    if (String.IsNullOrWhiteSpace(FileName))
+                        return;
 
-                rtb.Render(drawingVisual);
-                
-                PngBitmapEncoder png = new PngBitmapEncoder();
+                    var width = visual.RenderSize.Width + SystemParameters.VerticalScrollBarWidth;
+                    var height = visual.RenderSize.Height;
 
-                var frame = BitmapFrame.Create(rtb);
+                    if( width == 0 || height == 0 )
+                        return;
 
-                if (frame == null)
-                    return;
+                    RenderTargetBitmap rtb = new RenderTargetBitmap((Int32)width, (Int32)height, 96, 96, PixelFormats.Pbgra32);
 
-                stopWatch.Stop();
-                var ms = stopWatch.ElapsedMilliseconds;
-                Log.WriteInfo("Frame captured in {0}ms", ms);
-                png.Frames.Add(frame);
-
-                if (String.IsNullOrWhiteSpace(FileName))
-                    return;
-
-                try
-                {
-                    FileStream file;
-
-                    if( File.Exists(FileName) )
-                        file = File.Open(FileName, FileMode.Truncate, FileAccess.ReadWrite, FileShare.Delete);
-                    else
-                        file = File.Open(FileName, FileMode.Create, FileAccess.ReadWrite, FileShare.Delete);
-
-                    using (Stream stm = file )
+                    DrawingVisual drawingVisual = new DrawingVisual();
+                    using (DrawingContext drawingContext = drawingVisual.RenderOpen())
                     {
-                        png.Save(stm);
+                        drawingContext.DrawRectangle(visualBrush, null, new Rect(new Point(), new Size(width, height)));
                     }
-                }
-                catch { }
 
+                    rtb.Render(drawingVisual);
+
+                    PngBitmapEncoder png = new PngBitmapEncoder();
+
+                    var frame = BitmapFrame.Create(rtb);
+
+                    if (frame == null)
+                        return;
+
+                    png.Frames.Add(frame);
+
+                    if (String.IsNullOrWhiteSpace(FileName))
+                        return;
+
+                    try
+                    {
+                        FileStream file;
+
+                        if (File.Exists(FileName))
+                            file = File.Open(FileName, FileMode.Truncate, FileAccess.ReadWrite, FileShare.Delete);
+                        else
+                            file = File.Open(FileName, FileMode.Create, FileAccess.ReadWrite, FileShare.Delete);
+
+                        using (Stream stm = file)
+                        {
+                            png.Save(stm);
+                        }
+                    }
+                    catch { }
+                });
             }
         }
 

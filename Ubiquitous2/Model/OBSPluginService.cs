@@ -20,12 +20,14 @@ namespace UB.Model
         private static ImageData imageData = new ImageData();
         private static Size currentSize = new Size();
         private static bool imageChanged = false;
+        private static bool isConnected = false;
 
         [DataMember]
         private static RenderTargetBitmap renderTarget;
         
         public ImageData GetImage()
         {
+            isConnected = true;
             lock (lockSave)
             {
                 if ( imageChanged && RenderTarget != null)
@@ -62,6 +64,11 @@ namespace UB.Model
                 }
             }
         
+        }
+        public bool IsConnected
+        {
+            get { return isConnected; } 
+
         }
         public void Start()
         {

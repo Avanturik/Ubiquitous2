@@ -191,6 +191,9 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Compile Include="UserControl1.xaml.cs">
+      <DependentUpon>UserControl1.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Utils\Bitmap.cs" />
     <Compile Include="Utils\Clone.cs" />
     <Compile Include="Utils\Crypt.cs" />
@@ -210,6 +213,9 @@
     </Compile>
     <Compile Include="View\HelloPlaceHolderView.xaml.cs">
       <DependentUpon>HelloPlaceHolderView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\ServiceLogo.xaml.cs">
+      <DependentUpon>ServiceLogo.xaml</DependentUpon>
     </Compile>
     <Compile Include="View\StreamTopicSectionView.xaml.cs">
       <DependentUpon>StreamTopicSectionView.xaml</DependentUpon>
@@ -509,6 +515,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Page Include="UserControl1.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="View\DashBoardWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -518,6 +528,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="View\HelloPlaceHolderView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\ServiceLogo.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -729,6 +743,10 @@
       <Numbers>True</Numbers>
       <Punctuation>True</Punctuation>
     </BlendEmbeddedFont>
+    <Resource Include="Resources\Image1.png" />
+    <Resource Include="Resources\Image2.png" />
+    <Resource Include="Resources\Image3.png" />
+    <Resource Include="Resources\Image4.png" />
     <Resource Include="Resources\MainThemeThumbnail.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Resource>

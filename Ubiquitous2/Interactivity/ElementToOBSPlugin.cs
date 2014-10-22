@@ -24,7 +24,6 @@ namespace UB.Interactivity
     {
         private UIElement visual;
         private Timer saveTimer;
-        private Timer resetIsChangedTimer;
         private object lockSave = new object();
         private bool isChanged = false;
         private OBSPluginService obsPluginService = new OBSPluginService();
@@ -33,10 +32,7 @@ namespace UB.Interactivity
         {
             saveTimer = new Timer((obj) =>
             {
-                UI.Dispatch(() =>
-                {
-                    CaptureImage();
-                });
+               CaptureImage();
 
             }, null, Timeout.Infinite, Timeout.Infinite);
         }
@@ -64,15 +60,11 @@ namespace UB.Interactivity
         void visual_LayoutUpdated(object sender, EventArgs e)
         {
             isChanged = true;
-            resetIsChangedTimer = new Timer((obj) =>
-            {
-                isChanged = false;
-            }, null, 1000, Timeout.Infinite);
         }
 
         public void CaptureImage()
         {
-            if (!isChanged)
+            if (!isChanged || !obsPluginService.IsConnected )
                 return;
             
             lock (lockSave)
@@ -81,18 +73,18 @@ namespace UB.Interactivity
                 if (visual == null || !visual.IsArrangeValid)
                     return;
 
+                isChanged = false;
 
                 var width = visual.RenderSize.Width;
                 var height = visual.RenderSize.Height;
 
                 if (width == 0 || height == 0)
                     return;
-
-                RenderTargetBitmap renderTarget = new RenderTargetBitmap((Int32)width, (Int32)height, 96, 96, PixelFormats.Pbgra32);
-
-                renderTarget.Render(visual);
-
-                obsPluginService.RenderTarget = renderTarget;
+                UI.Dispatch( () => {
+                    RenderTargetBitmap renderTarget = new RenderTargetBitmap((Int32)width, (Int32)height, 96, 96, PixelFormats.Pbgra32);
+                    renderTarget.Render(visual);
+                    obsPluginService.RenderTarget = renderTarget;
+                });
 
             }
         }
