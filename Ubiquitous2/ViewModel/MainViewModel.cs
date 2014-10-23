@@ -115,7 +115,7 @@ namespace UB.ViewModel
 
         void keyboardListener_KeyUp(object sender, RawKeyEventArgs args)
         {
-            if (args.Key == Key.RightCtrl || args.Key == Key.LeftCtrl)
+            if (AppConfig.MouseTransparency && ( args.Key == Key.RightCtrl || args.Key == Key.LeftCtrl))
             {
                 UI.Dispatch(() => EnableMouseTransparency = AppConfig.MouseTransparency);
             }
@@ -124,7 +124,7 @@ namespace UB.ViewModel
 
         void keyboardListener_KeyDown(object sender, RawKeyEventArgs args)
         {
-            if (args.Key == Key.RightCtrl || args.Key == Key.LeftCtrl )
+            if (args.Key == Key.RightCtrl || args.Key == Key.LeftCtrl)
             {
                 UI.Dispatch(() => EnableMouseTransparency = false);
             }

@@ -9,6 +9,7 @@ using GalaSoft.MvvmLight.Command;
 using System.Collections.Generic;
 using UB.Utils;
 using System.Threading.Tasks;
+using System;
 
 namespace UB.ViewModel
 {
@@ -21,15 +22,18 @@ namespace UB.ViewModel
     public class DashBoardViewModel : ViewModelBase
     {
         private IChatDataService _dataService;
+        private IDatabase _databaseService;
         private IStreamPageDataService _streamDataService;
         /// <summary>
         /// Initializes a new instance of the DashBoardViewModel class.
         /// </summary>
         [PreferredConstructor]
-        public DashBoardViewModel(IChatDataService dataService, IStreamPageDataService streamDataService)
+        public DashBoardViewModel(IChatDataService dataService, IStreamPageDataService streamDataService, IDatabase databaseService)
         {
             _dataService = dataService;
             _streamDataService = streamDataService;
+            _databaseService = databaseService;
+
             //Task.Factory.StartNew(() => {
             //    _streamDataService.LoadTopicsFromWeb();
             //});
@@ -40,6 +44,16 @@ namespace UB.ViewModel
         {
 
             InitializeTopicSections();
+
+            TotalViewers = new ObservableCollection<StatisticsViewers>();
+            TotalViewers.Add(new StatisticsViewers() { Viewerscount = 0, DateTime = DateTime.Now });
+
+            _databaseService.GetViewersCount(5, (maxViewersPerInterval) =>
+            {
+                TotalViewers.Clear();
+                maxViewersPerInterval.ForEach(item => TotalViewers.Add(item));
+            });
+
             
             //Preset combobox
             TopicPresets = new ObservableCollection<EditComboBoxItem>();
@@ -57,6 +71,8 @@ namespace UB.ViewModel
                     });
                 }
             });
+
+
         }
 
         #region Stream topic       
@@ -256,6 +272,42 @@ namespace UB.ViewModel
                 RaisePropertyChanged(StreamTopicsPropertyName);
             }
         }
+
+        
+        #endregion
+
+        #region Analytics
+
+        /// <summary>
+        /// The <see cref="TotalViewers" /> property's name.
+        /// </summary>
+        public const string TotalViewersPropertyName = "TotalViewers";
+
+        private ObservableCollection<StatisticsViewers> _totalViewers = new ObservableCollection<StatisticsViewers>();
+
+        /// <summary>
+        /// Sets and gets the TotalViewers property.
+        /// Changes to that property's value raise the PropertyChanged event. 
+        /// </summary>
+        public ObservableCollection<StatisticsViewers> TotalViewers
+        {
+            get
+            {
+                return _totalViewers;
+            }
+
+            set
+            {
+                if (_totalViewers == value)
+                {
+                    return;
+                }
+
+                _totalViewers = value;
+                RaisePropertyChanged(TotalViewersPropertyName);
+            }
+        }
+
         #endregion
     }
 }

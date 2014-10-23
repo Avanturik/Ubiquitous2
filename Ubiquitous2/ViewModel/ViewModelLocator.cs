@@ -39,6 +39,9 @@ namespace UB.ViewModel
                 SimpleIoc.Default.Register<IChatDataService, Design.DesignDataService>();
                 SimpleIoc.Default.Register<IImageDataSource, Design.DesignImageCacheDataService>();
                 SimpleIoc.Default.Register<IGeneralDataService, Design.GeneralDataServiceDesign>();
+                SimpleIoc.Default.Register<IDatabase, Design.DatabaseService>();
+                SimpleIoc.Default.Register<IStreamPageDataService, Design.StreamPageDataService>();
+                SimpleIoc.Default.Register<IGreetingsDataService, Design.GreetingsDataService>();
             }
             else
             {
@@ -46,10 +49,11 @@ namespace UB.ViewModel
                 SimpleIoc.Default.Register<IChatDataService, ChatDataService>();
                 SimpleIoc.Default.Register<IImageDataSource, ImageCacheDataService>();
                 SimpleIoc.Default.Register<IGeneralDataService, GeneralDataService>();
+                SimpleIoc.Default.Register<IDatabase, DatabaseService>();
+                SimpleIoc.Default.Register<IStreamPageDataService, StreamPageDataService>();
+                SimpleIoc.Default.Register<IGreetingsDataService, GreetingsDataService>();
             }
-            SimpleIoc.Default.Register<IGreetingsDataService, GreetingsDataService>();
             SimpleIoc.Default.Register<SubFollowDonationViewModel>();
-            SimpleIoc.Default.Register<IStreamPageDataService, StreamPageDataService>();
             SimpleIoc.Default.Register<StreamTopicSectionViewModel>();
             SimpleIoc.Default.Register<EditBoxViewModel>();
             SimpleIoc.Default.Register<DashBoardViewModel>();

@@ -32,8 +32,6 @@ namespace UB
 
             WebRequest.DefaultWebProxy = null;
 
-            //var testSQL = new DatabaseService();
-            //testSQL.GetViewersCountToday(() => { });
             //RenderOptions.ProcessRenderMode = RenderMode.SoftwareOnly; 
         }
 

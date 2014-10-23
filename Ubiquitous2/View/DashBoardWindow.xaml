@@ -9,22 +9,33 @@
         xmlns:Controls="clr-namespace:UB.Controls"
         xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
         xmlns:Interactivity="clr-namespace:UB.Interactivity"
+        xmlns:sparrow="http://sparrowtoolkit.codeplex.com/wpf"
         xmlns:View="clr-namespace:UB.View"
         Title="Dashboard"
         mc:Ignorable="d ignore"
         Topmost="True"
         DataContext="{Binding DashBoard, Source={StaticResource Locator}}" d:DesignWidth="660" d:DesignHeight="450" Width="660" Height="450" Background="#FF1E1E1E" Icon="/Ubiquitous2;component/Resources/ubiquitous smile.ico">
 
+    <Window.Resources>
+        <Style x:Key="containerStyle" TargetType="Border">
+            <Setter Property="BorderBrush" Value="#FF117DBB"/>
+            <Setter Property="BorderThickness" Value="1"/>
+        </Style>
+        <Style TargetType="{x:Type Line}" x:Key="crossLineStyle">
+            <Setter Property="Stroke" Value="#33D9EAFF"/>
+            <Setter Property="StrokeThickness" Value="1"/>
+        </Style>
+    </Window.Resources>
     <i:Interaction.Behaviors>
         <Interactivity:WindowPersistentLocationBehavior WindowName="DashboardWindow"/>
         <Interactivity:UnclosableWindow/>
     </i:Interaction.Behaviors>
 
-    <fluent:BackstageTabControl SelectedIndex="0" Background="#FF323232" Style="{DynamicResource SettingsStyle}" ItemsPanelBackground="#FF3F3F46" Foreground="White">
+    <fluent:BackstageTabControl SelectedIndex="1" Background="#FF323232" Style="{DynamicResource SettingsStyle}" ItemsPanelBackground="#FF3F3F46" Foreground="White">
         <fluent:BackstageTabItem Header="Stream topic">
             <Grid>
                 <Grid.Background>
-                    <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                    <LinearGradientBrush EndPoint="0.5,1" MappingMode="RelativeToBoundingBox" StartPoint="0.5,0">
                         <GradientStop Color="White" Offset="0"/>
                         <GradientStop Color="Gray" Offset="0.889"/>
                     </LinearGradientBrush>
@@ -34,7 +45,7 @@
                     <RowDefinition Height="6*"/>
                     <RowDefinition Height="101*"/>
                     <RowDefinition Height="19*"/>
-                </Grid.RowDefinitions>                
+                </Grid.RowDefinitions>
                 <StackPanel Grid.Row="0" Orientation="Horizontal" VerticalAlignment="Center" Margin="0,8" Height="26">
                     <Label HorizontalAlignment="Left" VerticalAlignment="Center" FontWeight="Bold">Preset:</Label>
                     <Controls:EditComboBox  MinWidth="100"
@@ -73,9 +84,22 @@
             </Grid>
 
         </fluent:BackstageTabItem>
-        <fluent:BackstageTabItem Header="Analytics" Foreground="White">
-            <Grid>
-                <TextBlock Foreground="Black">Stream time details<LineBreak/>Average viewers per time interval<LineBreak/>Chat activity</TextBlock>
+        <fluent:BackstageTabItem Header="Analytics" Foreground="Black">
+            <Grid Background="White">
+                <StackPanel Orientation="Vertical">
+                    <TextBlock FontSize="24" TextAlignment="Center" Margin="0,15,0,0">Maximum total viewers</TextBlock>
+                    <Border Margin="15" VerticalAlignment="Top" Height="200" BorderThickness="1" BorderBrush="Black">
+                        <sparrow:SparrowChart RenderingMode="WritableBitmap" Margin="0" ContainerBorderStyle="{StaticResource containerStyle}" Background="#E0073540" Foreground="#FFDADADA" FontSize="16" Padding="15">
+                            <sparrow:SparrowChart.XAxis>
+                                <sparrow:DateTimeXAxis Visibility="Collapsed" ZoomCoefficient="0.05" ZoomOffset="0.5" Interval="0:30:0" StringFormat="MMM dd HH:mm"/>
+                            </sparrow:SparrowChart.XAxis>
+                            <sparrow:SparrowChart.YAxis>
+                                <sparrow:LinearYAxis MinValue="0" MaxValue="50" CrossLineStyle="{StaticResource crossLineStyle}"/>
+                            </sparrow:SparrowChart.YAxis>
+                            <sparrow:AreaSeries XPath="DateTime" StrokeThickness="2" YPath="Viewerscount" PointsSource="{Binding TotalViewers}" Fill="#C374AFD8" Stroke="#FF468CBD"/>
+                        </sparrow:SparrowChart>
+                    </Border>
+                </StackPanel>
             </Grid>
         </fluent:BackstageTabItem>
     </fluent:BackstageTabControl>

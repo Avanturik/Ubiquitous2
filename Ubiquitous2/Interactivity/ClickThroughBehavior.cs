@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Interactivity;
 using System.Windows.Interop;
+using UB.Model;
 
 namespace UB.Interactivity
 {
@@ -48,11 +49,13 @@ namespace UB.Interactivity
             var extendedStyle = GetWindowLong(hwnd, GWL_EXSTYLE);
             if (isTransparent)
             {
+                Log.WriteInfo("Clickthrough enabled");
                 SetWindowLong(hwnd, GWL_EXSTYLE, extendedStyle | WS_EX_TRANSPARENT);
                 window.IsHitTestVisible = false;
             }
             else
             {
+                Log.WriteInfo("Clickthrough disabled");
                 SetWindowLong(hwnd, GWL_EXSTYLE, extendedStyle & NOT_WS_EX_TRANSPARENT);
                 window.IsHitTestVisible = true;
             }

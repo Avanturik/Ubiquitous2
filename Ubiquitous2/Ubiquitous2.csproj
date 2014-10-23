@@ -186,6 +186,9 @@
     <Compile Include="Controls\SmoothPanel\SmoothPanelViewCache.cs" />
     <Compile Include="Converter\BoolToScrollBarVisibility - Copy.cs" />
     <Compile Include="Converter\NonEmptyToVisibility.cs" />
+    <Compile Include="Design\DatabaseService.cs" />
+    <Compile Include="Design\GreetingsDataService.cs" />
+    <Compile Include="Design\StreamPageDataService.cs" />
     <Compile Include="Interactivity\ElementToOBSPlugin.cs" />
     <Compile Include="Interactivity\UnclosableWindow.cs" />
     <Compile Include="Model\CybergameChat.cs" />
@@ -833,7 +836,7 @@
     <Content Include="Content\hitboxemoticons.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="database\ubiquitous.sqlite">
+    <Content Include="database\ubiquitousdefault.sqlite">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <None Include="Design\projectGuides.guides" />
