@@ -96,6 +96,7 @@ namespace UB.Model
                     lock (downloadLock)
                     {
                         SuccessHandler();
+                        Encoding = Encoding.UTF8;
                         return DownloadString(new Uri(url));
                     }
                 }

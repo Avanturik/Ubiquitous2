@@ -166,7 +166,7 @@ namespace UB.Model
                 if( !String.IsNullOrWhiteSpace(cookieName) && !String.IsNullOrWhiteSpace(cookieValue) && !String.IsNullOrWhiteSpace(newHref))
                 {
                     webClient.Encoding = System.Text.Encoding.UTF8;
-                    webClient.SetCookie( cookieName, cookieValue, "goodgame.ru");
+                    webClient.SetCookie( cookieName, cookieValue, "goodgame.ru");                    
                     content = webClient.Download( newHref );
                 }
             }
