@@ -12,9 +12,11 @@ namespace UB.Interactivity
 {
     public class DragThumb :Behavior<UIElement>
     {
+        private Window window;
         protected override void OnAttached()
         {
             AssociatedObject.MouseDown += AssociatedObject_MouseDown;
+            window = Window.GetWindow(AssociatedObject);
         }
 
         void AssociatedObject_MouseDown(object sender, MouseButtonEventArgs e)
@@ -34,7 +36,6 @@ namespace UB.Interactivity
 
         private void SwitchWindowSize()
         {
-            var window = Window.GetWindow(AssociatedObject);
             if (window == null)
                 return;
             window.WindowState = window.WindowState == WindowState.Maximized ? WindowState.Normal : WindowState.Maximized;
@@ -42,7 +43,6 @@ namespace UB.Interactivity
         }
         private void StartDrag()
         {
-            var window = Window.GetWindow(AssociatedObject);
             if (window == null)
                 return;
 

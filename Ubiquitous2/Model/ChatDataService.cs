@@ -6,6 +6,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Web;
+using System.Windows.Threading;
 using GalaSoft.MvvmLight.Threading;
 using Microsoft.Practices.ServiceLocation;
 using UB.Model.IRC;
@@ -26,7 +27,7 @@ namespace UB.Model
         private SteamChat steamChat;
         private HashSet<string> ignoreList = new HashSet<string>();
         //Disposable
-        private Timer receiveTimer;
+        private DispatcherTimer receiveTimer = new DispatcherTimer();
 
         public ChatDataService()
         {
@@ -133,27 +134,10 @@ namespace UB.Model
         public void StartAllChats()
         {
             steamChat = (SteamChat)GetChat(SettingsRegistry.ChatTitleSteam);
-            //Accumulate messages and update ViewModel periodically
-            receiveTimer = new Timer((obj) =>
-            {
-                if ( messageQueue.Count > 0 && readChatCallback != null)
-                {
-                    lock (messageQueueLock)
-                    {
-                        var messageList = messageQueue.ToList();
-                        if( readChatCallback(messageQueue.ToArray(), null) )
-                        {
-                            Task.Factory.StartNew(() =>
-                            {
-                                if (steamChat != null && steamChat.Enabled)
-                                    messageList.ForEach(message => steamChat.SendMessage(message));
-                            });
-
-                            messageQueue.Clear();
-                        }
-                    }
-                }
-            }, null, 1500, 1500);
+            //Accumulate messages and update ViewModel periodically            
+            receiveTimer.Interval = TimeSpan.FromMilliseconds(1000);
+            receiveTimer.Tick += receiveTimer_Tick;
+            receiveTimer.Start();
 
             int waitChatStatus = 5000;
             Chats.ForEach(chat =>
@@ -201,6 +185,27 @@ namespace UB.Model
             });
         }
 
+        void receiveTimer_Tick(object sender, EventArgs e)
+        {
+            if (messageQueue.Count > 0 && readChatCallback != null)
+            {
+                lock (messageQueueLock)
+                {
+                    var messageList = messageQueue.ToList();
+                    if (readChatCallback(messageQueue.ToArray(), null))
+                    {
+                        Task.Factory.StartNew(() =>
+                        {
+                            if (steamChat != null && steamChat.Enabled)
+                                messageList.ForEach(message => steamChat.SendMessage(message));
+                        });
+
+                        messageQueue.Clear();
+                    }
+                }
+            }
+        }
+
         void chat_MessageReceived(object sender, ChatServiceEventArgs e)
         {
             var message = e.Message;
@@ -229,7 +234,7 @@ namespace UB.Model
         }
         protected virtual void Dispose(bool nativeOnly)
         {
-            receiveTimer.Dispose();
+            
         }
 
         public string GetRandomText()
