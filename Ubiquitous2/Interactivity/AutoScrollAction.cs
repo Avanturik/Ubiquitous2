@@ -25,8 +25,13 @@ namespace UB.Interactivity
         protected void ScrollDown()
         {
             //TODO to get really smooth scroll I need to calculate message height more precisely
-            UI.Dispatch(() => InstantScrollToBottom());
-            UI.Dispatch(() => InstantScrollToBottom());
+
+            for (int i = 0; i < 2; i++)
+            {
+                Dispatcher.BeginInvoke(new Action(() => { InstantScrollToBottom(); }), DispatcherPriority.ContextIdle, null);
+            }
+            
+
             return; 
 
             storyBoard = new Storyboard();
@@ -64,8 +69,8 @@ namespace UB.Interactivity
             var scrollViewer = this.Target;
 
             scrollViewer.ScrollToBottom();
-            if (Dispatcher != null)
-                Dispatcher.Invoke(new Action(() => { }), DispatcherPriority.ContextIdle, null);
+            //if (Dispatcher != null)
+            //    Dispatcher.Invoke(new Action(() => { }), DispatcherPriority.ContextIdle, null);
 
         }
 
