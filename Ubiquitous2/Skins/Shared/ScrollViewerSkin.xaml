@@ -90,6 +90,11 @@
         </Setter>
     </Style>
 
+    
+    <ContextMenu x:Key="VScrollBarContextMenu" x:Shared="true">
+        <MenuItem IsCheckable="True" Header="Force autoscroll" Command="{Binding ForceAutoScroll}" CommandParameter="{Binding IsChecked, RelativeSource={RelativeSource Self}}" CommandTarget="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}"/>
+    </ContextMenu>
+
     <ControlTemplate x:Key="VerticalScrollBar" TargetType="{x:Type ScrollBar}">
 
         <Grid Width="8" Margin="0">
@@ -111,7 +116,7 @@
                     </RepeatButton>
                 </Track.DecreaseRepeatButton>
                 <Track.Thumb>
-                    <Thumb Style="{StaticResource ScrollBarThumbStyle}">
+                    <Thumb ContextMenu="{StaticResource VScrollBarContextMenu}" Style="{StaticResource ScrollBarThumbStyle}">
                     </Thumb>
                 </Track.Thumb>
                 <Track.IncreaseRepeatButton>

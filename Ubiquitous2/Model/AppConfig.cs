@@ -15,6 +15,36 @@ namespace UB.Model
         }
 
         /// <summary>
+        /// The <see cref="ForceAutoScroll" /> property's name.
+        /// </summary>
+        public const string ForceAutoScrollPropertyName = "ForceAutoScroll";
+
+        private bool _forceAutoScroll = false;
+
+        /// <summary>
+        /// Sets and gets the ForceAutoScroll property.
+        /// Changes to that property's value raise the PropertyChanged event. 
+        /// </summary>
+        public bool ForceAutoScroll
+        {
+            get
+            {
+                return _forceAutoScroll;
+            }
+
+            set
+            {
+                if (_forceAutoScroll == value)
+                {
+                    return;
+                }
+
+                _forceAutoScroll = value;
+                RaisePropertyChanged(ForceAutoScrollPropertyName);
+            }
+        }
+
+        /// <summary>
         /// The <see cref="FontSizeTimestamp" /> property's name.
         /// </summary>
         public const string FontSizeTimestampPropertyName = "FontSizeTimestamp";

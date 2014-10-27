@@ -107,7 +107,7 @@ namespace UB.ViewModel
 
             MessengerInstance.Register<bool>(this, "EnableAutoScroll", msg =>
             {
-                EnableAutoScroll = msg;
+               EnableAutoScroll = msg;
             });           
 
             if (_generalDataService.Services == null)
@@ -320,8 +320,8 @@ namespace UB.ViewModel
                 {
                     return;
                 }
-                _enableAutoScroll = value;
-                IsScrollBarVisible = !_enableAutoScroll;
+                _enableAutoScroll = value | AppConfig.ForceAutoScroll;
+                IsScrollBarVisible = !_enableAutoScroll | AppConfig.ForceAutoScroll;
                 RaisePropertyChanged(EnableAutoScrollPropertyName);
             }
         }
@@ -514,6 +514,25 @@ namespace UB.ViewModel
                 MessengerInstance.Unregister<bool>(this, "EnableAutoScroll");
         }
 
+
+        private RelayCommand<bool> _forceAutoScroll;
+
+        /// <summary>
+        /// Gets the ForceAutoScroll.
+        /// </summary>
+        public RelayCommand<bool> ForceAutoScroll
+        {
+            get
+            {
+                return _forceAutoScroll
+                    ?? (_forceAutoScroll = new RelayCommand<bool>(
+                    (newState) =>
+                    {
+                        EnableAutoScroll = newState;
+                        (Application.Current as App).AppConfig.ForceAutoScroll = newState;
+                    }));
+            }
+        }
     }
 
 }
