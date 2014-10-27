@@ -78,10 +78,11 @@
     <SignAssembly>false</SignAssembly>
   </PropertyGroup>
   <PropertyGroup>
-    <AssemblyOriginatorKeyFile>ubiquitous2.snk</AssemblyOriginatorKeyFile>
+    <AssemblyOriginatorKeyFile>
+    </AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <PropertyGroup>
-    <ManifestCertificateThumbprint>0978007EDB5F7F66974851199B67559A3A36B847</ManifestCertificateThumbprint>
+    <ManifestCertificateThumbprint>52BFE916C0EF90CE2809E41D0A84B3B348E904C2</ManifestCertificateThumbprint>
   </PropertyGroup>
   <PropertyGroup>
     <ManifestKeyFile>xedoc.pfx</ManifestKeyFile>
@@ -1046,7 +1047,6 @@
     <Content Include="Content\twitchemoticons.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <None Include="ubiquitous2.snk" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="ubiquitous smile.ico">
