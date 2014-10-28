@@ -85,7 +85,7 @@
                                 <Border.Background>
                                     <SolidColorBrush Opacity="{Binding AppConfig.IndividualMessageBackgroundOpacity}" Color="#303030"/>
                                 </Border.Background>
-                            <TextBlock TextOptions.TextFormattingMode="Display" Focusable="False" TextAlignment="Left" Margin="1,1,1,1" TextWrapping="Wrap" FontSize="{Binding AppConfig.FontSizeMessage}" Foreground="#FFCDCDCD" Interactivity:TextBlockAttached.InlineList="{Binding Message, Converter={StaticResource ResourceKey=textConverter}}" FontFamily="Calibri" TextOptions.TextHintingMode="Fixed" FontWeight="Normal"/>
+                            <TextBlock TextOptions.TextFormattingMode="Display" Focusable="False" TextAlignment="Left" Margin="1,1,1,1" TextWrapping="Wrap" FontSize="{Binding AppConfig.FontSizeMessage}" Foreground="#FFCDCDCD" Interactivity:TextBlockAttached.InlineList="{Binding Message, Converter={StaticResource ResourceKey=textConverter}, IsAsync=True}" FontFamily="Calibri" TextOptions.TextHintingMode="Fixed" FontWeight="Normal"/>
                         </Border>                            
                         </Grid>
                 </ControlTemplate>

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Interactivity;
@@ -25,15 +26,6 @@ namespace UB.Interactivity
         protected void ScrollDown()
         {
             //TODO to get really smooth scroll I need to calculate message height more precisely
-
-            for (int i = 0; i < 2; i++)
-            {
-                Dispatcher.BeginInvoke(new Action(() => { InstantScrollToBottom(); }), DispatcherPriority.ContextIdle, null);
-            }
-            
-
-            return; 
-
             storyBoard = new Storyboard();
 
             scrollViewer = this.Target;
@@ -58,20 +50,17 @@ namespace UB.Interactivity
 
         void storyBoard_Completed(object sender, EventArgs e)
         {
-            using (var timer = new Timer((obj) =>
+            for (int i = 0; i < 5; i++)
             {
-                UI.Dispatch(() => InstantScrollToBottom());
-            }, this, 100, Timeout.Infinite)) { };
+                Dispatcher.BeginInvoke(new Action(() => InstantScrollToBottom()), DispatcherPriority.ContextIdle, null);
+                Thread.Sleep(16);
+            }
         }
 
         protected void InstantScrollToBottom()
         {
             var scrollViewer = this.Target;
-
             scrollViewer.ScrollToBottom();
-            //if (Dispatcher != null)
-            //    Dispatcher.Invoke(new Action(() => { }), DispatcherPriority.ContextIdle, null);
-
         }
 
         /// <summary>

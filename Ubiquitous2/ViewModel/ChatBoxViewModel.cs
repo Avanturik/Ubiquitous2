@@ -214,25 +214,22 @@ namespace UB.ViewModel
                     firstMessageReceived = true;
                     MessengerInstance.Send<bool>(false, "SwitchHelloPlaceHolder");
                 }
-                UI.Dispatch(() =>
-                {               
-                    foreach( var msg in messages)
-                    {
-                        var newMessage = new ChatMessageViewModel(msg);
-                        Messages.Add(
-                            newMessage
-                        );
-                    }
+                foreach( var msg in messages)
+                {
+                    var newMessage = new ChatMessageViewModel(msg);
+                    Messages.Add(
+                        newMessage
+                    );
+                }
 
-                    if (MessageAdded != null)
-                        MessageAdded(this, EventArgs.Empty);
+                if (MessageAdded != null)
+                    MessageAdded(this, EventArgs.Empty);
 
-                    if (ChatToImageConfig.Enabled)
-                    {
-                        IsMessageAdded = true;
-                        IsMessageAdded = false;
-                    }
-                });
+                if (ChatToImageConfig.Enabled)
+                {
+                    IsMessageAdded = true;
+                    IsMessageAdded = false;
+                }
 
             }
         }
@@ -316,7 +313,7 @@ namespace UB.ViewModel
 
             set
             {
-                if (_enableAutoScroll == value)
+                if (_enableAutoScroll == (value | AppConfig.ForceAutoScroll))
                 {
                     return;
                 }

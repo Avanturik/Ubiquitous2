@@ -118,6 +118,9 @@ namespace UB.Model
         {
             var stopChats = Chats.Where(chat => chat.Enabled == true).ToList();
 
+            var result = Parallel.For(0, 1, (i) => { });
+            
+
             Task[] stopTasks = new Task[stopChats.Count()];
             for (int i = 0; i < stopTasks.Length; i++)
             {
@@ -135,7 +138,7 @@ namespace UB.Model
         {
             steamChat = (SteamChat)GetChat(SettingsRegistry.ChatTitleSteam);
             //Accumulate messages and update ViewModel periodically            
-            receiveTimer.Interval = TimeSpan.FromMilliseconds(1000);
+            receiveTimer.Interval = TimeSpan.FromMilliseconds(1500);
             receiveTimer.Tick += receiveTimer_Tick;
             receiveTimer.Start();
 

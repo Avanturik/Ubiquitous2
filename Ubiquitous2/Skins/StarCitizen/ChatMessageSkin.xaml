@@ -83,7 +83,7 @@
                             </StackPanel>
                             <TextBlock Focusable="False" Text="{Binding Message.TimeStamp}" FontSize="{Binding AppConfig.FontSizeTimestamp}" Foreground="#FFF7941D" TextAlignment="Right" DockPanel.Dock="Right" Margin="0,3,0,0" FontWeight="Bold" VerticalAlignment="Center" FontFamily="/Ubiquitous2;component/Fonts/#Electrolize" Height="15" TextOptions.TextHintingMode="Fixed"/>
                         </DockPanel>
-                        <TextBlock Grid.Row="1" Focusable="False" TextAlignment="Left" Margin="1,1,1,1" TextWrapping="Wrap" FontSize="{Binding AppConfig.FontSizeMessage}" Foreground="#FF4AD3C6" Interactivity:TextBlockAttached.InlineList="{Binding Message, Converter={StaticResource ResourceKey=textConverter}}" FontFamily="/Ubiquitous2;component/Fonts/#Electrolize">
+                        <TextBlock Grid.Row="1" Focusable="False" TextAlignment="Left" Margin="1,1,1,1" TextWrapping="Wrap" FontSize="{Binding AppConfig.FontSizeMessage}" Foreground="#FF4AD3C6" Interactivity:TextBlockAttached.InlineList="{Binding Message, Converter={StaticResource ResourceKey=textConverter}, IsAsync=True}" FontFamily="/Ubiquitous2;component/Fonts/#Electrolize">
                             <TextBlock.Background>
                                 <SolidColorBrush Opacity="{Binding AppConfig.IndividualMessageBackgroundOpacity}">
                                 </SolidColorBrush>

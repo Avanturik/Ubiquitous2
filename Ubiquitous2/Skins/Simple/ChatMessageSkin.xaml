@@ -83,7 +83,7 @@
                             </StackPanel>
                             <TextBlock Focusable="False" Text="{Binding Message.TimeStamp}" FontSize="{Binding AppConfig.FontSizeTimestamp}" Foreground="#FFD69B33" TextAlignment="Right" DockPanel.Dock="Right" Margin="0" FontWeight="Bold" VerticalAlignment="Center" FontFamily="Segoe UI"/>
                         </DockPanel>
-                        <TextBlock  Grid.Row="1" Focusable="False" TextAlignment="Left" Margin="1,1,1,1" TextWrapping="Wrap" FontSize="{Binding AppConfig.FontSizeMessage}" Foreground="#FFCDCDCD" Interactivity:TextBlockAttached.InlineList="{Binding Message, Converter={StaticResource ResourceKey=textConverter}}"  UseLayoutRounding="True" FontFamily="Segoe UI">
+                        <TextBlock  Grid.Row="1" Focusable="False" TextAlignment="Left" Margin="1,1,1,1" TextWrapping="Wrap" FontSize="{Binding AppConfig.FontSizeMessage}" Foreground="#FFCDCDCD" Interactivity:TextBlockAttached.InlineList="{Binding Message, Converter={StaticResource ResourceKey=textConverter}, IsAsync=True}"  UseLayoutRounding="True" FontFamily="Segoe UI">
                             <TextBlock.Background>
                                 <SolidColorBrush Opacity="{Binding AppConfig.IndividualMessageBackgroundOpacity}">
                                 </SolidColorBrush>
