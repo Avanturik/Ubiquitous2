@@ -70,26 +70,24 @@
                     		<BlurEffect Radius="0"/>
                     	</Grid.Effect>-->
                         <Grid Visibility="Hidden">
-							<TextBlock x:Name="prefixBlock" HorizontalAlignment="Left" Margin="0,0,5,0" Foreground="#FFE4FFFF" FontFamily="/Ubiquitous2;component/Fonts/#Purista">
+							<TextBlock x:Name="prefixBlock" HorizontalAlignment="Left" Margin="0,0,5,0" Foreground="#FFE4FFFF" FontFamily="/Ubiquitous2;component/Fonts/#Purista" TextWrapping="Wrap">
                                 <ub:ServiceLogo Width="12" DataContext="{Binding Message.ChatName}" HorizontalAlignment="Left" VerticalAlignment="Center"/>
                                 <Run Text="["/>
                                 <Hyperlink ToolTip="Click to set as active channel"  Focusable="False" Command="{Binding SetActiveChannel}" Cursor="Hand">
                                     <Run Focusable="False" FontSize="{Binding AppConfig.FontSizeMessage}" Text="{Binding Message.Channel}"  FontFamily="/Ubiquitous2;component/Fonts/#Purista Light"/>
                                 </Hyperlink>
                                 <Run Text="]"/>
-                                <InlineUIContainer>
-                                    <TextBlock FontSize="{Binding AppConfig.FontSizeMessage}" Text="{Binding Message.FromUserName}"  Cursor="Hand" ToolTip="Right click for options" Style="{StaticResource ResourceKey=NickStyle}" x:Name="nickTextBlock" VerticalAlignment="Top" Margin="0,0,-2,0" HorizontalAlignment="Right" FontFamily="/Ubiquitous2;component/Fonts/#Purista Medium">
-										<TextBlock.ContextMenu>
-											<ContextMenu x:Name="userNameMenu" Style="{DynamicResource ContextMenuStyle}">
-												<MenuItem Header="Add to ignore list" Command="{Binding IgnoreUser}"  CommandParameter="{Binding Message}" Foreground="#FFFFC042" VerticalContentAlignment="Center" VerticalAlignment="Center">
-													<MenuItem.Icon>
-														<Image Width="16" Source="/Ubiquitous2;component/Resources/ignore.png" HorizontalAlignment="Left" VerticalAlignment="Center"/>
-													</MenuItem.Icon>
-												</MenuItem>
-											</ContextMenu>
-										</TextBlock.ContextMenu>
-									</TextBlock>
-								</InlineUIContainer>
+                                <TextBlock FontSize="{Binding AppConfig.FontSizeMessage}" Text="{Binding Message.FromUserName}"  Cursor="Hand" ToolTip="Right click for options" Style="{StaticResource ResourceKey=NickStyle}" x:Name="nickTextBlock" VerticalAlignment="Top" Margin="0,0,-2,0" HorizontalAlignment="Right" FontFamily="/Ubiquitous2;component/Fonts/#Purista Medium">
+									<TextBlock.ContextMenu>
+										<ContextMenu x:Name="userNameMenu" Style="{DynamicResource ContextMenuStyle}">
+											<MenuItem Header="Add to ignore list" Command="{Binding IgnoreUser}"  CommandParameter="{Binding Message}" Foreground="#FFFFC042" VerticalContentAlignment="Center" VerticalAlignment="Center">
+												<MenuItem.Icon>
+													<Image Width="16" Source="/Ubiquitous2;component/Resources/ignore.png" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+												</MenuItem.Icon>
+											</MenuItem>
+										</ContextMenu>
+									</TextBlock.ContextMenu>
+								</TextBlock>
                                 <Run Text=" "/><Run Text=":"/></TextBlock>
 
 
