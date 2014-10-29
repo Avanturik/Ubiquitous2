@@ -24,28 +24,20 @@
 			<Setter.Value>
 				<ControlTemplate TargetType="{x:Type UserControl}">
 					<ControlTemplate.Resources>
-						<Style x:Key="{x:Type Hyperlink}" TargetType="{x:Type Hyperlink}">
-							<Setter Property="TextDecorations" Value="None"/>                          
-							<Style.Triggers>
-								<Trigger Property="IsMouseOver" Value="True">
-									<Setter Property="Foreground" Value="#FFE4FF00"/>
-									<Setter Property="Cursor" Value="Hand"/>
-								</Trigger>
-								<Trigger Property="IsMouseOver" Value="False">
-									<Setter Property="Foreground" Value="#FFE4FFFF"/>
-									<Setter Property="Cursor" Value="Hand"/>
-								</Trigger>
-							</Style.Triggers>
-						</Style>
-						<Style TargetType="{x:Type TextBox}">
-							<Setter Property="Background" Value="Transparent"/>
-							<Setter Property="BorderThickness" Value="0"/>
-							<Setter Property="IsReadOnly" Value="True"/>
-							<Setter Property="RenderOptions.EdgeMode" Value="Aliased"/>
-							<Setter Property="TextOptions.TextRenderingMode" Value="Aliased"/>
-							<Setter Property="TextWrapping" Value="Wrap"/>
-						</Style>
-						<Style TargetType="{x:Type TextBlock}" x:Key="NickStyle">
+                        <Style x:Key="{x:Type Hyperlink}" TargetType="{x:Type Hyperlink}">
+                            <Setter Property="TextDecorations" Value="None"/>
+                            <Style.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter Property="Foreground" Value="#FFE4FF00"/>
+                                    <Setter Property="Cursor" Value="Hand"/>
+                                </Trigger>
+                                <Trigger Property="IsMouseOver" Value="False">
+                                    <Setter Property="Foreground" Value="#FFE4FFFF"/>
+                                    <Setter Property="Cursor" Value="Hand"/>
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                        <Style TargetType="{x:Type TextBlock}" x:Key="NickStyle">
 							<Setter Property="Foreground" Value="#FFf3f5fD" />
 							<Setter Property="Effect">
 								<Setter.Value>
@@ -81,7 +73,9 @@
 							<TextBlock x:Name="prefixBlock" HorizontalAlignment="Left" Margin="0,0,5,0" Foreground="#FFE4FFFF" FontFamily="/Ubiquitous2;component/Fonts/#Purista">
                                 <ub:ServiceLogo Width="12" DataContext="{Binding Message.ChatName}" HorizontalAlignment="Left" VerticalAlignment="Center"/>
                                 <Run Text="["/>
-                                <Hyperlink ToolTip="Click to set as active channel"  Focusable="False" Command="{Binding SetActiveChannel}" Cursor="Hand"><Run Focusable="False" FontSize="{Binding AppConfig.FontSizeMessage}" Text="{Binding Message.Channel}"  FontFamily="/Ubiquitous2;component/Fonts/#Purista Light"/></Hyperlink>
+                                <Hyperlink ToolTip="Click to set as active channel"  Focusable="False" Command="{Binding SetActiveChannel}" Cursor="Hand">
+                                    <Run Focusable="False" FontSize="{Binding AppConfig.FontSizeMessage}" Text="{Binding Message.Channel}"  FontFamily="/Ubiquitous2;component/Fonts/#Purista Light"/>
+                                </Hyperlink>
                                 <Run Text="]"/>
                                 <InlineUIContainer>
                                     <TextBlock FontSize="{Binding AppConfig.FontSizeMessage}" Text="{Binding Message.FromUserName}"  Cursor="Hand" ToolTip="Right click for options" Style="{StaticResource ResourceKey=NickStyle}" x:Name="nickTextBlock" VerticalAlignment="Top" Margin="0,0,-2,0" HorizontalAlignment="Right" FontFamily="/Ubiquitous2;component/Fonts/#Purista Medium">
@@ -101,9 +95,9 @@
 
 						</Grid>
 						<TextBlock Foreground="White" TextWrapping="Wrap" Focusable="False" HorizontalAlignment="Stretch"
-
+                            Interactivity:TextBlockAttached.InlineListPrefix="{Binding Converter={StaticResource textConverter}, ElementName=prefixBlock}"
 							Interactivity:TextBlockAttached.InlineList="{Binding Message, Converter={StaticResource textConverter}}"
-							Interactivity:TextBlockAttached.InlineListPrefix="{Binding Converter={StaticResource textConverter}, ElementName=prefixBlock}" FontFamily="/Ubiquitous2;component/Fonts/#Purista Light" FontSize="{Binding AppConfig.FontSizeMessage}" FontWeight="Thin"
+							 FontFamily="/Ubiquitous2;component/Fonts/#Purista Light" FontSize="{Binding AppConfig.FontSizeMessage}" FontWeight="Thin"
                                    >
 							<TextBlock.Effect>
                                 <DropShadowEffect Color="#FF69879F" BlurRadius="7" ShadowDepth="0"/>

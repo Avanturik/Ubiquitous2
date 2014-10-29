@@ -29,10 +29,10 @@
                                             <ScrollViewer VerticalScrollBarVisibility="Visible" Focusable="False" d:DesignHeight="200" d:DesignWidth="500"  Template="{DynamicResource ScrollStyle}" CanContentScroll="True">
                                                 <i:Interaction.Triggers>
                                                     <Interactivity:DataEventTrigger EventName="MessageAdded" d:EventName="">
-                                                        <Interactivity:AutoScrollAction Duration="100" EnableAutoScroll="{Binding EnableAutoScroll}"/>
+                                                        <Interactivity:AutoScrollAction Duration="200" EnableAutoScroll="{Binding EnableAutoScroll}"/>
                                                     </Interactivity:DataEventTrigger>
                                                     <Interactivity:DataEventTrigger EventName="MessageSent" d:EventName="">
-                                                        <Interactivity:AutoScrollAction Duration="100" EnableAutoScroll="True"/>
+                                                        <Interactivity:AutoScrollAction Duration="200" EnableAutoScroll="True"/>
                                                     </Interactivity:DataEventTrigger>
                                                 </i:Interaction.Triggers>
                                                 <ItemsPresenter />
@@ -42,7 +42,7 @@
                             </ItemsControl.Template>
                             <ItemsControl.ItemsPanel>
                                 <ItemsPanelTemplate>
-                                        <dc:SmoothPanel Margin="7,0" TrackTopMost="True" VirtualizingPanel.VirtualizationMode="Recycling" VirtualizingPanel.CacheLength="5" VirtualizingPanel.CacheLengthUnit="Page">
+                                        <dc:SmoothPanel Margin="7,0" TrackTopMost="False">
                                             <dc:SmoothPanel.Templates>
                                                 <dc:SmoothPanelTemplate ViewModel="{x:Type ubviewmodel:ChatMessageViewModel}" View="{x:Type ubview:ChatMessageView}" />
                                             </dc:SmoothPanel.Templates>

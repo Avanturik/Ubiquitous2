@@ -25,7 +25,7 @@ namespace UB.Converter
         {
             lock( lockConvert )
             {
-                if( value is ChatMessage )                    
+                if( value is ChatMessage )
                 {
                     return ChatMessageToInlinesCollection(value as ChatMessage);
                 }

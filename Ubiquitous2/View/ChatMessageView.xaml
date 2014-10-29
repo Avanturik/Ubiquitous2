@@ -5,11 +5,13 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:Custom="http://www.galasoft.ch/mvvmlight"
              xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+             xmlns:Interactivity="clr-namespace:UB.Interactivity"
              mc:Ignorable="d" 
              UseLayoutRounding="True"             
              Focusable="False"
              Margin="0,0,0,6"
              xmlns:m="clr-namespace:UB.ViewModel"
+             Name="messageContainer"
              TextOptions.TextFormattingMode="Ideal"
              DataContext="{Binding Path=ChatMessage, Source={StaticResource Locator}}"
              d:DesignHeight="89" d:DesignWidth="300" Style="{DynamicResource ChatMessageTemplate}" >
@@ -20,5 +22,8 @@
         </i:EventTrigger>
     </i:Interaction.Triggers>
 
+    <i:Interaction.Behaviors>
+        <Interactivity:ElementSizeTracker Height="{Binding Message.Height, Mode=OneWayToSource}"/>
+    </i:Interaction.Behaviors>
 
 </UserControl>

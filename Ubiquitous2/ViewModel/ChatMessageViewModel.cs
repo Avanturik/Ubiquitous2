@@ -6,6 +6,8 @@ using GalaSoft.MvvmLight.Ioc;
 using GalaSoft.MvvmLight.Command;
 using Newtonsoft.Json;
 using System.Windows;
+using System.Windows.Controls;
+using UB.View;
 
 
 namespace UB.ViewModel
@@ -13,7 +15,6 @@ namespace UB.ViewModel
     public class ChatMessageViewModel : ViewModelBase, IHeightMeasurer
     {
         private readonly IChatDataService _dataService;
-
         private double estimatedHeight;
         private double estimatedWidth;
 
@@ -78,13 +79,33 @@ namespace UB.ViewModel
 
         public double GetEstimatedHeight(double width)
         {
+            if (Message.Height <= 0)
+                MeasureHeight(Message.Style);
+
+            if (Message.Height > 0)
+                return Message.Height;
+
             // Do not recalc height if text and width are unchanged
             if (estimatedHeight < 0 || estimatedWidth != width)
             {
                 estimatedWidth = width;
-                estimatedHeight = TextMeasurer.GetEstimatedHeight(Message.Text, width) + 38; // Add margin
+                estimatedHeight = TextMeasurer.GetEstimatedHeight(Message.Text, width); 
             }
             return estimatedHeight;
+        }
+
+        private void MeasureHeight(Style style)
+        {
+            var width = (Application.Current as App).ChatBoxWidth;
+            if (Message.Height <= 0 && width > 0 )
+            {
+                var testMessage = new ChatMessageView();
+                testMessage.DataContext = this;
+                testMessage.Style = (Style)testMessage.TryFindResource("ChatMessageTemplate");
+                testMessage.Measure(new Size(width, double.PositiveInfinity));
+                Message.Height = testMessage.DesiredSize.Height;
+            }
+
         }
 
         /// <summary>

@@ -15,46 +15,61 @@ namespace UB.Interactivity
     {
         private Storyboard storyBoard;
         private ScrollViewer scrollViewer;
+        private bool isInvoked = false;
+        protected override void OnAttached()
+        {
+            scrollViewer = Target;
+            scrollViewer.ScrollChanged += scrollViewer_ScrollChanged;
+        }
+
+        void scrollViewer_ScrollChanged(object sender, ScrollChangedEventArgs e)
+        {
+
+            if (e.ViewportHeightChange <= 0 && 
+                e.ExtentHeightChange <= 0.0 && 
+                scrollViewer.VerticalOffset == scrollViewer.ScrollableHeight
+                )
+            {
+                isInvoked = false;
+                return;
+            }
+            ScrollDown();
+        }
+
         protected override void Invoke(object parameter)
         {
+            isInvoked = true;
             if (EnableAutoScroll && Duration == 0)
                 InstantScrollToBottom();
-            else if (EnableAutoScroll)
+            else
                 ScrollDown();
         }
 
         protected void ScrollDown()
         {
-            //TODO to get really smooth scroll I need to calculate message height more precisely
-            storyBoard = new Storyboard();
 
-            scrollViewer = this.Target;
-            scrollViewer.InvalidateScrollInfo();
+            if (!EnableAutoScroll || !isInvoked )
+                return;
 
-            if (Dispatcher != null)
-                Dispatcher.Invoke(new Action(() => { }), DispatcherPriority.Render, null);
-
-            DoubleAnimation mainAnimation = new DoubleAnimation()
+            if (scrollViewer.ViewportHeight >= scrollViewer.ExtentHeight)
+                return;
+            
+            if (storyBoard != null )
             {
-                From = scrollViewer.VerticalOffset,
-                To = scrollViewer.ScrollableHeight,
-                DecelerationRatio = 0,
-                Duration = new Duration(TimeSpan.FromMilliseconds(Duration)),
-            };
+                storyBoard.Stop();
+                storyBoard = null;
+            }
+
+            storyBoard = new Storyboard();            
+
+            DoubleAnimation mainAnimation = new DoubleAnimation(scrollViewer.ExtentHeight - scrollViewer.ViewportHeight, TimeSpan.FromMilliseconds(Duration));
             storyBoard.Children.Add(mainAnimation);
             Storyboard.SetTarget(mainAnimation, AssociatedObject);
             Storyboard.SetTargetProperty(mainAnimation, new PropertyPath(ScrollViewerAttached.VerticalPositionProperty));
-            storyBoard.Completed += storyBoard_Completed;
-            storyBoard.Begin(scrollViewer);
-        }
-
-        void storyBoard_Completed(object sender, EventArgs e)
-        {
-            for (int i = 0; i < 5; i++)
-            {
-                Dispatcher.BeginInvoke(new Action(() => InstantScrollToBottom()), DispatcherPriority.ContextIdle, null);
-                Thread.Sleep(16);
-            }
+            storyBoard.Completed += (obj, e) => { 
+                storyBoard = null;
+            };
+            storyBoard.Begin();
         }
 
         protected void InstantScrollToBottom()
@@ -150,6 +165,36 @@ namespace UB.Interactivity
         /// </summary>
         public static readonly DependencyProperty WaitSizeChangeProperty = DependencyProperty.Register(
             WaitSizeChangePropertyName,
+            typeof(bool),
+            typeof(AutoScrollAction),
+            new UIPropertyMetadata(false));
+
+        /// <summary>
+        /// The <see cref="IsManual" /> dependency property's name.
+        /// </summary>
+        public const string IsManualPropertyName = "IsManual";
+
+        /// <summary>
+        /// Gets or sets the value of the <see cref="IsManual" />
+        /// property. This is a dependency property.
+        /// </summary>
+        public bool IsManual
+        {
+            get
+            {
+                return (bool)GetValue(IsManualProperty);
+            }
+            set
+            {
+                SetValue(IsManualProperty, value);
+            }
+        }
+
+        /// <summary>
+        /// Identifies the <see cref="IsManual" /> dependency property.
+        /// </summary>
+        public static readonly DependencyProperty IsManualProperty = DependencyProperty.Register(
+            IsManualPropertyName,
             typeof(bool),
             typeof(AutoScrollAction),
             new UIPropertyMetadata(false));

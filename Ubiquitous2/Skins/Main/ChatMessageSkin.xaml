@@ -5,6 +5,7 @@
                     xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
                     xmlns:ei="http://schemas.microsoft.com/expression/2010/interactions"
                     xmlns:Interactivity="clr-namespace:UB.Interactivity"
+                    xmlns:PresentationOptions="http://schemas.microsoft.com/winfx/2006/xaml/presentation/options" 
                     xmlns:gif="http://wpfanimatedgif.codeplex.com"
                     >
     <Converter:ChatMessageToInlines x:Key="textConverter" />
@@ -40,6 +41,7 @@
                         </Style>
                     </ControlTemplate.Resources>
                         <Grid Margin="0">
+                            
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="18"/>
                                 <RowDefinition MinHeight="18"/>
@@ -85,7 +87,7 @@
                                 <Border.Background>
                                     <SolidColorBrush Opacity="{Binding AppConfig.IndividualMessageBackgroundOpacity}" Color="#303030"/>
                                 </Border.Background>
-                            <TextBlock TextOptions.TextFormattingMode="Display" Focusable="False" TextAlignment="Left" Margin="1,1,1,1" TextWrapping="Wrap" FontSize="{Binding AppConfig.FontSizeMessage}" Foreground="#FFCDCDCD" Interactivity:TextBlockAttached.InlineList="{Binding Message, Converter={StaticResource ResourceKey=textConverter}, IsAsync=True}" FontFamily="Calibri" TextOptions.TextHintingMode="Fixed" FontWeight="Normal"/>
+                            <TextBlock TextOptions.TextFormattingMode="Display" Focusable="False" TextAlignment="Left" Margin="1,1,1,1" TextWrapping="Wrap" FontSize="{Binding AppConfig.FontSizeMessage}" Foreground="#FFCDCDCD" Interactivity:TextBlockAttached.InlineList="{Binding Message, Converter={StaticResource ResourceKey=textConverter}}" FontFamily="Calibri" TextOptions.TextHintingMode="Fixed" FontWeight="Normal"/>
                         </Border>                            
                         </Grid>
                 </ControlTemplate>

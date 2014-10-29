@@ -120,22 +120,26 @@ namespace UB.Interactivity
             var textBlockMain = new TextBlock();
             var textBlockPrefix = new TextBlock();
 
-            foreach (Inline inline in textBlock.Inlines.ToList())
+            if( prefixInlines == null || prefixInlines.Count <= 0 || mainInlines == null || mainInlines.Count <= 0 )
             {
-                var inlineKind = (inline.Tag as string);
-                switch( inlineKind )
+                foreach (Inline inline in textBlock.Inlines.ToList())
                 {
-                    case "main":
-                        if (mainInlines == null || mainInlines.Count <= 0)
-                            textBlockMain.Inlines.Add(inline);
-                        break;
-                    case "prefix":
-                        if (prefixInlines == null || prefixInlines.Count <= 0)
-                            textBlockPrefix.Inlines.Add(inline);
-                        break;
-                }
+                    var inlineKind = (inline.Tag as string);
+                    switch( inlineKind )
+                    {
+                        case "main":
+                            if (mainInlines == null || mainInlines.Count <= 0)
+                                textBlockMain.Inlines.Add(inline);
+                            break;
+                        case "prefix":
+                            if (prefixInlines == null || prefixInlines.Count <= 0)
+                                textBlockPrefix.Inlines.Add(inline);
+                            break;
+                    }
 
+                }
             }
+            
             textBlock.Inlines.Clear();
 
             if (prefixInlines != null && prefixInlines.Count > 0)

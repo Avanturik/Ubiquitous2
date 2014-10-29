@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Windows;
+using System.Windows.Controls;
 using UB.Utils;
 
 namespace UB.Model
@@ -78,5 +80,15 @@ namespace UB.Model
         public bool IsSentByMe { get; set; }
         public long UnixTimeStamp { get; set; }
         public bool IsNew { get; set; }
+        public Style Style { get; set; }
+
+
+        private double _height;
+
+        public double Height
+        {
+            get { return _height; }
+            set { _height = value > 0 ? value : _height; }
+        }
     }
 }
