@@ -191,9 +191,15 @@ namespace UB.ViewModel
                         return false;
                     };
                 });
-
+                
                 IsMessageAdded = false;
                 IsMessageAdded = true;
+
+                if( ChatToImageConfig.Enabled )
+                {
+                    SavePngFlag = false;
+                    SavePngFlag = true;
+                }
             }
         }
         private void AddMessages(ChatMessage[] messages)
@@ -528,6 +534,36 @@ namespace UB.ViewModel
                         EnableAutoScroll = newState;
                         (Application.Current as App).AppConfig.ForceAutoScroll = newState;
                     }));
+            }
+        }
+
+        /// <summary>
+        /// The <see cref="SavePngFlag" /> property's name.
+        /// </summary>
+        public const string SavePngFlagPropertyName = "SavePngFlag";
+
+        private bool _savePngFlag = false;
+
+        /// <summary>
+        /// Sets and gets the SavePngFlag property.
+        /// Changes to that property's value raise the PropertyChanged event. 
+        /// </summary>
+        public bool SavePngFlag
+        {
+            get
+            {
+                return _savePngFlag;
+            }
+
+            set
+            {
+                if (_savePngFlag == value)
+                {
+                    return;
+                }
+
+                _savePngFlag = value;
+                RaisePropertyChanged(SavePngFlagPropertyName);
             }
         }
     }

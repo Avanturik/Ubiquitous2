@@ -15,7 +15,7 @@
     
     
     <i:Interaction.Behaviors>
-        <Interactivity:ElementToPng FileName="{Binding ChatToImagePath}" DelayBefore="600" SaveOnDemand="True" SaveFlag="{Binding IsMessageAdded}"/>
+        <Interactivity:ElementToPng FileName="{Binding ChatToImagePath}" DelayBefore="600" SaveOnDemand="True" SaveFlag="{Binding SavePngFlag}"/>
         <Interactivity:ElementToOBSPlugin SaveInterval="40"/>
         <Interactivity:ElementSizeTracker Width="{Binding ChatBoxWidth, Mode=OneWayToSource}"/>
     </i:Interaction.Behaviors>

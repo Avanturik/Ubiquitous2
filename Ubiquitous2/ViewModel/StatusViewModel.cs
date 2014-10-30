@@ -51,8 +51,11 @@ namespace UB.ViewModel
                             Chats.Add(chat);
                             chat.Status.PropertyChanged += (o, e) =>
                             {
-                                IsNeedSave = true;
-                                IsNeedSave = false;
+                                if( ImageServiceConfig.Enabled )
+                                {
+                                    IsNeedSave = true;
+                                    IsNeedSave = false;
+                                }
                             };
                         }
                         if( ChatsView.NeedsRefresh )

@@ -42,10 +42,13 @@ namespace UB.ViewModel
                 CurrentTrack.PropertyChanged += (o,e) => {
                     if (e.PropertyName == MusicTrackInfo.ImagePropertyName)
                     {
-                        UI.Dispatch(() => {
-                            IsNeedSave = true;
-                            IsNeedSave = false;                        
-                        });
+                        if( imageService.Config.Enabled )
+                        {
+                            UI.Dispatch(() => {
+                                IsNeedSave = true;
+                                IsNeedSave = false;                        
+                            });
+                        }
                     }
                 };
                     

@@ -72,11 +72,9 @@
                         <Grid Visibility="Hidden">
 							<TextBlock x:Name="prefixBlock" HorizontalAlignment="Left" Margin="0,0,5,0" Foreground="#FFE4FFFF" FontFamily="/Ubiquitous2;component/Fonts/#Purista" TextWrapping="Wrap">
                                 <ub:ServiceLogo Width="12" DataContext="{Binding Message.ChatName}" HorizontalAlignment="Left" VerticalAlignment="Center"/>
-                                <Run Text="["/>
                                 <Hyperlink ToolTip="Click to set as active channel"  Focusable="False" Command="{Binding SetActiveChannel}" Cursor="Hand">
                                     <Run Focusable="False" FontSize="{Binding AppConfig.FontSizeMessage}" Text="{Binding Message.Channel}"  FontFamily="/Ubiquitous2;component/Fonts/#Purista Light"/>
                                 </Hyperlink>
-                                <Run Text="]"/>
                                 <TextBlock FontSize="{Binding AppConfig.FontSizeMessage}" Text="{Binding Message.FromUserName}"  Cursor="Hand" ToolTip="Right click for options" Style="{StaticResource ResourceKey=NickStyle}" x:Name="nickTextBlock" VerticalAlignment="Top" Margin="0,0,-2,0" HorizontalAlignment="Right" FontFamily="/Ubiquitous2;component/Fonts/#Purista Medium">
 									<TextBlock.ContextMenu>
 										<ContextMenu x:Name="userNameMenu" Style="{DynamicResource ContextMenuStyle}">
@@ -88,11 +86,11 @@
 										</ContextMenu>
 									</TextBlock.ContextMenu>
 								</TextBlock>
-                                <Run Text=" "/><Run Text=":"/></TextBlock>
+                                <Run Text=": "/></TextBlock>
 
 
 						</Grid>
-						<TextBlock Foreground="White" TextWrapping="Wrap" Focusable="False" HorizontalAlignment="Stretch"
+						<TextBlock Foreground="White" TextWrapping="Wrap" Focusable="False" HorizontalAlignment="Left"
                             Interactivity:TextBlockAttached.InlineListPrefix="{Binding Converter={StaticResource textConverter}, ElementName=prefixBlock}"
 							Interactivity:TextBlockAttached.InlineList="{Binding Message, Converter={StaticResource textConverter}}"
 							 FontFamily="/Ubiquitous2;component/Fonts/#Purista Light" FontSize="{Binding AppConfig.FontSizeMessage}" FontWeight="Thin"
