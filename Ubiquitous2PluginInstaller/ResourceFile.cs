@@ -19,17 +19,37 @@ namespace Ubiquitous2PluginInstaller
 
         }
 
-        public void SaveToFile(string savePath)
+        public void SaveToFile(string savePath, Action<string> callback)
         {
             using (Stream stream = assembly.GetManifestResourceStream(resourcePath))
             using (MemoryStream memoryStream = new MemoryStream())
             {
-                stream.CopyTo(memoryStream);
-                stream.Flush();
-                memoryStream.Flush();
+                if (stream == null && callback != null)
+                {
+                    callback("File not found in embedded resources: " + resourcePath);
+                    return;
+                }
 
-                File.WriteAllBytes(savePath, memoryStream.ToArray());
+                try
+                {
+                    stream.CopyTo(memoryStream);
+                    stream.Flush();
+                    memoryStream.Flush();
+                    var directory =  Path.GetDirectoryName( savePath);
+                    if (!System.IO.Directory.Exists(directory))
+                        Directory.CreateDirectory(directory);
 
+                    File.WriteAllBytes(savePath, memoryStream.ToArray());
+
+                } catch(Exception e)
+                {
+                    if (callback != null)
+                    {
+                        callback("Error saving " + resourcePath + " to " + savePath + ": " + e.Message);
+                        return;
+                    }
+
+                }
             }
         }
 

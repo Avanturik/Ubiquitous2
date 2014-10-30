@@ -25,7 +25,6 @@ namespace Ubiquitous2PluginInstaller
             Parallel.For(0, nameList.Length, (i, loopState) =>
             {
                 RegistryKey regKey = rootKey.OpenSubKey(nameList[i]);
-                Debug.Print(nameList[i]);
                 var displayName = regKey.GetValue("DisplayName");
                 if (displayName != null && displayName.ToString().Contains(partialName)) 
                 {
