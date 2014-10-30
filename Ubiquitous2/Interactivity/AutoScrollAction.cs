@@ -56,6 +56,10 @@ namespace UB.Interactivity
             
             if (storyBoard != null )
             {
+                var progress = storyBoard.GetCurrentProgress();
+                if( progress < 1 && progress > 0 )
+                    return;
+
                 storyBoard.Stop();
                 storyBoard = null;
             }
