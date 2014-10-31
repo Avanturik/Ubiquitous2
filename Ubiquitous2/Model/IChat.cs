@@ -19,19 +19,25 @@ namespace UB.Model
         bool Stop();
         bool Restart();
         bool SendMessage(ChatMessage message);
+        bool Login();
+        bool InitEmoticons();
+        void JoinChannels();
+        void ReadMessage(ChatMessage message);
+        void UpdateStats();
 
         Dictionary<string, ChatUser> Users { get; set; }
-        List<string> ChatChannels { get; set; }
+        List<string> ChatChannelNames { get; set; }
+        List<IChatChannel> ChatChannels { get; set; }
         Action<string, IChat> AddChannel { get; set; }
         Action<string, IChat> RemoveChannel { get; set; }
         Func<string, object> RequestData { get; set; }
+        Func<IChatChannel> CreateChannel { get; set; }
+        bool IsAnonymous { get; set; }
 
         List<Action<ChatMessage, IChat>> ContentParsers {get;set;}
         List<Emoticon> Emoticons { get; set; }
         void DownloadEmoticons(String url);
         ChatConfig Config {get;set;}
-        StatusBase Status { get; set; }        
-
-
+        StatusBase Status { get; set; }
     }
 }

@@ -15,16 +15,12 @@ using UB.Utils;
 
 namespace UB.Model
 {
-    public class CybergameChat : IChat, IStreamTopic
+    public class CybergameChat : ChatBase, IStreamTopic
     {
-        public event EventHandler<ChatServiceEventArgs> MessageReceived;
         private List<WebPoller> counterWebPollers = new List<WebPoller>();
-        private List<CybergameChannel> cybergameChannels = new List<CybergameChannel>();
         private WebClientBase loginWebClient = new WebClientBase();
         private List<KeyValuePair<string, string>> webGameList = new List<KeyValuePair<string, string>>();
         private List<KeyValuePair<String, String>> profileFormParams;
-        private string emoticonFallbackUrl = @"Content\cybergame_smiles.html";
-        private string emoticonUrl = "http://cybergame.tv/cgchat.htm?v=b";
         private string webChannelId;
         private object channelsLock = new object();
         private object pollerLock = new object();
@@ -33,18 +29,18 @@ namespace UB.Model
         private object lockSearch = new object();
         private bool isWebEmoticons = false;
         private bool isFallbackEmoticons = false;
-        private bool isAnonymous = true;
 
 
-        public CybergameChat(ChatConfig config)
+
+        public CybergameChat(ChatConfig config) : base(config)
         {
-            Config = config;
-            ContentParsers = new List<Action<ChatMessage, IChat>>();
-            ChatChannels = new List<string>();
-            Emoticons = new List<Emoticon>();
-            Status = new StatusBase();
-            Users = new Dictionary<string, ChatUser>();
+            EmoticonFallbackUrl = @"Content\cybergame_smiles.html";
+            EmoticonUrl = "http://cybergame.tv/cgchat.htm?v=b";
 
+            CreateChannel = () => { return new CybergameChannel(this); };
+
+            ContentParsers.Add(MessageParser.ParseURLs);
+            ContentParsers.Add(MessageParser.ParseEmoticons);
             Info = new StreamInfo()
             {
                 HasDescription = false,
@@ -52,191 +48,14 @@ namespace UB.Model
                 HasTopic = true,
                 ChatName = Config.ChatName,
             };
-            
-            ContentParsers.Add(MessageParser.ParseURLs);
-            ContentParsers.Add(MessageParser.ParseEmoticons);
-            
+
+
             Games = new ObservableCollection<Game>();
-
-            Enabled = Config.Enabled;
-        }
-        public string ChatName
-        {
-            get;
-            set;
-        }
-
-        public string IconURL
-        {
-            get;
-            set;
-
-        }
-
-        public string NickName
-        {
-            get;
-            set;
-
-        }
-
-        public bool HideViewersCounter
-        {
-            get;
-            set;
-
-        }
-
-        public bool Enabled
-        {
-            get;
-            set;
-
-        }
-
-        public bool Start()
-        {
-
-            if (Status.IsStarting || Status.IsConnected || Status.IsLoggedIn || Config == null)
-            {
-                return true;
-            }
-
-            Log.WriteInfo("Starting Cybergame.tv chat");
-            Status.ResetToDefault();
-            Status.IsStarting = true;
-
-            if (Login())
-            {
-                Status.IsConnecting = true;
-                Task.Factory.StartNew(() => JoinChannels());
-            }
-            InitEmoticons();
-
-            return false;
-        }
-
-        public bool Stop()
-        {
-            if (!Enabled)
-                Status.ResetToDefault();
-
-            if (Status.IsStopping)
-                return false;
-
-            Log.WriteInfo("Stopping Cybergame.tv chat");
-
-            Status.IsStopping = true;
-            Status.IsStarting = false;
-
-            lock (channelsLock)
-            {
-                cybergameChannels.ForEach(chan =>
-                {
-                    StopCounterPoller(chan.ChannelName);
-                    chan.Leave();
-                    if (RemoveChannel != null)
-                        RemoveChannel(chan.ChannelName, this);
-                });
-            }
-            ChatChannels.Clear();
-            return true;
         }
 
 
 
-        public bool Restart()
-        {
-            if (Status.IsStopping || Status.IsStarting)
-                return false;
-
-            Status.ResetToDefault();
-            Stop();
-            Start();
-            return true;
-        }
-
-        public bool SendMessage(ChatMessage message)
-        {
-            if (isAnonymous)
-                return false;
-
-            var cybergameChannel = cybergameChannels.FirstOrDefault(channel => channel.ChannelName.Equals(message.Channel, StringComparison.InvariantCultureIgnoreCase));
-            if (cybergameChannel != null)
-            {
-                if (String.IsNullOrWhiteSpace(message.FromUserName))
-                {
-                    message.FromUserName = NickName;
-                }
-                Task.Factory.StartNew(() => cybergameChannel.SendMessage(message));
-                ReadMessage(message);
-            }
-            return true;
-        }
-
-        public Dictionary<string, ChatUser> Users
-        {
-            get;
-            set;
-
-        }
-
-        public List<string> ChatChannels
-        {
-            get;
-            set;
-
-        }
-
-        public Action<string, IChat> AddChannel
-        {
-            get;
-            set;
-
-        }
-
-        public Action<string, IChat> RemoveChannel
-        {
-            get;
-            set;
-
-        }
-
-        public Func<string, object> RequestData
-        {
-            get;
-            set;
-
-        }
-
-        public List<Action<ChatMessage, IChat>> ContentParsers
-        {
-            get;
-            set;
-
-        }
-
-        public List<Emoticon> Emoticons
-        {
-            get;
-            set;
-
-        }
-
-        public ChatConfig Config
-        {
-            get;
-            set;
-
-        }
-
-        public StatusBase Status
-        {
-            get;
-            set;
-
-        }
-
+        #region IStreamTopic
         public StreamInfo Info
         {
             get;
@@ -288,7 +107,7 @@ namespace UB.Model
                 webGameList = Html.GetOptions(@"//select[@name='channel_game']/option", content);
                 webChannelId = Html.GetAttribute(@"//input[@name='channel']", "value", content);
                 profileFormParams = Html.FormParams(@"", content);
-                Info.CurrentGame.Id = webGameList.Where(v => v.Value.Equals(Info.CurrentGame.Name,StringComparison.InvariantCultureIgnoreCase)).Select(g => g.Key).FirstOrDefault();
+                Info.CurrentGame.Id = webGameList.Where(v => v.Value.Equals(Info.CurrentGame.Name, StringComparison.InvariantCultureIgnoreCase)).Select(g => g.Key).FirstOrDefault();
                 Info.CanBeRead = true;
                 Info.CanBeChanged = true;
 
@@ -312,7 +131,7 @@ namespace UB.Model
             loginWebClient.Headers["X-Requested-With"] = "XMLHttpRequest";
 
             Info.CurrentGame.Id = webGameList.FirstOrDefault(game => game.Value.Equals(Info.CurrentGame.Name, StringComparison.InvariantCultureIgnoreCase)).Key;
-           
+
             loginWebClient.Upload(String.Format(@"http://cybergame.tv/my_profile_edit/?mode=async&rand={0}", Time.UnixTimestamp()),
                 String.Format(param, Info.CurrentGame.Id, HttpUtility.UrlEncode(Info.Topic), webChannelId, HttpUtility.UrlEncode(displayName), HttpUtility.UrlEncode(channelName)));
         }
@@ -323,8 +142,11 @@ namespace UB.Model
             set;
 
         }
+      
+        #endregion
 
-        private bool Login()
+        #region IChat
+        public override bool Login()
         {
             try
             {
@@ -342,7 +164,7 @@ namespace UB.Model
                 Log.WriteInfo("Cybergame authorization exception {0}", e.Message);
                 return false;
             }
-            if (!isAnonymous)
+            if (!IsAnonymous)
             {
                 Status.IsLoggedIn = true;
             }
@@ -354,6 +176,8 @@ namespace UB.Model
         {
             var authToken = Config.GetParameterValue("AuthToken") as string;
             var userName = Config.GetParameterValue("Username") as string;
+            NickName = userName;
+
             var password = Config.GetParameterValue("Password") as string;
             var tokenCredentials = Config.GetParameterValue("AuthTokenCredentials") as string;
 
@@ -365,21 +189,19 @@ namespace UB.Model
 
             if (String.IsNullOrEmpty(userName))
             {
-                isAnonymous = true;
+                IsAnonymous = true;
                 return true;
             }
 
             if (String.IsNullOrWhiteSpace(authToken))
                 return false;
 
-            NickName = userName;
-
             loginWebClient.SetCookie("kname", userName, "cybergame.tv");
             loginWebClient.SetCookie("khash", userName, "cybergame.tv");
 
             var test = this.With(x => loginWebClient.Download("http://cybergame.tv"));
-            
-            if( test != null && test.Contains("logout.php") )
+
+            if (test != null && test.Contains("logout.php"))
                 return true;
 
             Config.SetParameterValue("AuthToken", String.Empty);
@@ -389,15 +211,15 @@ namespace UB.Model
         public bool LoginWithUsername()
         {
             var userName = Config.GetParameterValue("Username") as string;
+            NickName = userName;
             var password = Config.GetParameterValue("Password") as string;
 
             if (String.IsNullOrWhiteSpace(userName) || String.IsNullOrWhiteSpace(password))
             {
-                isAnonymous = true;
+                IsAnonymous = true;
                 return true;
             }
 
-            NickName = userName;
 
             var authString = String.Format(@"action=login&username={0}&pass={1}&remember_me=1", userName, password);
 
@@ -409,172 +231,19 @@ namespace UB.Model
             if (authToken == null)
             {
                 Log.WriteError("Login to cybergame.tv failed. Joining anonymously");
-                isAnonymous = true;
+                IsAnonymous = true;
                 return false;
             }
             else
             {
-                isAnonymous = false;
+                IsAnonymous = false;
                 Config.SetParameterValue("AuthToken", authToken);
                 Config.SetParameterValue("AuthTokenCredentials", userName + password);
 
                 return true;
             }
         }
-        private void ReadMessage(ChatMessage message)
-        {
-            if (MessageReceived != null)
-            {
-                var original = message.Text;
-                Log.WriteInfo("Original string:{0}", message.Text);
-                if (ContentParsers != null)
-                {
-                    var number = 1;
-                    ContentParsers.ForEach(parser =>
-                    {
-
-                        parser(message, this);
-                        if (original != message.Text)
-                            Log.WriteInfo("After parsing with {0}: {1}", number, message.Text);
-                        number++;
-                    });
-                }
-
-                MessageReceived(this, new ChatServiceEventArgs() { Message = message });
-
-            }
-        }
-        private void JoinChannels()
-        {
-            if (Status.IsStopping)
-                return;
-
-            var channels = Config.Parameters.StringArrayValue("Channels").Select(chan => "#" + chan.ToLower().Replace("#", "")).ToArray();
-
-            if ( !String.IsNullOrWhiteSpace( NickName ) )
-            {
-                if (!channels.Contains("#" + NickName.ToLower()))
-                    channels = channels.Union(new String[] { NickName.ToLower() }).ToArray();
-            }
-
-            foreach (var channel in channels)
-            {
-                var cybergameChannel = new CybergameChannel(this);
-                cybergameChannel.ReadMessage = ReadMessage;
-                cybergameChannel.LeaveCallback = (cybChannel) =>
-                {
-                    StopCounterPoller(cybChannel.ChannelName);
-                    lock (channelsLock)
-                        cybergameChannels.RemoveAll(item => item.ChannelName == cybChannel.ChannelName);
-
-                    ChatChannels.RemoveAll(chan => chan == null);
-                    ChatChannels.RemoveAll(chan => chan.Equals(cybChannel.ChannelName, StringComparison.InvariantCultureIgnoreCase));
-                    if (RemoveChannel != null)
-                        RemoveChannel(cybChannel.ChannelName, this);
-
-                    if (!Status.IsStarting && !Status.IsStopping)
-                    {
-                        Restart();
-                        return;
-                    }
-                };
-                if (!cybergameChannels.Any(c => c.ChannelName == channel))
-                    cybergameChannel.Join((cybChannel) =>
-                    {
-                        if (Status.IsStopping)
-                            return;
-
-                        Status.IsConnected = true;
-                        lock (channelsLock)
-                            cybergameChannels.Add(cybChannel);
-
-
-                        if (RemoveChannel != null)
-                            RemoveChannel(cybChannel.ChannelName, this);
-
-                        ChatChannels.RemoveAll(chan => !String.IsNullOrWhiteSpace(chan) && chan.Equals(cybChannel.ChannelName, StringComparison.InvariantCultureIgnoreCase));
-                        ChatChannels.Add((cybChannel.ChannelName));
-                        if (AddChannel != null)
-                            AddChannel(cybChannel.ChannelName, this);
-
-                        WatchChannelStats(cybChannel.ChannelName);
-
-                    }, NickName, channel, (String)Config.GetParameterValue("AuthToken"));
-            }
-        }
-
-        public void WatchChannelStats(string channel)
-        {
-            
-            var poller = new WebPoller()
-            {
-                Id = channel,
-                Uri = new Uri(String.Format(@"http://api.cybergame.tv/p/statusv2/?channel={0}", channel.Replace("#", ""))),
-            };
-            Log.WriteInfo(poller.Uri.OriginalString);
-            UI.Dispatch(() =>
-            {
-                lock (toolTipLock)
-                    Status.ToolTips.RemoveAll(t => t.Header == poller.Id);
-            });
-            UI.Dispatch(() =>
-            {
-                lock (toolTipLock)
-                    Status.ToolTips.Add(new ToolTip(poller.Id, ""));
-            });
-
-            poller.ReadString = (stream) =>
-            {
-                lock (pollerLock)
-                {
-                    var channelInfo = JsonConvert.DeserializeObject<CybergameChannelStatus>(stream);
-                    poller.LastValue = channelInfo;
-                    var viewers = 0;
-                    foreach (var webPoller in counterWebPollers.ToList())
-                    {
-                        var streamInfo = (CybergameChannelStatus)webPoller.LastValue;
-                        int streamInfoViewers = 0;
-
-
-                        lock (toolTipLock)
-                        {
-                            var tooltip = Status.ToolTips.FirstOrDefault(t => t.Header.Equals(webPoller.Id));
-                            if (tooltip == null)
-                                return;
-
-                            if (streamInfo != null && int.TryParse(streamInfo.spectators, out streamInfoViewers))
-                            {
-                                viewers += streamInfoViewers;
-                                tooltip.Text = streamInfo.spectators;
-                                tooltip.Number = streamInfoViewers;
-                            }
-                            else
-                            {
-                                tooltip.Text = "0";
-                                tooltip.Number = 0;
-                            }
-                        }
-
-                    }
-                    UI.Dispatch(() => Status.ViewersCount = viewers);
-                }
-            };
-            poller.Start();
-
-            lock (pollerLock)
-            {
-                counterWebPollers.RemoveAll(p => p.Id == poller.Id);
-                counterWebPollers.Add(poller);
-            }
-        }
-        private void InitEmoticons()
-        {
-            //Fallback icon list
-            DownloadEmoticons(AppDomain.CurrentDomain.BaseDirectory + emoticonFallbackUrl);
-            //Web icons
-            Task.Factory.StartNew(() => DownloadEmoticons(emoticonUrl));
-        }
-        public void DownloadEmoticons(string url)
+        public override void DownloadEmoticons(string url)
         {
             if (isFallbackEmoticons && isWebEmoticons)
                 return;
@@ -584,14 +253,11 @@ namespace UB.Model
                 var list = new List<Emoticon>();
                 if (Emoticons == null)
                     Emoticons = new List<Emoticon>();
-                
-                var test = loginWebClient.Download(url);
-                if (test != null)
-                    Log.WriteInfo("");
-                var emoticonsMatches = this.With( x => loginWebClient.Download("http://cybergame.tv/cgchat.htm?v=b"))
-                    .With( x => Regex.Matches(x,@"""(.*?)"":""(smiles/.*?)"""));
 
-                if( emoticonsMatches.Count <= 0 )
+                var emoticonsMatches = this.With(x => loginWebClient.Download(url))
+                    .With(x => Regex.Matches(x, @"""(.*?)"":""(smiles/.*?)"""));
+
+                if (emoticonsMatches.Count <= 0)
                 {
                     Log.WriteError("Unable to get Cybergame.tv emoticons!");
                     return;
@@ -623,28 +289,14 @@ namespace UB.Model
                 }
             }
         }
-
-        void StopCounterPoller(string channelName)
-        {
-            UI.Dispatch(() =>
-            {
-                lock (toolTipLock)
-                    Status.ToolTips.RemoveAll(t => t.Header == channelName);
-            });
-            WebPoller poller;
-            lock(pollerLock)
-                poller = counterWebPollers.FirstOrDefault(p => p.Id == channelName);
-            if (poller != null)
-            {
-                poller.Stop();
-                counterWebPollers.Remove(poller);
-            }
-        }
+        
+        #endregion
     }
-    public class CybergameChannel
+    public class CybergameChannel : ChatChannelBase
     {
         private WebSocketBase webSocket;
-        private CybergameChat _chat;
+        private object pollerLock = new object();
+        private WebPoller statsPoller;
         private Random random = new Random();
         private bool isAnonymous = false;
         private Dictionary<string, Action<CybergameChannel, CybergameData>>
@@ -654,25 +306,20 @@ namespace UB.Model
                         {"chatMessage", ChatMessageReceive},
                         {"listUsers", ListUsers},
             };
-        public CybergameChannel(CybergameChat chat)
+        public CybergameChannel(IChat chat)
         {
-            _chat = chat;
-            Status = new StatusBase();
-        }
-        public StatusBase Status { get; set; }
-        public string NickName { get; set; }
-        public string AuthToken { get; set; }
-
+            Chat = chat;
+        }       
         private static void SuccessfulConnect(CybergameChannel channel, CybergameData data)
         {
-            channel._chat.Status.IsConnected = true;
-            if (channel.joinCallback != null)
-                channel.joinCallback(channel);
+            channel.Chat.Status.IsConnected = true;
+            if (channel.JoinCallback != null)
+                channel.JoinCallback(channel);
         }
 
         private static void SuccessfulLogin(CybergameChannel channel, CybergameData data)
         {
-            channel._chat.Status.IsLoggedIn = true;
+            channel.Chat.Status.IsLoggedIn = true;
         }
 
         private static void ChatMessageReceive(CybergameChannel channel, CybergameData data)
@@ -680,12 +327,15 @@ namespace UB.Model
             if (String.IsNullOrWhiteSpace(data.From) || String.IsNullOrWhiteSpace(data.Text))
                 return;
 
+            channel.ChannelStats.MessagesCount++;
+            channel.Chat.UpdateStats();
+
             if (channel.ReadMessage != null)
                 channel.ReadMessage(new ChatMessage()
                 {
                     Channel = channel.ChannelName,
-                    ChatIconURL = channel._chat.IconURL,
-                    ChatName = channel._chat.ChatName,
+                    ChatIconURL = channel.Chat.IconURL,
+                    ChatName = channel.Chat.ChatName,
                     FromUserName = data.From,
                     HighlyImportant = false,
                     IsSentByMe = false,
@@ -696,36 +346,6 @@ namespace UB.Model
         private static void ListUsers(CybergameChannel channel, CybergameData data)
         {
 
-        }
-
-        public void Join(Action<CybergameChannel> callback, string nickName, string channel, string authToken)
-        {
-
-            if (String.IsNullOrWhiteSpace(channel))
-                return;
-            NickName = nickName;
-            AuthToken = authToken;
-            ChannelName = "#" + channel.Replace("#", "");
-            webSocket = new WebSocketBase();
-            webSocket.Origin = "http://www.cybergame.tv";
-            webSocket.ConnectHandler = () =>
-            {
-            };
-
-            webSocket.DisconnectHandler = () =>
-            {
-                Log.WriteError("Cybergame.tv disconnected {0}", ChannelName);
-                if (LeaveCallback != null)
-                    LeaveCallback(this);
-            };
-            joinCallback = callback;
-
-            webSocket.ReceiveMessageHandler = ReadRawMessage;
-            webSocket.Path = String.Format("/{0}/{1}/websocket", Rnd.RandomWebSocketServerNum(0x1e3), Rnd.RandomWebSocketString());
-            webSocket.Port = "9090";
-            webSocket.Host = "cybergame.tv";
-            Status.ResetToDefault();
-            webSocket.Connect();
         }
 
         private void ReadRawMessage(string rawMessage)
@@ -754,13 +374,14 @@ namespace UB.Model
 
         private void SendCredentials()
         {
+            var token = Chat.Config.GetParameterValue("AuthToken").ToString();
             var authPacket = new CybergamePacket()
             {
                 Command = "login",
                 Message = new CybergameData()
                 {
                     Login = NickName ?? "",
-                    Password = AuthToken ?? "",
+                    Password = token ?? "",
                     Channel = ChannelName,
                 },
             };
@@ -769,17 +390,13 @@ namespace UB.Model
             webSocket.Send(authPacket.ToString());
         }
 
-        public string ChannelName { get; set; }
-        public void Leave()
+        public override void Leave()
         {
             Log.WriteInfo("Cybergame leaving {0}", ChannelName);
             webSocket.Disconnect();
         }
-
-        private Action<CybergameChannel> joinCallback;
-        public Action<CybergameChannel> LeaveCallback { get; set; }
-        public Action<ChatMessage> ReadMessage { get; set; }
-        public void SendMessage(ChatMessage message)
+       
+        public override void SendMessage(ChatMessage message)
         {
             if (isAnonymous || String.IsNullOrWhiteSpace(message.Channel) ||
                 String.IsNullOrWhiteSpace(message.FromUserName) ||
@@ -797,8 +414,65 @@ namespace UB.Model
 
             webSocket.Send(messagePacket.ToString());
         }
+
+        public override void Join(Action<IChatChannel> callback, string channel)
+        {
+            ChannelName = "#" + channel.Replace("#", "");
+
+            SetupStatsWatcher();
+
+            if (String.IsNullOrWhiteSpace(channel))
+                return;
+
+            NickName = Chat.NickName;           
+            webSocket = new WebSocketBase();
+            webSocket.Origin = "http://www.cybergame.tv";
+            webSocket.ConnectHandler = () =>
+            {
+            };
+
+            webSocket.DisconnectHandler = () =>
+            {
+                Log.WriteError("Cybergame.tv disconnected {0}", ChannelName);
+                if (LeaveCallback != null)
+                    LeaveCallback(this);
+            };
+            JoinCallback = callback;
+
+            webSocket.ReceiveMessageHandler = ReadRawMessage;
+            webSocket.Path = String.Format("/{0}/{1}/websocket", Rnd.RandomWebSocketServerNum(0x1e3), Rnd.RandomWebSocketString());
+            webSocket.Port = "9090";
+            webSocket.Host = "cybergame.tv";            
+            webSocket.Connect();
+        }
+
+        public override void SetupStatsWatcher()
+        {
+            statsPoller = new WebPoller()
+            {
+                Id = ChannelName,
+                Uri = new Uri(String.Format(@"http://api.cybergame.tv/p/statusv2/?channel={0}", ChannelName.Replace("#", ""))),
+            };
+
+            statsPoller.ReadString = (stream) =>
+            {
+                lock (pollerLock)
+                {
+                    var channelInfo = JsonConvert.DeserializeObject<CybergameChannelStatus>(stream);
+                    statsPoller.LastValue = channelInfo;
+                    int viewers = 0;
+                    if( int.TryParse( channelInfo.spectators, out viewers))
+                    {
+                        ChannelStats.ViewersCount = viewers;
+                        Chat.UpdateStats();
+                    }
+                }
+            };
+            statsPoller.Start();
+        }
     }
 
+    #region Json classes
     [DataContract]
     public class CybergamePacket
     {
@@ -809,7 +483,7 @@ namespace UB.Model
 
         public override string ToString()
         {
-            return @"[""" +  @"{\""command\"":\""" + Command + @"\"",\""message\"":\""" +  Message.ToString()  + @"\""}""]";
+            return @"[""" + @"{\""command\"":\""" + Command + @"\"",\""message\"":\""" + Message.ToString() + @"\""}""]";
         }
 
     }
@@ -863,4 +537,6 @@ namespace UB.Model
             return JsonConvert.SerializeObject(this).Replace(@"""", @"\\\""");
         }
     }
+
+    #endregion
 }

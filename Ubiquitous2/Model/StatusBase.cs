@@ -409,5 +409,35 @@ namespace UB.Model
                 RaisePropertyChanged(ToolTipsPropertyName);
             }
         }
+
+        /// <summary>
+        /// The <see cref="MessagesCount" /> property's name.
+        /// </summary>
+        public const string MessagesCountPropertyName = "MessagesCount";
+
+        private int _messagesCount = 0;
+
+        /// <summary>
+        /// Sets and gets the MessagesCount property.
+        /// Changes to that property's value raise the PropertyChanged event. 
+        /// </summary>
+        public int MessagesCount
+        {
+            get
+            {
+                return _messagesCount;
+            }
+
+            set
+            {
+                if (_messagesCount == value)
+                {
+                    return;
+                }
+
+                _messagesCount = value;
+                RaisePropertyChanged(MessagesCountPropertyName);
+            }
+        }
     }
 }

@@ -355,7 +355,7 @@ namespace UB.Model
 
 
 
-        public List<string> ChatChannels
+        public List<string> ChatChannelNames
         {
             get;
             set;
@@ -387,6 +387,73 @@ namespace UB.Model
             get;
             set;
 
+        }
+
+
+        void IChat.JoinChannels()
+        {
+            throw new NotImplementedException();
+        }
+
+
+        public void ReadMessage(ChatMessage message)
+        {
+            throw new NotImplementedException();
+        }
+
+
+        public virtual bool Login()
+        {
+            throw new NotImplementedException();
+        }
+
+        public virtual bool InitEmoticons()
+        {
+            return true;
+        }
+
+
+        public Func<IChatChannel> CreateChannel
+        {
+            get
+            {
+                throw new NotImplementedException();
+            }
+            set
+            {
+                throw new NotImplementedException();
+            }
+        }
+
+
+        public void UpdateStats()
+        {
+            throw new NotImplementedException();
+        }
+
+        public List<IChatChannel> ChatChannels
+        {
+            get
+            {
+                throw new NotImplementedException();
+            }
+            set
+            {
+                throw new NotImplementedException();
+            }
+        }
+
+
+        public bool IsAnonymous
+        {
+            get
+            {
+                throw new NotImplementedException();
+            }
+            set
+            {
+                throw new NotImplementedException();
+            }
         }
     }
 }

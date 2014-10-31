@@ -38,7 +38,7 @@ namespace UB.Model
             Config = config;
             Enabled = Config.Enabled;
             ContentParsers = new List<Action<ChatMessage, IChat>>();
-            ChatChannels = new List<string>();
+            ChatChannelNames = new List<string>();
             Emoticons = new List<Emoticon>();
             Status = new StatusBase();
             Users = new Dictionary<string, ChatUser>();
@@ -125,7 +125,7 @@ namespace UB.Model
                     chan.Leave();
                 });
             }
-            ChatChannels.Clear();
+            ChatChannelNames.Clear();
             return true;
         }
 
@@ -163,7 +163,7 @@ namespace UB.Model
             set;
         }
 
-        public List<string> ChatChannels
+        public List<string> ChatChannelNames
         {
             get;
             set;
@@ -207,7 +207,7 @@ namespace UB.Model
         #endregion
 
 
-        private bool Login()
+        public bool Login()
         {
             try
             {
@@ -308,7 +308,7 @@ namespace UB.Model
             loginWebClient.Headers["Content-Type"] = @"application/json;charset=UTF-8";
             loginWebClient.Headers["Accept-Encoding"] = "gzip,deflate,sdch";
         }
-        private void ReadMessage(ChatMessage message)
+        public void ReadMessage(ChatMessage message)
         {
             if (MessageReceived != null)
             {
@@ -411,7 +411,7 @@ namespace UB.Model
                 counterWebPollers.Remove(poller);
             }
         }
-        private void JoinChannels()
+        public void JoinChannels()
         {
 
             if (Status.IsStopping)
@@ -438,8 +438,8 @@ namespace UB.Model
                     lock(channelsLock)
                         hitboxChannels.RemoveAll(item => item.ChannelName == hbChannel.ChannelName);
 
-                    ChatChannels.RemoveAll(chan => chan == null);
-                    ChatChannels.RemoveAll(chan => chan.Equals(hbChannel.ChannelName, StringComparison.InvariantCultureIgnoreCase));
+                    ChatChannelNames.RemoveAll(chan => chan == null);
+                    ChatChannelNames.RemoveAll(chan => chan.Equals(hbChannel.ChannelName, StringComparison.InvariantCultureIgnoreCase));
                     if (RemoveChannel != null)
                         RemoveChannel(hbChannel.ChannelName, this);
 
@@ -463,8 +463,8 @@ namespace UB.Model
                     if (RemoveChannel != null)
                         RemoveChannel(hbChannel.ChannelName, this);
 
-                    ChatChannels.RemoveAll(chan => chan.Equals(hbChannel.ChannelName, StringComparison.InvariantCultureIgnoreCase));
-                    ChatChannels.Add((hbChannel.ChannelName));
+                    ChatChannelNames.RemoveAll(chan => chan.Equals(hbChannel.ChannelName, StringComparison.InvariantCultureIgnoreCase));
+                    ChatChannelNames.Add((hbChannel.ChannelName));
                     if (AddChannel != null)
                         AddChannel(hbChannel.ChannelName, this);
 
@@ -473,12 +473,13 @@ namespace UB.Model
                 }, NickName, channel, (String)Config.GetParameterValue("AuthToken"));
             }
         }
-        private void InitEmoticons()
+        public bool InitEmoticons()
         {
             //Fallback icon list
             DownloadEmoticons(AppDomain.CurrentDomain.BaseDirectory + emoticonFallbackUrl);
             //Web icons
             Task.Factory.StartNew(() => DownloadEmoticons(emoticonUrl));
+            return true;
         }
         public void DownloadEmoticons(string url)
         {
@@ -777,6 +778,50 @@ namespace UB.Model
             followerPoller.Start();
         }
         #endregion
+
+
+        public Func<IChatChannel> CreateChannel
+        {
+            get
+            {
+                throw new NotImplementedException();
+            }
+            set
+            {
+                throw new NotImplementedException();
+            }
+        }
+
+
+        public void UpdateStats()
+        {
+            throw new NotImplementedException();
+        }
+
+        public List<IChatChannel> ChatChannels
+        {
+            get
+            {
+                throw new NotImplementedException();
+            }
+            set
+            {
+                throw new NotImplementedException();
+            }
+        }
+
+
+        public bool IsAnonymous
+        {
+            get
+            {
+                throw new NotImplementedException();
+            }
+            set
+            {
+                throw new NotImplementedException();
+            }
+        }
     }
 
     public class HitboxChannel

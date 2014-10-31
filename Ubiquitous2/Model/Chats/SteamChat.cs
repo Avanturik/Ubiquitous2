@@ -21,7 +21,7 @@ namespace UB.Model
         {
             Config = config;
             ContentParsers = new List<Action<ChatMessage, IChat>>();
-            ChatChannels = new List<string>();
+            ChatChannelNames = new List<string>();
             Emoticons = new List<Emoticon>();
             Status = new StatusBase();
             Users = new Dictionary<string, ChatUser>();
@@ -109,7 +109,7 @@ namespace UB.Model
         }
         #endregion
 
-        private bool Login()
+        public bool Login()
         {
             if (!LoginWithToken())
             {
@@ -263,7 +263,7 @@ namespace UB.Model
             set;
         }
 
-        public List<string> ChatChannels
+        public List<string> ChatChannelNames
         {
             get;
             set;
@@ -323,6 +323,68 @@ namespace UB.Model
         {
             get;
             set;
+        }
+
+
+        public void JoinChannels()
+        {
+            throw new NotImplementedException();
+        }
+
+
+        public void ReadMessage(ChatMessage message)
+        {
+            throw new NotImplementedException();
+        }
+
+
+        public bool InitEmoticons()
+        {
+            throw new NotImplementedException();
+        }
+
+
+        public Func<IChatChannel> CreateChannel
+        {
+            get
+            {
+                throw new NotImplementedException();
+            }
+            set
+            {
+                throw new NotImplementedException();
+            }
+        }
+
+
+        public void UpdateStats()
+        {
+            throw new NotImplementedException();
+        }
+
+        public List<IChatChannel> ChatChannels
+        {
+            get
+            {
+                throw new NotImplementedException();
+            }
+            set
+            {
+                throw new NotImplementedException();
+            }
+        }
+
+
+        public bool IsAnonymous
+        {
+            get
+            {
+                throw new NotImplementedException();
+            }
+            set
+            {
+                throw new NotImplementedException();
+            }
         }
     }
 }

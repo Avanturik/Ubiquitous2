@@ -28,7 +28,7 @@ namespace UB.Model
         {
             Config = config;
             ContentParsers = new List<Action<ChatMessage, IChat>>();
-            ChatChannels = new List<string>();
+            ChatChannelNames = new List<string>();
             Emoticons = new List<Emoticon>();
             Status = new StatusBase();
             Users = new Dictionary<string, ChatUser>();
@@ -84,7 +84,7 @@ namespace UB.Model
             Log.WriteInfo("Starting Gaminglive.tv chat");
             Status.ResetToDefault();
             Status.IsStarting = true;
-            ChatChannels.Clear();
+            ChatChannelNames.Clear();
             if( Login() )
             {
                 Status.IsConnecting = true;
@@ -105,7 +105,7 @@ namespace UB.Model
                     counterWebPollers.Remove(poller);
             }
         }
-        private void JoinChannels()
+        public void JoinChannels()
         {
 
 
@@ -137,8 +137,8 @@ namespace UB.Model
                     
                     lock(channelsLock)
                         gamingLiveChannels.RemoveAll(item => item.ChannelName == glChannel.ChannelName);
-                    ChatChannels.RemoveAll(chan => chan == null);
-                    ChatChannels.RemoveAll(chan => chan.Equals(glChannel.ChannelName, StringComparison.InvariantCultureIgnoreCase));
+                    ChatChannelNames.RemoveAll(chan => chan == null);
+                    ChatChannelNames.RemoveAll(chan => chan.Equals(glChannel.ChannelName, StringComparison.InvariantCultureIgnoreCase));
 
                     Log.WriteInfo("Remove gaminglive channel {0}", glChannel.ChannelName);
 
@@ -162,9 +162,9 @@ namespace UB.Model
                         if (RemoveChannel != null)
                             RemoveChannel(glChannel.ChannelName, this);
 
-                        ChatChannels.RemoveAll(chan => chan == null);
-                        ChatChannels.RemoveAll(chan => chan.Equals(glChannel.ChannelName, StringComparison.InvariantCultureIgnoreCase));
-                        ChatChannels.Add((glChannel.ChannelName));
+                        ChatChannelNames.RemoveAll(chan => chan == null);
+                        ChatChannelNames.RemoveAll(chan => chan.Equals(glChannel.ChannelName, StringComparison.InvariantCultureIgnoreCase));
+                        ChatChannelNames.Add((glChannel.ChannelName));
 
                         Log.WriteInfo("Add gaminglive channel {0}", glChannel.ChannelName);
                         if (AddChannel != null)
@@ -179,7 +179,7 @@ namespace UB.Model
                 }
             }
         }
-        private void ReadMessage( ChatMessage message )
+        public void ReadMessage( ChatMessage message )
         {
             if (MessageReceived != null)
             {
@@ -191,7 +191,7 @@ namespace UB.Model
             }
         }
         
-        private bool Login()
+        public bool Login()
         {
             try
             {
@@ -314,7 +314,7 @@ namespace UB.Model
                     if (RemoveChannel != null)
                         RemoveChannel(chan.ChannelName, this);
                 });
-            ChatChannels.Clear();
+            ChatChannelNames.Clear();
             return true;
         }
 
@@ -402,7 +402,7 @@ namespace UB.Model
             set;
         }
 
-        public List<string> ChatChannels
+        public List<string> ChatChannelNames
         {
             get;
             set;
@@ -584,6 +584,56 @@ namespace UB.Model
             get;
             set;
 
+        }
+
+
+        public bool InitEmoticons()
+        {
+            throw new NotImplementedException();
+        }
+
+
+        public Func<IChatChannel> CreateChannel
+        {
+            get
+            {
+                throw new NotImplementedException();
+            }
+            set
+            {
+                throw new NotImplementedException();
+            }
+        }
+
+
+        public void UpdateStats()
+        {
+            throw new NotImplementedException();
+        }
+
+        public List<IChatChannel> ChatChannels
+        {
+            get
+            {
+                throw new NotImplementedException();
+            }
+            set
+            {
+                throw new NotImplementedException();
+            }
+        }
+
+
+        public bool IsAnonymous
+        {
+            get
+            {
+                throw new NotImplementedException();
+            }
+            set
+            {
+                throw new NotImplementedException();
+            }
         }
     }
 

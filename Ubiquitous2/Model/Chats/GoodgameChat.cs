@@ -50,7 +50,7 @@ namespace UB.Model
             Enabled = Config.Enabled;
 
             ContentParsers = new List<Action<ChatMessage, IChat>>();
-            ChatChannels = new List<string>();
+            ChatChannelNames = new List<string>();
             Emoticons = new List<Emoticon>();
             Status = new StatusBase();
             Status.ResetToDefault();
@@ -130,7 +130,7 @@ namespace UB.Model
 
             return true;
         }
-        private bool Login()
+        public bool Login()
         {
             try
             {
@@ -277,7 +277,7 @@ namespace UB.Model
                     chan.Leave();
                 });
             }
-            ChatChannels.Clear();
+            ChatChannelNames.Clear();
             return true;
         }
 
@@ -310,7 +310,7 @@ namespace UB.Model
 
         }
 
-        public List<string> ChatChannels
+        public List<string> ChatChannelNames
         {
             get;
             set;
@@ -362,7 +362,7 @@ namespace UB.Model
             }
             return channelId;
         }
-        private void JoinChannels()
+        public void JoinChannels()
         {
 
             if (Status.IsStopping)
@@ -390,8 +390,8 @@ namespace UB.Model
                     lock (channelsLock)
                         goodgameChannels.RemoveAll(item => item.ChannelName == ggChannel.ChannelName);
 
-                    ChatChannels.RemoveAll(chan => chan == null);
-                    ChatChannels.RemoveAll(chan => chan.Equals(ggChannel.ChannelName, StringComparison.InvariantCultureIgnoreCase));
+                    ChatChannelNames.RemoveAll(chan => chan == null);
+                    ChatChannelNames.RemoveAll(chan => chan.Equals(ggChannel.ChannelName, StringComparison.InvariantCultureIgnoreCase));
                     if (RemoveChannel != null)
                         RemoveChannel(ggChannel.ChannelName, this);
 
@@ -425,8 +425,8 @@ namespace UB.Model
                         if (RemoveChannel != null)
                             RemoveChannel(ggChannel.ChannelName, this);
 
-                        ChatChannels.RemoveAll(chan => chan.Equals(ggChannel.ChannelName, StringComparison.InvariantCultureIgnoreCase));
-                        ChatChannels.Add(ggChannel.ChannelName);
+                        ChatChannelNames.RemoveAll(chan => chan.Equals(ggChannel.ChannelName, StringComparison.InvariantCultureIgnoreCase));
+                        ChatChannelNames.Add(ggChannel.ChannelName);
                         if (AddChannel != null)
                             AddChannel(ggChannel.ChannelName, this);
 
@@ -508,7 +508,7 @@ namespace UB.Model
                 counterWebPollers.Add(poller);
             }
         }
-        private void ReadMessage(ChatMessage message)
+        public void ReadMessage(ChatMessage message)
         {
             if (MessageReceived != null)
             {
@@ -604,12 +604,13 @@ namespace UB.Model
             }
         }
 
-        private void InitEmoticons()
+        public bool InitEmoticons()
         {
             //Fallback icon list
             DownloadEmoticons(AppDomain.CurrentDomain.BaseDirectory + emoticonFallbackUrl);
             //Web icons
             Task.Factory.StartNew(() => DownloadEmoticons(emoticonUrl));
+            return true;
         }
 
         private Uri GetServerUri()
@@ -735,6 +736,50 @@ namespace UB.Model
             get;
             set;
 
+        }
+
+
+        public Func<IChatChannel> CreateChannel
+        {
+            get
+            {
+                throw new NotImplementedException();
+            }
+            set
+            {
+                throw new NotImplementedException();
+            }
+        }
+
+
+        public void UpdateStats()
+        {
+            throw new NotImplementedException();
+        }
+
+        public List<IChatChannel> ChatChannels
+        {
+            get
+            {
+                throw new NotImplementedException();
+            }
+            set
+            {
+                throw new NotImplementedException();
+            }
+        }
+
+
+        public bool IsAnonymous
+        {
+            get
+            {
+                throw new NotImplementedException();
+            }
+            set
+            {
+                throw new NotImplementedException();
+            }
         }
     }
 

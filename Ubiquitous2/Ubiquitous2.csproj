@@ -211,6 +211,8 @@
     <Compile Include="Design\StreamPageDataService.cs" />
     <Compile Include="Interactivity\ElementToOBSPlugin.cs" />
     <Compile Include="Interactivity\UnclosableWindow.cs" />
+    <Compile Include="Model\ChatChannelBase.cs" />
+    <Compile Include="Model\ChannelStats.cs" />
     <Compile Include="Model\Chats\CybergameChat.cs" />
     <Compile Include="Model\DatabaseService.cs" />
     <Compile Include="Model\Chats\DummyChat.cs" />
@@ -218,6 +220,7 @@
     <Compile Include="Model\Chats\GoodgameChat.cs" />
     <Compile Include="Model\Greeting.cs" />
     <Compile Include="Model\GreetingsDataService.cs" />
+    <Compile Include="Model\IChatChannel.cs" />
     <Compile Include="Model\IDatabase.cs" />
     <Compile Include="Model\IFollowersProvider.cs" />
     <Compile Include="Model\IGreetingsDataService.cs" />

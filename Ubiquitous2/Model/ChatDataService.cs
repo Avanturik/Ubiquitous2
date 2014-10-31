@@ -255,7 +255,7 @@ namespace UB.Model
             {
                 foreach( var chat in Chats)
                 {
-                    foreach( var channel in chat.ChatChannels )
+                    foreach( var channel in chat.ChatChannelNames )
                     {
                         DispatchMessage(new ChatMessage() { 
                             Channel = channel,

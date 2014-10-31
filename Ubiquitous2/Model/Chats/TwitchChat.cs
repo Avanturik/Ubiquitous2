@@ -54,7 +54,7 @@ namespace UB.Model
             Games = new ObservableCollection<Game>();
 
             Users = new Dictionary<string, ChatUser>();
-            ChatChannels = new List<string>();
+            ChatChannelNames = new List<string>();
 
             this.NoticeReceived += TwitchChat_NoticeReceived;
             this.ChatUserJoined += TwitchChat_ChatUserJoined;
@@ -216,7 +216,7 @@ namespace UB.Model
                 LoginInfo.Channels[i] = "#" + LoginInfo.Channels[i].Replace("#", "");
             }
 
-            ChatChannels = LoginInfo.Channels.ToList();
+            ChatChannelNames = LoginInfo.Channels.ToList();
             NickName = LoginInfo.UserName;
 
             if( !isAnonymous && !(Status.IsLoginFailed && isOAuthTokenRenewed) )
@@ -283,12 +283,13 @@ namespace UB.Model
             isAnonymous = true;
             base.Start();
         }
-        private void InitEmoticons()
+        public override bool InitEmoticons()
         {
             //Fallback icon list
             DownloadEmoticons(AppDomain.CurrentDomain.BaseDirectory + emoticonFallbackUrl);
             //Web icons
             Task.Factory.StartNew(() => DownloadEmoticons(emoticonUrl));
+            return true;
         }
         public override bool Stop()
         {

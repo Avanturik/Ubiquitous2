@@ -3,10 +3,370 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using UB.Utils;
 
 namespace UB.Model
 {
-    class ChatBase
+    public class ChatBase : IChat
     {
+        private object channelsLock = new object();
+        private object toolTipLock = new object();
+        private object pollerLock = new object();
+        private List<WebPoller> counterWebPollers = new List<WebPoller>();
+        public event EventHandler<ChatServiceEventArgs> MessageReceived;
+
+        public ChatBase(ChatConfig config)
+        {
+            Config = config;
+            ContentParsers = new List<Action<ChatMessage, IChat>>();     
+            ChatChannels = new List<IChatChannel>();
+            Emoticons = new List<Emoticon>();
+            Status = new StatusBase();
+            Users = new Dictionary<string, ChatUser>();
+            IsAnonymous = true;
+            Enabled = Config.Enabled;
+        }
+        public bool IsAnonymous { get; set; }
+        public string EmoticonFallbackUrl { get; set; }
+        public string EmoticonUrl { get; set; }
+
+        public string ChatName
+        {
+            get;
+            set;
+        }
+
+        public string IconURL
+        {
+            get;
+            set;
+        }
+
+        public string NickName
+        {
+            get;
+            set;
+        }
+
+        public bool HideViewersCounter
+        {
+            get;
+            set;
+        }
+
+        public bool Enabled
+        {
+            get;
+            set;
+        }
+
+        public virtual bool Start()
+        {
+            if (Status.IsStarting || Status.IsConnected || Status.IsLoggedIn || Config == null)
+            {
+                return true;
+            }
+            Log.WriteInfo("Starting {0} chat", ChatName);
+
+            UI.Dispatch(() => Status.ToolTips.Clear());
+
+            Status.ResetToDefault();
+            Status.IsStarting = true;
+
+            if (Login())
+            {
+                Status.IsConnecting = true;
+                Task.Factory.StartNew(() => JoinChannels());
+            }
+            InitEmoticons();
+
+            return false;
+        }
+
+        public virtual void StopCounterPoller(string channelName)
+        {
+            UI.Dispatch(() =>
+            {
+                lock (toolTipLock)
+                    Status.ToolTips.RemoveAll(t => t.Header == channelName);
+            });
+
+            lock (pollerLock)
+            {
+                this.With(x => counterWebPollers)
+                    .With(x => x.FirstOrDefault(p => p.Id == channelName))
+                    .Do(x => { x.Stop(); counterWebPollers.Remove(x); });
+            }
+        }
+
+        public void ReadMessage(ChatMessage message)
+        {
+            if (MessageReceived != null)
+            {
+                var original = message.Text;
+                Log.WriteInfo("Original string:{0}", message.Text);
+                if (ContentParsers != null)
+                {
+                    var number = 1;
+                    ContentParsers.ForEach(parser =>
+                    {
+
+                        parser(message, this);
+                        if (original != message.Text)
+                            Log.WriteInfo("After parsing with {0}: {1}", number, message.Text);
+                        number++;
+                    });
+                }
+
+                MessageReceived(this, new ChatServiceEventArgs() { Message = message });
+
+            }
+        }
+        public virtual bool Stop()
+        {
+            if (!Enabled)
+                Status.ResetToDefault();
+
+            if (Status.IsStopping)
+                return false;
+
+            Log.WriteInfo("Stopping {0} chat", ChatName);
+
+            Status.IsStopping = true;
+            Status.IsStarting = false;
+
+            lock(toolTipLock)
+            {
+                UI.Dispatch(() => {
+                    Status.ViewersCount = 0;
+                    Status.MessagesCount = 0;
+                    Status.ToolTips.Clear();
+                });
+            }
+
+            lock (channelsLock)
+            {
+                ChatChannels.ForEach(chan =>
+                {
+                    StopCounterPoller(chan.ChannelName);
+                    chan.Leave();
+                    if (RemoveChannel != null)
+                        RemoveChannel(chan.ChannelName, this);
+                });
+            }
+            ChatChannels.Clear();
+            return true;
+        }
+
+        public virtual bool Restart()
+        {
+            if (Status.IsStopping || Status.IsStarting)
+                return false;
+
+            Status.ResetToDefault();
+            Stop();
+            Start();
+            return true;
+        }
+
+        public virtual bool SendMessage(ChatMessage message)
+        {
+            if (IsAnonymous)
+                return false;
+
+            this.With(x => ChatChannels.FirstOrDefault(channel => channel.ChannelName.Equals(message.Channel, StringComparison.InvariantCultureIgnoreCase)))
+                .Do(x =>
+                {
+                    if (String.IsNullOrWhiteSpace(message.FromUserName))
+                    {
+                        message.FromUserName = NickName;
+                    }
+                    Task.Factory.StartNew(() => x.SendMessage(message));
+                    ReadMessage(message);
+                });
+
+            return true;
+        }
+
+        public Dictionary<string, ChatUser> Users
+        {
+            get;
+            set;
+        }
+
+        public List<string> ChatChannelNames
+        {
+            get;
+            set;
+        }
+
+        public Action<string, IChat> AddChannel
+        {
+            get;
+            set;
+        }
+
+        public Action<string, IChat> RemoveChannel
+        {
+            get;
+            set;
+        }
+
+        public Func<string, object> RequestData
+        {
+            get;
+            set;
+        }
+
+        public List<Action<ChatMessage, IChat>> ContentParsers
+        {
+            get;
+            set;
+        }
+
+        public List<Emoticon> Emoticons
+        {
+            get;
+            set;
+        }
+
+        public virtual void DownloadEmoticons(string url)
+        {
+           
+        }
+
+        public ChatConfig Config
+        {
+            get;
+            set;
+        }
+
+        public StatusBase Status
+        {
+            get;
+            set;
+        }
+
+        public void UpdateStats()
+        {
+            lock (toolTipLock)
+            {
+                UI.Dispatch(() =>
+                {
+                    var channels = ChatChannels.ToList();
+                    Status.ViewersCount = channels.Sum(channel => channel.ChannelStats.ViewersCount);
+                    Status.MessagesCount = channels.Sum(channel => channel.ChannelStats.MessagesCount);
+                    channels.ForEach(channel =>
+                    {
+                        this.With(x => Status.ToolTips.ToList().FirstOrDefault(tooltip => tooltip.Header.Equals(channel.ChannelName)))
+                            .Do(x =>
+                            {
+                                x.Number = channel.ChannelStats.ViewersCount;
+                                x.Text = channel.ChannelStats.ViewersCount.ToString();
+                            });
+
+                    });
+                });
+            }
+        }
+
+        public virtual void JoinChannels()
+        {
+            if (Status.IsStopping || CreateChannel == null)
+                return;
+
+            var channels = Config.Parameters.StringArrayValue("Channels").Select(chan => "#" + chan.ToLower().Replace("#", "")).ToArray();
+
+            if (!String.IsNullOrWhiteSpace(NickName))
+            {
+                if (!channels.Contains("#" + NickName.ToLower()))
+                    channels = channels.Union(new String[] { NickName.ToLower() }).ToArray();
+            }
+
+            foreach (var channel in channels)
+            {
+                var chatChannel = CreateChannel();
+                chatChannel.ReadMessage = ReadMessage;
+                chatChannel.LeaveCallback = (leaveChannel) =>
+                {
+                    lock (toolTipLock)
+                    {
+                        UI.Dispatch(() => Status.ToolTips.RemoveAll(tooltip => tooltip.Header == channel));
+                    }
+
+                    lock (channelsLock)
+                        ChatChannels.RemoveAll(item => item.ChannelName == leaveChannel.ChannelName);
+
+                    ChatChannels.RemoveAll(chan => chan == null);
+                    ChatChannels.RemoveAll(chan => chan.ChannelName.Equals(leaveChannel.ChannelName, StringComparison.InvariantCultureIgnoreCase));
+                    if (RemoveChannel != null)
+                        RemoveChannel(leaveChannel.ChannelName, this);
+
+                    if (!Status.IsStarting && !Status.IsStopping)
+                    {
+                        Restart();
+                        return;
+                    }
+                };
+                if (!ChatChannels.Any(c => c.ChannelName == channel))
+                {
+                    lock (toolTipLock)
+                    {
+                        if (!Status.ToolTips.Any(t => t.Header == channel))
+                            UI.Dispatch(()=>Status.ToolTips.Add(new ToolTip(channel, "0")));
+                    }
+                    chatChannel.Join((joinChannel) =>
+                    {
+                        if (Status.IsStopping)
+                            return;
+
+                        Status.IsConnected = true;
+                        lock (channelsLock)
+                            ChatChannels.Add(joinChannel);
+
+
+                        if (RemoveChannel != null)
+                            RemoveChannel(joinChannel.ChannelName, this);
+
+                        ChatChannels.RemoveAll(chan => chan == null);
+                        ChatChannels.RemoveAll(chan => !String.IsNullOrWhiteSpace(chan.ChannelName) && chan.ChannelName.Equals(joinChannel.ChannelName, StringComparison.InvariantCultureIgnoreCase));
+                        ChatChannels.Add(joinChannel);
+                        if (AddChannel != null)
+                            AddChannel(joinChannel.ChannelName, this);
+
+                    }, channel);
+                }
+            }
+
+        }
+
+
+        public virtual bool Login()
+        {
+            return true;
+        }
+
+        public virtual bool InitEmoticons()
+        {
+            //Fallback icon list
+            DownloadEmoticons(AppDomain.CurrentDomain.BaseDirectory + EmoticonFallbackUrl);
+            //Web icons
+            Task.Factory.StartNew(() => DownloadEmoticons(EmoticonUrl));
+            return true;
+        }
+
+
+        public Func<IChatChannel> CreateChannel
+        {
+            get;
+            set;
+        }
+
+
+        public List<IChatChannel> ChatChannels
+        {
+            get;
+            set;
+        }
     }
 }

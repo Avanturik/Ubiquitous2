@@ -24,6 +24,9 @@ namespace Ubiquitous2PluginInstaller
             while( !success )
             {
                 var errors = Install();
+                if (errors == "exit")
+                    return;
+
                 if( !String.IsNullOrWhiteSpace(errors) )
                 {
                     var button = MessageBox.Show(errors, "Error", MessageBoxButtons.AbortRetryIgnore);
@@ -41,7 +44,7 @@ namespace Ubiquitous2PluginInstaller
 
         private static string Install()
         {
-            var files = new FileList() { 
+            var autoFiles = new FileList() { 
                 //x64    
                 {"CLRHost.Interop.dll", "x64.CLRHostPlugin.CLRHost.Interop.dll", @"64bit\plugins\CLRHostPlugin\"},
                 {"CLRHostPlugin.dll", "x64.CLRHostPlugin.dll", @"64bit\plugins\"},
@@ -52,17 +55,51 @@ namespace Ubiquitous2PluginInstaller
                 {"Ubiquitous2Plugin.dll", "Ubiquitous2Plugin.dll", @"plugins\CLRHostPlugin\"},
             };
 
+            var manualFiles64bit = new FileList() {
+                {"CLRHost.Interop.dll", "x64.CLRHostPlugin.CLRHost.Interop.dll", @"plugins\CLRHostPlugin\"},
+                {"CLRHostPlugin.dll", "x64.CLRHostPlugin.dll", @"plugins\"},
+                {"Ubiquitous2Plugin.dll", "Ubiquitous2Plugin.dll", @"plugins\CLRHostPlugin\"},                
+            };
+
+            var manualFiles32bit = new FileList() {
+                {"CLRHost.Interop.dll", "x86.CLRHostPlugin.CLRHost.Interop.dll", @"plugins\CLRHostPlugin\"},
+                {"CLRHostPlugin.dll", "x86.CLRHostPlugin.dll", @"plugins\"},
+                {"Ubiquitous2Plugin.dll", "Ubiquitous2Plugin.dll", @"plugins\CLRHostPlugin\"},                
+            };
+
+
+
             var installer = new Installer();
             var obsDirectory = installer.GetInstallDirectory("Open Broadcaster Software");
-
+            var fileList = autoFiles;
             if (String.IsNullOrWhiteSpace(obsDirectory))
             {
-                MessageBox.Show("OBS installation folder not found. Please copy plugin files manually!");
-                Application.Exit();
+                FolderBrowserDialog dialog = new FolderBrowserDialog();
+
+                dialog.Description = "Please select Open Broadcaster folder";
+                dialog.ShowNewFolderButton = false;
+                var result = dialog.ShowDialog();
+
+                if (result == DialogResult.OK || result == DialogResult.Yes)
+                    obsDirectory = dialog.SelectedPath + @"\";
+                else
+                    return "exit";
+
+                var fileType = PEHeader.GetMachineType(obsDirectory + "obs.exe");
+                
+                if (fileType == PEHeader.MachineType.Error)
+                    return "Wrong folder selected. OBS.EXE not found!";
+
+                if (fileType == PEHeader.MachineType.x64)
+                    fileList = manualFiles64bit;
+                else
+                    fileList = manualFiles32bit;
+     
             }
 
+
             Stack<string> errors = new Stack<string>();
-            foreach (var file in files)
+            foreach (var file in fileList)
             {
                 var resourceFile = new ResourceFile(file.ResourcePath);
                 resourceFile.SaveToFile(obsDirectory + file.DestinationPath + file.FileName, (error) =>
