@@ -11,8 +11,7 @@ namespace UB.Model
     {
         private object channelsLock = new object();
         private object toolTipLock = new object();
-        private object pollerLock = new object();
-        private List<WebPoller> counterWebPollers = new List<WebPoller>();
+        private object pollerLock = new object(); 
         public event EventHandler<ChatServiceEventArgs> MessageReceived;
 
         public ChatBase(ChatConfig config)
@@ -91,12 +90,6 @@ namespace UB.Model
                     Status.ToolTips.RemoveAll(t => t.Header == channelName);
             });
 
-            lock (pollerLock)
-            {
-                this.With(x => counterWebPollers)
-                    .With(x => x.FirstOrDefault(p => p.Id == channelName))
-                    .Do(x => { x.Stop(); counterWebPollers.Remove(x); });
-            }
         }
 
         public void ReadMessage(ChatMessage message)
@@ -147,8 +140,7 @@ namespace UB.Model
             lock (channelsLock)
             {
                 ChatChannels.ForEach(chan =>
-                {
-                    StopCounterPoller(chan.ChannelName);
+                {                   
                     chan.Leave();
                     if (RemoveChannel != null)
                         RemoveChannel(chan.ChannelName, this);
