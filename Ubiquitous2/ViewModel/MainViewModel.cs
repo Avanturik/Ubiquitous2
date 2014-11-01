@@ -31,6 +31,7 @@ namespace UB.ViewModel
         private readonly IGeneralDataService _generalDataService;
         private readonly ISettingsDataService _settingsDataService;
         private SteamGuardWindow steamGuardWindow;
+        private KeyboardListener keyboardListener;
         
         /// <summary>
         /// Initializes a new instance of the MainViewModel class.
