@@ -21,41 +21,21 @@ using UB.Utils;
 
 namespace UB.Model
 {
-    public class GoodgameChat : IChat, IStreamTopic
+    public class GoodgameChat : ChatBase, IStreamTopic
     {
-        //API: https://docs.google.com/document/d/1vVtEhiqHhyW7wYor3zLh6PNu0_v_3LTboTQBPaRR1SY/edit?pli=1
-
-        public event EventHandler<ChatServiceEventArgs> MessageReceived;
-        private const string emoticonUrl = @"http://goodgame.ru/css/compiled/chat.css";
-        //private const string emoticonUrl = @"http://goodgame.ru/css/compiled/smiles.css";
+        //API: https://docs.google.com/document/d/1vVtEhiqHhyW7wYor3zLh6PNu0_v_3LTboTQBPaRR1SY/edit?pli=1    
         private const string emoticonImageUrl = @"http://goodgame.ru/images/generated/smiles.png";
-        private const string emoticonFallbackUrl = @"Content\goodgame_smiles.css";
         private string ownChannel;
         private string ownChannelId;
-        private List<GoodgameChannel> goodgameChannels = new List<GoodgameChannel>();
-        private List<WebPoller> counterWebPollers = new List<WebPoller>();
         private object iconParseLock = new object();
-        private object channelsLock = new object();
-        private object toolTipLock = new object();
-        private object counterLock = new object();
-        private object pollerLock = new object();
-        private bool isFallbackEmoticons = false;
-        private bool isWebEmoticons = false;
-        private bool isAnonymous = true;
-        private string chatToken = null;
         private WebClientBase webClient = new WebClientBase();
-        public GoodgameChat(ChatConfig config)
+        
+        public GoodgameChat(ChatConfig config) : base( config )
         {
-            Config = config;
-            Enabled = Config.Enabled;
-
-            ContentParsers = new List<Action<ChatMessage, IChat>>();
-            ChatChannelNames = new List<string>();
-            Emoticons = new List<Emoticon>();
-            Status = new StatusBase();
-            Status.ResetToDefault();
-            Users = new Dictionary<string, ChatUser>();
-
+            EmoticonUrl = @"http://goodgame.ru/css/compiled/chat.css";
+            EmoticonFallbackUrl = @"Content\goodgame_smiles.css";
+            
+            CreateChannel = () => { return new GoodgameChannel(this); };
 
             ContentParsers.Add(MessageParser.ConvertToPlainText);
             ContentParsers.Add(MessageParser.ParseURLs);
@@ -70,91 +50,8 @@ namespace UB.Model
             };
 
             Games = new ObservableCollection<Game>();
-
-        }
-        public UInt32 UserId = 0;
-
-        public string ChatName
-        {
-            get;
-            set;
         }
 
-        public string IconURL
-        {
-            get;
-            set;
-
-        }
-
-        public string NickName
-        {
-            get;
-            set;
-
-        }
-
-        public bool HideViewersCounter
-        {
-            get;
-            set;
-
-        }
-
-        public bool Enabled
-        {
-            get;
-            set;
-
-        }
-
-        public bool Start()
-        {
-            if (Status.IsStarting || Status.IsConnected || Status.IsLoggedIn || Config == null)
-            {
-                return true;
-            }
-
-            Log.WriteInfo("Starting Goodgame.ru chat");
-            Status.ResetToDefault();
-            Status.IsStarting = true;
-            Status.IsConnecting = true;
-            if (Login())
-            {
-                Task.Factory.StartNew(() => JoinChannels());
-            }
-
-            isFallbackEmoticons = false;
-            isWebEmoticons = false;
-            Task.Factory.StartNew( ()=> InitEmoticons());
-
-            return true;
-        }
-        public bool Login()
-        {
-            try
-            {
-                if (!LoginWithToken())
-                {
-                    if (!LoginWithUsername())
-                    {
-                        Status.IsLoginFailed = true;
-                        return false;
-                    }
-                }
-            }
-            catch (Exception e)
-            {
-                Log.WriteInfo("Goodgame authorization exception {0}", e.Message);
-                return false;
-            }
-            if (!isAnonymous)
-            {
-                Status.IsLoggedIn = true;
-            }
-
-            return true;
-        }
         private string GoodgameGet(string url)
         {
             var content = webClient.Download(url);
@@ -172,6 +69,38 @@ namespace UB.Model
             }
             return content;
         }
+        private void ResetAuthData()
+        {
+            Config.SetParameterValue("AuthToken", String.Empty);
+            Config.SetParameterValue("AuthTokenCredentials", String.Empty);
+            Config.SetParameterValue("ChatToken", String.Empty);
+            Config.SetParameterValue("UserId", 0);
+        }
+        public override bool Login()
+        {
+            try
+            {
+                if (!LoginWithToken())
+                {
+                    if (!LoginWithUsername())
+                    {
+                        Status.IsLoginFailed = true;
+                        return false;
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                Log.WriteInfo("Goodgame authorization exception {0}", e.Message);
+                return false;
+            }
+            if (!IsAnonymous)
+            {
+                Status.IsLoggedIn = true;
+            }
+
+            return true;
+        }
         private bool LoginWithToken()
         {
             var authToken = Config.GetParameterValue("AuthToken") as string;
@@ -184,7 +113,8 @@ namespace UB.Model
 
             if (String.IsNullOrEmpty(userName))
             {
-                isAnonymous = true;
+                IsAnonymous = true;
+                ResetAuthData();
                 return true;
             }
 
@@ -200,21 +130,23 @@ namespace UB.Model
             if (String.IsNullOrWhiteSpace(content))
                 return false;
 
-            chatToken = Re.GetSubString(content, @"token.*?'(.*?)'");
-            UInt32.TryParse(Re.GetSubString(content, @"userId.*?'(\d+)"), out UserId);
-            if( UserId == 0 )
+            uint userId = 0;
+
+            if( !UInt32.TryParse(Re.GetSubString(content, @"userId.*?'(\d+)"), out userId) )
             {
-                Config.SetParameterValue("AuthToken", String.Empty);
-                isAnonymous = true;
+                IsAnonymous = true;
+                ResetAuthData();
                 return false;
             }
             else
             {
-                isAnonymous = false;
+                IsAnonymous = false;
                 Info.CanBeRead = true;
                 Info.CanBeChanged = true;
                 Config.SetParameterValue("AuthToken", authToken);
                 Config.SetParameterValue("AuthTokenCredentials", userName + password);
+                Config.SetParameterValue("ChatToken", Re.GetSubString(content, @"token.*?'(.*?)'"));
+                Config.SetParameterValue("UserId", userId);
             }
 
             return true;
@@ -227,7 +159,8 @@ namespace UB.Model
 
             if (String.IsNullOrWhiteSpace(userName) || String.IsNullOrWhiteSpace(password))
             {
-                isAnonymous = true;
+                IsAnonymous = true;
+                ResetAuthData();
                 return true;
             }
 
@@ -245,7 +178,8 @@ namespace UB.Model
             if (String.IsNullOrWhiteSpace(authToken))
             {
                 Log.WriteError("Login to goodgame.ru failed. Joining anonymously");
-                isAnonymous = true;
+                IsAnonymous = true;
+                ResetAuthData();
                 return false;
             }
             else
@@ -256,102 +190,7 @@ namespace UB.Model
             }
         }
 
-        public bool Stop()
-        {
-            if (!Enabled)
-                Status.ResetToDefault();
-
-            if (Status.IsStopping)
-                return false;
-
-            Log.WriteInfo("Stopping Goodgame chat");
-
-            Status.IsStopping = true;
-            Status.IsStarting = false;
-
-            lock (channelsLock)
-            {
-                goodgameChannels.ForEach(chan =>
-                {
-                    StopCounterPoller(chan.ChannelName);
-                    chan.Leave();
-                });
-            }
-            ChatChannelNames.Clear();
-            return true;
-        }
-
-        public bool Restart()
-        {
-            return true;
-        }
-
-        public bool SendMessage(ChatMessage message)
-        {
-            if (isAnonymous)
-                return false;
-
-            var goodgameChannel = goodgameChannels.FirstOrDefault(channel => channel.ChannelName.Equals(message.Channel, StringComparison.InvariantCultureIgnoreCase));
-            if (goodgameChannel != null)
-            {
-                if (String.IsNullOrWhiteSpace(message.FromUserName))
-                {
-                    message.FromUserName = NickName;
-                }
-                Task.Factory.StartNew(() => goodgameChannel.SendMessage(message));
-            }
-            return true;
-        }
-
-        public Dictionary<string, ChatUser> Users
-        {
-            get;
-            set;
-
-        }
-
-        public List<string> ChatChannelNames
-        {
-            get;
-            set;
-
-        }
-
-        public Action<string, IChat> AddChannel
-        {
-            get;
-            set;
-
-        }
-
-        public Action<string, IChat> RemoveChannel
-        {
-            get;
-            set;
-
-        }
-
-        public Func<string, object> RequestData
-        {
-            get;
-            set;
-
-        }
-
-        public List<Action<ChatMessage, IChat>> ContentParsers
-        {
-            get;
-            set;
-
-        }
-
-        public List<Emoticon> Emoticons
-        {
-            get;
-            set;
-
-        }
-        private UInt32 GetChannelId( string channelName )
+        public UInt32 GetChannelId( string channelName )
         {
             UInt32 channelId = 0;
             var content = GoodgameGet(String.Format(@"http://goodgame.ru/api/getupcomingbroadcast?id={0}&fmt=json", channelName.Replace("#","")));
@@ -362,181 +201,20 @@ namespace UB.Model
             }
             return channelId;
         }
-        public void JoinChannels()
+        public override void JoinChannels()
         {
-
-            if (Status.IsStopping)
-                return;
-
             var serverUri = GetServerUri();
+            if( serverUri != null )
+                Config.SetParameterValue("ServerUri", serverUri);
 
-            var channels = Config.Parameters.StringArrayValue("Channels").Select(chan => "#" + chan.ToLower().Replace("#", "")).ToArray();
-
-            if (!String.IsNullOrWhiteSpace( NickName) )
-            {
-                if (!channels.Contains("#" + NickName.ToLower()))
-                    channels = channels.Union(new String[] { NickName.ToLower() }).ToArray();
-            }
-
-            foreach (var channel in channels)
-            {
-
-                var goodgameChannel = new GoodgameChannel(this);
-                goodgameChannel.ServerUri = serverUri;
-                goodgameChannel.ReadMessage = ReadMessage;
-                goodgameChannel.LeaveCallback = (ggChannel) =>
-                {
-                    StopCounterPoller(ggChannel.ChannelName);
-                    lock (channelsLock)
-                        goodgameChannels.RemoveAll(item => item.ChannelName == ggChannel.ChannelName);
-
-                    ChatChannelNames.RemoveAll(chan => chan == null);
-                    ChatChannelNames.RemoveAll(chan => chan.Equals(ggChannel.ChannelName, StringComparison.InvariantCultureIgnoreCase));
-                    if (RemoveChannel != null)
-                        RemoveChannel(ggChannel.ChannelName, this);
-
-                    if (!Status.IsStarting && !Status.IsStopping)
-                    {
-                        Restart();
-                        return;
-                    }
-                };
-                if (!goodgameChannels.Any(c => c.ChannelName == channel))
-                {
-                    goodgameChannel.ChannelId = GetChannelId(channel);
-                    goodgameChannel.Join((ggChannel) =>
-                    {
-                        if (Status.IsStopping)
-                            return;
-
-                        UI.Dispatch(() => {
-                            HideViewersCounter = false;
-                            Status.IsConnected = true;
-                            if (!ggChannel.IsAnonymous)
-                            {
-                                isAnonymous = false;
-                                Status.IsLoggedIn = true;
-                            }
-                        });
-                        lock (channelsLock)
-                            goodgameChannels.Add(ggChannel);
-
-
-                        if (RemoveChannel != null)
-                            RemoveChannel(ggChannel.ChannelName, this);
-
-                        ChatChannelNames.RemoveAll(chan => chan.Equals(ggChannel.ChannelName, StringComparison.InvariantCultureIgnoreCase));
-                        ChatChannelNames.Add(ggChannel.ChannelName);
-                        if (AddChannel != null)
-                            AddChannel(ggChannel.ChannelName, this);
-
-                        WatchChannelStats(ggChannel.ChannelName, ggChannel.ChannelId.ToString());
-
-                    }, NickName, channel, chatToken);
-                }
-            }
+            base.JoinChannels();
         }
-        void StopCounterPoller(string channelName)
+
+        public override void DownloadEmoticons(string url)
         {
-            UI.Dispatch(() =>
-            {
-                lock (toolTipLock)
-                    Status.ToolTips.RemoveAll(t => t.Header == channelName);
-            });
-            WebPoller poller;
-            lock( pollerLock)
-                poller = counterWebPollers.FirstOrDefault(p => p.Id == channelName);
-            
-            if (poller != null)
-            {
-                poller.Stop();
-                counterWebPollers.Remove(poller);
-            }
-        }
-        public void WatchChannelStats(string channel, string channelId)
-        {            
-            var poller = new WebPoller()
-            {
-                Id = channel,
-                //TODO: get streamid and watch plain text counter
-                Uri = new Uri(String.Format(@"http://ftp.goodgame.ru/counter/{0}.txt?rnd=0.06468730559572577", channelId )),
-            };
-
-            UI.Dispatch(() =>
-            {
-                lock (toolTipLock)
-                    Status.ToolTips.RemoveAll(t => t.Header == poller.Id);
-            });
-            UI.Dispatch(() =>
-            {
-                lock (toolTipLock)
-                    Status.ToolTips.Add(new ToolTip(poller.Id, ""));
-            });
-
-            poller.ReadString = (text) =>
-            {
-                lock (counterLock)
-                {
-                    poller.LastValue = text;
-                    var viewers = 0;
-                    foreach (var webPoller in counterWebPollers.ToList())
-                    {
-                        Int32 viewersCount = 0;
-                        var viewersCountText = webPoller.LastValue as string;
-                        Int32.TryParse(viewersCountText, out viewersCount);
-
-                        lock (toolTipLock)
-                        {
-                            var tooltip = Status.ToolTips.FirstOrDefault(t => t.Header.Equals(webPoller.Id));
-                            if (tooltip == null)
-                                return;
-
-                            viewers += viewersCount;
-                            tooltip.Text = String.IsNullOrWhiteSpace(viewersCountText)?"0":viewersCountText;
-                            tooltip.Number = viewersCount;
-                        }
-
-                    }
-                    UI.Dispatch(() => Status.ViewersCount = viewers);
-                }
-            };
-            //poller.Start();
-
-            lock (pollerLock)
-            {
-                counterWebPollers.RemoveAll(p => p.Id == poller.Id);
-                counterWebPollers.Add(poller);
-            }
-        }
-        public void ReadMessage(ChatMessage message)
-        {
-            if (MessageReceived != null)
-            {
-                var original = message.Text;
-                Log.WriteInfo("Original string:{0}", message.Text);
-                if (ContentParsers != null)
-                {
-                    var number = 1;
-                    ContentParsers.ForEach(parser =>
-                    {
-
-                        parser(message, this);
-                        if (original != message.Text)
-                            Log.WriteInfo("After parsing with {0}: {1}", number, message.Text);
-                        number++;
-                    });
-                }
-
-                MessageReceived(this, new ChatServiceEventArgs() { Message = message });
-
-            }
-        }
-        public void DownloadEmoticons(string url)
-        {
-
             lock (iconParseLock)
             {
-                if (isFallbackEmoticons && isWebEmoticons)
+                if (IsFallbackEmoticons && IsWebEmoticons)
                     return;
 
                 var list = new List<Emoticon>();
@@ -595,22 +273,13 @@ namespace UB.Model
                             }
                         }
                         Emoticons = list;
-                        if (isFallbackEmoticons)
-                            isWebEmoticons = true;
+                        if (IsFallbackEmoticons)
+                            IsWebEmoticons = true;
 
-                        isFallbackEmoticons = true;
+                        IsFallbackEmoticons = true;
                     }
                 }
             }
-        }
-
-        public bool InitEmoticons()
-        {
-            //Fallback icon list
-            DownloadEmoticons(AppDomain.CurrentDomain.BaseDirectory + emoticonFallbackUrl);
-            //Web icons
-            Task.Factory.StartNew(() => DownloadEmoticons(emoticonUrl));
-            return true;
         }
 
         private Uri GetServerUri()
@@ -627,21 +296,7 @@ namespace UB.Model
                 return null;
 
         }
-
-        public ChatConfig Config
-        {
-            get;
-            set;
-
-        }
-
-        public StatusBase Status
-        {
-            get;
-            set;
-
-        }
-
+        #region IStreamTopic
         public StreamInfo Info
         {
             get;
@@ -675,7 +330,7 @@ namespace UB.Model
                 .With(x => JArray.Parse(x))
                 .With(x => x.Select(game => new Game() { Id = game[2].ToString(), Name = game[0].ToString() }))
                 .ToList()
-                .ForEach( g => Games.Add(g));
+                .ForEach(g => Games.Add(g));
 
             if (callback != null)
                 UI.Dispatch(() => callback());
@@ -694,10 +349,10 @@ namespace UB.Model
                 content = GoodgameGet(String.Format("http://goodgame.ru/chat/{0}/", ownChannel));
                 ownChannelId = Re.GetSubString(content, @"channelId:[^\d]*(\d+)");
 
-                if( !String.IsNullOrWhiteSpace(ownChannel) )
+                if (!String.IsNullOrWhiteSpace(ownChannel))
                 {
-                    
-                    content = GoodgameGet(String.Format(@"http://goodgame.ru/channel/{0}",ownChannel));
+
+                    content = GoodgameGet(String.Format(@"http://goodgame.ru/channel/{0}", ownChannel));
                     if (!String.IsNullOrWhiteSpace(content))
                     {
                         Info.Topic = Re.GetSubString(content, @"<title>([^<]*)</title>");
@@ -737,61 +392,16 @@ namespace UB.Model
             set;
 
         }
-
-
-        public Func<IChatChannel> CreateChannel
-        {
-            get
-            {
-                throw new NotImplementedException();
-            }
-            set
-            {
-                throw new NotImplementedException();
-            }
-        }
-
-
-        public void UpdateStats()
-        {
-            throw new NotImplementedException();
-        }
-
-        public List<IChatChannel> ChatChannels
-        {
-            get
-            {
-                throw new NotImplementedException();
-            }
-            set
-            {
-                throw new NotImplementedException();
-            }
-        }
-
-
-        public bool IsAnonymous
-        {
-            get
-            {
-                throw new NotImplementedException();
-            }
-            set
-            {
-                throw new NotImplementedException();
-            }
-        }
+        
+        #endregion
     }
 
 
-    public class GoodgameChannel
+    public class GoodgameChannel : ChatChannelBase
     {
         private WebSocketBase webSocket;
-        private GoodgameChat _chat;
         private Random random = new Random();
         private WebClientBase webClient = new WebClientBase();
-        private UInt32 userId = 0;
-        private Action<GoodgameChannel> joinCallback;
         private Dictionary<string, Action<GoodgameChannel, GoodGameData>>
             packetHandlers = new Dictionary<string, Action<GoodgameChannel, GoodGameData>>() {
                 {"welcome", WelcomeHandler},
@@ -803,19 +413,9 @@ namespace UB.Model
 
         public GoodgameChannel(GoodgameChat chat)
         {
-            _chat = chat;
-            userId = _chat.UserId;
-            Status = new StatusBase();
-            IsAnonymous = true;
+            Chat = chat;
         }
-        public StatusBase Status { get; set; }
-        
-        public string NickName { get; set; }
-        public string AuthToken { get; set; }
-        public UInt32 ChannelId { get; set; }
-
-        public bool IsAnonymous { get; set; }
-        public Uri ServerUri { get; set; }
+        public uint ChannelId { get; set; }
         private static void WelcomeHandler(GoodgameChannel channel, GoodGameData data)
         {
             Log.WriteInfo("Goodgame protocol version: {0}", data.ProtocolVersion);
@@ -825,29 +425,29 @@ namespace UB.Model
         }
         private static void SuccessAuthHandler(GoodgameChannel channel, GoodGameData data)
         {
-            channel.Status.IsConnected = true;
+            channel.Chat.Status.IsConnected = true;
             if (data.UserId == 0)
             {
-                channel.IsAnonymous = true;
+                channel.Chat.IsAnonymous = true;
             }
             else
             {
-                channel.Status.IsLoggedIn = true;
-                channel.IsAnonymous = false;
+                channel.Chat.Status.IsLoggedIn = true;
+                channel.Chat.IsAnonymous = false;
             }
 
             channel.SendChannelJoin();
         }
         private void SendChannelJoin()
         {
-
-            Log.WriteInfo("Goodgame serializing join packet. ChannelId: {0}", ChannelId);
+            var channelId = (Chat as GoodgameChat).GetChannelId(ChannelName);
+            Log.WriteInfo("Goodgame serializing join packet. ChannelId: {0}", channelId);
             var joinPacket = new GoodgamePacket()
             {
                 Type = "join",
                 Data = new GoodGameData()
                 {
-                    ChannelId = ChannelId,
+                    ChannelId = channelId,
                     IsHidden = false,
                     Mobile = 0,
                 },
@@ -861,19 +461,17 @@ namespace UB.Model
         private static void SuccessJoinHandler(GoodgameChannel channel, GoodGameData data)
         {
             UI.Dispatch(() => {
-                channel.Status.IsConnecting = false;
-                channel.Status.IsStarting = false;
-                channel._chat.Status.IsConnected = true;
-                channel._chat.Status.IsConnecting = false;
-                channel._chat.Status.IsConnected = true;
+                channel.Chat.Status.IsConnecting = false;
+                channel.Chat.Status.IsStarting = false;
+                channel.Chat.Status.IsConnected = true;
 
-                if (!channel.IsAnonymous)
-                    channel.Status.IsLoggedIn = true;            
+                if (!channel.Chat.IsAnonymous)
+                    channel.Chat.Status.IsLoggedIn = true;            
             });
 
 
-            if (channel.joinCallback != null)
-                channel.joinCallback(channel);
+            if (channel.JoinCallback != null)
+                channel.JoinCallback(channel);
 
             Log.WriteInfo("Goodgame joined to #{0} id:{1}", data.ChannelName, data.ChannelId);
         }
@@ -890,8 +488,8 @@ namespace UB.Model
                 channel.ReadMessage(new ChatMessage()
                 {
                     Channel = channel.ChannelName,
-                    ChatIconURL = channel._chat.IconURL,
-                    ChatName = channel._chat.ChatName,
+                    ChatIconURL = channel.Chat.IconURL,
+                    ChatName = channel.Chat.ChatName,
                     FromUserName = data.UserName,
                     HighlyImportant = false,
                     IsSentByMe = false,
@@ -899,26 +497,18 @@ namespace UB.Model
                 });
         }
 
-        public void Join(Action<GoodgameChannel> callback, string nickName, string channel, string authToken)
+        public override void Join(Action<IChatChannel> callback, string channel)
         {
 
             if (String.IsNullOrWhiteSpace(channel))
                 return;
 
-            NickName = nickName;
-            AuthToken = authToken;
             ChannelName = "#" + channel.Replace("#", "");
 
             webSocket = new WebSocketBase();
             webSocket.PingInterval = 0;
             webSocket.Origin = "http://goodgame.ru";
-            joinCallback = callback;
-            //webSocket.ConnectHandler = () =>
-            //{
-
-            //    if (callback != null)
-            //        callback(this);
-            //};
+            JoinCallback = callback;
 
             webSocket.DisconnectHandler = () =>
             {
@@ -932,13 +522,15 @@ namespace UB.Model
 
         private void SendCredentials()
         {
+            uint userId = 0;
+            UInt32.TryParse( Chat.Config.GetParameterValue("UserId").ToString(), out userId);
             var authPacket = new GoodgamePacket()
             {
                 Type = "auth",
                 Data = new GoodGameData()
                 {
                     UserId = userId,
-                    Token = AuthToken
+                    Token = Chat.Config.GetParameterValue("ChatToken").ToString(),
                 },
             };
 
@@ -947,8 +539,8 @@ namespace UB.Model
         }
         private void Connect()
         {
-            Status.ResetToDefault();
-            if( ServerUri == null )
+            Uri serverUri;
+            if( Uri.TryCreate( Chat.Config.GetParameterValue("ServerUri").ToString(), UriKind.Absolute, out serverUri ) )
             {
                 webSocket.Path = String.Format("/chat/{0}/{1}/websocket", Rnd.RandomWebSocketServerNum(0x1e3), Rnd.RandomWebSocketString());
                 webSocket.Port = "8081";
@@ -956,9 +548,9 @@ namespace UB.Model
             }
             else
             {
-                webSocket.Path = String.Format("{0}/{1}/{2}/websocket", ServerUri.AbsolutePath, Rnd.RandomWebSocketServerNum(0x1e3), Rnd.RandomWebSocketString());
-                webSocket.Port = ServerUri.Port.ToString();
-                webSocket.Host = ServerUri.Host;
+                webSocket.Path = String.Format("{0}/{1}/{2}/websocket", serverUri.AbsolutePath, Rnd.RandomWebSocketServerNum(0x1e3), Rnd.RandomWebSocketString());
+                webSocket.Port = serverUri.Port.ToString();
+                webSocket.Host = serverUri.Host;
             }
             webSocket.Connect();
         }
@@ -981,8 +573,7 @@ namespace UB.Model
             {
             }
         }
-        public string ChannelName { get; set; }
-        public void Leave()
+        public override void Leave()
         {
             Log.WriteInfo("Goodgame.ru leaving {0}", ChannelName);
             
@@ -990,11 +581,9 @@ namespace UB.Model
                 webSocket.Disconnect();
         }
 
-        public Action<GoodgameChannel> LeaveCallback { get; set; }
-        public Action<ChatMessage> ReadMessage { get; set; }
-        public void SendMessage(ChatMessage message)
+        public override void SendMessage(ChatMessage message)
         {
-            if (IsAnonymous || String.IsNullOrWhiteSpace(message.Channel) ||
+            if (Chat.IsAnonymous || String.IsNullOrWhiteSpace(message.Channel) ||
                 String.IsNullOrWhiteSpace(message.FromUserName) ||
                 String.IsNullOrWhiteSpace(message.Text))
                 return;

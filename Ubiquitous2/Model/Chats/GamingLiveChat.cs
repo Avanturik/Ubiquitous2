@@ -12,26 +12,17 @@ using UB.Utils;
 
 namespace UB.Model
 {
-    class GamingLiveChat : IChat, IStreamTopic
+    class GamingLiveChat : ChatBase, IStreamTopic
     {
-        public event EventHandler<ChatServiceEventArgs> MessageReceived;
-        private WebClientBase loginWebClient = new WebClientBase();
-        private List<GamingLiveChannel> gamingLiveChannels = new List<GamingLiveChannel>();
+        private WebClientBase loginWebClient = new WebClientBase();   
         private GamingLiveGameList jsonGames;
-        private object counterLock = new object();
-        private object channelsLock = new object();
-        private List<WebPoller> counterWebPollers = new List<WebPoller>();
-        private bool isAnonymous = false;
         private object lockSearch = new object();
         private object pollerLock = new object();
-        public GamingLiveChat(ChatConfig config)
+        public GamingLiveChat(ChatConfig config) : base(config)
         {
-            Config = config;
-            ContentParsers = new List<Action<ChatMessage, IChat>>();
-            ChatChannelNames = new List<string>();
-            Emoticons = new List<Emoticon>();
-            Status = new StatusBase();
-            Users = new Dictionary<string, ChatUser>();
+            CreateChannel = () => { return new GamingLiveChannel(this); };
+
+            NickName = "__$anonymous";
 
             ContentParsers.Add(MessageParser.ParseURLs);
             ContentParsers.Add(MessageParser.ParseSimpleImageTags);
@@ -46,165 +37,23 @@ namespace UB.Model
             };
 
             Games = new ObservableCollection<Game>();
-
-            Enabled = Config.Enabled;
-        }
-        public string ChatName
-        {
-            get;
-            set;
         }
 
-        public string IconURL
-        {
-            get;
-            set;
-        }
-
-        public string NickName
-        {
-            get;
-            set;
-        }
-
-        public bool Enabled
-        {
-            get;
-            set;
-        }
-
-        public bool Start()
-        {
-
-            if (Status.IsStarting || Status.IsConnected || Status.IsLoggedIn || Config == null)
-            {
-                return true;
-            }
-
-            Log.WriteInfo("Starting Gaminglive.tv chat");
-            Status.ResetToDefault();
-            Status.IsStarting = true;
-            ChatChannelNames.Clear();
-            if( Login() )
-            {
-                Status.IsConnecting = true;
-                Task.Factory.StartNew( () => JoinChannels());
-            }
-            return false;
-        }
-        void StopCounterPoller(string channelName)
-        {
-            UI.Dispatch(() => Status.ToolTips.RemoveAll(t => t.Header == channelName));
-            WebPoller poller;
-            lock( pollerLock )
-                poller = counterWebPollers.FirstOrDefault(p => p.Id == channelName);
-            if( poller != null)
-            {
-                poller.Stop();
-                lock(pollerLock)
-                    counterWebPollers.Remove(poller);
-            }
-        }
-        public void JoinChannels()
-        {
-
-
-            var channels = Config.Parameters.StringArrayValue("Channels").Select(chan => "#" + chan.ToLower().Replace("#","")).ToArray();
-
-
-            if (NickName != null && !NickName.Equals("__$anonymous", StringComparison.InvariantCultureIgnoreCase))
-            {
-                if (!channels.Contains("#" + NickName.ToLower()))
-                    channels = channels.Union(new String[] { NickName.ToLower() }).ToArray();
-            }
-
-
-
-            foreach( var channel in channels )
-            {
-
-                if (Status.IsStopping)
-                    return;
-
-                Log.WriteInfo("Joining {0}@gaminglive", channel);
-                lock (channelsLock)
-                    gamingLiveChannels.RemoveAll(chan => chan.ChannelName.Equals(channel, StringComparison.InvariantCultureIgnoreCase));
-
-                var gamingLiveChannel = new GamingLiveChannel(this);
-                gamingLiveChannel.ReadMessage = ReadMessage;
-                gamingLiveChannel.LeaveCallback = (glChannel) => {
-                    StopCounterPoller(glChannel.ChannelName);
-                    
-                    lock(channelsLock)
-                        gamingLiveChannels.RemoveAll(item => item.ChannelName == glChannel.ChannelName);
-                    ChatChannelNames.RemoveAll(chan => chan == null);
-                    ChatChannelNames.RemoveAll(chan => chan.Equals(glChannel.ChannelName, StringComparison.InvariantCultureIgnoreCase));
-
-                    Log.WriteInfo("Remove gaminglive channel {0}", glChannel.ChannelName);
-
-                    if (RemoveChannel != null)
-                        RemoveChannel(glChannel.ChannelName, this);
-
-                    if (!Status.IsStarting && !Status.IsStopping)
-                        Restart();
-                };
-                if( !gamingLiveChannels.Any(c => c.ChannelName == channel ))
-                {
-                    gamingLiveChannel.Join((glChannel) => {
-                        if (Status.IsStopping)
-                            return;
-                        Status.IsConnected = true;
-
-
-                        if(!isAnonymous)
-                            Status.IsLoggedIn = true;
-
-                        if (RemoveChannel != null)
-                            RemoveChannel(glChannel.ChannelName, this);
-
-                        ChatChannelNames.RemoveAll(chan => chan == null);
-                        ChatChannelNames.RemoveAll(chan => chan.Equals(glChannel.ChannelName, StringComparison.InvariantCultureIgnoreCase));
-                        ChatChannelNames.Add((glChannel.ChannelName));
-
-                        Log.WriteInfo("Add gaminglive channel {0}", glChannel.ChannelName);
-                        if (AddChannel != null)
-                            AddChannel(glChannel.ChannelName, this);
-
-                        WatchChannelStats(glChannel.ChannelName);
-
-                    }, NickName, channel, (String)Config.GetParameterValue("AuthToken"));
-
-                    lock (channelsLock)
-                        gamingLiveChannels.Add(gamingLiveChannel);
-                }
-            }
-        }
-        public void ReadMessage( ChatMessage message )
-        {
-            if (MessageReceived != null)
-            {
-                if (ContentParsers != null)
-                    ContentParsers.ForEach(parser => parser(message, this));
-
-                MessageReceived(this, new ChatServiceEventArgs() { Message = message });
-
-            }
-        }
-        
-        public bool Login()
+        #region IChat
+        public override bool Login()
         {
             try
             {
-                if( !LoginWithToken())
+                if (!LoginWithToken())
                 {
                     if (!LoginWithUsername())
                     {
                         Status.IsLoginFailed = true;
                         return false;
                     }
-                }     
+                }
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 Log.WriteInfo("Gaminglive authorization exception {0}", e.Message);
                 return false;
@@ -217,14 +66,14 @@ namespace UB.Model
             var userName = Config.GetParameterValue("Username") as string;
             var password = Config.GetParameterValue("Password") as string;
 
-            if( String.IsNullOrWhiteSpace(userName) || String.IsNullOrWhiteSpace(password))
+            if (String.IsNullOrWhiteSpace(userName) || String.IsNullOrWhiteSpace(password))
             {
-                isAnonymous = true;
+                IsAnonymous = true;
                 return true;
             }
             NickName = userName;
-            
-            var authString =  String.Format(@"{{""email"":""{0}"",""password"":""{1}""}}", userName, password);
+
+            var authString = String.Format(@"{{""email"":""{0}"",""password"":""{1}""}}", userName, password);
 
             SetCommonHeaders();
             var authToken = this.With(x => loginWebClient.Upload("https://api.gaminglive.tv/auth/session", authString))
@@ -238,7 +87,7 @@ namespace UB.Model
             }
             else
             {
-                isAnonymous = false;
+                IsAnonymous = false;
                 Config.SetParameterValue("AuthToken", authToken);
                 Config.SetParameterValue("AuthTokenCredentials", userName + password);
                 return true;
@@ -248,17 +97,17 @@ namespace UB.Model
         public bool LoginWithToken()
         {
             var authToken = (string)Config.GetParameterValue("AuthToken");
-            var userName = Config.GetParameterValue("Username") as string;            
+            var userName = Config.GetParameterValue("Username") as string;
             var password = Config.GetParameterValue("Password") as string;
             var tokenCredentials = Config.GetParameterValue("AuthTokenCredentials") as string;
-            
+
             if (tokenCredentials != userName + password)
                 return false;
 
 
             if (String.IsNullOrEmpty(userName))
             {
-                isAnonymous = true;
+                IsAnonymous = true;
                 return true;
             }
 
@@ -269,7 +118,7 @@ namespace UB.Model
             loginWebClient.Headers["Auth-Token"] = authToken;
 
             var response = this.With(x => loginWebClient.Download("https://api.gaminglive.tv/auth/me"))
-                .With(x => String.IsNullOrWhiteSpace(x)?null:x)
+                .With(x => String.IsNullOrWhiteSpace(x) ? null : x)
                 .With(x => JToken.Parse(x));
 
             if (response == null)
@@ -279,10 +128,10 @@ namespace UB.Model
 
             var isOk = response.Value<bool>("ok");
             NickName = (string)response.Value<dynamic>("user").login;
-        
-            if( isOk && !String.IsNullOrWhiteSpace(NickName) )
+
+            if (isOk && !String.IsNullOrWhiteSpace(NickName))
             {
-                isAnonymous = false;
+                IsAnonymous = false;
                 return true;
             }
 
@@ -295,173 +144,9 @@ namespace UB.Model
             loginWebClient.Headers["Accept"] = @"application/json, text/plain, */*";
             loginWebClient.Headers["Accept-Encoding"] = "gzip,deflate";
         }
-        public bool Stop()
-        {
-            if (!Enabled)
-                Status.ResetToDefault();
 
-            if (Status.IsStopping)
-                return false;
-
-            Log.WriteInfo("Stopping Gaminglive.tv chat");
-            Status.IsStopping = true;
-            Status.IsStarting = false;
-
-            lock(channelsLock)
-                gamingLiveChannels.ToList().ForEach(chan => {
-                    StopCounterPoller(chan.ChannelName);
-                    chan.Leave();
-                    if (RemoveChannel != null)
-                        RemoveChannel(chan.ChannelName, this);
-                });
-            ChatChannelNames.Clear();
-            return true;
-        }
-
-        public bool Restart()
-        {
-            if (Status.IsStopping || Status.IsStarting)
-                return false;
-
-            Stop();
-            Start();
-            Status.ResetToDefault();
-            return true;
-        }
-
-        public bool SendMessage(ChatMessage message)
-        {
-            lock( channelsLock)
-            {
-                var gamingLiveChannel = gamingLiveChannels.FirstOrDefault(channel => channel.ChannelName.Equals(message.Channel, StringComparison.InvariantCultureIgnoreCase));
-                if (gamingLiveChannel != null)
-                {
-                    Task.Factory.StartNew(() => gamingLiveChannel.SendMessage(message));
-                }
-            }
-                
-
-            return true;
-        }
-
-        public void WatchChannelStats(string channel)
-        {
-            var poller = new WebPoller()
-            {
-                Id = channel,
-                Uri = new Uri(String.Format(@"http://api.gaminglive.tv/channels/{0}", channel.Replace("#", ""))),
-            };
-
-            UI.Dispatch(() => Status.ToolTips.RemoveAll(t => t.Header == poller.Id));
-            UI.Dispatch(() => Status.ToolTips.Add(new ToolTip(poller.Id, "")));
-
-            poller.ReadStream = (stream) =>
-            {
-                lock (counterLock)
-                {
-                    var channelInfo = Json.DeserializeStream<GamingLiveChannelStats>(stream);
-                    poller.LastValue = channelInfo;
-                    var viewers = 0;
-                    foreach (var webPoller in counterWebPollers.ToList())
-                    {
-                        var streamInfo = this.With(x => (GamingLiveChannelStats)webPoller.LastValue)
-                            .With(x => x.state);
-
-                        var tooltip = Status.ToolTips.ToList().FirstOrDefault(t => t.Header == webPoller.Id);
-                        if (tooltip == null)
-                            return;
-
-                        if (streamInfo != null)
-                        {
-                            viewers += streamInfo.viewers;
-                            tooltip.Text = streamInfo.viewers.ToString();
-                            tooltip.Number = streamInfo.viewers;
-                        }
-                        else
-                        {
-                            tooltip.Text = "0";
-                            tooltip.Number = 0;
-                        }
-
-                    }
-                    UI.Dispatch(() => Status.ViewersCount = viewers);
-                }
-            };
-            poller.Start();
-
-            lock(counterLock)
-            {
-                counterWebPollers.RemoveAll(p => p.Id == poller.Id);
-                counterWebPollers.Add(poller);
-            }
-        }
-
-        public Dictionary<string, ChatUser> Users
-        {
-            get;
-            set;
-        }
-
-        public List<string> ChatChannelNames
-        {
-            get;
-            set;
-        }
-
-        public Action<string, IChat> AddChannel
-        {
-            get;
-            set;
-        }
-
-        public Action<string, IChat> RemoveChannel
-        {
-            get;
-            set;
-        }
-
-        public List<Action<ChatMessage, IChat>> ContentParsers
-        {
-            get;
-            set;
-        }
-
-        public List<Emoticon> Emoticons
-        {
-            get;
-            set;
-        }
-
-        public void DownloadEmoticons(string url)
-        {
-            
-        }
-
-        public ChatConfig Config
-        {
-            get;
-            set;
-        }
-
-        public StatusBase Status
-        {
-            get;
-            set;
-        }
-
-        public Func<string, object> RequestData
-        {
-            get;
-            set;
-        }
-
-        public bool HideViewersCounter
-        {
-            get;
-            set;
-
-        }
-
+        #endregion
+        #region IStreamTopic
         public StreamInfo Info
         {
             get;
@@ -507,24 +192,24 @@ namespace UB.Model
         {
             if (!Status.IsLoggedIn)
                 return;
-            
+
             GetGameList();
 
             Task.Factory.StartNew(() =>
             {
-                var jsonInfo = GetLiveStreamInfo();             
-                
+                var jsonInfo = GetLiveStreamInfo();
+
                 if (jsonInfo == null)
                     return;
 
                 Info.Topic = jsonInfo["name"].ToObject<string>();
                 var game = jsonInfo["game"];
-                if( game != null )
+                if (game != null)
                 {
                     Info.CurrentGame.Name = game["name"].ToObject<string>();
                     Info.CurrentGame.Id = game["id"].ToObject<string>();
                 }
-                
+
                 Info.CanBeRead = true;
                 Info.CanBeChanged = true;
 
@@ -548,8 +233,8 @@ namespace UB.Model
 
             var userName = Config.GetParameterValue("Username") as string;
             var authToken = Config.GetParameterValue("AuthToken") as string;
-            var gameId = this.With( x => jsonGames.games.FirstOrDefault( game => game.name.Equals(Info.CurrentGame.Name,StringComparison.InvariantCultureIgnoreCase) ))
-                            .With( x => x.id);
+            var gameId = this.With(x => jsonGames.games.FirstOrDefault(game => game.name.Equals(Info.CurrentGame.Name, StringComparison.InvariantCultureIgnoreCase)))
+                            .With(x => x.id);
 
             var jsonInfo = new GamingLiveChannelUpdate
             {
@@ -584,99 +269,40 @@ namespace UB.Model
             get;
             set;
 
-        }
+        }      
+        #endregion
 
-
-        public bool InitEmoticons()
-        {
-            throw new NotImplementedException();
-        }
-
-
-        public Func<IChatChannel> CreateChannel
-        {
-            get
-            {
-                throw new NotImplementedException();
-            }
-            set
-            {
-                throw new NotImplementedException();
-            }
-        }
-
-
-        public void UpdateStats()
-        {
-            throw new NotImplementedException();
-        }
-
-        public List<IChatChannel> ChatChannels
-        {
-            get
-            {
-                throw new NotImplementedException();
-            }
-            set
-            {
-                throw new NotImplementedException();
-            }
-        }
-
-
-        public bool IsAnonymous
-        {
-            get
-            {
-                throw new NotImplementedException();
-            }
-            set
-            {
-                throw new NotImplementedException();
-            }
-        }
     }
 
-    public class GamingLiveChannel
+    public class GamingLiveChannel : ChatChannelBase
     {
         private Timer pingTimer;
         private const int pingInterval = 60000;
         private WebSocketBase webSocket;
         private WebSocketBase secondWebSocket;
-        private IChat _chat;
+        private object pollerLock = new object();
+        private WebPoller statsPoller;
         private bool isJoined = false;
-        bool isAnonymous = false;
-        object lockConnect = new object();
         public GamingLiveChannel(IChat chat)
         {
-            _chat = chat;
+            Chat = chat;
         }
-        public void Join(Action<GamingLiveChannel> callback, string nickName, string channel, string authToken)
+        public override void Join(Action<IChatChannel> callback, string channel)
         {
-            JoinCallback = callback;
-
-            isAnonymous = nickName == null || nickName.Equals("__$anonymous",StringComparison.InvariantCultureIgnoreCase) 
-                || String.IsNullOrWhiteSpace(nickName) 
-                || String.IsNullOrWhiteSpace(authToken);
-
-            if( isAnonymous )
-            {
-                nickName = "__$anonymous";
-                authToken = "__$anonymous";
-            }
             ChannelName = "#" + channel.Replace("#", "");
+            
+            SetupStatsWatcher();
 
-
+            JoinCallback = callback;
 
             webSocket = new WebSocketBase();
             webSocket.Host = "54.76.144.150";
-            //webSocket.PingInterval = 0;
+
             webSocket.Origin = "http://www.gaminglive.tv";
-            webSocket.Path = String.Format("/chat/{0}?nick={1}&authToken={2}", ChannelName.Replace("#",""), nickName, authToken );
-            webSocket.ConnectHandler = () =>
-            {
-                //webSocket.Send("{}");
-            };
+            webSocket.Path = String.Format("/chat/{0}?nick={1}&authToken={2}", 
+                ChannelName.Replace("#", ""), 
+                Chat.NickName, 
+                Chat.IsAnonymous ? "__$anonymous" : Chat.Config.GetParameterValue("AuthToken").ToString());
 
             webSocket.DisconnectHandler = () =>
             {
@@ -701,10 +327,10 @@ namespace UB.Model
         }
         private void ReadRawMessage(string rawMessage)        
         {
-            if (!_chat.Status.IsConnected)
+            if (!Chat.Status.IsConnected)
             {
-                _chat.Status.IsStarting = false;
-                _chat.Status.IsConnected = true;
+                Chat.Status.IsStarting = false;
+                Chat.Status.IsConnected = true;
             }
 
             if (!isJoined && JoinCallback != null)
@@ -713,9 +339,11 @@ namespace UB.Model
                 isJoined = true;
             }
             
-            //Log.WriteInfo("gaminglive raw message: {0}", rawMessage);
             if( !String.IsNullOrWhiteSpace(rawMessage))
             {
+                if( !Chat.IsAnonymous )
+                    Chat.Status.IsLoggedIn = true;
+
                 var json = JToken.Parse(rawMessage);
                 var nickName = (string)json.Value<dynamic>("user").nick;
                 var text = json.Value<string>("message");
@@ -732,8 +360,8 @@ namespace UB.Model
                 if(ReadMessage != null)
                     ReadMessage(new ChatMessage() { 
                         Channel = ChannelName,
-                        ChatIconURL = _chat.IconURL,
-                        ChatName = _chat.ChatName,
+                        ChatIconURL = Chat.IconURL,
+                        ChatName = Chat.ChatName,
                         FromUserName = nickName,
                         HighlyImportant = false,
                         IsSentByMe = false,
@@ -742,22 +370,44 @@ namespace UB.Model
 
             }
         }
-        public string ChannelName { get; set; }
-        public void Leave()
+        public override void Leave()
         {
             Log.WriteInfo("Gaminglive leaving {0}", ChannelName);
             webSocket.Disconnect();
         }
 
-        public Action<GamingLiveChannel> LeaveCallback { get; set; }
-        public Action<GamingLiveChannel> JoinCallback { get; set; }
-        public Action<ChatMessage> ReadMessage { get; set; }
-        public void SendMessage( ChatMessage message )
+        public override void SendMessage( ChatMessage message )
         {
-            if (isAnonymous)
+            if (Chat.IsAnonymous)
                 return;
+
             dynamic jsonMessage = new { message = message.Text, color = "orange" };
             webSocket.Send(JsonConvert.SerializeObject(jsonMessage));
+        }
+
+        public override void SetupStatsWatcher()
+        {
+            statsPoller = new WebPoller()
+            {
+                Id = ChannelName,
+                Uri = new Uri(String.Format(@"http://api.gaminglive.tv/channels/{0}", ChannelName.Replace("#", ""))),
+            };
+
+            statsPoller.ReadStream = (stream) =>
+            {
+                lock (pollerLock)
+                {
+                    var channelInfo = Json.DeserializeStream<GamingLiveChannelStats>(stream);
+                    statsPoller.LastValue = channelInfo;
+                    int viewers = 0;
+                    if (channelInfo != null && channelInfo.state != null )
+                        viewers = channelInfo.state.viewers;
+
+                    ChannelStats.ViewersCount = viewers;
+                    Chat.UpdateStats();
+                }
+            };
+            statsPoller.Start();
         }
     }
     #region Gaminglive json classes

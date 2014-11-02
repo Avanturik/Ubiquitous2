@@ -12,7 +12,6 @@ namespace UB.Model
         {
             ChannelStats = new ChannelStats();
         }
-        public string NickName { get; set; }
 
         public ChatConfig ChatConfig
         {
@@ -20,13 +19,13 @@ namespace UB.Model
             set;
         }
 
-        public Action<CybergameChannel> JoinCallback
+        public Action<IChatChannel> JoinCallback
         {
             get;
             set;
         }
 
-        public Action<CybergameChannel> LeaveCallback
+        public Action<IChatChannel> LeaveCallback
         {
             get;
             set;

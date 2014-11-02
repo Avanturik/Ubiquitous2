@@ -29,6 +29,9 @@ namespace UB.Model
         public string EmoticonFallbackUrl { get; set; }
         public string EmoticonUrl { get; set; }
 
+        public bool IsWebEmoticons { get; set; }
+        public bool IsFallbackEmoticons { get; set; }
+
         public string ChatName
         {
             get;
@@ -269,7 +272,7 @@ namespace UB.Model
 
             var channels = Config.Parameters.StringArrayValue("Channels").Select(chan => "#" + chan.ToLower().Replace("#", "")).ToArray();
 
-            if (!String.IsNullOrWhiteSpace(NickName))
+            if (!IsAnonymous && !String.IsNullOrWhiteSpace(NickName))
             {
                 if (!channels.Contains("#" + NickName.ToLower()))
                     channels = channels.Union(new String[] { NickName.ToLower() }).ToArray();

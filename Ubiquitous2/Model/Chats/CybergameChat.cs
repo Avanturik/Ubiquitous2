@@ -17,19 +17,12 @@ namespace UB.Model
 {
     public class CybergameChat : ChatBase, IStreamTopic
     {
-        private List<WebPoller> counterWebPollers = new List<WebPoller>();
         private WebClientBase loginWebClient = new WebClientBase();
         private List<KeyValuePair<string, string>> webGameList = new List<KeyValuePair<string, string>>();
         private List<KeyValuePair<String, String>> profileFormParams;
         private string webChannelId;
-        private object channelsLock = new object();
-        private object pollerLock = new object();
-        private object toolTipLock = new object();
         private object iconParseLock = new object();
         private object lockSearch = new object();
-        private bool isWebEmoticons = false;
-        private bool isFallbackEmoticons = false;
-
 
 
         public CybergameChat(ChatConfig config) : base(config)
@@ -245,7 +238,7 @@ namespace UB.Model
         }
         public override void DownloadEmoticons(string url)
         {
-            if (isFallbackEmoticons && isWebEmoticons)
+            if (IsFallbackEmoticons && IsWebEmoticons)
                 return;
 
             lock (iconParseLock)
@@ -281,10 +274,10 @@ namespace UB.Model
                     if (list.Count > 0)
                     {
                         Emoticons = list.ToList();
-                        if (isFallbackEmoticons)
-                            isWebEmoticons = true;
+                        if (IsFallbackEmoticons)
+                            IsWebEmoticons = true;
 
-                        isFallbackEmoticons = true;
+                        IsFallbackEmoticons = true;
                     }
                 }
             }
@@ -298,7 +291,6 @@ namespace UB.Model
         private object pollerLock = new object();
         private WebPoller statsPoller;
         private Random random = new Random();
-        private bool isAnonymous = false;
         private Dictionary<string, Action<CybergameChannel, CybergameData>>
             packetHandlers = new Dictionary<string, Action<CybergameChannel, CybergameData>>() {
                         {"changeWindow", SuccessfulConnect},
@@ -350,7 +342,6 @@ namespace UB.Model
 
         private void ReadRawMessage(string rawMessage)
         {
-            //Log.WriteInfo("Cybergame raw message: {0}", rawMessage);
             if( rawMessage.Equals("o") )
             {
                 SendCredentials();
@@ -380,7 +371,7 @@ namespace UB.Model
                 Command = "login",
                 Message = new CybergameData()
                 {
-                    Login = NickName ?? "",
+                    Login = Chat.NickName ?? "",
                     Password = token ?? "",
                     Channel = ChannelName,
                 },
@@ -398,7 +389,7 @@ namespace UB.Model
        
         public override void SendMessage(ChatMessage message)
         {
-            if (isAnonymous || String.IsNullOrWhiteSpace(message.Channel) ||
+            if (Chat.IsAnonymous || String.IsNullOrWhiteSpace(message.Channel) ||
                 String.IsNullOrWhiteSpace(message.FromUserName) ||
                 String.IsNullOrWhiteSpace(message.Text))
                 return;
@@ -423,8 +414,7 @@ namespace UB.Model
 
             if (String.IsNullOrWhiteSpace(channel))
                 return;
-
-            NickName = Chat.NickName;           
+       
             webSocket = new WebSocketBase();
             webSocket.Origin = "http://www.cybergame.tv";
             webSocket.ConnectHandler = () =>
