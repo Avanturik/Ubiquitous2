@@ -357,6 +357,9 @@ namespace UB.Model
                 if (String.IsNullOrWhiteSpace(nickName) || String.IsNullOrWhiteSpace(text))
                     return;
 
+                ChannelStats.MessagesCount++;
+                Chat.UpdateStats();
+
                 if(ReadMessage != null)
                     ReadMessage(new ChatMessage() { 
                         Channel = ChannelName,
