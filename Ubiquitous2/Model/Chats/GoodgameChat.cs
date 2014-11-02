@@ -581,7 +581,7 @@ namespace UB.Model
         private void Connect()
         {
             Uri serverUri;
-            if( Uri.TryCreate( Chat.Config.GetParameterValue("ServerUri").ToString(), UriKind.Absolute, out serverUri ) )
+            if( !Uri.TryCreate( Chat.Config.GetParameterValue("ServerUri").ToString(), UriKind.Absolute, out serverUri ) )
             {
                 webSocket.Path = String.Format("/chat/{0}/{1}/websocket", Rnd.RandomWebSocketServerNum(0x1e3), Rnd.RandomWebSocketString());
                 webSocket.Port = "8081";
