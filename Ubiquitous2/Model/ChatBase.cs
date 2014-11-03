@@ -11,7 +11,8 @@ namespace UB.Model
     {
         private object channelsLock = new object();
         private object toolTipLock = new object();
-        private object pollerLock = new object(); 
+        private object pollerLock = new object();
+        private object joinLock = new object();
         public event EventHandler<ChatServiceEventArgs> MessageReceived;
 
         public ChatBase(ChatConfig config)
@@ -304,11 +305,11 @@ namespace UB.Model
                     if (Status.IsStarting || Status.IsStopping)
                         return;
                     else
-                        JoinChannel(chatChannel, channel);
-
+                        lock( joinLock )
+                            JoinChannel(chatChannel, channel);
                 };
-
-                JoinChannel(chatChannel, channel);
+                lock( joinLock )
+                    JoinChannel(chatChannel, channel);
             }
 
         }
@@ -317,29 +318,34 @@ namespace UB.Model
         {
             if (!ChatChannels.Any(c => c.ChannelName == channel))
             {
-                lock (toolTipLock)
-                {
-                    if (!Status.ToolTips.ToList().Any(t => t.Header == channel))
-                        UI.Dispatch(() => Status.ToolTips.Add(new ToolTip(channel, "0")));
-                }
+
                 chatChannel.Join((joinChannel) =>
                 {
-                    if (Status.IsStopping)
-                        return;
+                    lock( joinLock )
+                    {
+                        if (Status.IsStopping)
+                            return;
+                        
+                        lock (toolTipLock)
+                        {
+                            if (!Status.ToolTips.ToList().Any(t => t.Header == channel))
+                                UI.Dispatch(() => Status.ToolTips.Add(new ToolTip(channel, joinChannel.ChannelStats.ViewersCount.ToString())));
+                        }
 
-                    Status.IsConnected = true;
-                    lock (channelsLock)
+                        Status.IsConnected = true;
+                        lock (channelsLock)
+                            ChatChannels.Add(joinChannel);
+
+
+                        if (RemoveChannel != null)
+                            RemoveChannel(joinChannel.ChannelName, this);
+
+                        ChatChannels.RemoveAll(chan => chan == null || (!String.IsNullOrWhiteSpace(chan.ChannelName) && chan.ChannelName.Equals(joinChannel.ChannelName, StringComparison.InvariantCultureIgnoreCase)));
                         ChatChannels.Add(joinChannel);
+                        if (AddChannel != null)
+                            AddChannel(joinChannel.ChannelName, this);
 
-
-                    if (RemoveChannel != null)
-                        RemoveChannel(joinChannel.ChannelName, this);
-
-                    ChatChannels.RemoveAll(chan => chan == null || (!String.IsNullOrWhiteSpace(chan.ChannelName) && chan.ChannelName.Equals(joinChannel.ChannelName, StringComparison.InvariantCultureIgnoreCase)));
-                    ChatChannels.Add(joinChannel);
-                    if (AddChannel != null)
-                        AddChannel(joinChannel.ChannelName, this);
-
+                    }
                 }, channel);
             }
         }
