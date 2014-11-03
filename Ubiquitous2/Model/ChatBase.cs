@@ -70,7 +70,10 @@ namespace UB.Model
             }
             Log.WriteInfo("Starting {0} chat", ChatName);
 
-            UI.Dispatch(() => Status.ToolTips.Clear());
+            lock( toolTipLock )
+            {
+                UI.Dispatch(() => Status.ToolTips.Clear());
+            }
 
             Status.ResetToDefault();
             Status.IsStarting = true;
@@ -136,7 +139,8 @@ namespace UB.Model
                 UI.Dispatch(() => {
                     Status.ViewersCount = 0;
                     Status.MessagesCount = 0;
-                    Status.ToolTips.Clear();
+                    lock( toolTipLock)
+                        Status.ToolTips.Clear();
                 });
             }
 
@@ -297,44 +301,48 @@ namespace UB.Model
                     if (RemoveChannel != null)
                         RemoveChannel(leaveChannel.ChannelName, this);
 
-                    if (!Status.IsStarting && !Status.IsStopping)
-                    {
-                        Restart();
+                    if (Status.IsStarting || Status.IsStopping)
                         return;
-                    }
+                    else
+                        JoinChannel(chatChannel, channel);
+
                 };
-                if (!ChatChannels.Any(c => c.ChannelName == channel))
-                {
-                    lock (toolTipLock)
-                    {
-                        if (!Status.ToolTips.Any(t => t.Header == channel))
-                            UI.Dispatch(()=>Status.ToolTips.Add(new ToolTip(channel, "0")));
-                    }
-                    chatChannel.Join((joinChannel) =>
-                    {
-                        if (Status.IsStopping)
-                            return;
 
-                        Status.IsConnected = true;
-                        lock (channelsLock)
-                            ChatChannels.Add(joinChannel);
-
-
-                        if (RemoveChannel != null)
-                            RemoveChannel(joinChannel.ChannelName, this);
-
-                        ChatChannels.RemoveAll(chan => chan == null || ( !String.IsNullOrWhiteSpace(chan.ChannelName) && chan.ChannelName.Equals(joinChannel.ChannelName, StringComparison.InvariantCultureIgnoreCase)));
-                        ChatChannels.Add(joinChannel);
-                        if (AddChannel != null)
-                            AddChannel(joinChannel.ChannelName, this);
-
-                    }, channel);
-                }
+                JoinChannel(chatChannel, channel);
             }
 
         }
 
+        private void JoinChannel( IChatChannel chatChannel, string channel )
+        {
+            if (!ChatChannels.Any(c => c.ChannelName == channel))
+            {
+                lock (toolTipLock)
+                {
+                    if (!Status.ToolTips.ToList().Any(t => t.Header == channel))
+                        UI.Dispatch(() => Status.ToolTips.Add(new ToolTip(channel, "0")));
+                }
+                chatChannel.Join((joinChannel) =>
+                {
+                    if (Status.IsStopping)
+                        return;
 
+                    Status.IsConnected = true;
+                    lock (channelsLock)
+                        ChatChannels.Add(joinChannel);
+
+
+                    if (RemoveChannel != null)
+                        RemoveChannel(joinChannel.ChannelName, this);
+
+                    ChatChannels.RemoveAll(chan => chan == null || (!String.IsNullOrWhiteSpace(chan.ChannelName) && chan.ChannelName.Equals(joinChannel.ChannelName, StringComparison.InvariantCultureIgnoreCase)));
+                    ChatChannels.Add(joinChannel);
+                    if (AddChannel != null)
+                        AddChannel(joinChannel.ChannelName, this);
+
+                }, channel);
+            }
+        }
         public virtual bool Login()
         {
             return true;
