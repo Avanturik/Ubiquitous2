@@ -323,8 +323,7 @@ namespace UB.Model
                         if (RemoveChannel != null)
                             RemoveChannel(joinChannel.ChannelName, this);
 
-                        ChatChannels.RemoveAll(chan => chan == null);
-                        ChatChannels.RemoveAll(chan => !String.IsNullOrWhiteSpace(chan.ChannelName) && chan.ChannelName.Equals(joinChannel.ChannelName, StringComparison.InvariantCultureIgnoreCase));
+                        ChatChannels.RemoveAll(chan => chan == null || ( !String.IsNullOrWhiteSpace(chan.ChannelName) && chan.ChannelName.Equals(joinChannel.ChannelName, StringComparison.InvariantCultureIgnoreCase)));
                         ChatChannels.Add(joinChannel);
                         if (AddChannel != null)
                             AddChannel(joinChannel.ChannelName, this);
