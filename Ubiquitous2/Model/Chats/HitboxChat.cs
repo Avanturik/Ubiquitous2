@@ -13,37 +13,23 @@ using UB.Utils;
 
 namespace UB.Model
 {
-    public class HitboxChat : IChat, IStreamTopic, IFollowersProvider
+    public class HitboxChat : ChatBase, IStreamTopic, IFollowersProvider
     {
-        public event EventHandler<ChatServiceEventArgs> MessageReceived;
         private WebClientBase loginWebClient = new WebClientBase();
-        private const string emoticonUrl = "https://www.hitbox.tv/api/chat/icons/UnknownSoldier";
-        private const string emoticonFallbackUrl = @"Content\hitboxemoticons.json";
-        private List<HitboxChannel> hitboxChannels = new List<HitboxChannel>();
-        private object counterLock = new object();
-        private List<WebPoller> counterWebPollers = new List<WebPoller>();
-        private bool isAnonymous = false;
         private object iconParseLock = new object();
-        private bool isFallbackEmoticons = false;
-        private bool isWebEmoticons = false;
-        private object channelsLock = new object();
-        private object pollerLock = new object();
-        private object toolTipLock = new object();
         private object lockSearch = new object();
         private WebPoller followerPoller = new WebPoller();
         private HitboxFollowers currentFollowers = new HitboxFollowers();
 
-        public HitboxChat(ChatConfig config)
+        public HitboxChat(ChatConfig config) : base(config)
         {
-            Config = config;
-            Enabled = Config.Enabled;
-            ContentParsers = new List<Action<ChatMessage, IChat>>();
-            ChatChannelNames = new List<string>();
-            Emoticons = new List<Emoticon>();
-            Status = new StatusBase();
-            Users = new Dictionary<string, ChatUser>();
+            EmoticonUrl = "https://www.hitbox.tv/api/chat/icons/UnknownSoldier";
+            EmoticonFallbackUrl = @"Content\hitboxemoticons.json";
+            
+            NickName = "UnknownSoldier";
 
-            //ContentParsers.Add(MessageParser.ParseImageUrlsAsImages);
+            CreateChannel = () => { return new HitboxChannel(this); };
+
             ContentParsers.Add(MessageParser.RemoveRedundantTags);
             ContentParsers.Add(MessageParser.ParseURLs);
             ContentParsers.Add(MessageParser.ParseSpaceSeparatedEmoticons);
@@ -59,159 +45,12 @@ namespace UB.Model
             Games = new ObservableCollection<Game>();
         }
         #region IChat implementation
-        public string ChatName
-        {
-            get;
-            set;
-        }
 
-        public string IconURL
-        {
-            get;
-            set;
-        }
-
-        public string NickName
-        {
-            get;
-            set;
-        }
-
-        public bool Enabled
-        {
-            get;
-            set;
-        }
-
-        public bool Start()
-        {
-            if (Status.IsStarting || Status.IsConnected || Status.IsLoggedIn || Config == null)
-            {
-                return true;
-            }
-            
-            Log.WriteInfo("Starting Hitbox.tv chat");
-            Status.ResetToDefault();
-            Status.IsStarting = true;
-
-            if (Login())
-            {
-                Status.IsConnecting = true;
-                Task.Factory.StartNew(() => JoinChannels());
-            }
-            InitEmoticons();
-            PollFollowers();
-            return false;
-        }
-
-        public bool Stop()
-        {
-            if (!Enabled)
-                Status.ResetToDefault();
-
-            if (Status.IsStopping)
-                return false;
-
-            Log.WriteInfo("Stopping Hitbox.tv chat");
-
-            Status.IsStopping = true;
-            Status.IsStarting = false;
-
-            lock( channelsLock )
-            {
-                hitboxChannels.ForEach(chan =>
-                {
-                    StopCounterPoller(chan.ChannelName);
-                    chan.Leave();
-                });
-            }
-            ChatChannelNames.Clear();
-            return true;
-        }
-
-        public bool Restart()
-        {
-            if (Status.IsStopping || Status.IsStarting )
-                return false;
-
-            Status.ResetToDefault();
-            Stop();
-            Start();
-            return true;
-        }
-
-        public bool SendMessage(ChatMessage message)
-        {
-            if (isAnonymous)
-                return false;
-
-            var hitBoxChannel = hitboxChannels.FirstOrDefault(channel => channel.ChannelName.Equals(message.Channel, StringComparison.InvariantCultureIgnoreCase));
-            if (hitBoxChannel != null)
-            {
-                if( String.IsNullOrWhiteSpace (message.FromUserName))
-                {
-                    message.FromUserName = NickName;
-                }
-                Task.Factory.StartNew(() => hitBoxChannel.SendMessage(message));
-            }
-            return true;
-        }
-
-        public Dictionary<string, ChatUser> Users
-        {
-            get;
-            set;
-        }
-
-        public List<string> ChatChannelNames
-        {
-            get;
-            set;
-        }
-
-        public Action<string, IChat> AddChannel
-        {
-            get;
-            set;
-        }
-
-        public Action<string, IChat> RemoveChannel
-        {
-            get;
-            set;
-        }
-
-        public List<Action<ChatMessage, IChat>> ContentParsers
-        {
-            get;
-            set;
-        }
-
-        public List<Emoticon> Emoticons
-        {
-            get;
-            set;
-        }
-
-        public ChatConfig Config
-        {
-            get;
-            set;
-        }
-
-        public StatusBase Status
-        {
-            get;
-            set;
-        }
-        #endregion
-
-
-        public bool Login()
+        public override bool Login()
         {
             try
             {
-                if (LoginWithToken())
+                if (!LoginWithToken())
                 {
                     if (!LoginWithUsername())
                     {
@@ -225,7 +64,7 @@ namespace UB.Model
                 Log.WriteInfo("Hitbox authorization exception {0}", e.Message);
                 return false;
             }
-            if (!isAnonymous)
+            if (!IsAnonymous)
             {
                 Status.IsLoggedIn = true;
             }
@@ -245,7 +84,7 @@ namespace UB.Model
 
             if( String.IsNullOrEmpty(userName) || userName.Equals("unknownsoldier",StringComparison.InvariantCultureIgnoreCase))
             {
-                isAnonymous = true;
+                IsAnonymous = true;
                 return true;
             }
 
@@ -258,6 +97,7 @@ namespace UB.Model
             
             if (test.teams != null)
             {
+                IsAnonymous = false;
                 return true;
             }
 
@@ -273,7 +113,7 @@ namespace UB.Model
 
             if (String.IsNullOrWhiteSpace(userName) || String.IsNullOrWhiteSpace(password))
             {
-                isAnonymous = true;
+                IsAnonymous = true;
                 return true;
             }
 
@@ -290,12 +130,12 @@ namespace UB.Model
             if (authToken == null)
             {
                 Log.WriteError("Login to hitbox.tv failed. Joining anonymously");
-                isAnonymous = true;
+                IsAnonymous = true;
                 return false;
             }
             else
             {
-                isAnonymous = false;
+                IsAnonymous = false;
                 Config.SetParameterValue("AuthToken", authToken);
                 Config.SetParameterValue("AuthTokenCredentials", userName + password);
 
@@ -308,182 +148,10 @@ namespace UB.Model
             loginWebClient.Headers["Content-Type"] = @"application/json;charset=UTF-8";
             loginWebClient.Headers["Accept-Encoding"] = "gzip,deflate,sdch";
         }
-        public void ReadMessage(ChatMessage message)
+
+        public override void DownloadEmoticons(string url)
         {
-            if (MessageReceived != null)
-            {
-                var original = message.Text;
-                Log.WriteInfo("Original string:{0}", message.Text);
-                if (ContentParsers != null)
-                {
-                    var number = 1;
-                    ContentParsers.ForEach(parser =>
-                    {
-
-                        parser(message, this);
-                        if( original != message.Text)
-                            Log.WriteInfo("After parsing with {0}: {1}", number, message.Text);
-                        number++;
-                    });
-                }
-
-                MessageReceived(this, new ChatServiceEventArgs() { Message = message });
-
-            }
-        }
-        public void WatchChannelStats(string channel)
-        {
-            var poller = new WebPoller()
-            {
-                Id = channel,
-                Uri = new Uri(String.Format(@"http://api.hitbox.tv/media/live/{0}", channel.Replace("#", ""))),
-            };
-
-            UI.Dispatch(() => { 
-                lock(toolTipLock)
-                    Status.ToolTips.RemoveAll(t => t.Header == poller.Id);
-            });
-            UI.Dispatch(() => {
-                lock (toolTipLock)
-                    Status.ToolTips.Add(new ToolTip(poller.Id, ""));
-            });
-
-            poller.ReadStream = (stream) =>
-            {
-                lock (counterLock)
-                {
-                    var channelInfo = Json.DeserializeStream<HitboxChannelStats>(stream);
-                    poller.LastValue = channelInfo;
-                    var viewers = 0;
-                    foreach (var webPoller in counterWebPollers.ToList())
-                    {
-                        var streamInfo = this.With(x => (HitboxChannelStats)webPoller.LastValue)
-                            .With(x => x.livestream)
-                            .With(x => x.FirstOrDefault(livestream => livestream.media_name.Equals(webPoller.Id.Replace("#",""), StringComparison.InvariantCultureIgnoreCase)));
-
-                        lock(toolTipLock)
-                        {
-                            var tooltip = Status.ToolTips.FirstOrDefault(t => t.Header.Equals(webPoller.Id));
-                            if (tooltip == null)
-                                return;
-
-                            if (streamInfo != null)
-                            {
-                                viewers += streamInfo.media_views;
-                                tooltip.Text = streamInfo.media_views.ToString();
-                                tooltip.Number = streamInfo.media_views;
-                            }
-                            else
-                            {
-                                tooltip.Text = "0";
-                                tooltip.Number = 0;
-                            }
-                        }
-
-                    }
-                    UI.Dispatch(() => Status.ViewersCount = viewers);
-                }
-            };
-            poller.Start();
-            
-            lock( pollerLock )
-            {
-                if( !poller.Id.Equals("#unknownsoldier",StringComparison.InvariantCultureIgnoreCase))
-                {
-                    counterWebPollers.RemoveAll(p => p.Id == poller.Id);
-                    counterWebPollers.Add(poller);
-                }
-            }
-        }
-        void StopCounterPoller(string channelName)
-        {
-            UI.Dispatch(() => {
-                lock (toolTipLock)
-                    Status.ToolTips.RemoveAll(t => t.Header == channelName);
-            } );
-            WebPoller poller;
-            lock( pollerLock )
-                poller = counterWebPollers.FirstOrDefault(p => p.Id == channelName);
-
-            if (poller != null)
-            {
-                poller.Stop();
-                counterWebPollers.Remove(poller);
-            }
-        }
-        public void JoinChannels()
-        {
-
-            if (Status.IsStopping)
-                return;
-
-            var channels = Config.Parameters.StringArrayValue("Channels").Select(chan => "#" + chan.ToLower().Replace("#", "")).ToArray();
-
-            if (NickName != null && !NickName.Equals("UnknownSoldier", StringComparison.InvariantCultureIgnoreCase))
-            {
-                if (!channels.Contains("#" + NickName.ToLower()))
-                    channels = channels.Union(new String[] { NickName.ToLower() }).ToArray();
-            }
-
-            foreach (var channel in channels)
-            {
-                if (channel.Equals("UnknownSoldier", StringComparison.InvariantCultureIgnoreCase))
-                    continue;
-
-                var hitboxChannel = new HitboxChannel(this);
-                hitboxChannel.ReadMessage = ReadMessage;
-                hitboxChannel.LeaveCallback = (hbChannel) =>
-                {
-                    StopCounterPoller(hbChannel.ChannelName);
-                    lock(channelsLock)
-                        hitboxChannels.RemoveAll(item => item.ChannelName == hbChannel.ChannelName);
-
-                    ChatChannelNames.RemoveAll(chan => chan == null);
-                    ChatChannelNames.RemoveAll(chan => chan.Equals(hbChannel.ChannelName, StringComparison.InvariantCultureIgnoreCase));
-                    if (RemoveChannel != null)
-                        RemoveChannel(hbChannel.ChannelName, this);
-
-                    if (!Status.IsStarting && !Status.IsStopping)
-                    {
-                        Restart();
-                        return;
-                    }
-                };
-                if( !hitboxChannels.Any(c => c.ChannelName == channel))
-                hitboxChannel.Join((hbChannel) =>
-                {
-                    if (Status.IsStopping)
-                        return;
-
-                    Status.IsConnected = true;
-                    lock (channelsLock)
-                        hitboxChannels.Add(hbChannel);
-
-
-                    if (RemoveChannel != null)
-                        RemoveChannel(hbChannel.ChannelName, this);
-
-                    ChatChannelNames.RemoveAll(chan => chan.Equals(hbChannel.ChannelName, StringComparison.InvariantCultureIgnoreCase));
-                    ChatChannelNames.Add((hbChannel.ChannelName));
-                    if (AddChannel != null)
-                        AddChannel(hbChannel.ChannelName, this);
-
-                    WatchChannelStats(hbChannel.ChannelName);
-
-                }, NickName, channel, (String)Config.GetParameterValue("AuthToken"));
-            }
-        }
-        public bool InitEmoticons()
-        {
-            //Fallback icon list
-            DownloadEmoticons(AppDomain.CurrentDomain.BaseDirectory + emoticonFallbackUrl);
-            //Web icons
-            Task.Factory.StartNew(() => DownloadEmoticons(emoticonUrl));
-            return true;
-        }
-        public void DownloadEmoticons(string url)
-        {
-            if (isFallbackEmoticons && isWebEmoticons )
+            if (IsFallbackEmoticons && IsWebEmoticons )
                 return;
 
             lock (iconParseLock)
@@ -529,29 +197,15 @@ namespace UB.Model
                     if (list.Count > 0)
                     {
                         Emoticons = list.ToList();
-                        if (isFallbackEmoticons)
-                            isWebEmoticons = true;
+                        if (IsFallbackEmoticons)
+                            IsWebEmoticons = true;
 
-                        isFallbackEmoticons = true;
+                        IsFallbackEmoticons = true;
                     }
                 }
             }
         }
-
-
-        public Func<string, object> RequestData
-        {
-            get;
-            set;
-        }
-
-
-        public bool HideViewersCounter
-        {
-            get;
-            set;
-
-        }
+        #endregion
 
         #region IStreamTopic
         public StreamInfo Info
@@ -779,66 +433,20 @@ namespace UB.Model
         }
         #endregion
 
-
-        public Func<IChatChannel> CreateChannel
-        {
-            get
-            {
-                throw new NotImplementedException();
-            }
-            set
-            {
-                throw new NotImplementedException();
-            }
-        }
-
-
-        public void UpdateStats()
-        {
-            throw new NotImplementedException();
-        }
-
-        public List<IChatChannel> ChatChannels
-        {
-            get
-            {
-                return ChatChannelNames.Select(x => new ChatChannelBase() { ChannelName = x } as IChatChannel).ToList();
-            }
-            set
-            {
-                throw new NotImplementedException();
-            }
-        }
-
-
-        public bool IsAnonymous
-        {
-            get
-            {
-                throw new NotImplementedException();
-            }
-            set
-            {
-                throw new NotImplementedException();
-            }
-        }
     }
 
-    public class HitboxChannel
+    public class HitboxChannel : ChatChannelBase
     {
         private WebSocketBase webSocket;
-        private HitboxChat _chat;
         private Random random = new Random();
-        private bool isAnonymous = false;
+        private WebPoller statsPoller;
+        private object pollerLock = new object();
 
         public HitboxChannel(HitboxChat chat)
         {
-            _chat = chat;
-            HitboxChannelStatus = new StatusBase();
+            Chat = chat;
+            
         }
-        public StatusBase HitboxChannelStatus { get; set; }
-        public string NickName { get; set; }
-        public string AuthToken { get; set; }
         private void GetRandomIP(string[] hosts, int port, Action<string> callback)
         {
             List<string> resultList = new List<string>();
@@ -898,20 +506,21 @@ namespace UB.Model
             callback(randomHost);
 
         }
-        public void Join(Action<HitboxChannel> callback, string nickName, string channel, string authToken)
+        public override void Join(Action<IChatChannel> callback, string channel)
         {
 
             if( String.IsNullOrWhiteSpace(channel) )
                 return;
-            NickName = nickName;
-            AuthToken = authToken;
+
+            var authToken = Chat.Config.GetParameterValue("AuthToken") as string;
+
             ChannelName = "#" + channel.Replace("#", "");
             webSocket = new WebSocketBase();
             webSocket.PingInterval = 0;
             webSocket.Origin = "http://www.hitbox.tv";
             webSocket.ConnectHandler = () =>
             {
-                SendCredentials(NickName, channel, authToken);
+                SendCredentials(Chat.NickName, channel, authToken);
 
                 if (callback != null)
                     callback(this);
@@ -929,8 +538,6 @@ namespace UB.Model
 
         private void SendCredentials(string nickname, string channel, string authToken)
         {
-            isAnonymous = String.IsNullOrWhiteSpace(authToken) || String.IsNullOrWhiteSpace(nickname);
-
             var loginData = new HitboxWebSocketPacket()
             {
                 name = "message",
@@ -940,9 +547,9 @@ namespace UB.Model
                         method = "joinChannel",
                         @params = new {
                             channel = channel.Replace("#",""),
-                            name =  isAnonymous ? "UnknownSoldier" : nickname ?? "",
-                            token = isAnonymous ? "" : authToken,
-                            isAdmin = !isAnonymous && channel.Replace("#","").Equals(nickname,StringComparison.InvariantCultureIgnoreCase) ? true :false,
+                            name =  Chat.NickName,
+                            token = Chat.IsAnonymous ? "" : authToken ?? "",
+                            isAdmin = !Chat.IsAnonymous && channel.Replace("#","").Equals(nickname,StringComparison.InvariantCultureIgnoreCase) ? true :false,
                         }   
                     }
                 }
@@ -952,7 +559,6 @@ namespace UB.Model
         }
         private void Connect()
         {
-            HitboxChannelStatus.ResetToDefault();
             var servers = Json.DeserializeUrl<HitboxServer[]>("https://www.hitbox.tv/api/chat/servers?redis=true");
             if (servers == null)
                 return;
@@ -984,7 +590,7 @@ namespace UB.Model
 
             if (rawMessage.Equals("1::"))
             {
-                HitboxChannelStatus.IsConnected = true;
+                Chat.Status.IsConnected = true;
             }
             else if (rawMessage.Equals("2::"))
             {
@@ -1011,41 +617,42 @@ namespace UB.Model
                     switch( role.ToLower() )
                     {
                         case "guest":
-                            if (!isAnonymous)
+                            if (!Chat.IsAnonymous)
                             {
-                                _chat.Status.IsLoggedIn = false;
-                                if( !_chat.Status.IsLoginFailed )
+                                Chat.Status.IsLoggedIn = false;
+                                if( !Chat.Status.IsLoginFailed )
                                 {
-                                    _chat.Status.IsConnected = false;
-                                    _chat.Status.IsLoggedIn = false;
-                                    _chat.Status.IsLoginFailed = true;
-                                    _chat.Status.IsStarting = false;
-                                    _chat.Config.SetParameterValue("AuthToken", String.Empty);
-                                    _chat.Restart();
+                                    Chat.Status.IsConnected = false;
+                                    Chat.Status.IsLoggedIn = false;
+                                    Chat.Status.IsLoginFailed = true;
+                                    Chat.Status.IsStarting = false;
+                                    Chat.Config.SetParameterValue("AuthToken", String.Empty);
+                                    Chat.Restart();
                                 }
                             }
                             else
                             {
-                                _chat.Status.IsLoginFailed = false;
+                                Chat.Status.IsLoginFailed = false;
                             }
 
                             break;
                         case "admin":
                             {
-                                _chat.Status.IsLoggedIn = true;
-                                _chat.Status.IsLoginFailed = false;
+                                Chat.Status.IsLoggedIn = true;
+                                Chat.Status.IsLoginFailed = false;
                             }
                             break;
                         case "anon":
                             {
-                                _chat.Status.IsLoggedIn = true;
-                                _chat.Status.IsLoginFailed = false;
+                                Chat.Status.IsLoggedIn = true;
+                                Chat.Status.IsLoginFailed = false;
                             }
                             break;
                         default:
                            break;
                     }
-                    SendCredentials(NickName, ChannelName, AuthToken);
+                    var authToken = Chat.Config.GetParameterValue("AuthToken") as string;
+                    SendCredentials(Chat.NickName, ChannelName, authToken);
                 }
                 else if (!String.IsNullOrWhiteSpace(rawMessage) && rawMessage.Contains("chatMsg"))
                 {
@@ -1059,8 +666,8 @@ namespace UB.Model
                         ReadMessage(new ChatMessage()
                         {
                             Channel = ChannelName,
-                            ChatIconURL = _chat.IconURL,
-                            ChatName = _chat.ChatName,
+                            ChatIconURL = Chat.IconURL,
+                            ChatName = Chat.ChatName,
                             FromUserName = nickName,
                             HighlyImportant = false,
                             IsSentByMe = false,
@@ -1071,18 +678,16 @@ namespace UB.Model
             }
             
         }
-        public string ChannelName { get; set; }
-        public void Leave()
+        
+        public override void Leave()
         {
             Log.WriteInfo("Hitbox leaving {0}", ChannelName);
             webSocket.Disconnect();
         }
         
-        public Action<HitboxChannel> LeaveCallback { get; set; }
-        public Action<ChatMessage> ReadMessage { get; set; }
-        public void SendMessage( ChatMessage message )
+        public override void SendMessage( ChatMessage message )
         {
-            if (isAnonymous || String.IsNullOrWhiteSpace(message.Channel) ||
+            if (Chat.IsAnonymous || String.IsNullOrWhiteSpace(message.Channel) ||
                 String.IsNullOrWhiteSpace(message.FromUserName) ||
                 String.IsNullOrWhiteSpace(message.Text))
                 return;
@@ -1103,6 +708,34 @@ namespace UB.Model
                 }
             };
             webSocket.Send("5:::" + JsonConvert.SerializeObject(jsonMessage));
+        }
+
+        public override void SetupStatsWatcher()
+        {
+            statsPoller = new WebPoller()
+            {
+                Id = ChannelName,
+                Uri = new Uri(String.Format(@"http://api.hitbox.tv/media/live/{0}", ChannelName.Replace("#", ""))),
+            };
+
+            statsPoller.ReadStream = (stream) =>
+            {
+                lock (pollerLock)
+                {
+                    var channelInfo = this.With(x => stream)
+                        .With(x => Json.DeserializeStream<HitboxChannelStats>(stream))
+                        .With(x => x.livestream)
+                        .With(x => x.FirstOrDefault(livestream => livestream.media_name.Equals(ChannelName.Replace("#",""), StringComparison.InvariantCultureIgnoreCase)));
+
+                    statsPoller.LastValue = channelInfo;
+                    if (channelInfo != null)
+                    {
+                        ChannelStats.ViewersCount = channelInfo.media_views;
+                        Chat.UpdateStats();
+                    }
+                }
+            };
+            statsPoller.Start();
         }
     }
 

@@ -31,6 +31,7 @@ namespace UB.Model
             EmoticonUrl = "http://cybergame.tv/cgchat.htm?v=b";
 
             CreateChannel = () => { return new CybergameChannel(this); };
+            ReceiveOwnMessages = true;
 
             ContentParsers.Add(MessageParser.ParseURLs);
             ContentParsers.Add(MessageParser.ParseEmoticons);

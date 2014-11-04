@@ -301,7 +301,7 @@ namespace UB.Model
             webSocket.Origin = "http://www.gaminglive.tv";
             webSocket.Path = String.Format("/chat/{0}?nick={1}&authToken={2}", 
                 ChannelName.Replace("#", ""), 
-                Chat.NickName, 
+                Chat.IsAnonymous ? "__$anonymous" : Chat.NickName, 
                 Chat.IsAnonymous ? "__$anonymous" : Chat.Config.GetParameterValue("AuthToken").ToString());
 
             webSocket.DisconnectHandler = () =>

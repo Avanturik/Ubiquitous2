@@ -24,6 +24,7 @@ namespace UB.Model
             Status = new StatusBase();
             Users = new Dictionary<string, ChatUser>();
             IsAnonymous = true;
+            ReceiveOwnMessages = false;
             Enabled = Config.Enabled;
         }
         public bool IsAnonymous { get; set; }
@@ -58,6 +59,12 @@ namespace UB.Model
         }
 
         public bool Enabled
+        {
+            get;
+            set;
+        }
+
+        public bool ReceiveOwnMessages
         {
             get;
             set;
@@ -182,7 +189,8 @@ namespace UB.Model
                         message.FromUserName = NickName;
                     }
                     Task.Factory.StartNew(() => x.SendMessage(message));
-                    ReadMessage(message);
+                    if( ReceiveOwnMessages)
+                        ReadMessage(message);
                 });
 
             return true;
@@ -304,9 +312,16 @@ namespace UB.Model
 
                     if (Status.IsStarting || Status.IsStopping)
                         return;
-                    else
-                        lock( joinLock )
-                            JoinChannel(chatChannel, channel);
+
+                    if (ChatChannels.Count <= 0)
+                    {
+                        Status.ResetToDefault();
+                        Status.IsConnecting = true;
+                    }
+
+
+                    lock( joinLock )
+                        JoinChannel(chatChannel, channel);
                 };
                 lock( joinLock )
                     JoinChannel(chatChannel, channel);
@@ -331,7 +346,7 @@ namespace UB.Model
                             if (!Status.ToolTips.ToList().Any(t => t.Header == channel))
                                 UI.Dispatch(() => Status.ToolTips.Add(new ToolTip(channel, joinChannel.ChannelStats.ViewersCount.ToString())));
                         }
-
+                        Status.IsConnecting = false;
                         Status.IsConnected = true;
                         lock (channelsLock)
                             ChatChannels.Add(joinChannel);
