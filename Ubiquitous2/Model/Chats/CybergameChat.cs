@@ -451,7 +451,7 @@ namespace UB.Model
                     var channelInfo = JsonConvert.DeserializeObject<CybergameChannelStatus>(stream);
                     statsPoller.LastValue = channelInfo;
                     int viewers = 0;
-                    if( int.TryParse( channelInfo.spectators, out viewers))
+                    if( channelInfo != null  && int.TryParse( channelInfo.spectators, out viewers))
                     {
                         ChannelStats.ViewersCount = viewers;
                         Chat.UpdateStats();

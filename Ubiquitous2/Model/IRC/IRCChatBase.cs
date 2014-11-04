@@ -435,7 +435,7 @@ namespace UB.Model
         {
             get
             {
-                throw new NotImplementedException();
+                return ChatChannelNames.Select( x => new ChatChannelBase() { ChannelName = x } as IChatChannel).ToList();
             }
             set
             {

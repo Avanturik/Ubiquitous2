@@ -433,7 +433,11 @@ namespace UB.Model
         public uint ChannelId { get; set; }
         private static void ViewersHandler(GoodgameChannel channel, GoodGameData data)
         {
-            channel.ChannelStats.ViewersCount = (int)data.Count;
+            if (data.Count == null)
+                channel.ChannelStats.ViewersCount = 0;
+            else
+                channel.ChannelStats.ViewersCount = (int)data.Count;
+
             channel.Chat.UpdateStats();
         }
         private static void WelcomeHandler(GoodgameChannel channel, GoodGameData data)
@@ -571,7 +575,7 @@ namespace UB.Model
                 Data = new GoodGameData()
                 {
                     UserId = userId,
-                    Token = Chat.Config.GetParameterValue("ChatToken").ToString(),
+                    Token = this.With( x => Chat.Config.GetParameterValue("ChatToken")).With( x=> x.ToString()),
                 },
             };
 
@@ -581,7 +585,7 @@ namespace UB.Model
         private void Connect()
         {
             Uri serverUri;
-            if( !Uri.TryCreate( Chat.Config.GetParameterValue("ServerUri").ToString(), UriKind.Absolute, out serverUri ) )
+            if( !Uri.TryCreate( this.With ( x => Chat.Config.GetParameterValue("ServerUri")).With(x => x.ToString()), UriKind.Absolute, out serverUri ) )
             {
                 webSocket.Path = String.Format("/chat/{0}/{1}/websocket", Rnd.RandomWebSocketServerNum(0x1e3), Rnd.RandomWebSocketString());
                 webSocket.Port = "8081";
@@ -731,7 +735,7 @@ namespace UB.Model
         [DataMember(Name = "timestamp", EmitDefaultValue = false, IsRequired = false)]
         public UInt32 Timestamp { get; set; }
         [DataMember(Name = "count", EmitDefaultValue = false, IsRequired = false)]
-        public UInt32 Count { get; set; }
+        public UInt32? Count { get; set; }
     }
 
     #endregion
