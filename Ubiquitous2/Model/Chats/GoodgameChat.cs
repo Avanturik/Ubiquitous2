@@ -430,7 +430,6 @@ namespace UB.Model
                 RequestCounters();
             }, this, Timeout.Infinite, Timeout.Infinite);
         }
-        public uint ChannelId { get; set; }
         private static void ViewersHandler(GoodgameChannel channel, GoodGameData data)
         {
             if (data.Count == null)
@@ -632,13 +631,14 @@ namespace UB.Model
                 String.IsNullOrWhiteSpace(message.FromUserName) ||
                 String.IsNullOrWhiteSpace(message.Text))
                 return;
-
+            //["{\"type\":\"send_message\",\"data\":{\"channel_id\":2304,\"text\":\"asdf\",\"hideIcon\":false,\"mobile\":0}}"]
+            var channelId = (Chat as GoodgameChat).GetChannelId(ChannelName);
             var messagePacket = new GoodgamePacket()
             {
                 Type = "send_message",
                 Data = new GoodGameData()
                 {
-                    ChannelId = ChannelId,
+                    ChannelId = channelId,
                     Text = message.Text,
                     IsIconHidden = false,
                     Mobile = 0,
