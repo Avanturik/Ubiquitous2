@@ -5,7 +5,7 @@
                     xmlns:Interactivity="clr-namespace:UB.Interactivity"
                     xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
                     xmlns:ei="http://schemas.microsoft.com/expression/2010/interactions"
-                    xmlns:gif="http://wpfanimatedgif.codeplex.com"
+                    xmlns:gif="clr-namespace:WpfAnimatedGif"
                     >
     <Converter:ChatMessageToInlines x:Key="textConverter" />
     <Style TargetType="{x:Type TextBlock}">

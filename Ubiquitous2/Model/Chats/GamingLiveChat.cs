@@ -296,7 +296,7 @@ namespace UB.Model
             JoinCallback = callback;
 
             webSocket = new WebSocketBase();
-            webSocket.Host = "54.76.144.150";
+            webSocket.Host = "api.gaminglive.tv";
 
             webSocket.Origin = "http://www.gaminglive.tv";
             webSocket.Path = String.Format("/chat/{0}?nick={1}&authToken={2}", 

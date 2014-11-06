@@ -161,23 +161,20 @@
     <Reference Include="System.Windows.Interactivity, Version=4.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\MvvmLightLibs.5.0.0.1\lib\net45\System.Windows.Interactivity.dll</HintPath>
     </Reference>
-    <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Xaml" />
+    <Reference Include="System.XML" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="System.Xaml">
-      <RequiredTargetFramework>4.0</RequiredTargetFramework>
-    </Reference>
     <Reference Include="WebSocket4Net">
       <HintPath>..\packages\WebSocket4Net.0.10\lib\net45\WebSocket4Net.dll</HintPath>
     </Reference>
     <Reference Include="WindowsBase" />
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
-    <Reference Include="WpfAnimatedGif, Version=1.4.9.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\WpfAnimatedGif.1.4.9\lib\net\WpfAnimatedGif.dll</HintPath>
+    <Reference Include="WriteableBitmapEx.Wpf">
+      <HintPath>..\packages\WriteableBitmapEx.1.0.13.0\lib\net40\WriteableBitmapEx.Wpf.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -185,6 +182,27 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="AnimatedGif\AnimationCache.cs" />
+    <Compile Include="AnimatedGif\CompressedBitmapSource.cs" />
+    <Compile Include="AnimatedGif\Decoding\GifApplicationExtension.cs" />
+    <Compile Include="AnimatedGif\Decoding\GifBlock.cs" />
+    <Compile Include="AnimatedGif\Decoding\GifBlockKind.cs" />
+    <Compile Include="AnimatedGif\Decoding\GifColor.cs" />
+    <Compile Include="AnimatedGif\Decoding\GifCommentExtension.cs" />
+    <Compile Include="AnimatedGif\Decoding\GifDecoderException.cs" />
+    <Compile Include="AnimatedGif\Decoding\GifExtension.cs" />
+    <Compile Include="AnimatedGif\Decoding\GifFile.cs" />
+    <Compile Include="AnimatedGif\Decoding\GifFrame.cs" />
+    <Compile Include="AnimatedGif\Decoding\GifGraphicControlExtension.cs" />
+    <Compile Include="AnimatedGif\Decoding\GifHeader.cs" />
+    <Compile Include="AnimatedGif\Decoding\GifHelpers.cs" />
+    <Compile Include="AnimatedGif\Decoding\GifImageData.cs" />
+    <Compile Include="AnimatedGif\Decoding\GifImageDescriptor.cs" />
+    <Compile Include="AnimatedGif\Decoding\GifLogicalScreenDescriptor.cs" />
+    <Compile Include="AnimatedGif\Decoding\GifPlainTextExtension.cs" />
+    <Compile Include="AnimatedGif\Decoding\GifTrailer.cs" />
+    <Compile Include="AnimatedGif\ImageAnimationController.cs" />
+    <Compile Include="AnimatedGif\ImageBehavior.cs" />
     <Compile Include="Controls\EditBox.xaml.cs">
       <DependentUpon>EditBox.xaml</DependentUpon>
     </Compile>

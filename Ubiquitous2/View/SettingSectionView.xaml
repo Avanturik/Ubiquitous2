@@ -7,7 +7,7 @@
              xmlns:Devart="clr-namespace:Devart.Controls"
              xmlns:ViewModel="clr-namespace:UB.ViewModel"
              xmlns:View="clr-namespace:UB.View"
-             xmlns:gif="http://wpfanimatedgif.codeplex.com"
+             xmlns:gif="clr-namespace:WpfAnimatedGif"
              xmlns:Converter="clr-namespace:UB.Converter"
              DataContext="{Binding Source={StaticResource Locator},Path=SettingsSection}"
              mc:Ignorable="d"    
