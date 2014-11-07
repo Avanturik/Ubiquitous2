@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using UB.Utils;
 
@@ -161,6 +162,7 @@ namespace UB.Model
                         RemoveChannel(chan.ChannelName, this);
                 });
             }
+            Thread.Sleep(1000);
             ChatChannels.Clear();
             return true;
         }
@@ -303,10 +305,11 @@ namespace UB.Model
                     }
 
                     lock (channelsLock)
+                    {
+                        ChatChannels.RemoveAll(chan => chan == null);
                         ChatChannels.RemoveAll(item => item.ChannelName == leaveChannel.ChannelName);
+                    }
 
-                    ChatChannels.RemoveAll(chan => chan == null);
-                    ChatChannels.RemoveAll(chan => chan.ChannelName.Equals(leaveChannel.ChannelName, StringComparison.InvariantCultureIgnoreCase));
                     if (RemoveChannel != null)
                         RemoveChannel(leaveChannel.ChannelName, this);
 
@@ -333,7 +336,6 @@ namespace UB.Model
         {
             if (!ChatChannels.Any(c => c.ChannelName == channel))
             {
-
                 chatChannel.Join((joinChannel) =>
                 {
                     lock( joinLock )
