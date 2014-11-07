@@ -277,10 +277,11 @@ namespace UB.Model
     public class GamingLiveChannel : ChatChannelBase
     {
         private Timer pingTimer;
-        private const int pingInterval = 60000;
+        private int pingInterval = 10000;
         private WebSocketBase webSocket;
         private WebSocketBase secondWebSocket;
         private object pollerLock = new object();
+        private object pingLock = new object();
         private WebPoller statsPoller;
         private bool isJoined = false;
         public GamingLiveChannel(IChat chat)
@@ -304,6 +305,21 @@ namespace UB.Model
                 Chat.IsAnonymous ? "__$anonymous" : Chat.NickName, 
                 Chat.IsAnonymous ? "__$anonymous" : Chat.Config.GetParameterValue("AuthToken").ToString());
 
+            pingTimer = new Timer((sender) =>
+            {
+                lock (pingLock)
+                {
+                    secondWebSocket = new WebSocketBase();
+                    secondWebSocket.Host = webSocket.Host;
+                    secondWebSocket.Origin = webSocket.Origin;
+                    secondWebSocket.Path = String.Format("/chat/{0}?nick={1}&authToken={2}", ChannelName.Replace("#", ""), "__$anonymous", "__$anonymous");
+                    secondWebSocket.Connect();
+                    Thread.Sleep(5000);
+                    secondWebSocket.Disconnect();
+                }
+
+            }, this, 0, pingInterval);
+
             webSocket.DisconnectHandler = () =>
             {
                 if (LeaveCallback != null)
@@ -312,23 +328,14 @@ namespace UB.Model
             webSocket.ReceiveMessageHandler = ReadRawMessage;
             webSocket.Connect();
 
-            pingTimer = new Timer((sender) =>
-            {
-                secondWebSocket = new WebSocketBase();
-                secondWebSocket.Host = webSocket.Host;
-                secondWebSocket.Origin = webSocket.Origin;
-                secondWebSocket.Path = String.Format("/chat/{0}?nick={1}&authToken={2}", ChannelName.Replace("#", ""), "__$anonymous", "__$anonymous");
-                secondWebSocket.Connect();
-                Thread.Sleep(5000);
-                secondWebSocket.Disconnect();
-
-            }, this, 500, pingInterval);
 
         }
         private void ReadRawMessage(string rawMessage)        
         {
             if (!Chat.Status.IsConnected)
             {
+                pingInterval = 60000;
+
                 Chat.Status.IsStarting = false;
                 Chat.Status.IsConnected = true;
             }
