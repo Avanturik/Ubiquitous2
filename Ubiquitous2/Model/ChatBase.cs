@@ -176,7 +176,7 @@ namespace UB.Model
             Stop();
             Start();
             return true;
-        }
+        } 
 
         public virtual bool SendMessage(ChatMessage message)
         {

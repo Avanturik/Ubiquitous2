@@ -277,7 +277,7 @@ namespace UB.Model
     public class GamingLiveChannel : ChatChannelBase
     {
         private Timer pingTimer;
-        private int pingInterval = 10000;
+        private int pingInterval = 60000;
         private WebSocketBase webSocket;
         private WebSocketBase secondWebSocket;
         private object pollerLock = new object();
@@ -320,6 +320,13 @@ namespace UB.Model
 
             }, this, 0, pingInterval);
 
+            webSocket.ConnectHandler = () =>
+                {
+                    Chat.Status.IsLoggedIn = !Chat.IsAnonymous;
+                    Chat.Status.IsConnected = true;
+                    Chat.Status.IsStarting = false;
+                };
+
             webSocket.DisconnectHandler = () =>
             {
                 if (LeaveCallback != null)
@@ -332,14 +339,6 @@ namespace UB.Model
         }
         private void ReadRawMessage(string rawMessage)        
         {
-            if (!Chat.Status.IsConnected)
-            {
-                pingInterval = 60000;
-
-                Chat.Status.IsStarting = false;
-                Chat.Status.IsConnected = true;
-            }
-
             if (!isJoined && JoinCallback != null)
             {
                 JoinCallback(this);
