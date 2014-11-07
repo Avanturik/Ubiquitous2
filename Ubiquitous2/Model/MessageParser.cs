@@ -76,7 +76,6 @@ namespace UB.Model
             else
                 words = new HashSet<string>(new string[] { message.Text });
 
-
             foreach (var emoticon in emoticons)
             {
                 if ((words != null || !containsNonAlpha) && emoticon.ExactWord != null)

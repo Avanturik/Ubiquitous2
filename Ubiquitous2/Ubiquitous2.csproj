@@ -232,6 +232,7 @@
     <Compile Include="Model\ChatChannelBase.cs" />
     <Compile Include="Model\ChannelStats.cs" />
     <Compile Include="Model\Chats\CybergameChat.cs" />
+    <Compile Include="Model\Chats\YoutubeChat.cs" />
     <Compile Include="Model\DatabaseService.cs" />
     <Compile Include="Model\Chats\DummyChat.cs" />
     <Compile Include="Model\Game.cs" />
@@ -822,6 +823,15 @@
     <Resource Include="Resources\BattlefieldThemeThumbnail.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Resource>
+    <Resource Include="Resources\youtube.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+    <Content Include="Content\youtube-emoji.css">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\youtubeemoji.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="web\css\battlefield.css">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

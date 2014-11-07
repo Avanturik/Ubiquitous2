@@ -21,51 +21,75 @@ namespace UB.Model
             Interval = 30000;
             wc = new WebClientBase();
             Cookies = wc.Cookies;
+            IsLongPoll = false;
+            IsTimeStamped = true;
             timer = new Timer(poll, this, Timeout.Infinite, Timeout.Infinite);
             wc.ErrorHandler = (error) => {
                 Log.WriteError(error);
-                timer.Change(Interval * 2, Interval * 2);
+                if (!IsLongPoll)
+                    timer.Change(Interval * 2, Interval * 2);
+                else
+                    timer.Change(0, Timeout.Infinite);
+
                 gotError = true;
             };
             wc.SuccessHandler = () => {
                 if( gotError)
                 {
-                    timer.Change(Interval, Interval );
+                    if (!IsLongPoll)
+                        timer.Change(Interval, Interval);
+                    else
+                        timer.Change(0, Timeout.Infinite);
+
                     gotError = false;
                 }
             };
         }
         public void Start()
         {
-            var newUrl = Uri.OriginalString;
-            if( !newUrl.Contains('?'))
+            if( IsTimeStamped )
             {
-                newUrl += "?t=" + Time.UnixTimestamp().ToString();
+                var newUrl = Uri.OriginalString;
+
+                if (!newUrl.Contains('?'))
+                {
+                    newUrl += "?t=" + Time.UnixTimestamp().ToString();
+                }
+                else
+                {
+                    newUrl += "&t=" + Time.UnixTimestamp().ToString();
+                }
+                Uri = new Uri(newUrl);
             }
-            else
-            {
-                newUrl += "&t=" + Time.UnixTimestamp().ToString();
-            }
-            Uri = new Uri(newUrl);
+            if (IsLongPoll)
+                wc.Timeout = 60000;
 
             timer.Change(0, Interval);
         }
         public void Stop()
         {
-            timer.Change(Timeout.Infinite, Timeout.Infinite);
+            if( timer != null )
+                timer.Change(Timeout.Infinite, Timeout.Infinite);
         }
         public string Id { get; set; }
         public int Interval { get; set; }
         public CookieContainer Cookies { get; set; }
         public Action<Stream> ReadStream { get; set; }
         public Action<string> ReadString { get; set; }
+        public bool IsLongPoll { get; set; }
+        public bool IsTimeStamped { get; set; }
         public Uri Uri { get; set; }
-        
+        public Action ErrorHandler { get; set; }
         private void poll(object sender)
-        {
+        {            
             lock(lockWebClient)
             {
-                if( ReadStream != null )
+                var obj = sender as WebPoller;
+
+                if (IsLongPoll)
+                    obj.timer.Change(Timeout.Infinite, Timeout.Infinite);
+
+                if (ReadStream != null)
                 {
                     ReadStream(wc.DownloadToStream(Uri.OriginalString));
                 }
@@ -73,6 +97,8 @@ namespace UB.Model
                 {
                     ReadString(wc.Download(Uri.OriginalString));
                 }
+                if (IsLongPoll)
+                    obj.timer.Change(0, Timeout.Infinite);
             }
         }
 

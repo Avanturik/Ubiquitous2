@@ -18,6 +18,7 @@ namespace UB.Model
         public static string ChatTitleSteam = "Steam";
         public static string ChatTitleGoodgame = "Goodgame.ru";
         public static string ChatTitleCybergame = "Cybergame.tv";
+        public static string ChatTitleYoutube = "Youtube.com";
 
         //Service titles
         public static string ServiceTitleMusicTicker = "Music ticker";
@@ -213,6 +214,18 @@ namespace UB.Model
                             new ConfigField() {  Name = "AuthTokenCredentials", Label = "Auth token credentials", DataType = "Text", IsVisible = false, Value = String.Empty },
                         }
                     },
+                    
+                    //Youtube.com
+                    new ChatConfig()
+                    {
+                        ChatName = ChatTitleYoutube,
+                        IconURL = Icons.YoutubeIcon,
+                        Enabled = false,
+                        Parameters = new List<ConfigField>() {
+                            new ConfigField() {  Name = "Channels", Label = "Channels", DataType = "Text", IsVisible = true, Value = "hromadsketv, codex000" },
+                            new ConfigField("Info2", "Channels is comma separated list of youtube user names. Hashtag is optional. e.g: #codex000, ipsum, #lorem", "Info", true, null),
+                        }
+                    },
 
                 };
             }        
@@ -333,6 +346,15 @@ namespace UB.Model
                                                 {
                                                     ChatName = ChatTitleCybergame,
                                                     IconURL = Icons.CybergameIcon,
+                                                };
+                                             }},
+            //Youtube
+            {ChatTitleYoutube, (config)=>
+                                            {
+                                                return new YoutubeChat(config)
+                                                {
+                                                    ChatName = ChatTitleYoutube,
+                                                    IconURL = Icons.YoutubeIcon,
                                                 };
                                              }},
 

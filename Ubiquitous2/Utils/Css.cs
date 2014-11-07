@@ -14,13 +14,15 @@ namespace UB.Utils
             if (String.IsNullOrWhiteSpace(cssDefinition))
                 return null;
 
-            var url = Re.GetSubString(cssDefinition, @"url\('([^']+)");
-            var x = Re.GetSubString(cssDefinition, @"url\('[^']+.*?(-*\d+)");
+            var url = Re.GetSubString(cssDefinition, @"url\(([^\)]+)");
+            url = url.Replace(@"'", "");
+
+            var x = Re.GetSubString(cssDefinition, @"url\([^\)]+.*?(-*\d+)");
             if (String.IsNullOrWhiteSpace(x))
                 x = "0";
 
-            var y = Re.GetSubString(cssDefinition, @"url\('[^']+.*?\d+.*?(-*\d+)");
-            if (String.IsNullOrWhiteSpace(x))
+            var y = Re.GetSubString(cssDefinition, @"url\([^\)]+.*?\d+.*?(-*\d+)");
+            if (String.IsNullOrWhiteSpace(y))
                 y = "0";
 
             var width = Re.GetSubString(cssDefinition, @"width.*?(\d+)");

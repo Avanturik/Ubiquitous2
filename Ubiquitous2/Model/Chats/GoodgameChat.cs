@@ -181,74 +181,74 @@ namespace UB.Model
 
         public override void DownloadEmoticons(string url)
         {
-            lock (iconParseLock)
-            {
-                if (IsFallbackEmoticons && IsWebEmoticons)
-                    return;
-
-                var list = new List<Emoticon>();
-                if (Emoticons == null)
-                    Emoticons = new List<Emoticon>();
-
-
-                var content = GoodgameGet(url);
-
-                MatchCollection matches = Regex.Matches(content, @"}[^\.]*\.smile-([^-|\s]*)\s*{(.*?)}", RegexOptions.IgnoreCase);
-
-                if (matches.Count <= 0)
+                lock (iconParseLock)
                 {
-                    Log.WriteError("Unable to get Goodgame.ru emoticons!");
-                }
-                else
-                {
-                    string originalUrl = null;
-                    foreach (Match match in matches)
+                    if (IsFallbackEmoticons && IsWebEmoticons)
+                        return;
+
+                    var list = new List<Emoticon>();
+                    if (Emoticons == null)
+                        Emoticons = new List<Emoticon>();
+
+
+                    var content = GoodgameGet(url);
+
+                    MatchCollection matches = Regex.Matches(content, @"}[^\.]*\.smile-([^-|\s]*)\s*{(.*?)}", RegexOptions.IgnoreCase);
+
+                    if (matches.Count <= 0)
                     {
-                        if (match.Groups.Count >= 2)
+                        Log.WriteError("Unable to get Goodgame.ru emoticons!");
+                    }
+                    else
+                    {
+                        string originalUrl = null;
+                        foreach (Match match in matches)
                         {
-                            var smileName = match.Groups[1].Value;
-                            var cssClassDefinition = match.Groups[2].Value;
-
-                            var background = Css.GetBackground(cssClassDefinition);
-
-                            if (background != null && !String.IsNullOrWhiteSpace(background.url) && background.width > 0 && background.height > 0)
+                            if (match.Groups.Count >= 2)
                             {
-                                originalUrl = String.Format("http://goodgame.ru/{0}", background.url.Replace("../../", ""));
-                                var modifiedUrl = String.Format(@"/ubiquitous/cache?ubx={0}&uby={1}&ubw={2}&ubh={3}&uburl={4}",
-                                    background.x, background.y, background.width, background.height, HttpUtility.UrlEncode(originalUrl));
+                                var smileName = match.Groups[1].Value;
+                                var cssClassDefinition = match.Groups[2].Value;
 
-                                list.Add(new Emoticon(String.Format(":{0}:", smileName),
-                                    modifiedUrl,
-                                    background.width,
-                                    background.height
-                                ));
+                                var background = Css.GetBackground(cssClassDefinition);
+
+                                if (background != null && !String.IsNullOrWhiteSpace(background.url) && background.width > 0 && background.height > 0)
+                                {
+                                    originalUrl = String.Format("http://goodgame.ru/{0}", background.url.Replace("../../", ""));
+                                    var modifiedUrl = String.Format(@"/ubiquitous/cache?ubx={0}&uby={1}&ubw={2}&ubh={3}&uburl={4}",
+                                        background.x, background.y, background.width, background.height, HttpUtility.UrlEncode(originalUrl));
+
+                                    list.Add(new Emoticon(String.Format(":{0}:", smileName),
+                                        modifiedUrl,
+                                        background.width,
+                                        background.height
+                                    ));
+                                }
                             }
                         }
-                    }
-                    if (list.Count > 0)
-                    {
-                        Uri uri;
-                        if (!String.IsNullOrWhiteSpace(originalUrl) && Uri.TryCreate(originalUrl, UriKind.Absolute, out uri))
+                        if (list.Count > 0)
                         {
-                            var ddosCookieGet = GoodgameGet("http://goodgame.ru");
-                            if (ddosCookieGet != null)
+                            Uri uri;
+                            if (!String.IsNullOrWhiteSpace(originalUrl) && Uri.TryCreate(originalUrl, UriKind.Absolute, out uri))
                             {
-                                var imageDataService = SimpleIoc.Default.GetInstance<IImageDataSource>();
-                                imageDataService.AddImage(uri, webClient.DownloadToMemoryStream(originalUrl));
+                                var ddosCookieGet = GoodgameGet("http://goodgame.ru");
+                                if (ddosCookieGet != null)
+                                {
+                                    var imageDataService = SimpleIoc.Default.GetInstance<IImageDataSource>();
+                                    imageDataService.AddImage(uri, webClient.DownloadToMemoryStream(originalUrl));
+                                }
+                                else
+                                {
+                                    //get local image
+                                }
                             }
-                            else
-                            {
-                                //get local image
-                            }
-                        }
-                        Emoticons = list;
-                        if (IsFallbackEmoticons)
-                            IsWebEmoticons = true;
+                            Emoticons = list;
+                            if (IsFallbackEmoticons)
+                                IsWebEmoticons = true;
 
-                        IsFallbackEmoticons = true;
+                            IsFallbackEmoticons = true;
+                        }
                     }
                 }
-            }
         }        
         #endregion
 

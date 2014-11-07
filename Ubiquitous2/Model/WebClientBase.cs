@@ -50,14 +50,14 @@ namespace UB.Model
                 };
                 StartPos = -1;
                 EndPos = -1;
-                
+                Timeout = 5000;
                 Proxy = null;
                 SuccessHandler = () => { };
             }
             public Action<string> ErrorHandler { get; set; }
             public Action SuccessHandler { get; set; }
             public bool KeepAlive { get; set; }
-
+            public int Timeout { get; set; }
             public long StartPos { get; set; }
             public long EndPos { get; set; }
             protected override WebRequest GetWebRequest(Uri address)
@@ -80,7 +80,7 @@ namespace UB.Model
                     {
                         webRequest.AddRange(StartPos, EndPos);
                     }
-                    webRequest.Timeout = 5000;
+                    webRequest.Timeout = Timeout;
                     webRequest.CookieContainer = m_container;
                     webRequest.UserAgent = userAgent;
                     webRequest.Proxy = null;
@@ -100,9 +100,9 @@ namespace UB.Model
                         return DownloadString(new Uri(url));
                     }
                 }
-                catch
+                catch(Exception e)
                 {
-                    ErrorHandler(String.Format("Error downloading {0}", url));
+                    ErrorHandler(String.Format("Error downloading {0}, {1}", url, e.Message));
                 }
                 return String.Empty;
             }
@@ -370,6 +370,23 @@ namespace UB.Model
                     }
                     return null;
                 }
+            }
+
+            public string GetRedirectUrl( string url )
+            {
+                try
+                {
+                    Uri uri;
+                    if (Uri.TryCreate(url, UriKind.Absolute, out uri))
+                    {
+                        var response = GetWebResponse(GetWebRequest(uri));
+                        return response.ResponseUri.OriginalString;
+                    }
+                }
+                catch
+                {
+                }
+                return url;
             }
 
     }
