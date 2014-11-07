@@ -261,7 +261,7 @@ namespace UB.Model
                 {
                     Id = ChannelName,
                     Uri = new Uri(String.Format(@"http://www.youtube.com/live_stats?v={0}&t={1}", videoId, Time.UnixTimestamp().ToString())),
-                    IsLongPoll = true,
+                    IsLongPoll = false,
                     Interval = 60000,
                 };
 

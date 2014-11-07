@@ -61,6 +61,9 @@ namespace UB.Model
                 }
                 Uri = new Uri(newUrl);
             }
+
+            wc.KeepAlive = KeepAlive;
+            
             if (IsLongPoll)
                 wc.Timeout = 60000;
 
@@ -80,6 +83,7 @@ namespace UB.Model
         public bool IsTimeStamped { get; set; }
         public Uri Uri { get; set; }
         public Action ErrorHandler { get; set; }
+        public bool KeepAlive { get; set; }
         private void poll(object sender)
         {            
             lock(lockWebClient)
