@@ -13,6 +13,7 @@ namespace UB.Model
     public class WebPoller
     {
         private WebClientBase wc;
+        private bool isStopped = true;
         private object lockWebClient = new object();
         private Timer timer;
         private bool gotError = false;
@@ -68,9 +69,11 @@ namespace UB.Model
                 wc.Timeout = 60000;
 
             timer.Change(0, Interval);
+            isStopped = false;
         }
         public void Stop()
         {
+            isStopped = true;
             if( timer != null )
                 timer.Change(Timeout.Infinite, Timeout.Infinite);
         }
@@ -85,7 +88,10 @@ namespace UB.Model
         public Action ErrorHandler { get; set; }
         public bool KeepAlive { get; set; }
         private void poll(object sender)
-        {            
+        {
+            if (isStopped)
+                return;
+
             lock(lockWebClient)
             {
                 var obj = sender as WebPoller;

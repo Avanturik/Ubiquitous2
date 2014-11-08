@@ -186,12 +186,15 @@ namespace UB.Model
             if( !String.IsNullOrWhiteSpace(videoId) )
             {
                 #region Chatpoller
+                int rc = 0;
+                lastTime = Time.UnixTimestamp().ToString();
                 chatPoller = new WebPoller()
                 {
                     Id = ChannelName,
-                    Uri = new Uri(String.Format(@"https://www.youtube.com/live_comments?action_get_comments=1&video_id={0}&lt={1}&format=json",
+                    Uri = new Uri(String.Format(@"https://www.youtube.com/live_comments?action_get_comments=1&video_id={0}&lt={1}&rc={2}&format=json",
                         videoId,
-                        String.IsNullOrWhiteSpace(lastTime) ? Time.UnixTimestamp().ToString() : lastTime)),
+                        lastTime,
+                        rc)),
                     IsLongPoll = true,     
                     Interval = 60000,
                     IsTimeStamped = false,
@@ -218,10 +221,6 @@ namespace UB.Model
                                     return;
 
                                 lastTime = generalInfo["latest_time"].ToString();
-
-                                chatPoller.Uri = new Uri(String.Format(@"https://www.youtube.com/live_comments?action_get_comments=1&video_id={0}&lt={1}&format=json",
-                                    videoId,
-                                    String.IsNullOrWhiteSpace(lastTime) ? Time.UnixTimestamp().ToString() : lastTime));
 
                                 var comments = JArray.Parse(generalInfo["comments"].ToString());
 
@@ -252,6 +251,13 @@ namespace UB.Model
                                 }
                             }
                         }
+                        rc++;
+                        chatPoller.Uri = new Uri(String.Format(@"https://www.youtube.com/live_comments?action_get_comments=1&video_id={0}&lt={1}&rc={2}&format=json",
+                            videoId,
+                            lastTime,
+                            rc));
+
+
                     }
                 };
                 chatPoller.Start();
