@@ -11,6 +11,9 @@ namespace UB.Utils
     {
         public static string GetSubString(string input, string re)
         {
+            if (input == null)
+                return null;
+
             var match = Regex.Match(input, re, RegexOptions.Singleline | RegexOptions.IgnoreCase);
             if (!match.Success)
                 return null;

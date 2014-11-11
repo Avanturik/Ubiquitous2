@@ -72,13 +72,17 @@ namespace UB.Utils
             }
             else 
             {
-                Image testImage = Image.FromStream(webClient.DownloadToStream(url));
-                var imageInfo = new ImageInfo()
+                using( Stream stream = webClient.DownloadToStream(url) )
                 {
-                    Format = testImage.RawFormat,
-                    Dimensions = testImage.Size,
-                };
-                callback(imageInfo);
+                    Image testImage = Image.FromStream(stream);
+                    var imageInfo = new ImageInfo()
+                    {
+                        Format = testImage.RawFormat,
+                        Dimensions = testImage.Size,
+                    };
+                    callback(imageInfo);
+
+                }
             }
         }
         public static long GetWebImageSize( string url )

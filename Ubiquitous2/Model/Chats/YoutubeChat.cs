@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
@@ -29,8 +30,8 @@ namespace UB.Model
 
             ReceiveOwnMessages = true;
 
-            ContentParsers.Add(MessageParser.ParseURLs);
-            ContentParsers.Add(MessageParser.ParseEmoticons);
+            //ContentParsers.Add(MessageParser.ParseURLs);
+            ContentParsers.Add(MessageParser.ParseEmoji);
         }
 
         public override void DownloadEmoticons(string url)
@@ -123,13 +124,14 @@ namespace UB.Model
         private WebPoller chatPoller;
         private string videoId = null;
         private string lastTime = null;
-        private WebClientBase webClient = new WebClientBase();
+        private WebClientBase webClient;
         private Random random = new Random();
         private Timer checkTimer;
 
         public YoutubeChannel(IChat chat)
         {
             Chat = chat;
+            InitWebClient();
         }
 
         public override void Leave()
@@ -158,12 +160,21 @@ namespace UB.Model
             GetStreamId();
             JoinCallback = callback;
         }
+        private void InitWebClient()
+        {
+            webClient = new WebClientBase();
+            webClient.Timeout = 30000;
+            webClient.KeepAlive = false;
+            webClient.IsAnonymous = true;
+            webClient.ErrorHandler = (error) => {
+                InitWebClient();
+            };
+        }
         public void GetStreamId()
         {
             checkTimer = new Timer((obj) =>
             {
                 var youtubeChannel = obj as YoutubeChannel;
-
                 var channelUrl = webClient.GetRedirectUrl(String.Format(@"https://www.youtube.com/user/{0}/live", ChannelName.Replace("#", "")));
                 var id = Re.GetSubString(channelUrl, @"v=([^&]+)");
                 if (!String.IsNullOrWhiteSpace(id) && videoId != id )
@@ -177,8 +188,7 @@ namespace UB.Model
 
                     youtubeChannel.SetupPollers();
                 }
-
-            }, this, 0, 60000);
+            }, this, 0, random.Next(50000,60000));
         }
         public void SetupPollers()
         {
@@ -187,22 +197,43 @@ namespace UB.Model
             {
                 #region Chatpoller
                 int rc = 0;
+                int poll_delay = 30000;
                 lastTime = Time.UnixTimestamp().ToString();
                 chatPoller = new WebPoller()
                 {
                     Id = ChannelName,
-                    Uri = new Uri(String.Format(@"https://www.youtube.com/live_comments?action_get_comments=1&video_id={0}&lt={1}&rc={2}&format=json",
+                    Uri = new Uri(String.Format(@"https://www.youtube.com/live_comments?action_get_comments=1&video_id={0}&lt={1}&rc={2}&pd={3}&format=json",
                         videoId,
                         lastTime,
-                        rc)),
+                        rc,
+                        poll_delay)),
                     IsLongPoll = true,     
-                    Interval = 60000,
+                    Interval = 30000,
+                    TimeoutMs = 30000,
+                    IsAnonymous = true,
+                    KeepAlive = false,
+                    Delay = poll_delay,
                     IsTimeStamped = false,
                 };
                 chatPoller.ReadString = (text) =>
                 {
+                    
                     lock (chatLock)
                     {
+                        rc++;
+                        if (rc > 5)
+                            rc = 0;
+
+                        chatPoller.Uri = new Uri(String.Format(@"https://www.youtube.com/live_comments?action_get_comments=1&video_id={0}&lt={1}&rc={2}&pd={3}&format=json",
+                            videoId,
+                            lastTime,
+                            rc,
+                            poll_delay));
+
+                        chatPoller.Interval = random.Next(20000, 30000);
+                        chatPoller.TimeoutMs = random.Next(30000, 35000);
+                        chatPoller.Delay = random.Next(20000, 30000);
+
                         if (String.IsNullOrWhiteSpace(text))
                             return;
 
@@ -220,15 +251,22 @@ namespace UB.Model
                                     generalInfo["latest_time"].ToString() == lastTime))
                                     return;
 
+                                long intLastTime;
+                                long.TryParse(lastTime, out intLastTime);
                                 lastTime = generalInfo["latest_time"].ToString();
-
                                 var comments = JArray.Parse(generalInfo["comments"].ToString());
 
                                 foreach (var comment in comments)
                                 {
+                                    var time_created = comment["time_created"].ToObject<long>();
+
+                                    if (time_created < intLastTime)
+                                        continue;
+
                                     var author_name = comment["author_name"].ToString();
                                     var comment_text = comment["comment"].ToString();
 
+                                                                     
                                     if (String.IsNullOrEmpty(author_name) ||
                                         String.IsNullOrEmpty(comment_text))
                                         return;
@@ -251,11 +289,6 @@ namespace UB.Model
                                 }
                             }
                         }
-                        rc++;
-                        chatPoller.Uri = new Uri(String.Format(@"https://www.youtube.com/live_comments?action_get_comments=1&video_id={0}&lt={1}&rc={2}&format=json",
-                            videoId,
-                            lastTime,
-                            rc));
 
 
                     }

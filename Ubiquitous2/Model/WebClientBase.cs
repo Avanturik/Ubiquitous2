@@ -41,10 +41,13 @@ namespace UB.Model
                         delegate
                         { return true; }
                     );
-                ServicePointManager.DefaultConnectionLimit = 10;
+                ServicePointManager.DefaultConnectionLimit = 25;
                 ServicePointManager.Expect100Continue = false;
                 ServicePointManager.UseNagleAlgorithm = false;
+                ServicePointManager.DnsRefreshTimeout = 60;
+                ServicePointManager.EnableDnsRoundRobin = true;
                 KeepAlive = true;
+                IsAnonymous = false;
                 ErrorHandler = (error) => {
                     Log.WriteError(error);
                 };
@@ -60,51 +63,55 @@ namespace UB.Model
             public int Timeout { get; set; }
             public long StartPos { get; set; }
             public long EndPos { get; set; }
+            public bool IsAnonymous { get; set; }
             protected override WebRequest GetWebRequest(Uri address)
             {
-                WebRequest request = base.GetWebRequest(address);
-
-                HttpWebRequest webRequest = request as HttpWebRequest;
-                if (webRequest != null)
+                lock(downloadLock )
                 {
-                    if (KeepAlive)
-                    {
-                        webRequest.ProtocolVersion = HttpVersion.Version11;
-                        webRequest.KeepAlive = true;
-                        var sp = webRequest.ServicePoint;
-                        var prop = sp.GetType().GetProperty("HttpBehaviour", BindingFlags.Instance | BindingFlags.NonPublic);
-                        prop.SetValue(sp, (byte)0, null);
-                    }
+                    WebRequest request = base.GetWebRequest(address);
 
-                    if( StartPos != -1 && EndPos != -1 )
+                    HttpWebRequest webRequest = request as HttpWebRequest;
+                    if (webRequest != null)
                     {
-                        webRequest.AddRange(StartPos, EndPos);
+                        if (KeepAlive)
+                        {
+                            webRequest.ProtocolVersion = HttpVersion.Version11;
+                            webRequest.KeepAlive = true;
+                            var sp = webRequest.ServicePoint;
+                            var prop = sp.GetType().GetProperty("HttpBehaviour", BindingFlags.Instance | BindingFlags.NonPublic);
+                            prop.SetValue(sp, (byte)0, null);
+                        }
+                        else
+                        {
+                            webRequest.KeepAlive = false;
+                        }
+
+                        if (StartPos != -1 && EndPos != -1)
+                        {
+                            webRequest.AddRange(StartPos, EndPos);
+                        }
+                        webRequest.Timeout = Timeout;
+                        if (!IsAnonymous)
+                            webRequest.CookieContainer = m_container;
+
+                        webRequest.UserAgent = userAgent;
+                        webRequest.Proxy = null;
+                        webRequest.CachePolicy = new HttpRequestCachePolicy(HttpRequestCacheLevel.NoCacheNoStore);
+                        webRequest.AutomaticDecompression = DecompressionMethods.GZip | DecompressionMethods.Deflate;
                     }
-                    webRequest.Timeout = Timeout;
-                    webRequest.CookieContainer = m_container;
-                    webRequest.UserAgent = userAgent;
-                    webRequest.Proxy = null;
-                    webRequest.CachePolicy = new HttpRequestCachePolicy(HttpRequestCacheLevel.NoCacheNoStore);
-                    webRequest.AutomaticDecompression = DecompressionMethods.GZip | DecompressionMethods.Deflate;
+                    return request;
                 }
-                return request;
             }
             public String Download(String url)
             {
-                try
-                {
+                return(string)TryWeb(url,() => {                
                     lock (downloadLock)
                     {
                         SuccessHandler();
                         Encoding = Encoding.UTF8;
                         return DownloadString(new Uri(url));
                     }
-                }
-                catch(Exception e)
-                {
-                    ErrorHandler(String.Format("Error downloading {0}, {1}", url, e.Message));
-                }
-                return String.Empty;
+                });
             }
             public byte[] DownloadToByteArray( String url )
             {
@@ -151,7 +158,7 @@ namespace UB.Model
                             } while( bytesRead > 0);
 
                             memoryStream.Position = 0;
-
+                            response.Close();
                             return memoryStream;
                         }
                     }
@@ -178,7 +185,7 @@ namespace UB.Model
                         
                         if( SuccessHandler != null )
                             SuccessHandler();
-
+                        
                         return response.GetResponseStream();
                     }
                 }
@@ -226,8 +233,9 @@ namespace UB.Model
                     HttpWebResponse response = (HttpWebResponse)request.GetResponse();
                     return response.GetResponseStream();
                 }
-                catch
+                catch ( Exception e)
                 {
+                    Log.WriteInfo("PutStream: {0}", e.Message);
                     return null;
                 }
             }
@@ -242,8 +250,9 @@ namespace UB.Model
                     if (response != null)
                         return;
                 }
-                catch
+                catch( Exception e)
                 {
+                    Log.WriteInfo("RequestPatchOptions {0}, {1}", e.Message, url);
                 }
             }
 
@@ -269,8 +278,9 @@ namespace UB.Model
                     HttpWebResponse response = (HttpWebResponse)request.GetResponse();
                     return response.GetResponseStream();
                 }
-                catch
+                catch( Exception e )
                 {
+                    Log.WriteInfo("PatchStream {0}, {1}", e.Message, url);
                     return null;
                 }
             }
@@ -338,10 +348,15 @@ namespace UB.Model
                         StartPos = -1;
                         EndPos = -1;
                         if (result != null)
-                            return result.ContentLength;
+                        {
+                            var length = result.ContentLength;
+                            result.Close();
+                            return length;
+                        }
                     }
-                    catch
+                    catch( Exception e )
                     {
+                        Log.WriteInfo("GetContentLength {0}, {1}", e.Message, url);
                         StartPos = -1;
                         EndPos = -1;
                     }
@@ -363,8 +378,9 @@ namespace UB.Model
                         EndPos = -1;
                         return result.GetResponseStream();
                     }
-                    catch
+                    catch(Exception e)
                     {
+                        Log.WriteInfo("DownloadPartial {0}, {1}", e.Message, url);
                         StartPos = -1;
                         EndPos = -1;
                     }
@@ -374,19 +390,36 @@ namespace UB.Model
 
             public string GetRedirectUrl( string url )
             {
-                try
-                {
+                return (string)TryWeb(url, () => {
                     Uri uri;
                     if (Uri.TryCreate(url, UriKind.Absolute, out uri))
                     {
-                        var response = GetWebResponse(GetWebRequest(uri));
+                        var request = GetWebRequest(uri);
+                        var response = GetWebResponse(request);
+                        response.Close();
                         return response.ResponseUri.OriginalString;
+
+
                     }
-                }
-                catch
+                    return url;
+                });
+            }
+
+            public object TryWeb(string url, Func<object> action)
+            {
+                try
                 {
+                    return action();
                 }
-                return url;
+                catch ( Exception e )
+                {
+                    if (ErrorHandler != null)
+                        ErrorHandler(e.Message);
+                    else
+                        Log.WriteError("{0}, url: {1}", e.Message, url);
+
+                }
+                return null;
             }
 
     }

@@ -147,7 +147,7 @@ namespace UB.Model
         }
         public void GetImageSource(Uri uri, int width, int height, Image image, Action<ImageCacheItem> callback)
         {
-            if (String.IsNullOrWhiteSpace(uri.OriginalString))
+            if (uri == null || String.IsNullOrWhiteSpace(uri.OriginalString) || bitmapImageCache == null )
                 return;
 
             bool forceSize = false;
@@ -166,11 +166,18 @@ namespace UB.Model
                 FixImageSize(image, width);
             }
 
+            var originalString = uri.OriginalString;
+            string baseUrl = String.Empty;
             if( uri.OriginalString.Contains("uburl="))
             {
-                Uri.TryCreate(HttpUtility.UrlDecode( Url.GetParameter(uri,"uburl")), UriKind.RelativeOrAbsolute, out uri);               
+                baseUrl = Url.GetParameter(uri, "uburl");
+                Uri.TryCreate(HttpUtility.UrlDecode( baseUrl ), UriKind.RelativeOrAbsolute, out uri);               
             }
-            
+            if( uri == null )
+            {
+                Log.WriteInfo("Error parsing uri: {0} baseurl: {1}", originalString, baseUrl);
+                return;
+            }
             lock( imageSourceLock )
             {
                 if (!bitmapImageCache.ContainsKey(uri.OriginalString) )

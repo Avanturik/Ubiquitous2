@@ -307,6 +307,7 @@ namespace UB.Model
                     lock (channelsLock)
                     {
                         ChatChannels.RemoveAll(chan => chan == null);
+                        ChatChannels.ForEach(chan => { if (chan != null) chan.Leave(); });
                         ChatChannels.RemoveAll(item => item.ChannelName == leaveChannel.ChannelName);
                     }
 

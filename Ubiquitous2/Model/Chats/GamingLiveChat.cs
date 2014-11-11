@@ -382,6 +382,7 @@ namespace UB.Model
         public override void Leave()
         {
             Log.WriteInfo("Gaminglive leaving {0}", ChannelName);
+            statsPoller.Stop();
             webSocket.Disconnect();
         }
 

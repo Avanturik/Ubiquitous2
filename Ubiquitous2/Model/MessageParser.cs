@@ -85,10 +85,37 @@ namespace UB.Model
                 }
                 else if (emoticon.Pattern != null && containsNonAlpha)
                 {
-                    message.Text = Regex.Replace(message.Text, emoticon.Pattern, emoticon.HtmlCode, RegexOptions.Singleline);
+                    if( emoticon.Pattern.Length > 6 && emoticon.Pattern.StartsWith(@"\u"))
+                    {
+                        message.Text = message.Text.ReplaceUTF32Character(emoticon.Pattern.Substring(2), emoticon.HtmlCode);
+                    }
+                    else
+                    {
+                        message.Text = Regex.Replace(message.Text, emoticon.Pattern, emoticon.HtmlCode, RegexOptions.Singleline);
+                    }
                 }
             }
         }
+        public static void ParseEmoji(ChatMessage message, IChat chat)
+        {
+            if (chat == null || chat.Emoticons == null)
+                return;
+            var emoticons = chat.Emoticons.ToList();
+
+            var utf32Hex = message.Text.ConvertToUTF32Hex();
+            foreach (var emoticon in emoticons)
+            {
+                if (emoticon.Pattern != null)
+                {
+                    if (emoticon.Pattern.StartsWith(@"\u"))
+                    {
+                        message.Text =  message.Text.ReplaceUTF32Character(emoticon.Pattern.Substring(2), emoticon.HtmlCode);
+                    }
+                }
+            }
+            //message.Text = utf32Hex.ConvertFromUTF32Hex();
+        }
+
         public static void ParseSpaceSeparatedEmoticons(ChatMessage message, IChat chat)
         {
             if (chat == null || chat.Emoticons == null)
