@@ -60,7 +60,12 @@ namespace UB.Model
                     gotError = false;
                 }
             };
-
+            
+        }
+        public WebHeaderCollection Headers
+        {
+            get { return wc.Headers;  }
+            set { wc.Headers = value; }
         }
         public void Start()
         {

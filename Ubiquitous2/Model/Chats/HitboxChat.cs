@@ -98,6 +98,7 @@ namespace UB.Model
             if (test.teams != null)
             {
                 IsAnonymous = false;
+                PollFollowers();
                 return true;
             }
 
@@ -139,7 +140,7 @@ namespace UB.Model
                 Config.SetParameterValue("AuthToken", authToken);
                 Config.SetParameterValue("AuthTokenCredentials", userName + password);
 
-                return true;
+                return LoginWithToken();
             }
         }
         private void SetCommonHeaders()
@@ -393,6 +394,9 @@ namespace UB.Model
         }
         private void PollFollowers()
         {
+            if (followerPoller != null)
+                followerPoller.Stop();
+
             var getUrl = @"https://www.hitbox.tv/api/followers/user/{0}?limit=50";
             var userName = Config.GetParameterValue("Username") as string;
 

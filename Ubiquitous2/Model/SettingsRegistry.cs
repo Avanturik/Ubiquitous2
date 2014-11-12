@@ -137,6 +137,7 @@ namespace UB.Model
                             new ConfigField() {  Name = "Password", Label = "Password", DataType = "Password", IsVisible = true, Value = String.Empty },
                             new ConfigField() {  Name = "Channels", Label = "Channels", DataType = "Text", IsVisible = true, Value = "gaminglivetv,fog" },
                             new ConfigField() {  Name = "AuthToken", Label = "AuthToken", DataType = "Text", IsVisible = false, Value = String.Empty },
+                            new ConfigField() {  Name = "LastFollowerTime", Label = "LastFollowerTime", DataType = "Text", IsVisible = false, Value = String.Empty },
                             new ConfigField("Info1", "Fill channels and leave username and password empty if you need readonly access.", "Info", true, null),
                             new ConfigField("Info2", "Channels is comma separated list. Hashtag is optional. e.g: #xedoc, ipsum, #lorem", "Info", true, null),
                             new ConfigField() {  Name = "AuthTokenCredentials", Label = "Auth token credentials", DataType = "Text", IsVisible = false, Value = String.Empty },

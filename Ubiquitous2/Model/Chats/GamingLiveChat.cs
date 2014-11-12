@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Runtime.Serialization;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -12,10 +13,12 @@ using UB.Utils;
 
 namespace UB.Model
 {
-    class GamingLiveChat : ChatBase, IStreamTopic
+    class GamingLiveChat : ChatBase, IStreamTopic, IFollowersProvider
     {
-        private WebClientBase loginWebClient = new WebClientBase();   
+        private WebClientBase loginWebClient = new WebClientBase();
+        private List<GamingLiveNotification> currentFollowers = new List<GamingLiveNotification>();
         private GamingLiveGameList jsonGames;
+        private WebPoller notificationPoller;
         private object lockSearch = new object();
         private object pollerLock = new object();
         public GamingLiveChat(ChatConfig config) : base(config)
@@ -90,7 +93,7 @@ namespace UB.Model
                 IsAnonymous = false;
                 Config.SetParameterValue("AuthToken", authToken);
                 Config.SetParameterValue("AuthTokenCredentials", userName + password);
-                return true;
+                return LoginWithToken();
 
             }
         }
@@ -132,6 +135,7 @@ namespace UB.Model
             if (isOk && !String.IsNullOrWhiteSpace(NickName))
             {
                 IsAnonymous = false;
+                PollNotifications();
                 return true;
             }
 
@@ -146,6 +150,7 @@ namespace UB.Model
         }
 
         #endregion
+        
         #region IStreamTopic
         public StreamInfo Info
         {
@@ -272,6 +277,68 @@ namespace UB.Model
         }      
         #endregion
 
+        #region IFollowersProvider
+        public Action<ChatUser> AddFollower
+        {
+            get;
+            set;
+        }
+
+        public Action<ChatUser> RemoveFollower
+        {
+            get;
+            set;
+        }
+        #endregion
+
+        private void PollNotifications()
+        {
+            if (notificationPoller != null)
+                notificationPoller.Stop();
+
+            notificationPoller = new WebPoller()
+            {
+                Id = "followersPoller",
+                Interval = 5000,
+                Uri = new Uri(@"https://api.gaminglive.tv/notifications"),
+            };
+            notificationPoller.Headers["Auth-Token"] = Config.GetParameterValue("AuthToken") as string;
+            
+            notificationPoller.ReadStream = (stream) =>
+            {
+                using (stream)
+                {
+
+                    var notifications = Json.DeserializeStream<GamingLiveNotification[]>(stream);
+
+                    long lastFollow = 0;                    
+                    long.TryParse( Config.GetParameterValue("LastFollowerTime") as string, out lastFollow);
+
+                    foreach (var notification in notifications)
+                    {
+                        if( notification.t.Equals( "user:followed", StringComparison.InvariantCultureIgnoreCase))
+                        {
+                            if( notification.at > lastFollow )
+                            {
+                                if (currentFollowers.Any(n => n.from == notification.from))
+                                    continue;
+
+                                currentFollowers.Add(notification);
+                                Config.SetParameterValue("LastFollowerTime", notification.at.ToString());
+                                if (AddFollower != null)
+                                    AddFollower(new ChatUser()
+                                    {
+                                        NickName = notification.from,
+                                        ChatName = ChatName
+                                    });
+                            }
+                        }
+                    }
+                }
+            };
+
+            notificationPoller.Start();
+        }
     }
 
     public class GamingLiveChannel : ChatChannelBase
@@ -468,5 +535,12 @@ namespace UB.Model
     {
         public List<GamingLiveGame> games { get; set; }
     }
+
+    public class GamingLiveNotification
+    {
+        public long at { get; set; }       
+        public string from { get; set; }    
+        public string t { get; set; }
+    }    
     #endregion
 }
