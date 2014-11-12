@@ -376,6 +376,7 @@ namespace UB.Model
             {
                 lock (pingLock)
                 {
+                    Log.WriteInfo("Gaminglive ping to {0}", ChannelName);
                     secondWebSocket = new WebSocketBase();
                     secondWebSocket.Host = webSocket.Host;
                     secondWebSocket.Origin = webSocket.Origin;
@@ -389,13 +390,16 @@ namespace UB.Model
 
             webSocket.ConnectHandler = () =>
                 {
+                    if( JoinCallback != null )
+                        JoinCallback(this);
+                    isJoined = true;
                     Chat.Status.IsLoggedIn = !Chat.IsAnonymous;
                     Chat.Status.IsConnected = true;
                     Chat.Status.IsStarting = false;
                 };
 
             webSocket.DisconnectHandler = () =>
-            {
+            {                
                 if (LeaveCallback != null)
                     LeaveCallback(this);
             };
@@ -406,11 +410,12 @@ namespace UB.Model
         }
         private void ReadRawMessage(string rawMessage)        
         {
-            if (!isJoined && JoinCallback != null)
-            {
-                JoinCallback(this);
-                isJoined = true;
-            }
+            Log.WriteInfo("Gaminglive raw message: {0}", rawMessage);
+            //if (!isJoined && JoinCallback != null)
+            //{
+            //    JoinCallback(this);
+            //    isJoined = true;
+            //}
             
             if( !String.IsNullOrWhiteSpace(rawMessage))
             {
@@ -449,6 +454,7 @@ namespace UB.Model
         public override void Leave()
         {
             Log.WriteInfo("Gaminglive leaving {0}", ChannelName);
+            pingTimer.Change(Timeout.Infinite, Timeout.Infinite);
             statsPoller.Stop();
             webSocket.Disconnect();
         }
