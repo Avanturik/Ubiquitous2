@@ -114,6 +114,9 @@ namespace UB.Model
             }
             else
             {
+                if (userId == 0)
+                    LoginWithUsername();
+
                 IsAnonymous = false;
                 Info.CanBeRead = true;
                 Info.CanBeChanged = true;
@@ -160,7 +163,11 @@ namespace UB.Model
             {
                 Config.SetParameterValue("AuthToken", authToken);
                 Config.SetParameterValue("AuthTokenCredentials", userName + password);
-                return LoginWithToken();
+                Config.SetParameterValue("UserId", uid);
+                if (!String.IsNullOrEmpty(uid) && uid != "0")
+                    return LoginWithToken();
+                else
+                    return false;
             }
         }
 
@@ -448,6 +455,7 @@ namespace UB.Model
             channel.Chat.Status.IsConnected = true;
             if (data.UserId == 0)
             {
+                channel.Chat.Status.IsLoggedIn = false;
                 channel.Chat.IsAnonymous = true;
             }
             else
