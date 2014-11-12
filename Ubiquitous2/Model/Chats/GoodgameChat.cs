@@ -416,7 +416,9 @@ namespace UB.Model
         private Random random = new Random();
         private WebClientBase webClient = new WebClientBase();
         private Timer timer;
+        private Timer disconnectTimer;
         private const int counterInterval = 20000;
+        private const int disconnectTimeout = 40000;
         private Dictionary<string, Action<GoodgameChannel, GoodGameData>>
             packetHandlers = new Dictionary<string, Action<GoodgameChannel, GoodGameData>>() {
                 {"welcome", WelcomeHandler},
@@ -425,6 +427,7 @@ namespace UB.Model
                 {"channel_counters", ChannelCountersHandler},
                 {"message", MessageHandler},
                 {"viewers", ViewersHandler},
+                {"pong", PongHandler},
             };
 
         public GoodgameChannel(GoodgameChat chat)
@@ -432,6 +435,11 @@ namespace UB.Model
             Chat = chat;
             timer = new Timer((obj) => {
                 RequestCounters();
+            }, this, Timeout.Infinite, Timeout.Infinite);
+
+            disconnectTimer = new Timer((obj) =>
+            {
+                (obj as GoodgameChannel).webSocket.Disconnect();
             }, this, Timeout.Infinite, Timeout.Infinite);
         }
         private static void ViewersHandler(GoodgameChannel channel, GoodGameData data)
@@ -442,6 +450,10 @@ namespace UB.Model
                 channel.ChannelStats.ViewersCount = (int)data.Count;
 
             channel.Chat.UpdateStats();
+        }
+        private static void PongHandler(GoodgameChannel channel, GoodGameData data)
+        {
+            Log.WriteInfo("Goodgame pong received");
         }
         private static void WelcomeHandler(GoodgameChannel channel, GoodGameData data)
         {
@@ -498,6 +510,7 @@ namespace UB.Model
             });
 
             channel.timer.Change(0, counterInterval);
+            channel.disconnectTimer.Change(disconnectTimeout, Timeout.Infinite);
 
             if (channel.JoinCallback != null)
                 channel.JoinCallback(channel);           
@@ -585,6 +598,18 @@ namespace UB.Model
             Log.WriteInfo("Goodgame sending {0}", authPacket.ToString());
             webSocket.Send(authPacket.ToString());
         }
+        private void SendPing()
+        {
+            var pingPacket = new GoodgamePacket()
+            {
+                Type = "ping",
+                Data = new GoodGameData()
+                {
+
+                }
+            };
+            webSocket.Send(pingPacket.ToString());
+        }
         private void Connect()
         {
             Uri serverUri;
@@ -605,6 +630,7 @@ namespace UB.Model
         private void ReadRawMessage(string rawMessage)
         {
             Log.WriteInfo("Goodgame raw message {0}", rawMessage);
+            disconnectTimer.Change(disconnectTimeout, Timeout.Infinite);
             if( rawMessage.StartsWith("a"))
             {
                 var packet = this.With( x => JArray.Parse(rawMessage.Substring(1)))
@@ -625,6 +651,9 @@ namespace UB.Model
         {
             Log.WriteInfo("Goodgame.ru leaving {0}", ChannelName);
             
+            timer.Change(Timeout.Infinite, Timeout.Infinite);
+            disconnectTimer.Change(Timeout.Infinite, Timeout.Infinite);
+
             if( !webSocket.IsClosed )
                 webSocket.Disconnect();
         }
