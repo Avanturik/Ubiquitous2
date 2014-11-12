@@ -408,29 +408,33 @@ namespace UB.Model
             followerPoller.Uri = new Uri(String.Format(getUrl, HttpUtility.UrlEncode(userName.ToLower())));
             followerPoller.ReadStream = (stream) =>
             {
-                var followers = Json.DeserializeStream<HitboxFollowers>(stream);
-                if (followers != null && followers.followers != null)
+                using( stream )
                 {
-                    if (currentFollowers.followers == null)
+                    var followers = Json.DeserializeStream<HitboxFollowers>(stream);
+                    if (followers != null && followers.followers != null)
                     {
-                        currentFollowers.followers = followers.followers.ToList();
-                    }
-                    else if (followers.followers.Count > 0)
-                    {
-                        var newFollowers = followers.followers.Take(25).Except(currentFollowers.followers, new LambdaComparer<HitboxFollower>((x, y) => x.user_name.Equals(y.user_name)));
-                        foreach (var follower in newFollowers)
+                        if (currentFollowers.followers == null)
                         {
-                            if (AddFollower != null)
-                                AddFollower(new ChatUser()
-                                {
-                                    NickName = follower.user_name,
-                                    ChatName = ChatName
-                                });
+                            currentFollowers.followers = followers.followers.ToList();
                         }
+                        else if (followers.followers.Count > 0)
+                        {
+                            var newFollowers = followers.followers.Take(25).Except(currentFollowers.followers, new LambdaComparer<HitboxFollower>((x, y) => x.user_name.Equals(y.user_name)));
+                            foreach (var follower in newFollowers)
+                            {
+                                if (AddFollower != null)
+                                    AddFollower(new ChatUser()
+                                    {
+                                        NickName = follower.user_name,
+                                        ChatName = ChatName
+                                    });
+                            }
 
-                        currentFollowers.followers = followers.followers.ToList();
+                            currentFollowers.followers = followers.followers.ToList();
+                        }
                     }
                 }
+
 
             };
             followerPoller.Start();
@@ -726,16 +730,19 @@ namespace UB.Model
             {
                 lock (pollerLock)
                 {
-                    var channelInfo = this.With(x => stream)
-                        .With(x => Json.DeserializeStream<HitboxChannelStats>(stream))
-                        .With(x => x.livestream)
-                        .With(x => x.FirstOrDefault(livestream => livestream.media_name.Equals(ChannelName.Replace("#",""), StringComparison.InvariantCultureIgnoreCase)));
-
-                    statsPoller.LastValue = channelInfo;
-                    if (channelInfo != null)
+                    using (stream)
                     {
-                        ChannelStats.ViewersCount = channelInfo.media_views;
-                        Chat.UpdateStats();
+                        var channelInfo = this.With(x => stream)
+                            .With(x => Json.DeserializeStream<HitboxChannelStats>(stream))
+                            .With(x => x.livestream)
+                            .With(x => x.FirstOrDefault(livestream => livestream.media_name.Equals(ChannelName.Replace("#", ""), StringComparison.InvariantCultureIgnoreCase)));
+
+                        statsPoller.LastValue = channelInfo;
+                        if (channelInfo != null)
+                        {
+                            ChannelStats.ViewersCount = channelInfo.media_views;
+                            Chat.UpdateStats();
+                        }
                     }
                 }
             };

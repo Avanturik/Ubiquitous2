@@ -480,14 +480,17 @@ namespace UB.Model
             {
                 lock (pollerLock)
                 {
-                    var channelInfo = Json.DeserializeStream<GamingLiveChannelStats>(stream);
-                    statsPoller.LastValue = channelInfo;
-                    int viewers = 0;
-                    if (channelInfo != null && channelInfo.state != null )
-                        viewers = channelInfo.state.viewers;
+                    using( stream )
+                    {
+                        var channelInfo = Json.DeserializeStream<GamingLiveChannelStats>(stream);
+                        statsPoller.LastValue = channelInfo;
+                        int viewers = 0;
+                        if (channelInfo != null && channelInfo.state != null)
+                            viewers = channelInfo.state.viewers;
 
-                    ChannelStats.ViewersCount = viewers;
-                    Chat.UpdateStats();
+                        ChannelStats.ViewersCount = viewers;
+                        Chat.UpdateStats();
+                    }
                 }
             };
             statsPoller.Start();

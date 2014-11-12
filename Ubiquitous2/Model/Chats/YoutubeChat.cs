@@ -89,13 +89,17 @@ namespace UB.Model
 
                             var imageDataService = SimpleIoc.Default.GetInstance<IImageDataSource>();
 
-                            var memoryStream = webClient.DownloadToMemoryStream(originalUrl);
-                            if( memoryStream == null )
+                            using (var memoryStream = webClient.DownloadToMemoryStream(originalUrl))
                             {
-                                Log.WriteError("Web Youtube emoticons aren't available!");
-                                memoryStream = webClient.DownloadToMemoryStream(@"Content\youtubeemoji.png");
-                                if( memoryStream != null )
-                                    imageDataService.AddImage(uri, memoryStream);
+                                if (memoryStream == null)
+                                {
+                                    Log.WriteError("Web Youtube emoticons aren't available!");
+                                    using( var memStream = webClient.DownloadToMemoryStream(@"Content\youtubeemoji.png"))
+                                    {
+                                        if (memStream != null)
+                                            imageDataService.AddImage(uri, memStream);
+                                    }
+                                }
                             }
                         }
                         Emoticons = list;
@@ -260,7 +264,7 @@ namespace UB.Model
                                 {
                                     var time_created = comment["time_created"].ToObject<long>();
 
-                                    if (time_created < intLastTime)
+                                    if (time_created <= intLastTime)
                                         continue;
 
                                     var author_name = comment["author_name"].ToString();

@@ -120,34 +120,37 @@ namespace UB.Model
 
                 poller.ReadStream = (stream) =>
                 {
-                    lock( counterLock )
+                    lock (counterLock)
                     {
-                        var channelInfo = Json.DeserializeStream<TwitchChannelInfo>(stream);
-                        poller.LastValue = channelInfo;
-                        var viewers = 0;
-                        foreach (var webPoller in counterWebPollers.ToList())
+                        using (stream)
                         {
-                            var streamInfo = this.With(x => (TwitchChannelInfo)webPoller.LastValue)
-                                .With(x => x.stream);
-
-                            var tooltip = Status.ToolTips.FirstOrDefault(t => t.Header == webPoller.Id);
-                            if (tooltip == null)
-                                return;
-
-                            if (streamInfo != null)
+                            var channelInfo = Json.DeserializeStream<TwitchChannelInfo>(stream);
+                            poller.LastValue = channelInfo;
+                            var viewers = 0;
+                            foreach (var webPoller in counterWebPollers.ToList())
                             {
-                                viewers += streamInfo.viewers;
-                                tooltip.Text = streamInfo.viewers.ToString();
-                                tooltip.Number = streamInfo.viewers;
-                            }
-                            else
-                            {
-                                tooltip.Text = "0";
-                                tooltip.Number = 0;
-                            }
+                                var streamInfo = this.With(x => (TwitchChannelInfo)webPoller.LastValue)
+                                    .With(x => x.stream);
 
+                                var tooltip = Status.ToolTips.FirstOrDefault(t => t.Header == webPoller.Id);
+                                if (tooltip == null)
+                                    return;
+
+                                if (streamInfo != null)
+                                {
+                                    viewers += streamInfo.viewers;
+                                    tooltip.Text = streamInfo.viewers.ToString();
+                                    tooltip.Number = streamInfo.viewers;
+                                }
+                                else
+                                {
+                                    tooltip.Text = "0";
+                                    tooltip.Number = 0;
+                                }
+
+                            }
+                            UI.Dispatch(() => Status.ViewersCount = viewers);
                         }
-                        UI.Dispatch( () => Status.ViewersCount = viewers);
                     }
                     
 
@@ -561,27 +564,30 @@ namespace UB.Model
             followerPoller.Uri = new Uri(String.Format(@"http://api.twitch.tv/kraken/channels/{0}/follows?limit=50&offset=0&on_site=1", LoginInfo.UserName.ToLower()));
             followerPoller.ReadStream = (stream) =>
             {
-                var followers = Json.DeserializeStream<TwitchFollowers>(stream);
-                if( followers != null && followers.follows != null)
+                using (stream)
                 {
-                    if (currentFollowers.follows == null )
+                    var followers = Json.DeserializeStream<TwitchFollowers>(stream);
+                    if (followers != null && followers.follows != null)
                     {
-                        currentFollowers.follows = followers.follows.ToList();
-                    }
-                    else if( followers.follows.Count > 0)
-                    {
-                        var newFollowers = followers.follows.Take(25).Except(currentFollowers.follows, new LambdaComparer<TwitchFollow>((x, y) => x.user.display_name.Equals(y.user.display_name)));
-                        foreach( var follower in newFollowers)
+                        if (currentFollowers.follows == null)
                         {
-                            if (AddFollower != null)
-                                AddFollower(new ChatUser()
-                                {
-                                    NickName = follower.user.display_name,
-                                    ChatName = ChatName                                    
-                                });
+                            currentFollowers.follows = followers.follows.ToList();
                         }
+                        else if (followers.follows.Count > 0)
+                        {
+                            var newFollowers = followers.follows.Take(25).Except(currentFollowers.follows, new LambdaComparer<TwitchFollow>((x, y) => x.user.display_name.Equals(y.user.display_name)));
+                            foreach (var follower in newFollowers)
+                            {
+                                if (AddFollower != null)
+                                    AddFollower(new ChatUser()
+                                    {
+                                        NickName = follower.user.display_name,
+                                        ChatName = ChatName
+                                    });
+                            }
 
-                        currentFollowers.follows = followers.follows.ToList();
+                            currentFollowers.follows = followers.follows.ToList();
+                        }
                     }
                 }
 

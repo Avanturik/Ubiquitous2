@@ -228,7 +228,10 @@ namespace UB.Model
                                 if (ddosCookieGet != null)
                                 {
                                     var imageDataService = SimpleIoc.Default.GetInstance<IImageDataSource>();
-                                    imageDataService.AddImage(uri, webClient.DownloadToMemoryStream(originalUrl));
+                                    using (var memoryStream = webClient.DownloadToMemoryStream(originalUrl))
+                                    {
+                                        imageDataService.AddImage(uri, memoryStream);
+                                    }
                                 }
                                 else
                                 {

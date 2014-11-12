@@ -1083,6 +1083,7 @@
     <Content Include="Content\twitchemoticons.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Resource Include="View\Image1.png" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="ubiquitous smile.ico">

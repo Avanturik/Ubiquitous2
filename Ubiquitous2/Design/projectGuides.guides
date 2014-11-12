@@ -5,8 +5,8 @@
       <GuideModels>
         <GuideModel>
           <Guides>
-            <Guide Alignment="Left" Position="27" />
             <Guide Alignment="Top" Position="14" />
+            <Guide Alignment="Left" Position="27" />
           </Guides>
         </GuideModel>
       </GuideModels>
