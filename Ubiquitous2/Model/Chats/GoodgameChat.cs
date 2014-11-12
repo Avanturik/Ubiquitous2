@@ -14,12 +14,6 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using UB.Utils;
 
-//TODO: change viewers number source from http poll to websocket query
-//Request viewers counter
-//{"type":"getviewers","data":{"channel":"1234"}}
-//Receive viewers counter
-//{"viewers":"123"}
-
 namespace UB.Model
 {
     public class GoodgameChat : ChatBase, IStreamTopic
@@ -526,7 +520,7 @@ namespace UB.Model
 
         public override void Join(Action<IChatChannel> callback, string channel)
         {
-
+            Thread.Sleep(random.Next(200,500));
             if (String.IsNullOrWhiteSpace(channel))
                 return;
 
@@ -540,7 +534,6 @@ namespace UB.Model
             webSocket.DisconnectHandler = () =>
             {
                 timer.Change(Timeout.Infinite, Timeout.Infinite);
-                Log.WriteError("Goodgame disconnected {0}", ChannelName);
                 if (LeaveCallback != null)
                     LeaveCallback(this);
             };
