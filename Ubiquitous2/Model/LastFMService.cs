@@ -154,7 +154,7 @@ namespace UB.Model
 
                 _currentTrack = track;
             }
-            else if( track == null )
+            else if( track == null && _currentTrack == null )
             {
                 MusicTrackInfo.Album = "No scrobbling data";
                 MusicTrackInfo.Artist = "";
