@@ -6,6 +6,8 @@
 *.user
 *.sln.docstates
 
+*.pfx
+
 # Build results
 
 [Dd]ebug/
