@@ -18,7 +18,7 @@ using System.Windows.Controls;
 
 namespace UB.Interactivity
 {
-    public class ElementToPng : Behavior<UIElement>
+    public class ElementToPng : BehaviorBase
     {
         private UIElement visual;
         private Timer saveTimer;
@@ -32,15 +32,15 @@ namespace UB.Interactivity
                 SaveVisualToPng();
             }, null, Timeout.Infinite, Timeout.Infinite);
         }
-        protected override void OnDetaching()
+        protected override void Cleanup()
         {
             saveTimer.Change(Timeout.Infinite, Timeout.Infinite);
         }
-        protected override void OnAttached()
+        protected override void Attach()
         {
             visual = AssociatedObject as UIElement;
             visual.LayoutUpdated += visual_LayoutUpdated;
-            visualBrush.Visual = visual;
+            visualBrush.Visual = visual;            
         }
 
         void visual_LayoutUpdated(object sender, EventArgs e)

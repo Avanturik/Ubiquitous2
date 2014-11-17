@@ -167,7 +167,7 @@ namespace UB.Model
                         Enabled = false,
                         Parameters = new List<ConfigField>() {
                             new ConfigField("InfoTop", "Chat in fullscreen mode via Steam overlay", "Info", true, null),
-                            new ConfigField() {  Name = "Username", Label = "Bot username", DataType = "Text", IsVisible = true, Value = "UnknownSoldier" },
+                            new ConfigField() {  Name = "Username", Label = "Bot username", DataType = "Text", IsVisible = true, Value = String.Empty },
                             new ConfigField() {  Name = "Password", Label = "Bot password", DataType = "Password", IsVisible = true, Value = String.Empty },
                             new ConfigField() {  Name = "Whitelist", Label = "Whiltelist", DataType = "Text", IsVisible = true, Value = String.Empty },
                             new ConfigField("Info0", "Whitelist - comma separated nicknames list. Bot will redirect messages to all his friends if you leave it empty", "Info", true, null),

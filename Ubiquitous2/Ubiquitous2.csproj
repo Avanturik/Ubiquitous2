@@ -38,9 +38,10 @@
     <PublisherName>Xedoc</PublisherName>
     <WebPage>publish.htm</WebPage>
     <OpenBrowserOnPublish>false</OpenBrowserOnPublish>
-    <ApplicationRevision>1</ApplicationRevision>
+    <ApplicationRevision>3</ApplicationRevision>
     <ApplicationVersion>2.0.0.%2a</ApplicationVersion>
     <UseApplicationTrust>true</UseApplicationTrust>
+    <CreateDesktopShortcut>true</CreateDesktopShortcut>
     <PublishWizardCompleted>true</PublishWizardCompleted>
     <BootstrapperEnabled>true</BootstrapperEnabled>
   </PropertyGroup>
@@ -227,6 +228,7 @@
     <Compile Include="Design\DatabaseService.cs" />
     <Compile Include="Design\GreetingsDataService.cs" />
     <Compile Include="Design\StreamPageDataService.cs" />
+    <Compile Include="Interactivity\BehaviorBase.cs" />
     <Compile Include="Interactivity\ElementToOBSPlugin.cs" />
     <Compile Include="Interactivity\UnclosableWindow.cs" />
     <Compile Include="Model\ChatChannelBase.cs" />

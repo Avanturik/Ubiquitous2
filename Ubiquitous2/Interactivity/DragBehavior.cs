@@ -8,13 +8,13 @@ using System.Windows.Interactivity;
 
 namespace UB.Interactivity
 {
-    public class DragWindow :Behavior<Window>
+    public class DragWindow :BehaviorBase
     {
-        protected override void OnAttached()
+        protected override void Attach()
         {
             AssociatedObject.PreviewMouseDown += AssociatedObject_PreviewMouseDown;
         }
-        protected override void OnDetaching()
+        protected override void Cleanup()
         {
             AssociatedObject.PreviewMouseDown -= AssociatedObject_PreviewMouseDown;
         }

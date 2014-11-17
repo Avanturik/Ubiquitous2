@@ -21,7 +21,7 @@ using System.Windows.Controls;
 
 namespace UB.Interactivity
 {
-    public class ElementToOBSPlugin : Behavior<UIElement>
+    public class ElementToOBSPlugin : BehaviorBase
     {
         private UIElement visual;
         private Timer saveTimer;
@@ -39,13 +39,7 @@ namespace UB.Interactivity
 
             }, null, Timeout.Infinite, Timeout.Infinite);
         }
-
-        protected override void OnDetaching()
-        {
-            saveTimer.Change(Timeout.Infinite, Timeout.Infinite);
-            obsPluginService.Stop();
-        }
-        protected override void OnAttached()
+        protected override void Attach()
         {
             visual = AssociatedObject as UIElement;
             visual.LayoutUpdated += visual_LayoutUpdated;
@@ -59,7 +53,12 @@ namespace UB.Interactivity
             catch
             {
 
-            }
+            }            
+        }
+        protected override void Cleanup()
+        {
+            saveTimer.Change(Timeout.Infinite, Timeout.Infinite);
+            obsPluginService.Stop();            
         }
 
         void visual_LayoutUpdated(object sender, EventArgs e)

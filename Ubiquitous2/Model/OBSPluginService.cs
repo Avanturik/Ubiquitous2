@@ -88,7 +88,14 @@ namespace UB.Model
 
         public void Stop()
         {
-            serviceHost.Close();
+            //try
+            //{
+            //    serviceHost.Close();
+            //}
+            //catch (Exception e)
+            //{
+                
+            //}
         }
     }
 

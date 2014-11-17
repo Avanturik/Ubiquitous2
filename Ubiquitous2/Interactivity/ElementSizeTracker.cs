@@ -13,13 +13,18 @@ using UB.Utils;
 
 namespace UB.Interactivity
 {
-    public class ElementSizeTracker : Behavior<FrameworkElement>
+    public class ElementSizeTracker : BehaviorBase
     {
         private FrameworkElement element;
-        protected override void OnAttached()
-        {            
+
+        protected override void Attach()
+        {
             element = AssociatedObject;
-            element.SizeChanged += element_SizeChanged;
+            element.SizeChanged += element_SizeChanged;            
+        }
+        protected override void Cleanup()
+        {
+            element.SizeChanged -= element_SizeChanged;
         }
 
         void element_SizeChanged(object sender, SizeChangedEventArgs e)
@@ -29,11 +34,6 @@ namespace UB.Interactivity
 
             Height = element.ActualHeight;
             Width = element.ActualWidth;
-        }
-
-        protected override void OnDetaching()
-        {
-            element.SizeChanged -= element_SizeChanged;
         }
 
         /// <summary>
