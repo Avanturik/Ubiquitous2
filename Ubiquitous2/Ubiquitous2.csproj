@@ -284,6 +284,9 @@
     <Compile Include="View\HelloPlaceHolderView.xaml.cs">
       <DependentUpon>HelloPlaceHolderView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="View\ImageStack.xaml.cs">
+      <DependentUpon>ImageStack.xaml</DependentUpon>
+    </Compile>
     <Compile Include="View\ServiceLogo.xaml.cs">
       <DependentUpon>ServiceLogo.xaml</DependentUpon>
     </Compile>
@@ -598,6 +601,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="View\HelloPlaceHolderView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\ImageStack.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

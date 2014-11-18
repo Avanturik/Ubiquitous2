@@ -11,9 +11,11 @@ using System.Web;
 using dotIRC;
 using System.Net;
 using System.Threading;
+using System.Collections.Specialized;
+using Newtonsoft.Json;
+using System.Runtime.Serialization;
 
 
-//jtv PRIVMSG justinfan42585 :SPECIALUSER xangold staff
 namespace UB.Model
 {
     public class TwitchChat : ChatBase, IStreamTopic, IFollowersProvider
@@ -159,7 +161,7 @@ namespace UB.Model
                 Log.WriteError("Twitch: Can't get API token");
                 return false;
             }
-            //webClient.Headers["Twitch-Api-Token"] = apiToken;
+            webClient.Headers["Twitch-Api-Token"] = apiToken;
             webClient.Headers["X-CSRF-Token"] = csrfToken;
             webClient.Headers["Accept"] = "*/*";
 
@@ -427,6 +429,8 @@ namespace UB.Model
         private Random random = new Random();
         private Timer pingTimer, disconnectTimer;
         private const int pingInterval = 30000;
+        private Dictionary<string, List<UserBadge>> userBadges = new Dictionary<string, List<UserBadge>>();
+        private NameValueCollection channelBadges = new NameValueCollection();
         private Dictionary<string, Action<TwitchChannel, IrcRawMessageEventArgs>>
                 packetHandlers = new Dictionary<string, Action<TwitchChannel, IrcRawMessageEventArgs>>() {
                             {"001", ConnectHandler},
@@ -491,6 +495,21 @@ namespace UB.Model
                     TryIrc( () => ircClient.Connect(hostList.AddressList[random.Next(0, hostList.AddressList.Count())], port, false, registrationInfo));
                 });
             }
+            using( WebClientBase webClient = new WebClientBase())
+            {
+                var badgesJson = this.With(x => webClient.Download(String.Format(@"https://api.twitch.tv/kraken/chat/{0}/badges",ChannelName.Replace("#",""))))
+                    .With(x => JsonConvert.DeserializeObject<TwitchBadges>(x));
+
+                if (badgesJson == null)
+                    return;
+
+                channelBadges["admin"] = this.With(x => badgesJson.admin).With(x => x.image);
+                channelBadges["broadcaster"] = this.With( x=> badgesJson.broadcaster).With( x => x.image);
+                channelBadges["mod"] = this.With( x=> badgesJson.mod).With( x => x.image);
+                channelBadges["staff"] = this.With( x=> badgesJson.staff).With( x => x.image);
+                channelBadges["turbo"] = this.With( x=> badgesJson.turbo).With( x => x.image);
+                channelBadges["subscriber"] = this.With( x=> badgesJson.subscriber).With( x => x.image);
+            }
         }
 
         void ircClient_RawMessageReceived(object sender, IrcRawMessageEventArgs e)
@@ -551,6 +570,17 @@ namespace UB.Model
         }
         private void SetUserBadge(string userName, string userType)
         {
+            if (!userBadges.ContainsKey(userName))
+                userBadges.Add(userName, new List<UserBadge>());
+            
+            if (userBadges[userName].Any(x => x.Title.Equals(userType)))
+                return;
+
+            userBadges[userName].Add( 
+                new UserBadge() {
+                    Url = channelBadges[userType.ToLower()],
+                    Title = userType
+                });
             Log.WriteInfo("Special user:{0} type:{1}", userName, userType);
         }
         private static void PrivateMessageHandler( TwitchChannel channel, IrcRawMessageEventArgs args )
@@ -582,6 +612,7 @@ namespace UB.Model
                     HighlyImportant = false,
                     IsSentByMe = false,
                     Text = parameters[1],
+                    UserBadges = channel.userBadges.ContainsKey(args.Message.Source.Name) ? channel.userBadges[args.Message.Source.Name] : null
                 });
         }
         private static void ConnectHandler(TwitchChannel channel, IrcRawMessageEventArgs args)
@@ -633,6 +664,74 @@ namespace UB.Model
         }
     }
 
+    #region Twitch badges json
+    public class TwitchBadgeAdmin
+    {
+        [DataMember(IsRequired = false)]
+        public string alpha { get; set; }
+        [DataMember(IsRequired = false)]
+        public string image { get; set; }
+        [DataMember(IsRequired = false)]
+        public string svg { get; set; }
+    }
+
+    public class TwitchBadgeBroadcaster
+    {
+        [DataMember(IsRequired = false)]
+        public string alpha { get; set; }
+        [DataMember(IsRequired = false)]
+        public string image { get; set; }
+        [DataMember(IsRequired = false)]
+        public string svg { get; set; }
+    }
+
+    public class TwitchBadgeMod
+    {
+        [DataMember(IsRequired = false)]
+        public string alpha { get; set; }
+        [DataMember(IsRequired = false)]
+        public string image { get; set; }
+        [DataMember(IsRequired = false)]
+        public string svg { get; set; }
+    }
+
+    public class TwitchBadgeStaff
+    {
+        [DataMember(IsRequired = false)]
+        public string alpha { get; set; }
+        [DataMember(IsRequired = false)]
+        public string image { get; set; }
+        [DataMember(IsRequired = false)]
+        public string svg { get; set; }
+    }
+
+    public class TwitchBadgeTurbo
+    {
+        [DataMember(IsRequired = false)]
+        public string alpha { get; set; }
+        [DataMember(IsRequired = false)]
+        public string image { get; set; }
+        [DataMember(IsRequired = false)]
+        public string svg { get; set; }
+    }
+
+    public class TwitcBadgeSubscriber
+    {
+        [DataMember(IsRequired = false)]
+        public string image { get; set; }
+    }
+
+    public class TwitchBadges
+    {
+        public TwitchBadgeAdmin admin { get; set; }
+        public TwitchBadgeBroadcaster broadcaster { get; set; }
+        public TwitchBadgeMod mod { get; set; }
+        public TwitchBadgeStaff staff { get; set; }
+        public TwitchBadgeTurbo turbo { get; set; }
+        public TwitcBadgeSubscriber subscriber { get; set; }
+        public TwitchLinks2 _links { get; set; }
+    }
+    #endregion
 
     #region Twich emoticon json
     class TwitchJsonEmoticons

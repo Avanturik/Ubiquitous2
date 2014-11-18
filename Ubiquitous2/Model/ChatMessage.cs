@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.Windows;
 using System.Windows.Controls;
 using UB.Utils;
@@ -81,7 +82,7 @@ namespace UB.Model
         public long UnixTimeStamp { get; set; }
         public bool IsNew { get; set; }
         public Style Style { get; set; }
-        public List<String> UserBadges { get; set; }
+        public List<UserBadge> UserBadges { get; set; }
 
         private double _height;
 
@@ -91,4 +92,11 @@ namespace UB.Model
             set { _height = value > 0 ? value : _height; }
         }
     }
+
+    public class UserBadge
+    {
+        public string Url { get; set; }
+        public string Title { get; set; }
+    }
+
 }
