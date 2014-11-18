@@ -34,6 +34,8 @@ namespace UB.Model
             EmoticonUrl = "http://api.twitch.tv/kraken/chat/emoticons";
             EmoticonFallbackUrl = @"Content\twitchemoticons.json";
 
+            ReceiveOwnMessages = true;
+
             NickName = "justinfan" + random.Next(1000000, 9999999).ToString();
 
             CreateChannel = () => { return new TwitchChannel(this); };
@@ -190,8 +192,18 @@ namespace UB.Model
                 Config.SetParameterValue("AuthTokenCredentials", userName + password);
 
                 return LoginWithToken();
-            }
+            }        
         }
+
+        public override bool SendMessage(ChatMessage message)
+        {        
+            message.UserBadges = new List<UserBadge>() {
+                new UserBadge() { Title = "broadcaster", Url = "http://chat-badges.s3.amazonaws.com/broadcaster.png"}
+            };
+
+            return base.SendMessage(message);
+        }
+
         public override void DownloadEmoticons(string url)
         {
             if (IsFallbackEmoticons && IsWebEmoticons)
@@ -539,7 +551,7 @@ namespace UB.Model
         }
         public override void SendMessage( ChatMessage message )
         {
-            TryIrc( () => ircClient.LocalUser.SendMessage( "#" + ChannelName, message.Text));
+            TryIrc( () => ircClient.LocalUser.SendMessage( ChannelName, message.Text));
         }
         public override void SetupStatsWatcher()
         {
