@@ -71,7 +71,6 @@ namespace UB.Model
 
             return true;
         }
-
         public bool LoginWithToken()
         {
             var authToken = Config.GetParameterValue("AuthToken") as string;
@@ -149,7 +148,6 @@ namespace UB.Model
             loginWebClient.Headers["Content-Type"] = @"application/json;charset=UTF-8";
             loginWebClient.Headers["Accept-Encoding"] = "gzip,deflate,sdch";
         }
-
         public override void DownloadEmoticons(string url)
         {
             if (IsFallbackEmoticons && IsWebEmoticons )
@@ -396,6 +394,9 @@ namespace UB.Model
         {
             if (followerPoller != null)
                 followerPoller.Stop();
+
+            if (!Status.IsLoggedIn)
+                return;
 
             var getUrl = @"https://www.hitbox.tv/api/followers/user/{0}?limit=50";
             var userName = Config.GetParameterValue("Username") as string;

@@ -296,6 +296,9 @@ namespace UB.Model
             if (notificationPoller != null)
                 notificationPoller.Stop();
 
+            if (!Status.IsLoggedIn)
+                return;
+
             notificationPoller = new WebPoller()
             {
                 Id = "followersPoller",
@@ -350,7 +353,6 @@ namespace UB.Model
         private object pollerLock = new object();
         private object pingLock = new object();
         private WebPoller statsPoller;
-        private bool isJoined = false;
         public GamingLiveChannel(IChat chat)
         {
             Chat = chat;
@@ -392,7 +394,6 @@ namespace UB.Model
                 {
                     if( JoinCallback != null )
                         JoinCallback(this);
-                    isJoined = true;
                     Chat.Status.IsLoggedIn = !Chat.IsAnonymous;
                     Chat.Status.IsConnected = true;
                     Chat.Status.IsStarting = false;

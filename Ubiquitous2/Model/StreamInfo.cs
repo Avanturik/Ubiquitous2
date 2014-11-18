@@ -36,7 +36,35 @@ namespace UB.Model
             };
             return result;
         }
+        /// <summary>
+        /// The <see cref="Language" /> property's name.
+        /// </summary>
+        public const string LanguagePropertyName = "Language";
 
+        private string _language = String.Empty;
+
+        /// <summary>
+        /// Sets and gets the Language property.
+        /// Changes to that property's value raise the PropertyChanged event. 
+        /// </summary>
+        public string Language
+        {
+            get
+            {
+                return _language;
+            }
+
+            set
+            {
+                if (_language == value)
+                {
+                    return;
+                }
+
+                _language = value;
+                RaisePropertyChanged(LanguagePropertyName);
+            }
+        }
         /// <summary>
         /// The <see cref="ChatName" /> property's name.
         /// </summary>

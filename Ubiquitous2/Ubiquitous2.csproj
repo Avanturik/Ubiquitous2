@@ -234,6 +234,7 @@
     <Compile Include="Model\ChatChannelBase.cs" />
     <Compile Include="Model\ChannelStats.cs" />
     <Compile Include="Model\Chats\CybergameChat.cs" />
+    <Compile Include="Model\Chats\TwitchChatOld.cs" />
     <Compile Include="Model\Chats\YoutubeChat.cs" />
     <Compile Include="Model\DatabaseService.cs" />
     <Compile Include="Model\Chats\DummyChat.cs" />

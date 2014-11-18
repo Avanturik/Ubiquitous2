@@ -3,15 +3,17 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+             xmlns:il="http://schemas.microsoft.com/expression/2010/interactions"
+             xmlns:Interactivity="clr-namespace:UB.Interactivity"
              mc:Ignorable="d" 
              Background="#E51E1E1E"
              Visibility="{Binding IsPlaceHolderVisible, Converter={StaticResource boolToVisibilityConverter}}"
              d:DesignHeight="192" d:DesignWidth="171">
-
     <UserControl.DataContext>
         <Binding Path="HelloPlaceHolder" Source="{StaticResource Locator}"/>
     </UserControl.DataContext>
-    <Grid>
+    <Grid>        
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="121*"/>
             <ColumnDefinition Width="127*"/>
@@ -38,6 +40,10 @@
             </Image.Effect>
         </Image>
         <Viewbox Grid.Row="2" Grid.ColumnSpan="2">
+            <i:Interaction.Behaviors>
+                <il:MouseDragElementBehavior/>
+            </i:Interaction.Behaviors>
+
             <TextBlock VerticalAlignment="Bottom" FontSize="36" Foreground="#FF00FF2E" TextAlignment="Center" Margin="5">
                 <TextBlock.Effect>
                     <DropShadowEffect ShadowDepth="0" BlurRadius="22" Color="#FF5BFF54"/>

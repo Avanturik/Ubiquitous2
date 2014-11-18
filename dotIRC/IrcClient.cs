@@ -1871,13 +1871,17 @@ namespace dotIRC
                 }
 
                 // Handle sent IRC message.
-                Debug.Assert(e.UserToken != null);
+                //Debug.Assert(e.UserToken != null);
+                if( e.UserToken != null )
+                {
+
                 var messageSentEventArgs = (IrcRawMessageEventArgs)e.UserToken;
                 OnRawMessageSent(messageSentEventArgs);
 
 #if DEBUG
                 DebugUtilities.WriteIrcRawLine(this, "<<< " + messageSentEventArgs.RawContent);
 #endif
+                }
             }
             catch (ObjectDisposedException)
             {

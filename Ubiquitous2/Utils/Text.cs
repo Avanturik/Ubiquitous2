@@ -16,7 +16,6 @@ namespace UB.Utils
 
             what = what.PadLeft(8, '0').ToUpper();
 
-            int j = 0;
             int length = what.Length;
 
             string whatFormatted = String.Empty;
