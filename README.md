@@ -2,6 +2,7 @@ Ubiquitous2
 ===========
 
 https://obsproject.com/forum/resources/ubiquitous-2-chat-obs-source-plugin.132/
+
 Multichat. (C#, MVVM, WPF)
 
 Download links and video instructions: 
