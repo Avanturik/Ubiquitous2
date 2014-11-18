@@ -549,12 +549,22 @@ namespace UB.Model
             };
             statsPoller.Start();
         }
-
+        private void SetUserBadge(string userName, string userType)
+        {
+            Log.WriteInfo("Special user:{0} type:{1}", userName, userType);
+        }
         private static void PrivateMessageHandler( TwitchChannel channel, IrcRawMessageEventArgs args )
         {
             var parameters = args.Message.Parameters;
             if (parameters.Count < 2)
                 return;
+
+            if( parameters[1].StartsWith("specialuser", StringComparison.InvariantCultureIgnoreCase))
+            {
+                var userBadgeParams = parameters[1].Split(' ');
+                if( userBadgeParams.Length == 3 )
+                    channel.SetUserBadge(userBadgeParams[1], userBadgeParams[2]);
+            }
 
             if (!parameters[0].Equals(channel.ChannelName, StringComparison.InvariantCultureIgnoreCase))
                 return;
@@ -577,6 +587,7 @@ namespace UB.Model
         private static void ConnectHandler(TwitchChannel channel, IrcRawMessageEventArgs args)
         {
             channel.TryIrc( () => channel.ircClient.Channels.Join(channel.ChannelName));
+            channel.TryIrc(() => channel.ircClient.SendRawMessage("TWITCHCLIENT 2"));
         }
         private static void JoinHandler(TwitchChannel channel, IrcRawMessageEventArgs args)
         {

@@ -81,7 +81,7 @@ namespace UB.Model
         public long UnixTimeStamp { get; set; }
         public bool IsNew { get; set; }
         public Style Style { get; set; }
-
+        public List<String> UserBadges { get; set; }
 
         private double _height;
 
