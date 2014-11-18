@@ -434,6 +434,7 @@ namespace UB.Model
         private Dictionary<string, Action<TwitchChannel, IrcRawMessageEventArgs>>
                 packetHandlers = new Dictionary<string, Action<TwitchChannel, IrcRawMessageEventArgs>>() {
                             {"001", ConnectHandler},
+                            {"MODE", ModeHandler},
                             {"PRIVMSG", PrivateMessageHandler},
                             {"JOIN", JoinHandler},
                             {"PART", LeaveHandler},
@@ -459,6 +460,23 @@ namespace UB.Model
             }, this, Timeout.Infinite, Timeout.Infinite);
 
             SetupStatsWatcher();
+
+            using (WebClientBase webClient = new WebClientBase())
+            {
+                var badgesJson = this.With(x => webClient.Download(String.Format(@"https://api.twitch.tv/kraken/chat/{0}/badges", ChannelName.Replace("#", ""))))
+                    .With(x => JsonConvert.DeserializeObject<TwitchBadges>(x));
+
+                if (badgesJson == null)
+                    return;
+
+                channelBadges["admin"] = this.With(x => badgesJson.admin).With(x => x.image);
+                channelBadges["broadcaster"] = this.With(x => badgesJson.broadcaster).With(x => x.image);
+                channelBadges["mod"] = this.With(x => badgesJson.mod).With(x => x.image);
+                channelBadges["staff"] = this.With(x => badgesJson.staff).With(x => x.image);
+                channelBadges["turbo"] = this.With(x => badgesJson.turbo).With(x => x.image);
+                channelBadges["subscriber"] = this.With(x => badgesJson.subscriber).With(x => x.image);
+            }
+            SetUserBadge(ChannelName.ToLower().Replace("#",""), "broadcaster");
 
             JoinCallback = callback;
             
@@ -494,21 +512,6 @@ namespace UB.Model
                     }
                     TryIrc( () => ircClient.Connect(hostList.AddressList[random.Next(0, hostList.AddressList.Count())], port, false, registrationInfo));
                 });
-            }
-            using( WebClientBase webClient = new WebClientBase())
-            {
-                var badgesJson = this.With(x => webClient.Download(String.Format(@"https://api.twitch.tv/kraken/chat/{0}/badges",ChannelName.Replace("#",""))))
-                    .With(x => JsonConvert.DeserializeObject<TwitchBadges>(x));
-
-                if (badgesJson == null)
-                    return;
-
-                channelBadges["admin"] = this.With(x => badgesJson.admin).With(x => x.image);
-                channelBadges["broadcaster"] = this.With( x=> badgesJson.broadcaster).With( x => x.image);
-                channelBadges["mod"] = this.With( x=> badgesJson.mod).With( x => x.image);
-                channelBadges["staff"] = this.With( x=> badgesJson.staff).With( x => x.image);
-                channelBadges["turbo"] = this.With( x=> badgesJson.turbo).With( x => x.image);
-                channelBadges["subscriber"] = this.With( x=> badgesJson.subscriber).With( x => x.image);
             }
         }
 
@@ -617,8 +620,20 @@ namespace UB.Model
         }
         private static void ConnectHandler(TwitchChannel channel, IrcRawMessageEventArgs args)
         {
-            channel.TryIrc( () => channel.ircClient.Channels.Join(channel.ChannelName));
+            channel.TryIrc(() => channel.ircClient.Channels.Join(channel.ChannelName));
             channel.TryIrc(() => channel.ircClient.SendRawMessage("TWITCHCLIENT 2"));
+        }
+        private static void ModeHandler(TwitchChannel channel, IrcRawMessageEventArgs args)
+        {
+            var parameters = args.Message.Parameters;
+            if (parameters.Count < 3)
+                return;
+            if (!parameters[1].Equals("+o"))
+                return;
+
+            var username = parameters[2];
+            if( !username.Equals( channel.Chat.NickName, StringComparison.InvariantCultureIgnoreCase))
+                channel.SetUserBadge(parameters[2], "mod");
         }
         private static void JoinHandler(TwitchChannel channel, IrcRawMessageEventArgs args)
         {

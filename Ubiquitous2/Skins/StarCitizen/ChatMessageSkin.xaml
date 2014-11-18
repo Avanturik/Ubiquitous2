@@ -64,6 +64,7 @@
                                         <TextBlock Focusable="False" FontSize="{Binding AppConfig.FontSizeChannel}" Text="{Binding Message.Channel}" Margin="0" HorizontalAlignment="Left" FontWeight="Bold" VerticalAlignment="Center" Foreground="#FFF7941D" FontFamily="/Ubiquitous2;component/Fonts/#Electrolize" TextOptions.TextHintingMode="Fixed"/>
                                     </Hyperlink>
                                 </TextBlock>
+                                <ub:ImageStack DataContext="{Binding Message.UserBadges}"/>
                                 <TextBlock ToolTip="Right click for options" Cursor="Hand" Focusable="False" FontSize="{Binding AppConfig.FontSizeNickName}" Text="{Binding Message.FromUserName}" Margin="0,0,5,0" Foreground="#FFF7941D" HorizontalAlignment="Left" FontWeight="Bold" OverridesDefaultStyle="False" VerticalAlignment="Center" FontFamily="/Ubiquitous2;component/Fonts/#Electrolize" TextOptions.TextHintingMode="Fixed">
                                     <TextBlock.ContextMenu>
                                         <ContextMenu Name="userNameMenu" Style="{DynamicResource ContextMenuStyle}">

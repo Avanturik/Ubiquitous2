@@ -6,7 +6,6 @@
              mc:Ignorable="d"  
              d:DesignHeight="12" d:DesignWidth="12">
     <Grid>
-        <TextBlock>></TextBlock>
         <ItemsControl Focusable="False" ItemsSource="{Binding}">
             <ItemsControl.ItemTemplate>
                 <DataTemplate>

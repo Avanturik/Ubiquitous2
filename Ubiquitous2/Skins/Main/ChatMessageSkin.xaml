@@ -69,7 +69,8 @@
                                         <TextBlock Focusable="False" FontSize="{Binding AppConfig.FontSizeChannel}" Text="{Binding Message.Channel}" Margin="0,0,0,0" HorizontalAlignment="Left" FontWeight="Bold"/>
                                     </Hyperlink>
                                 </TextBlock>
-                            <TextBlock ToolTip="Right click for options" Cursor="Hand" Focusable="False" FontSize="{Binding AppConfig.FontSizeNickName}" Text="{Binding Message.FromUserName}" Margin="5,0,0,0" Foreground="#FFFFC042" HorizontalAlignment="Left" FontWeight="Bold" VerticalAlignment="Center" Padding="0">
+                            <ub:ImageStack Margin="5,0,0,0" DataContext="{Binding Message.UserBadges}"/>
+                            <TextBlock ToolTip="Right click for options" Cursor="Hand" Focusable="False" FontSize="{Binding AppConfig.FontSizeNickName}" Text="{Binding Message.FromUserName}" Margin="0,0,0,0" Foreground="#FFFFC042" HorizontalAlignment="Left" FontWeight="Bold" VerticalAlignment="Center" Padding="0">
                                     <TextBlock.ContextMenu>
                                         <ContextMenu Name="userNameMenu" Style="{DynamicResource ContextMenuStyle}">
                                             <MenuItem Header="Add to ignore list" Command="{Binding IgnoreUser}" CommandParameter="{Binding Message}" Foreground="#FFFFC042" VerticalAlignment="Center">

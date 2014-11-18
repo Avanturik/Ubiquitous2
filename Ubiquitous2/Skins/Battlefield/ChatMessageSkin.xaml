@@ -75,6 +75,7 @@
                                 <Hyperlink ToolTip="Click to set as active channel"  Focusable="False" Command="{Binding SetActiveChannel}" Cursor="Hand">
                                     <Run Focusable="False" FontSize="{Binding AppConfig.FontSizeMessage}" Text="{Binding Message.Channel}"  FontFamily="/Ubiquitous2;component/Fonts/#Purista Light"/>
                                 </Hyperlink>
+                                <ub:ImageStack DataContext="{Binding Message.UserBadges}"/>
                                 <TextBlock FontSize="{Binding AppConfig.FontSizeMessage}" Text="{Binding Message.FromUserName}"  Cursor="Hand" ToolTip="Right click for options" Style="{StaticResource ResourceKey=NickStyle}" x:Name="nickTextBlock" VerticalAlignment="Top" Margin="0,0,-2,0" HorizontalAlignment="Right" FontFamily="/Ubiquitous2;component/Fonts/#Purista Medium">
 									<TextBlock.ContextMenu>
 										<ContextMenu x:Name="userNameMenu" Style="{DynamicResource ContextMenuStyle}">
