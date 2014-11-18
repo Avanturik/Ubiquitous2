@@ -3,6 +3,10 @@ Ubiquitous2
 
 Multichat. (C#, MVVM, WPF)
 
+Download links and video instructions: 
+
+(https://obsproject.com/forum/resources/ubiquitous-2-chat-obs-source-plugin.132/)
+
 PC:
 
 ![alt tag](http://i.imgur.com/cMC1ixE.png)
