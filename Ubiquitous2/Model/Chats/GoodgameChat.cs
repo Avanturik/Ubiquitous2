@@ -758,7 +758,7 @@ namespace UB.Model
         [DataMember(Name = "reason", EmitDefaultValue = false, IsRequired = false)]
         public string Reason { get; set; }
         [DataMember(Name = "payments", EmitDefaultValue = false, IsRequired = false)]
-        public double Payments { get; set; }
+        public object Payments { get; set; }
         [DataMember(Name = "paidsmiles", EmitDefaultValue = false, IsRequired = false)]
         public object[] PaidSmiles { get; set; }
         [DataMember(Name = "user_rights", EmitDefaultValue = false, IsRequired = false)]

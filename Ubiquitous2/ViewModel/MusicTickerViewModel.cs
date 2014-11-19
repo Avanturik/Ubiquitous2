@@ -216,11 +216,14 @@ namespace UB.ViewModel
                 {
                     if (e.PropertyName == MusicTrackInfo.ImagePropertyName)
                     {
-                        UI.Dispatch(() =>
+                        if( imageService.Config.Enabled )
                         {
-                            IsNeedSave = true;
-                            IsNeedSave = false;
-                        });
+                            UI.Dispatch(() =>
+                            {
+                                IsNeedSave = true;
+                                IsNeedSave = false;
+                            });
+                        }
                     }
                 };
                 RaisePropertyChanged(CurrentTrackPropertyName);

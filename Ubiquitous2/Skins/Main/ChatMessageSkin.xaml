@@ -6,7 +6,6 @@
                     xmlns:ei="http://schemas.microsoft.com/expression/2010/interactions"
                     xmlns:Interactivity="clr-namespace:UB.Interactivity"
                     xmlns:PresentationOptions="http://schemas.microsoft.com/winfx/2006/xaml/presentation/options" 
-                    xmlns:gif="clr-namespace:WpfAnimatedGif"
                     >
     <Converter:ChatMessageToInlines x:Key="textConverter" />
 
@@ -59,7 +58,7 @@
                         </Border>
 
                         <DockPanel Focusable="False" Grid.Row="0" HorizontalAlignment="Stretch" Margin="0" LastChildFill="False" VerticalAlignment="Center">
-                                <Image Focusable="False" gif:ImageBehavior.AnimatedSource="{Binding Message.ChatIconURL, Mode=OneTime}" gif:ImageBehavior.RepeatBehavior="Forever" Stretch="Fill" Margin ="5,0,0,0" Width="12" Height="12" VerticalAlignment="Center" HorizontalAlignment="Left">
+                                <Image Focusable="False" Source="{Binding Message.ChatIconURL, Mode=OneTime}" Stretch="Fill" Margin ="5,0,0,0" Width="12" Height="12" VerticalAlignment="Center" HorizontalAlignment="Left">
                                 <Image.Effect>
                                         <DropShadowEffect BlurRadius="2" Opacity="0.2" ShadowDepth="2"/>
                                     </Image.Effect>

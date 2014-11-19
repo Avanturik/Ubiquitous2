@@ -5,7 +5,6 @@
                     xmlns:Interactivity="clr-namespace:UB.Interactivity"
                     xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
                     xmlns:ei="http://schemas.microsoft.com/expression/2010/interactions"
-                    xmlns:gif="http://wpfanimatedgif.codeplex.com"
                     xmlns:ee="http://schemas.microsoft.com/expression/2010/effects"
                     >
 	<Converter:ChatMessageToInlines x:Key="textConverter" />
