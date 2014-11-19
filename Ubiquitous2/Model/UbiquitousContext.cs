@@ -15,9 +15,10 @@ namespace UB.Model
     {
         private const int databaseVersion = 1;
         private const string defaultDbPath = @".\database\ubiquitousdefault.sqlite";
-        private const string workDbPath = @".\database\ubiquitous.sqlite";
+        private string workDbPath = String.Empty;
         public UbiquitousContext()
         {
+            workDbPath = AppDomain.CurrentDomain.GetData("DBFolder").ToString() + @"\ubiquitous.sqlite";
             Database.SetInitializer<UbiquitousContext>(null);
             MigrateDatabase();
         }

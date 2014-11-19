@@ -37,28 +37,20 @@ namespace UB.Model
             {
 
                 Log.WriteError(error);
-                InitWebClient();
-                try
+                if (gotError)
                 {
-                    timer.Dispose();
+                    timer.Change(60000, 60000);
+                    return;
                 }
-                catch { }
-                
-                timer = new Timer(poll, this, 0, Timeout.Infinite);
 
                 gotError = true;
             };
             wc.SuccessHandler = () =>
             {
-                if (gotError)
-                {
-                    if (!IsLongPoll)
-                        timer.Change(Interval, Interval);
-                    else
-                        timer.Change(0, Timeout.Infinite);
+                if( gotError )
+                    timer.Change(Interval, Interval);
 
-                    gotError = false;
-                }
+                gotError = false;
             };
             
         }
@@ -132,9 +124,14 @@ namespace UB.Model
                 {
                     using( Stream stream = obj.wc.DownloadToMemoryStream( obj.Uri.OriginalString))
                     {
+
+                        if (obj.gotError)
+                            return;
+
                         obj.ReadStream(stream);
                     }
                 }
+
                 if( obj.ReadString != null )
                 {
                     obj.ReadString(obj.wc.Download(obj.Uri.OriginalString));

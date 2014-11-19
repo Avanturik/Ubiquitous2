@@ -79,6 +79,15 @@ namespace UB.Controls
             };
             newItem.SelectAction = () => Select(newItem);
 
+            newItem.PropertyChanged += (o, e) =>
+            {
+                if (e.PropertyName == EditComboBoxItem.TitlePropertyName)
+                {
+                    Rename(o as EditComboBoxItem);
+                }
+
+            };
+
             _items.Add(newItem);
 
             if (AddAction != null)

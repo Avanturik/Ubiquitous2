@@ -220,8 +220,7 @@ namespace UB.Model
                     IsTimeStamped = false,
                 };
                 chatPoller.ReadString = (text) =>
-                {
-                    
+                {                    
                     lock (chatLock)
                     {
                         rc++;

@@ -57,6 +57,9 @@ namespace UB.ViewModel
                 case "filesave":
                     _text = configField.Value as string;
                     break;
+                case "filesavetxt":
+                    _text = configField.Value as string;
+                    break;
                 case "bool":
                     _isTrue = (bool)configField.Value;
                     break;
@@ -88,9 +91,20 @@ namespace UB.ViewModel
                                           () =>
                                           {
                                               Microsoft.Win32.SaveFileDialog fileDialog = new Microsoft.Win32.SaveFileDialog();
-                                              fileDialog.FileName = "ubiquitouschat";
-                                              fileDialog.DefaultExt = ".png";
-                                              fileDialog.Filter = "PNG image (.png)|*.png";
+                                              fileDialog.FileName = "ubiquitous";
+                                              switch (_configField.DataType.ToLower())
+                                              {
+                                                  case "filesave":
+                                                        fileDialog.DefaultExt = ".png";
+                                                        fileDialog.Filter = "PNG image (.png)|*.png";
+                                                      break;
+                                                  case "filesavetxt":
+                                                        fileDialog.DefaultExt = ".txt";
+                                                        fileDialog.Filter = "Text file (.txt)|*.txt";
+                                                      break;
+
+                                              }
+
                                               var result = fileDialog.ShowDialog();
                                               if( result == true )
                                               {

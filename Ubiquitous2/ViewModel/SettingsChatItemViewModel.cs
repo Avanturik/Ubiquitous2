@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using Devart.Controls;
 using GalaSoft.MvvmLight;
@@ -315,7 +316,7 @@ namespace UB.ViewModel
 
                 if( chatDataService != null && Name != null )
                 {
-                    chatDataService.SwitchChat(Name, _enabled);
+                   Task.Factory.StartNew( ()=> chatDataService.SwitchChat(Name, _enabled));
                 }
                 IsLoaderVisible = false;
                 RaisePropertyChanged(EnabledPropertyName);

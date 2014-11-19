@@ -9,7 +9,6 @@ using System.Web;
 using System.Windows.Threading;
 using GalaSoft.MvvmLight.Threading;
 using Microsoft.Practices.ServiceLocation;
-using UB.Model.IRC;
 using UB.Properties;
 using UB.Utils;
 
@@ -20,6 +19,8 @@ namespace UB.Model
         private List<ChatMessage> messageQueue = new List<ChatMessage>();
         private object messageQueueLock = new object();
         private ISettingsDataService settingsDataService;
+        private IGeneralDataService _dataService;
+        private ChatToFileService historyService;
         private Random random;
         private Func<ChatMessage[], Exception,bool> readChatCallback;
         private List<ChatConfig> chatConfigs;
@@ -32,6 +33,8 @@ namespace UB.Model
         public ChatDataService()
         {
             settingsDataService = ServiceLocator.Current.GetInstance<ISettingsDataService>();
+            _dataService = ServiceLocator.Current.GetInstance<IGeneralDataService>();
+            historyService = _dataService.Services.FirstOrDefault(service => service.Config.ServiceName == SettingsRegistry.ServiceTitleChatToFile) as ChatToFileService;
             random = new Random();
             Start();
         }
@@ -106,7 +109,6 @@ namespace UB.Model
             }
             Log.WriteInfo("switching {0} to {1}", chatName, enabled);
         }
-
         public IChat GetChat( String chatName )
         {
             if (chatName == null)
@@ -137,6 +139,9 @@ namespace UB.Model
         public void StartAllChats()
         {
             steamChat = (SteamChat)GetChat(SettingsRegistry.ChatTitleSteam);
+            if (historyService.Config.Enabled)
+                historyService.Start();
+
             //Accumulate messages and update ViewModel periodically            
             receiveTimer.Interval = TimeSpan.FromMilliseconds(1500);
             receiveTimer.Tick += receiveTimer_Tick;
@@ -221,7 +226,8 @@ namespace UB.Model
         void AddMessageToQueue( ChatMessage message )
         {
             lock (messageQueueLock)
-            {                
+            {
+                historyService.AddToHistory(message);
                 messageQueue.Add(message);
                 if( message.HighlyImportant )
                 {

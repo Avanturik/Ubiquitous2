@@ -25,6 +25,7 @@ namespace UB.Model
         public static string ServiceTitleWebServer = "Web server";
         public static string ServiceTitleImageSaver = "Save chat to image";
         public static string ServiceTitleObsRemote = "OBS control";
+        public static string ServiceTitleChatToFile = "History";
 
 
         //Default service settings
@@ -81,7 +82,17 @@ namespace UB.Model
                             new ConfigField("Info1", @"Default OBSRemote password is ""admin"". To disable authentication leave it empty", "Info", true, null),
                             new ConfigField("Info2", @"This service depend on OBSRemote plugin: http://obsremote.com", "Info", true, null),
                         }
-                    }
+                    },
+                    new ServiceConfig()
+                    {
+                        ServiceName = ServiceTitleChatToFile,
+                        IconURL = Icons.LogIcon,
+                        Enabled = false,
+                        Parameters = new List<ConfigField>() {
+                            new ConfigField("Filename", "History file", "FileSaveTXT", true, Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + @"\ubiquitous_history.txt"),
+                            new ConfigField("Info1", "Save chat history as txt file", "Info", true, null),
+                        }
+                    },
 
                 };
             }
@@ -278,11 +289,8 @@ namespace UB.Model
             {ServiceTitleImageSaver, (config)=> { return new ChatToImageService(config); }},
             //OBS control via OBSRemote
             {ServiceTitleObsRemote, (config)=> { return new OBSRemoteService(config); }},
-            
-            
-            //TODO: OBS support
-
-
+            //History service
+            {ServiceTitleChatToFile, (config)=> { return new ChatToFileService(config); }},
         };
 
         //Chat factory

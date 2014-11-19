@@ -38,8 +38,8 @@
     <PublisherName>Xedoc</PublisherName>
     <WebPage>publish.htm</WebPage>
     <OpenBrowserOnPublish>false</OpenBrowserOnPublish>
-    <ApplicationRevision>3</ApplicationRevision>
-    <ApplicationVersion>2.0.0.%2a</ApplicationVersion>
+    <ApplicationRevision>1</ApplicationRevision>
+    <ApplicationVersion>2.1.0.%2a</ApplicationVersion>
     <UseApplicationTrust>true</UseApplicationTrust>
     <CreateDesktopShortcut>true</CreateDesktopShortcut>
     <PublishWizardCompleted>true</PublishWizardCompleted>
@@ -150,6 +150,7 @@
     <Reference Include="System.Data.SQLite.Linq">
       <HintPath>..\packages\System.Data.SQLite.Linq.1.0.94.1\lib\net45\System.Data.SQLite.Linq.dll</HintPath>
     </Reference>
+    <Reference Include="System.Deployment" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.ServiceModel" />
@@ -234,8 +235,8 @@
     <Compile Include="Model\ChatChannelBase.cs" />
     <Compile Include="Model\ChannelStats.cs" />
     <Compile Include="Model\Chats\CybergameChat.cs" />
-    <Compile Include="Model\Chats\TwitchChatOld.cs" />
     <Compile Include="Model\Chats\YoutubeChat.cs" />
+    <Compile Include="Model\ChatToFileService.cs" />
     <Compile Include="Model\DatabaseService.cs" />
     <Compile Include="Model\Chats\DummyChat.cs" />
     <Compile Include="Model\Game.cs" />
@@ -452,8 +453,6 @@
     <Compile Include="Model\ChatDataService.cs" />
     <Compile Include="Model\IChat.cs" />
     <Compile Include="Model\IChatDataService.cs" />
-    <Compile Include="Model\IRC\IRCChatBase.cs" />
-    <Compile Include="Model\IRC\IRCLoginInfo.cs" />
     <Compile Include="Model\ISettingsDataService.cs" />
     <Compile Include="Model\LoginInfoBase.cs" />
     <Compile Include="Model\Chats\SteamChat.cs" />
@@ -821,7 +820,6 @@
       <Punctuation>True</Punctuation>
     </BlendEmbeddedFont>
     <None Include="app.manifest" />
-    <None Include="xedoc.pfx" />
     <Resource Include="Resources\MainThemeThumbnail.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Resource>
@@ -843,6 +841,9 @@
     <Content Include="Content\youtubeemoji.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Resource Include="Resources\log.gif">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
     <Content Include="web\css\battlefield.css">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

@@ -87,12 +87,22 @@ namespace UB.Model
             Status.ResetToDefault();
             Status.IsStarting = true;
 
-            if (Login())
+            int timeout = 1000;
+            int tries = 0;
+            while( !Login() )
             {
-                Status.IsConnecting = true;
-                Task.Factory.StartNew(() => JoinChannels());
+                Thread.Sleep(timeout);
+                tries++;
+                if( tries > 3 )
+                    timeout = 5000;
+                if (tries > 10)
+                    timeout = 30000;
             }
+
+            Status.IsConnecting = true;
+            Task.Factory.StartNew(() => JoinChannels());
             InitEmoticons();
+
 
             return false;
         }

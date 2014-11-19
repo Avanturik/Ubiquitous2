@@ -1,5 +1,4 @@
 ﻿using System;
-using UB.Model.IRC;
 using UB.Utils;
 using System.Text.RegularExpressions;
 using System.Collections.Generic;

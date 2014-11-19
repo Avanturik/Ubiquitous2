@@ -100,6 +100,19 @@
                         </Setter.Value>
                     </Setter>
                 </DataTrigger>
+                <DataTrigger Binding="{Binding DataType, Mode=OneWay}" Value="FileSaveTXT">
+                    <Setter Property="Template">
+                        <Setter.Value>
+                            <ControlTemplate>
+                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Stretch" VerticalAlignment="Top">
+                                    <TextBlock MinWidth="100" Text="{Binding LabelText}" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="0,0,5,0"/>
+                                    <TextBox Width="200" Text="{Binding Text,Mode=TwoWay}" VerticalAlignment="Top"/>
+                                    <Button Command="{Binding SaveFileDialog}" Margin="5,0,0,0" Padding="5,1,5,1" Content="..." VerticalAlignment="Top" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" HorizontalAlignment="Left"/>
+                                </StackPanel>
+                            </ControlTemplate>
+                        </Setter.Value>
+                    </Setter>
+                </DataTrigger>
             </Style.Triggers>
         </Style>
     </UserControl.Resources>

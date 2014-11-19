@@ -17,19 +17,35 @@ namespace UB.Model
             if (callback == null)
                 return;
 
-            var maxRecords = 288;
-            var maxViewersPerInterval = context.StatisticsViewers.ToList().GroupBy(rec =>
+            TryDB(() =>
             {
-                DateTime time = rec.DateTime;
-                time = time.AddMinutes(-(time.Minute % intervalMinutes));
-                time = time.AddMilliseconds(-time.Millisecond - 1000 * time.Second);
-                return time;
-            }).Select(group => new StatisticsViewers()
-            {
-                DateTime = group.Key,
-                Viewerscount = group.Max(item => item.Viewerscount)
+                var maxRecords = 288;
+                var maxViewersPerInterval = context.StatisticsViewers.ToList().GroupBy(rec =>
+                {
+                    DateTime time = rec.DateTime;
+                    time = time.AddMinutes(-(time.Minute % intervalMinutes));
+                    time = time.AddMilliseconds(-time.Millisecond - 1000 * time.Second);
+                    return time;
+                }).Select(group => new StatisticsViewers()
+                {
+                    DateTime = group.Key,
+                    Viewerscount = group.Max(item => item.Viewerscount)
+                });
+                callback(maxViewersPerInterval.Skip(Math.Max(0, maxViewersPerInterval.Count() - maxRecords)).Take(maxRecords).ToList());
             });
-            callback(maxViewersPerInterval.Skip(Math.Max(0, maxViewersPerInterval.Count() - maxRecords)).Take(maxRecords).ToList());
+        }
+        private void TryDB( Action action )
+        {
+            try
+            {
+                if (action != null)
+                    action();
+            }
+            catch(Exception e)
+            {
+                Log.WriteError("Database exception {0}", e.Message);
+            }
         }
     }
+
 }

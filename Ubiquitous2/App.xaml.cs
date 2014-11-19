@@ -1,4 +1,5 @@
-﻿using System.Configuration;
+﻿using System;
+using System.Configuration;
 using System.Diagnostics;
 using System.Net;
 using System.Windows;
@@ -9,6 +10,7 @@ using GalaSoft.MvvmLight.Threading;
 using UB.Model;
 using UB.Properties;
 using UB.Utils;
+using System.Deployment.Application;
 
 namespace UB
 {
@@ -29,6 +31,20 @@ namespace UB
                 Timeline.DesiredFrameRateProperty.OverrideMetadata(
                     typeof(Timeline),
                     new FrameworkPropertyMetadata { DefaultValue = 20 });
+
+
+            string dbFolder = @".\database";
+
+            try
+            {
+                dbFolder = ApplicationDeployment.CurrentDeployment.DataDirectory;
+            }
+            catch( Exception ex)
+            {
+                Log.WriteInfo( "Not ClickOnce {0}", ex.Message);
+            }
+
+            AppDomain.CurrentDomain.SetData("DBFolder", dbFolder);
 
             WebRequest.DefaultWebProxy = null;
 

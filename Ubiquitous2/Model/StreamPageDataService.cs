@@ -34,7 +34,7 @@ namespace UB.Model
 
             presets.Add(newPreset);
 
-            return newPreset;
+            return presets.Last();
         }
         public void GetPresets(Action<List<StreamInfoPreset>> callback)
         {
