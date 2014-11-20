@@ -29,10 +29,12 @@ namespace UB.Model
             HighlyImportant = false;
             FormatString = "%from @%chatname: %text";
             IsNew = true;
+            IsEmoticonsParsed = false;
         }
         public String ChatName { get; set; }
         public string FormatString { get; set; }
         public string OriginalText { get; set; }
+        public bool IsEmoticonsParsed { get; set; }
         public String FormattedText
         {
             get

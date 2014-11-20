@@ -67,6 +67,11 @@ namespace UB.Model
         {
             if (chat == null || chat.Emoticons == null)
                 return;
+            
+            if (message.IsEmoticonsParsed)
+                return;
+
+
             var emoticons = chat.Emoticons.ToList();
             bool containsNonAlpha = Regex.IsMatch(message.Text, @"\W");
             HashSet<string> words = null;
@@ -95,6 +100,7 @@ namespace UB.Model
                     }
                 }
             }
+            message.IsEmoticonsParsed = true;
         }
         public static void ParseEmoji(ChatMessage message, IChat chat)
         {

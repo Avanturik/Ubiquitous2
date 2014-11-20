@@ -535,6 +535,7 @@ namespace UB.Model
 
         void ircClient_Disconnected(object sender, EventArgs e)
         {
+            Log.WriteInfo("Twitch disconnected from {0}", ChannelName);
             Leave();
             if (LeaveCallback != null)
                 LeaveCallback(this);

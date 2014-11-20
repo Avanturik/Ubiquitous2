@@ -11,6 +11,7 @@ using UB.Model;
 using UB.Properties;
 using UB.Utils;
 using System.Deployment.Application;
+using System.Text.RegularExpressions;
 
 namespace UB
 {
@@ -32,6 +33,7 @@ namespace UB
                     typeof(Timeline),
                     new FrameworkPropertyMetadata { DefaultValue = 20 });
 
+            Regex.CacheSize = 0;
 
             string dbFolder = @".\database";
 
