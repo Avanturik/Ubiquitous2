@@ -668,7 +668,7 @@ namespace UB.Model
         private static void NoticeHandler( TwitchChannel channel, IrcRawMessageEventArgs args )
         {
             Log.WriteInfo("Twitch notice: {0}", args.RawContent);
-            if (args.RawContent.Contains("Login unsuccessful"))
+            if (!channel.Chat.IsAnonymous && args.RawContent.Contains("Login unsuccessful"))
             {
                 channel.Chat.Status.IsLoginFailed = true;
                 channel.Chat.Status.IsLoggedIn = false;
