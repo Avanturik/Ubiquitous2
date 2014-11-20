@@ -16,6 +16,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Windows.Threading;
+using UB.Model;
 
 namespace UB.Interactivity
 {
@@ -86,16 +87,7 @@ namespace UB.Interactivity
             //window.SourceInitialized += (o, e) => hwndSource = (HwndSource)PresentationSource.FromVisual((Visual)o);
         }
 
-        /// <summary>
-        /// Sticks a message on the message queue.
-        /// </summary>
-        /// <param name="hWnd"></param>
-        /// <param name="Msg"></param>
-        /// <param name="wParam"></param>
-        /// <param name="lParam"></param>
-        /// <returns></returns>
-        [DllImport("user32.dll", CharSet = CharSet.Auto)]
-        private static extern IntPtr SendMessage(IntPtr hWnd, uint Msg, IntPtr wParam, IntPtr lParam);
+
 
         /// <summary>
         /// Puts a resize message on the message queue for the specified border position.
@@ -103,7 +95,7 @@ namespace UB.Interactivity
         /// <param name="direction"></param>
         private void ResizeWindow(BorderPosition direction)
         {
-            SendMessage(hwndSource.Handle, 0x112, (IntPtr)direction, IntPtr.Zero);
+            NativeMethods.SendMessage(hwndSource.Handle, 0x112, (IntPtr)direction, IntPtr.Zero);
         }
 
         /// <summary>

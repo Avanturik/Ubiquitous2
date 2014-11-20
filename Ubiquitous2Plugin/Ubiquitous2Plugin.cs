@@ -14,8 +14,8 @@ namespace Ubiquitous2Plugin
 {
     public class Ubiquitous2Plugin : AbstractPlugin
     {
-        [DllImport("kernel32")]
-        public extern static int LoadLibrary(string librayName);
+        //[DllImport("kernel32", CharSet=CharSet.Unicode)]
+        //internal extern static int LoadLibrary(string librayName);
 
         public Ubiquitous2Plugin()
         {
@@ -38,13 +38,13 @@ namespace Ubiquitous2Plugin
         {
             String libraryDirectory = Path.Combine(AssemblyDirectory, "Ubiquitous2Plugin");
             
-            LoadLibrary(Path.Combine(libraryDirectory, "d3dcompiler_43.dll"));
-            LoadLibrary(Path.Combine(libraryDirectory, "d3dcompiler_46.dll"));
-            LoadLibrary(Path.Combine(libraryDirectory, "libGLESv2.dll"));
-            LoadLibrary(Path.Combine(libraryDirectory, "libEGL.dll"));
-            LoadLibrary(Path.Combine(libraryDirectory, "ffmpegsumo.dll"));
-            LoadLibrary(Path.Combine(libraryDirectory, "icudt.dll"));
-            LoadLibrary(Path.Combine(libraryDirectory, "libcef.dll"));
+            //LoadLibrary(Path.Combine(libraryDirectory, "d3dcompiler_43.dll"));
+            //LoadLibrary(Path.Combine(libraryDirectory, "d3dcompiler_46.dll"));
+            //LoadLibrary(Path.Combine(libraryDirectory, "libGLESv2.dll"));
+            //LoadLibrary(Path.Combine(libraryDirectory, "libEGL.dll"));
+            //LoadLibrary(Path.Combine(libraryDirectory, "ffmpegsumo.dll"));
+            //LoadLibrary(Path.Combine(libraryDirectory, "icudt.dll"));
+            //LoadLibrary(Path.Combine(libraryDirectory, "libcef.dll"));
 
             API.Instance.AddImageSourceFactory(new Ubiquitous2Factory());
             //API.Instance.AddSettingsPane(new Ubiquitous2SettingsPane());

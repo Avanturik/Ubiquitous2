@@ -3,6 +3,7 @@ using System.Diagnostics;
 using System.Runtime.InteropServices;
 using System.Runtime.CompilerServices;
 using System.Windows.Input;
+using UB.Model;
 
 namespace UB.Utils
 {
@@ -19,7 +20,7 @@ namespace UB.Utils
         public KeyboardListener()
         {
             // We have to store the HookCallback, so that it is not garbage collected runtime
-            hookedLowLevelKeyboardProc = (InterceptKeys.LowLevelKeyboardProc)LowLevelKeyboardProc;
+            hookedLowLevelKeyboardProc = (NativeMethods.LowLevelKeyboardProc)LowLevelKeyboardProc;
 
             // Set the hook
             hookId = InterceptKeys.SetHook(hookedLowLevelKeyboardProc);
@@ -79,7 +80,7 @@ namespace UB.Utils
                     wParam.ToUInt32() == (int)InterceptKeys.KeyEvent.WM_SYSKEYUP)
                     hookedKeyboardCallbackAsync.BeginInvoke((InterceptKeys.KeyEvent)wParam.ToUInt32(), Marshal.ReadInt32(lParam), null, null);
 
-            return InterceptKeys.CallNextHookEx(hookId, nCode, wParam, lParam);
+            return NativeMethods.CallNextHookEx(hookId, nCode, wParam, lParam);
         }
 
         /// <summary>
@@ -90,7 +91,7 @@ namespace UB.Utils
         /// <summary>
         /// Contains the hooked callback in runtime.
         /// </summary>
-        private InterceptKeys.LowLevelKeyboardProc hookedLowLevelKeyboardProc;
+        private NativeMethods.LowLevelKeyboardProc hookedLowLevelKeyboardProc;
 
         /// <summary>
         /// HookCallbackAsync procedure that calls accordingly the KeyDown or KeyUp events.
@@ -136,7 +137,7 @@ namespace UB.Utils
         /// </summary>
         public void Dispose()
         {
-            InterceptKeys.UnhookWindowsHookEx(hookId);
+            NativeMethods.UnhookWindowsHookEx(hookId);
         }
 
         #endregion
@@ -186,8 +187,7 @@ namespace UB.Utils
     /// Winapi Key interception helper class.
     /// </summary>
     internal static class InterceptKeys
-    {
-        public delegate IntPtr LowLevelKeyboardProc(int nCode, UIntPtr wParam, IntPtr lParam);
+    {       
         public static int WH_KEYBOARD_LL = 13;
 
         public enum KeyEvent : int
@@ -198,28 +198,16 @@ namespace UB.Utils
             WM_SYSKEYDOWN = 260
         }
 
-        public static IntPtr SetHook(LowLevelKeyboardProc proc)
+        public static IntPtr SetHook(NativeMethods.LowLevelKeyboardProc proc)
         {
             using (Process curProcess = Process.GetCurrentProcess())
             using (ProcessModule curModule = curProcess.MainModule)
             {
-                return SetWindowsHookEx(WH_KEYBOARD_LL, proc,
-                    GetModuleHandle(curModule.ModuleName), 0);
+                return NativeMethods.SetWindowsHookEx(WH_KEYBOARD_LL, proc,
+                    NativeMethods.GetModuleHandle(curModule.ModuleName), 0);
             }
         }
 
-        [DllImport("user32.dll", CharSet = CharSet.Auto, SetLastError = true)]
-        public static extern IntPtr SetWindowsHookEx(int idHook, LowLevelKeyboardProc lpfn, IntPtr hMod, uint dwThreadId);
-
-        [DllImport("user32.dll", CharSet = CharSet.Auto, SetLastError = true)]
-        [return: MarshalAs(UnmanagedType.Bool)]
-        public static extern bool UnhookWindowsHookEx(IntPtr hhk);
-
-        [DllImport("user32.dll", CharSet = CharSet.Auto, SetLastError = true)]
-        public static extern IntPtr CallNextHookEx(IntPtr hhk, int nCode, UIntPtr wParam, IntPtr lParam);
-
-        [DllImport("kernel32.dll", CharSet = CharSet.Auto, SetLastError = true)]
-        public static extern IntPtr GetModuleHandle(string lpModuleName);
     }
     #endregion
 }

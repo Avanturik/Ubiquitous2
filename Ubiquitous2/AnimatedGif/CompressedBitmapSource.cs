@@ -31,7 +31,6 @@ namespace WpfAnimatedGif
                     encoder.Save(memoryStream);
                     memoryStream.Flush();
                     Bytes = memoryStream.ToArray();
-                    memoryStream.Close();
                 }
                 Width = encoder.Frames[0].PixelWidth;
                 Height = encoder.Frames[0].PixelHeight;

@@ -1492,6 +1492,8 @@ namespace dotIRC
                         if (sendDelay > 0)
                             break;
                     }
+                    if (this.messageSendQueue.Count == 0)
+                        return;
 
                     // Send next message in queue.
                     var message = this.messageSendQueue.Dequeue();
@@ -2186,6 +2188,16 @@ namespace dotIRC
 
         private void HandleClientConnected(IrcRegistrationInfo regInfo)
         {
+            if (this.socket.RemoteEndPoint == null)
+            {
+                try
+                {
+                    this.socket.Disconnect( false );
+                }
+                catch { }
+                return;
+            }
+
             DebugUtilities.WriteEvent(string.Format("Connected to server at '{0}'.",
                 ((IPEndPoint)this.socket.RemoteEndPoint).Address));
 

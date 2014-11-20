@@ -18,11 +18,7 @@ namespace UB.Interactivity
         
         const int GWL_EXSTYLE = (-20);
 
-        [DllImport("user32.dll")]
-        static extern int GetWindowLong(IntPtr hwnd, int index);
 
-        [DllImport("user32.dll")]
-        static extern int SetWindowLong(IntPtr hwnd, int index, int newStyle);
         
         protected override void OnAttached()
         {
@@ -46,17 +42,17 @@ namespace UB.Interactivity
         public static void SwitchTransparency(Window window, bool isTransparent)
         {
             var hwnd = new WindowInteropHelper(window).Handle;
-            var extendedStyle = GetWindowLong(hwnd, GWL_EXSTYLE);
+            var extendedStyle = NativeMethods.GetWindowLong(hwnd, GWL_EXSTYLE);
             if (isTransparent)
             {
                 Log.WriteInfo("Clickthrough enabled");
-                SetWindowLong(hwnd, GWL_EXSTYLE, extendedStyle | WS_EX_TRANSPARENT);
+                NativeMethods.SetWindowLong(hwnd, GWL_EXSTYLE, extendedStyle | WS_EX_TRANSPARENT);
                 window.IsHitTestVisible = false;
             }
             else
             {
                 Log.WriteInfo("Clickthrough disabled");
-                SetWindowLong(hwnd, GWL_EXSTYLE, extendedStyle & NOT_WS_EX_TRANSPARENT);
+                NativeMethods.SetWindowLong(hwnd, GWL_EXSTYLE, extendedStyle & NOT_WS_EX_TRANSPARENT);
                 window.IsHitTestVisible = true;
             }
         }

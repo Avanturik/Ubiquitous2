@@ -181,7 +181,9 @@ namespace UB.Converter
                             break;
                     }
                 }
+                htmlDoc = null;
             }
+            
             return textBlock.Inlines;
 
         }

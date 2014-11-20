@@ -87,17 +87,8 @@ namespace UB.Model
             Status.ResetToDefault();
             Status.IsStarting = true;
 
-            int timeout = 1000;
-            int tries = 0;
-            while( !Login() )
-            {
-                Thread.Sleep(timeout);
-                tries++;
-                if( tries > 3 )
-                    timeout = 5000;
-                if (tries > 10)
-                    timeout = 30000;
-            }
+            if (!Login())
+                IsAnonymous = true;
 
             Status.IsConnecting = true;
             Task.Factory.StartNew(() => JoinChannels());
@@ -126,14 +117,18 @@ namespace UB.Model
                 if (ContentParsers != null)
                 {
                     var number = 1;
-                    ContentParsers.ForEach(parser =>
+                    if( !message.IsParsed )
                     {
+                        ContentParsers.ForEach(parser =>
+                        {
 
-                        parser(message, this);
-                        if (original != message.Text)
-                            Log.WriteInfo("After parsing with {0}: {1}", number, message.Text);
-                        number++;
-                    });
+                            parser(message, this);
+                            if (original != message.Text)
+                                Log.WriteInfo("After parsing with {0}: {1}", number, message.Text);
+                            number++;
+                        });
+                        message.IsParsed = true;
+                    }
                 }
 
                 MessageReceived(this, new ChatServiceEventArgs() { Message = message });
@@ -165,7 +160,7 @@ namespace UB.Model
 
             lock (channelsLock)
             {
-                ChatChannels.ForEach(chan =>
+                ChatChannels.ToList().ForEach(chan =>
                 {                   
                     chan.Leave();
                     if (RemoveChannel != null)
@@ -309,6 +304,9 @@ namespace UB.Model
                 chatChannel.ReadMessage = ReadMessage;
                 chatChannel.LeaveCallback = (leaveChannel) =>
                 {
+                    if (Status.IsLoginFailed)
+                        IsAnonymous = true;
+
                     lock (toolTipLock)
                     {
                         UI.Dispatch(() => Status.ToolTips.RemoveAll(tooltip => tooltip.Header == channel));
@@ -323,7 +321,7 @@ namespace UB.Model
                     if (RemoveChannel != null)
                         RemoveChannel(leaveChannel.ChannelName, this);
 
-                    if (Status.IsStarting || Status.IsStopping)
+                    if (Status.IsStopping)
                         return;
 
                     if (ChatChannels.Count <= 0)
@@ -336,8 +334,8 @@ namespace UB.Model
                     lock( joinLock )
                         JoinChannel(chatChannel, channel);
                 };
-                lock( joinLock )
-                    JoinChannel(chatChannel, channel);
+                lock (joinLock)
+                    Task.Run( () => JoinChannel(chatChannel, channel));
             }
 
         }
@@ -346,6 +344,7 @@ namespace UB.Model
         {
             if (!ChatChannels.Any(c => c.ChannelName == channel))
             {
+                Log.WriteInfo("{0} joining {1}", Config.ChatName, channel);
                 chatChannel.Join((joinChannel) =>
                 {
                     lock( joinLock )

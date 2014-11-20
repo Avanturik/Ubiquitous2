@@ -35,13 +35,13 @@ namespace UB.Utils
     [SuppressUnmanagedCodeSecurity]
     internal static class UnsafeNativeMethods
     {
-        [DllImport("gdi32.dll", CharSet = CharSet.Auto, ExactSpelling = true)]
+        [DllImport("gdi32.dll", CharSet = CharSet.Unicode, ExactSpelling = true)]
         public static extern Boolean DeleteDC(IntPtr hDC);
 
-        [DllImport("gdi32.dll", CharSet = CharSet.Auto, ExactSpelling = true)]
+        [DllImport("gdi32.dll", CharSet = CharSet.Unicode, ExactSpelling = true)]
         public static extern Int32 GetDeviceCaps(DCSafeHandle hDC, Int32 nIndex);
 
-        [DllImport("gdi32.dll", EntryPoint = "CreateDC", CharSet = CharSet.Auto)]
+        [DllImport("gdi32.dll", EntryPoint = "CreateDC", CharSet = CharSet.Unicode)]
         public static extern DCSafeHandle IntCreateDC(String lpszDriver,
             String lpszDeviceName, String lpszOutput, IntPtr devMode);
 

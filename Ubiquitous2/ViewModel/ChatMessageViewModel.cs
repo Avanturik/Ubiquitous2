@@ -60,7 +60,6 @@ namespace UB.ViewModel
 
         private void Initialize(ChatMessage message)
         {
-
             Message = message;
             if (Message.ChatIconURL == null)
                 Message.ChatIconURL = Icons.MainIcon;
@@ -113,7 +112,7 @@ namespace UB.ViewModel
         /// </summary>
         public const string AppConfigPropertyName = "AppConfig";
 
-        private AppConfig _appConfig = new AppConfig();
+        private AppConfig _appConfig;
 
         /// <summary>
         /// Sets and gets the AppConfig property.

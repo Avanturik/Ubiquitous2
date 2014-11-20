@@ -23,6 +23,7 @@ namespace UB.LastFM.Services
 	/// This exception is thrown whenever a method is called thar required an authenticated 
 	/// <see cref="Session"/> object and the given was not.
 	/// </summary>
+    [Serializable]
 	public class AuthenticationRequiredException : Exception
 	{
 		internal AuthenticationRequiredException()

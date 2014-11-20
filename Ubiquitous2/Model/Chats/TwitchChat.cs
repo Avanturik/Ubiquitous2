@@ -8,7 +8,6 @@ using System.Linq;
 using System.Collections.ObjectModel;
 using System.Web;
 using dotIRC;
-using System.Net;
 using System.Threading;
 using System.Collections.Specialized;
 using Newtonsoft.Json;
@@ -109,9 +108,10 @@ namespace UB.Model
                 PollFollowers();
                 return true;
             }
+            Config.SetParameterValue("OAuthToken",  null);
+            Config.SetParameterValue("ApiToken", null);
+            Config.SetParameterValue("AuthTokenCredentials", null);
 
-
-            Config.SetParameterValue("OAuthToken", String.Empty);
 
             return false;
         }
@@ -440,6 +440,7 @@ namespace UB.Model
         private Random random = new Random();
         private Timer pingTimer, disconnectTimer;
         private const int pingInterval = 30000;
+        private bool isRetry = false;
         private Dictionary<string, List<UserBadge>> userBadges = new Dictionary<string, List<UserBadge>>();
         private NameValueCollection channelBadges = new NameValueCollection();
         private Dictionary<string, Action<TwitchChannel, IrcRawMessageEventArgs>>
@@ -460,6 +461,8 @@ namespace UB.Model
         }
         public override void Join(Action<IChatChannel> callback, string channel)
         {
+            var safeConnectDelay = Chat.ChatChannels.Count * 100;
+            Thread.Sleep(safeConnectDelay);
             ChannelName = "#" + channel.Replace("#", "");
 
             pingTimer = new Timer((sender) => {
@@ -467,7 +470,7 @@ namespace UB.Model
             }, this, Timeout.Infinite, Timeout.Infinite);
 
             disconnectTimer = new Timer((sender) => {
-                TryIrc( () => ircClient.Quit("bye!"));
+                TryIrc( () => Leave());
             }, this, Timeout.Infinite, Timeout.Infinite);
 
             SetupStatsWatcher();
@@ -490,11 +493,11 @@ namespace UB.Model
             SetUserBadge(ChannelName.ToLower().Replace("#",""), "broadcaster");
 
             JoinCallback = callback;
-            
-            var registrationInfo = new IrcUserRegistrationInfo() { 
-                UserName = Chat.NickName,
-                NickName = Chat.NickName,
-                RealName = Chat.NickName,
+            var nickname = Chat.IsAnonymous ? "justinfan" + random.Next(100000, 999999) : Chat.NickName;
+            var registrationInfo = new IrcUserRegistrationInfo() {
+                UserName = nickname,
+                NickName = nickname,
+                RealName = nickname,
                 Password = Chat.IsAnonymous ? "blah" : "oauth:" + Chat.Config.GetParameterValue("OAuthToken") as string,
             };
 
@@ -537,8 +540,6 @@ namespace UB.Model
         {
             Log.WriteInfo("Twitch disconnected from {0}", ChannelName);
             Leave();
-            if (LeaveCallback != null)
-                LeaveCallback(this);
         }
         public override void Leave()
         {
@@ -549,6 +550,9 @@ namespace UB.Model
             Log.WriteInfo("Twitch leaving {0}", ChannelName);
 
             TryIrc(() => ircClient.Quit("bye!"));
+
+            if (LeaveCallback != null && !isRetry)
+                LeaveCallback(this);
         }
         public override void SendMessage( ChatMessage message )
         {
@@ -656,6 +660,7 @@ namespace UB.Model
                 if (!channel.Chat.IsAnonymous)
                     channel.Chat.Status.IsLoggedIn = true;
 
+                channel.isRetry = false;
                 channel.pingTimer.Change(pingInterval, pingInterval);
 
                 if (channel.JoinCallback != null)
@@ -671,8 +676,9 @@ namespace UB.Model
             Log.WriteInfo("Twitch notice: {0}", args.RawContent);
             if (!channel.Chat.IsAnonymous && args.RawContent.Contains("Login unsuccessful"))
             {
-                channel.Chat.Status.IsLoginFailed = true;
-                channel.Chat.Status.IsLoggedIn = false;
+                channel.isRetry = true;
+                //Thread.Sleep(3000);
+                //channel.Join((ch) => { channel.JoinCallback(ch); }, channel.ChannelName);
             }
         }
 
