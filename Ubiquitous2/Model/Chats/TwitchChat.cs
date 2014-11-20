@@ -535,6 +535,7 @@ namespace UB.Model
 
         void ircClient_Disconnected(object sender, EventArgs e)
         {
+            Leave();
             if (LeaveCallback != null)
                 LeaveCallback(this);
         }
@@ -567,14 +568,13 @@ namespace UB.Model
                     using (stream)
                     {
                         var channelInfo = this.With(x => stream)
-                            .With(x => Json.DeserializeStream<TwitchChannelInfo>(stream))
-                            .With(x => x.stream);
+                            .With(x => Json.DeserializeStream<dynamic>(stream));
 
 
                         statsPoller.LastValue = channelInfo;
-                        if (channelInfo != null)
+                        if (channelInfo != null && channelInfo.stream != null )
                         {
-                            ChannelStats.ViewersCount = channelInfo.viewers;
+                            ChannelStats.ViewersCount = channelInfo.stream.viewers;
                             Chat.UpdateStats();
                         }
                     }

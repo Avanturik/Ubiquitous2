@@ -316,7 +316,7 @@ namespace UB.ViewModel
 
                 if( chatDataService != null && Name != null )
                 {
-                   Task.Factory.StartNew( ()=> chatDataService.SwitchChat(Name, _enabled));
+                   chatDataService.SwitchChat(Name, _enabled);
                 }
                 IsLoaderVisible = false;
                 RaisePropertyChanged(EnabledPropertyName);
