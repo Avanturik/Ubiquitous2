@@ -148,6 +148,13 @@ namespace UB.Model
             Status.IsStopping = true;
             Status.IsStarting = false;
 
+            ChatChannels.ToList().ForEach(chan =>
+            {
+                chan.Leave();
+                if (RemoveChannel != null)
+                    RemoveChannel(chan.ChannelName, this);
+            });
+
             lock(toolTipLock)
             {
                 UI.Dispatch(() => {
@@ -158,15 +165,7 @@ namespace UB.Model
                 });
             }
 
-            lock (channelsLock)
-            {
-                ChatChannels.ToList().ForEach(chan =>
-                {                   
-                    chan.Leave();
-                    if (RemoveChannel != null)
-                        RemoveChannel(chan.ChannelName, this);
-                });
-            }
+
             Thread.Sleep(1000);
             ChatChannels.Clear();
             return true;

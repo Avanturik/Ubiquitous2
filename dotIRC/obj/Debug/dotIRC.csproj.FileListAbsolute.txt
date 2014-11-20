@@ -46,3 +46,4 @@ C:\Users\meshkov\Source\Repos\Ubiquitous2\dotIRC\obj\Debug\dotIRC.csproj.Generat
 C:\Users\meshkov\Source\Repos\Ubiquitous2\dotIRC\obj\Debug\dotIRC.dll
 C:\Users\meshkov\Source\Repos\Ubiquitous2\dotIRC\obj\Debug\dotIRC.pdb
 C:\Users\meshkov\Source\Repos\Ubiquitous2\dotIRC\obj\Debug\dotIRC.csprojResolveAssemblyReference.cache
+C:\Users\user\Source\Repos\Ubiquitous2\dotIRC\obj\Debug\dotIRC.csprojResolveAssemblyReference.cache

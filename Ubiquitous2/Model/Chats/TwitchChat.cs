@@ -440,7 +440,6 @@ namespace UB.Model
         private Random random = new Random();
         private Timer pingTimer, disconnectTimer;
         private const int pingInterval = 30000;
-        private bool isRetry = false;
         private Dictionary<string, List<UserBadge>> userBadges = new Dictionary<string, List<UserBadge>>();
         private NameValueCollection channelBadges = new NameValueCollection();
         private Dictionary<string, Action<TwitchChannel, IrcRawMessageEventArgs>>
@@ -551,7 +550,7 @@ namespace UB.Model
 
             TryIrc(() => ircClient.Quit("bye!"));
 
-            if (LeaveCallback != null && !isRetry)
+            if (LeaveCallback != null)
                 LeaveCallback(this);
         }
         public override void SendMessage( ChatMessage message )
@@ -660,7 +659,6 @@ namespace UB.Model
                 if (!channel.Chat.IsAnonymous)
                     channel.Chat.Status.IsLoggedIn = true;
 
-                channel.isRetry = false;
                 channel.pingTimer.Change(pingInterval, pingInterval);
 
                 if (channel.JoinCallback != null)
@@ -674,10 +672,10 @@ namespace UB.Model
         private static void NoticeHandler( TwitchChannel channel, IrcRawMessageEventArgs args )
         {
             Log.WriteInfo("Twitch notice: {0}", args.RawContent);
-            if (!channel.Chat.IsAnonymous && args.RawContent.Contains("Login unsuccessful"))
+            if (args.RawContent.Contains("Login unsuccessful"))
             {
-                channel.isRetry = true;
-                //Thread.Sleep(3000);
+                Thread.Sleep(2000);
+                channel.Leave();
                 //channel.Join((ch) => { channel.JoinCallback(ch); }, channel.ChannelName);
             }
         }
