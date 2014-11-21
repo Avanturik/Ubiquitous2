@@ -355,7 +355,7 @@ namespace UB.Model
                     {
 
                         if (AddChannel != null)
-                            AddChannel(chatChannel.ChannelName, this);
+                            AddChannel(joinChannel.ChannelName, this);
 
                         if (Status.IsStopping)
                             return;
@@ -367,8 +367,6 @@ namespace UB.Model
                         }
                         Status.IsConnecting = false;
                         Status.IsConnected = true;
-
-
                     }
                 }, channel);
             }

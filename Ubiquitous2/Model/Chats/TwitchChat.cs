@@ -647,8 +647,17 @@ namespace UB.Model
         {
             if( channel.ircClient.Channels.Count <= 0 )
             {
+                channel.Chat.Status.IsConnected = true;
+                channel.Chat.Status.IsConnecting = false;
                 channel.TryIrc(() => channel.ircClient.Channels.Join(channel.ChannelName));
                 channel.TryIrc(() => channel.ircClient.SendRawMessage("TWITCHCLIENT 2"));
+            }
+            if( channel.Chat.IsAnonymous )
+            {
+                channel.pingTimer.Change(pingInterval, pingInterval);
+
+                if (channel.JoinCallback != null)
+                    channel.JoinCallback(channel);
             }
         }
         private static void ModeHandler(TwitchChannel channel, IrcRawMessageEventArgs args)
