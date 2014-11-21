@@ -15,6 +15,36 @@ namespace UB.Model
         }
 
         /// <summary>
+        /// The <see cref="ShowChannel" /> property's name.
+        /// </summary>
+        public const string ShowChannelPropertyName = "ShowChannel";
+
+        private bool _showChannel = false;
+
+        /// <summary>
+        /// Sets and gets the ShowChannel property.
+        /// Changes to that property's value raise the PropertyChanged event. 
+        /// </summary>
+        public bool ShowChannel
+        {
+            get
+            {
+                return _showChannel;
+            }
+
+            set
+            {
+                if (_showChannel == value)
+                {
+                    return;
+                }
+
+                _showChannel = value;
+                RaisePropertyChanged(ShowChannelPropertyName);
+            }
+        }
+
+        /// <summary>
         /// The <see cref="ForceAutoScroll" /> property's name.
         /// </summary>
         public const string ForceAutoScrollPropertyName = "ForceAutoScroll";

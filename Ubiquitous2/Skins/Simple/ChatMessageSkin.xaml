@@ -7,6 +7,9 @@
                     xmlns:ei="http://schemas.microsoft.com/expression/2010/interactions"
                     >
     <Converter:ChatMessageToInlines x:Key="textConverter" />
+    <BooleanToVisibilityConverter x:Key="boolToVisibilityConverter"></BooleanToVisibilityConverter>
+
+   
     <Style TargetType="{x:Type TextBlock}">
         <Setter Property="FontFamily" Value="Segoe UI"/>
     </Style>
@@ -58,7 +61,7 @@
                                         <DropShadowEffect BlurRadius="2" Opacity="0.2" ShadowDepth="2"/>
                                     </Image.Effect>
                                 </Image>
-                                <TextBlock ToolTip="Click to set as active channel" Focusable="False" VerticalAlignment="Center" Margin="0,0,5,0" HorizontalAlignment="Left">
+                                <TextBlock Visibility="{Binding AppConfig.ShowChannel, Converter={StaticResource boolToVisibilityConverter}}" ToolTip="Click to set as active channel" Focusable="False" VerticalAlignment="Center" Margin="0,0,5,0" HorizontalAlignment="Left">
                                     <Hyperlink Focusable="False" Command="{Binding SetActiveChannel}" Cursor="Hand">
                                         <TextBlock Focusable="False" FontSize="{Binding AppConfig.FontSizeChannel}" Text="{Binding Message.Channel}" Margin="0" HorizontalAlignment="Left" FontWeight="Bold" VerticalAlignment="Center"/>
                                     </Hyperlink>

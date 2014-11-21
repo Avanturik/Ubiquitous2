@@ -201,6 +201,7 @@
                                             </TextBlock>
                                             <Label HorizontalAlignment="Center" VerticalAlignment="Top" FontSize="9" Margin="0,-3,0,-6" Content="{Binding AppConfig.FontSizeChannel, StringFormat=D}" FontWeight="Normal"/>
                                             <Slider IsSnapToTickEnabled="True"  Value="{Binding AppConfig.FontSizeChannel, Mode=TwoWay}" Maximum="24" SmallChange="0.5" TickFrequency="1" TickPlacement="BottomRight" LargeChange="1" Minimum="6" Orientation="Vertical" VerticalAlignment="Top" HorizontalAlignment="Center" Height="80" Margin="7,0,0,0"/>
+                                            <CheckBox Margin="0,5" IsChecked="{Binding AppConfig.ShowChannel, Mode=TwoWay}" FontWeight="Normal" Content="Visible"/>
                                         </StackPanel>
                                         <StackPanel Margin="7,0,0,0">
                                             <TextBlock VerticalAlignment="Top" HorizontalAlignment="Center" FontWeight="Normal" TextAlignment="Center">

@@ -8,8 +8,9 @@
                     xmlns:ee="http://schemas.microsoft.com/expression/2010/effects"
                     >
 	<Converter:ChatMessageToInlines x:Key="textConverter" />
-   
-	<Style TargetType="{x:Type TextBlock}">
+    <BooleanToVisibilityConverter x:Key="boolToVisibilityConverter"></BooleanToVisibilityConverter>
+
+    <Style TargetType="{x:Type TextBlock}">
 		<Setter Property="FontFamily" Value="Segoe UI"/>
 	</Style>
 	<Style TargetType="{x:Type Window}">
@@ -71,9 +72,11 @@
                         <Grid Visibility="Hidden">
 							<TextBlock x:Name="prefixBlock" HorizontalAlignment="Left" Margin="0,0,5,0" Foreground="#FFE4FFFF" FontFamily="/Ubiquitous2;component/Fonts/#Purista" TextWrapping="Wrap">
                                 <ub:ServiceLogo Width="12" DataContext="{Binding Message.ChatName}" HorizontalAlignment="Left" VerticalAlignment="Center"/>
-                                <Hyperlink ToolTip="Click to set as active channel"  Focusable="False" Command="{Binding SetActiveChannel}" Cursor="Hand">
-                                    <Run Focusable="False" FontSize="{Binding AppConfig.FontSizeMessage}" Text="{Binding Message.Channel}"  FontFamily="/Ubiquitous2;component/Fonts/#Purista Light"/>
-                                </Hyperlink>
+                                <TextBlock Visibility="{Binding AppConfig.ShowChannel, Converter={StaticResource boolToVisibilityConverter}}">
+                                    <Hyperlink ToolTip="Click to set as active channel"  Focusable="False" Command="{Binding SetActiveChannel}" Cursor="Hand">
+                                        <Run Focusable="False" FontSize="{Binding AppConfig.FontSizeMessage}" Text="{Binding Message.Channel}"  FontFamily="/Ubiquitous2;component/Fonts/#Purista Light"/>
+                                    </Hyperlink>                                    
+                                </TextBlock>
                                 <ub:ImageStack DataContext="{Binding Message.UserBadges}"/>
                                 <TextBlock FontSize="{Binding AppConfig.FontSizeMessage}" Text="{Binding Message.FromUserName}"  Cursor="Hand" ToolTip="Right click for options" Style="{StaticResource ResourceKey=NickStyle}" x:Name="nickTextBlock" VerticalAlignment="Top" Margin="0,0,-2,0" HorizontalAlignment="Right" FontFamily="/Ubiquitous2;component/Fonts/#Purista Medium">
 									<TextBlock.ContextMenu>

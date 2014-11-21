@@ -343,16 +343,20 @@ namespace UB.Model
             {
                 Log.WriteInfo("{0} joining {1}", Config.ChatName, channel);
 
+                if (RemoveChannel != null)
+                    RemoveChannel(chatChannel.ChannelName, this);
+
                 lock (channelsLock)
                     ChatChannels.Add(chatChannel);
-
-                if (AddChannel != null)
-                    AddChannel(chatChannel.ChannelName, this);
 
                 chatChannel.Join((joinChannel) =>
                 {
                     lock( joinLock )
                     {
+
+                        if (AddChannel != null)
+                            AddChannel(chatChannel.ChannelName, this);
+
                         if (Status.IsStopping)
                             return;
                         

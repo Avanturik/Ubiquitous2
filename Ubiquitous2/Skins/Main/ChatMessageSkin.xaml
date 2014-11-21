@@ -8,6 +8,7 @@
                     xmlns:PresentationOptions="http://schemas.microsoft.com/winfx/2006/xaml/presentation/options" 
                     >
     <Converter:ChatMessageToInlines x:Key="textConverter" />
+    <BooleanToVisibilityConverter x:Key="boolToVisibilityConverter"></BooleanToVisibilityConverter>
 
     <Style x:Key="ChatMessageTemplate" TargetType="{x:Type UserControl}">
         <Setter Property="Template">
@@ -63,7 +64,7 @@
                                         <DropShadowEffect BlurRadius="2" Opacity="0.2" ShadowDepth="2"/>
                                     </Image.Effect>
                                 </Image>
-                                <TextBlock ToolTip="Click to set as active channel" Focusable="False" VerticalAlignment="Center" Margin="5,0,0,1" Padding="0">
+                            <TextBlock Visibility="{Binding AppConfig.ShowChannel, Converter={StaticResource boolToVisibilityConverter}}" ToolTip="Click to set as active channel" Focusable="False" VerticalAlignment="Center" Margin="5,0,0,1" Padding="0">
                                     <Hyperlink Focusable="False" Command="{Binding SetActiveChannel}" Cursor="Hand">
                                         <TextBlock Focusable="False" FontSize="{Binding AppConfig.FontSizeChannel}" Text="{Binding Message.Channel}" Margin="0,0,0,0" HorizontalAlignment="Left" FontWeight="Bold"/>
                                     </Hyperlink>
