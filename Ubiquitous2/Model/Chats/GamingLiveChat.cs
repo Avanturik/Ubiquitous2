@@ -309,6 +309,9 @@ namespace UB.Model
             
             notificationPoller.ReadStream = (stream) =>
             {
+                if (stream == null)
+                    return;
+
                 using (stream)
                 {
 
@@ -479,6 +482,9 @@ namespace UB.Model
 
             statsPoller.ReadStream = (stream) =>
             {
+                if (stream == null)
+                    return;
+
                 lock (pollerLock)
                 {
                     using( stream )

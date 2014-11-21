@@ -449,6 +449,9 @@ namespace UB.Model
             {
                 lock (pollerLock)
                 {
+                    if (stream == null)
+                        return;
+
                     var channelInfo = JsonConvert.DeserializeObject<CybergameChannelStatus>(stream);
                     statsPoller.LastValue = channelInfo;
                     int viewers = 0;

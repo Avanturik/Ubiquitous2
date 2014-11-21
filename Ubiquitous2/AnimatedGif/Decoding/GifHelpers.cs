@@ -8,6 +8,9 @@ namespace WpfAnimatedGif.Decoding
     {
         public static string ReadString(Stream stream, int length)
         {
+            if (stream == null)
+                return null;
+
             byte[] bytes = new byte[length];
             stream.ReadAll(bytes, 0, length);
             return Encoding.ASCII.GetString(bytes);

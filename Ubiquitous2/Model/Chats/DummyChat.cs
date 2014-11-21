@@ -104,6 +104,9 @@ namespace UB.Model
 
             statsPoller.ReadString = (stream) =>
             {
+                if (stream == null)
+                    return;
+
                 lock (pollerLock)
                 {
                     //var channelInfo = JsonConvert.DeserializeObject<ChannelStatus>(stream);

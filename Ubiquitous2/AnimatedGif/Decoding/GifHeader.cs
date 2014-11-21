@@ -26,6 +26,9 @@ namespace WpfAnimatedGif.Decoding
 
         private void Read(Stream stream)
         {
+            if (stream == null)
+                return; 
+
             Signature = GifHelpers.ReadString(stream, 3);
             if (Signature != "GIF")
                 throw GifHelpers.InvalidSignatureException(Signature);

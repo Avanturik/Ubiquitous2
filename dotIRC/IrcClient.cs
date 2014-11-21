@@ -1856,7 +1856,10 @@ namespace dotIRC
             sendEventArgs.SetBuffer(buffer, offset, count);
             sendEventArgs.UserToken = token;
             sendEventArgs.Completed += SendCompleted;
-            
+
+            if (this.socket == null)
+                return;
+
             if (!this.socket.SendAsync(sendEventArgs))
                 ((EventHandler<SocketAsyncEventArgs>)SendCompleted).BeginInvoke(
                     this.socket, sendEventArgs, null, null);

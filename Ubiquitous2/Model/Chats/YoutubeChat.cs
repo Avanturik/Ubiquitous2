@@ -220,7 +220,10 @@ namespace UB.Model
                     IsTimeStamped = false,
                 };
                 chatPoller.ReadString = (text) =>
-                {                    
+                {
+                    if (String.IsNullOrWhiteSpace(text))
+                        return;
+
                     lock (chatLock)
                     {
                         rc++;
@@ -309,11 +312,11 @@ namespace UB.Model
 
                 statsPoller.ReadString = (text) =>
                 {
+                    if (String.IsNullOrWhiteSpace(text))
+                        return;
+
                     lock (pollerLock)
                     {
-                        if (String.IsNullOrEmpty(text))
-                            return;
-
                         Int32 viewers = 0;
                         Int32.TryParse(text, out viewers);
                         ChannelStats.ViewersCount = viewers;

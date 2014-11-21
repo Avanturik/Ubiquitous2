@@ -223,6 +223,9 @@ namespace UB.ViewModel
                 foreach( var msg in messages)
                 {
                     var newMessage = new ChatMessageViewModel(msg);
+                    if (Messages.Count > 500)
+                        Messages.Remove(Messages.First());
+
                     Messages.Add(
                         newMessage
                     );

@@ -401,6 +401,9 @@ namespace UB.Model
 
             followerPoller.ReadStream = (stream) =>
             {
+                if (stream == null)
+                    return;
+
                 using (stream)
                 {
                     var followers = Json.DeserializeStream<TwitchFollowers>(stream);
@@ -542,6 +545,9 @@ namespace UB.Model
         }
         public override void Leave()
         {
+            ircClient.Disconnected -= ircClient_Disconnected;
+            ircClient.RawMessageReceived -= ircClient_RawMessageReceived;
+
             disconnectTimer.Change(Timeout.Infinite, Timeout.Infinite);
             pingTimer.Change(Timeout.Infinite, Timeout.Infinite);
             statsPoller.Stop();
@@ -549,6 +555,7 @@ namespace UB.Model
             Log.WriteInfo("Twitch leaving {0}", ChannelName);
 
             TryIrc(() => ircClient.Quit("bye!"));
+            TryIrc(() => ircClient.Dispose());
 
             if (LeaveCallback != null)
                 LeaveCallback(this);
@@ -567,6 +574,9 @@ namespace UB.Model
 
             statsPoller.ReadStream = (stream) =>
             {
+                if (stream == null)
+                    return;
+
                 lock (pollerLock)
                 {
                     using (stream)
@@ -635,8 +645,11 @@ namespace UB.Model
         }
         private static void ConnectHandler(TwitchChannel channel, IrcRawMessageEventArgs args)
         {
-            channel.TryIrc(() => channel.ircClient.Channels.Join(channel.ChannelName));
-            channel.TryIrc(() => channel.ircClient.SendRawMessage("TWITCHCLIENT 2"));
+            if( channel.ircClient.Channels.Count <= 0 )
+            {
+                channel.TryIrc(() => channel.ircClient.Channels.Join(channel.ChannelName));
+                channel.TryIrc(() => channel.ircClient.SendRawMessage("TWITCHCLIENT 2"));
+            }
         }
         private static void ModeHandler(TwitchChannel channel, IrcRawMessageEventArgs args)
         {

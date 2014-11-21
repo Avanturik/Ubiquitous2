@@ -409,6 +409,9 @@ namespace UB.Model
             followerPoller.Uri = new Uri(String.Format(getUrl, HttpUtility.UrlEncode(userName.ToLower())));
             followerPoller.ReadStream = (stream) =>
             {
+                if (stream == null)
+                    return;
+
                 using( stream )
                 {
                     var followers = Json.DeserializeStream<HitboxFollowers>(stream);
@@ -729,6 +732,9 @@ namespace UB.Model
 
             statsPoller.ReadStream = (stream) =>
             {
+                if (stream == null)
+                    return;
+
                 lock (pollerLock)
                 {
                     using (stream)

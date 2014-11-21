@@ -167,7 +167,6 @@ namespace UB.Model
 
 
             Thread.Sleep(1000);
-            ChatChannels.Clear();
             return true;
         }
 
@@ -313,7 +312,7 @@ namespace UB.Model
 
                     lock (channelsLock)
                     {
-                        ChatChannels.RemoveAll(chan => chan == null);                        
+                        ChatChannels.RemoveAll(chan => chan == null);
                         ChatChannels.RemoveAll(item => item.ChannelName == leaveChannel.ChannelName);
                     }
 
@@ -329,7 +328,6 @@ namespace UB.Model
                         Status.IsConnecting = true;
                     }
 
-
                     lock( joinLock )
                         JoinChannel(chatChannel, channel);
                 };
@@ -344,6 +342,13 @@ namespace UB.Model
             if (!ChatChannels.Any(c => c.ChannelName == channel))
             {
                 Log.WriteInfo("{0} joining {1}", Config.ChatName, channel);
+
+                lock (channelsLock)
+                    ChatChannels.Add(chatChannel);
+
+                if (AddChannel != null)
+                    AddChannel(chatChannel.ChannelName, this);
+
                 chatChannel.Join((joinChannel) =>
                 {
                     lock( joinLock )
@@ -358,17 +363,7 @@ namespace UB.Model
                         }
                         Status.IsConnecting = false;
                         Status.IsConnected = true;
-                        lock (channelsLock)
-                            ChatChannels.Add(joinChannel);
 
-
-                        if (RemoveChannel != null)
-                            RemoveChannel(joinChannel.ChannelName, this);
-
-                        ChatChannels.RemoveAll(chan => chan == null || (!String.IsNullOrWhiteSpace(chan.ChannelName) && chan.ChannelName.Equals(joinChannel.ChannelName, StringComparison.InvariantCultureIgnoreCase)));
-                        ChatChannels.Add(joinChannel);
-                        if (AddChannel != null)
-                            AddChannel(joinChannel.ChannelName, this);
 
                     }
                 }, channel);
