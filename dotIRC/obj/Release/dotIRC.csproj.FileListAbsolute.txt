@@ -35,3 +35,10 @@ C:\Users\meshkov\Source\Repos\Ubiquitous2\dotIRC\obj\Release\dotIRC.Properties.R
 C:\Users\meshkov\Source\Repos\Ubiquitous2\dotIRC\obj\Release\dotIRC.csproj.GenerateResource.Cache
 C:\Users\meshkov\Source\Repos\Ubiquitous2\dotIRC\obj\Release\dotIRC.dll
 C:\Users\meshkov\Source\Repos\Ubiquitous2\dotIRC\obj\Release\dotIRC.pdb
+C:\Users\Anton\Source\Repos\Ubiquitous2\dotIRC\bin\Release\net40\dotIRC.xml
+C:\Users\Anton\Source\Repos\Ubiquitous2\dotIRC\bin\Release\net40\dotIRC.dll
+C:\Users\Anton\Source\Repos\Ubiquitous2\dotIRC\bin\Release\net40\dotIRC.pdb
+C:\Users\Anton\Source\Repos\Ubiquitous2\dotIRC\obj\Release\dotIRC.Properties.Resources.resources
+C:\Users\Anton\Source\Repos\Ubiquitous2\dotIRC\obj\Release\dotIRC.csproj.GenerateResource.Cache
+C:\Users\Anton\Source\Repos\Ubiquitous2\dotIRC\obj\Release\dotIRC.dll
+C:\Users\Anton\Source\Repos\Ubiquitous2\dotIRC\obj\Release\dotIRC.pdb
