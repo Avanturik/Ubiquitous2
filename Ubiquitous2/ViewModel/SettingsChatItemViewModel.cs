@@ -195,16 +195,20 @@ namespace UB.ViewModel
             {
                 return _restart
                     ?? (_restart = new RelayCommand(
-                                          () =>
+                                          async () =>
                                           {
-                                                if (Enabled)
-                                                {
-                                                    IsLoaderVisible = true;
-                                                    Status.ResetToDefault();
-                                                    chat.Stop();
-                                                    chat.Start();
-                                                    IsLoaderVisible = false;
-                                                }
+                                              await Task.Run(() => {
+                                                  if (Enabled)
+                                                  {
+                                                      IsLoaderVisible = true;
+                                                      Status.ResetToDefault();
+                                                      Status.IsConnected = false;
+                                                      Status.IsLoggedIn = false;
+                                                      chat.Stop();
+                                                      chat.Start();
+                                                      IsLoaderVisible = false;
+                                                  }
+                                              });
                                           }));
             }
         }
