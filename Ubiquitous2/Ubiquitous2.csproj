@@ -279,6 +279,7 @@
     <Compile Include="ViewModel\EditBoxViewModel.cs" />
     <Compile Include="ViewModel\StreamTopicSectionViewModel.cs" />
     <Compile Include="ViewModel\SubFollowDonationViewModel.cs" />
+    <Compile Include="ViewModel\UserListViewModel.cs" />
     <Compile Include="View\DashBoardWindow.xaml.cs">
       <DependentUpon>DashBoardWindow.xaml</DependentUpon>
     </Compile>
@@ -302,6 +303,12 @@
     </Compile>
     <Compile Include="View\TestView.xaml.cs">
       <DependentUpon>TestView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\UserListView.xaml.cs">
+      <DependentUpon>UserListView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\UserListWindow.xaml.cs">
+      <DependentUpon>UserListWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="View\YesNoDialogView.xaml.cs">
       <DependentUpon>YesNoDialogView.xaml</DependentUpon>
@@ -625,6 +632,14 @@
     <Page Include="View\TestView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="View\UserListView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\UserListWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="View\YesNoDialogView.xaml">
       <SubType>Designer</SubType>

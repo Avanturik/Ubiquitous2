@@ -53,6 +53,7 @@ namespace UB.ViewModel
                 SimpleIoc.Default.Register<IStreamPageDataService, StreamPageDataService>();
                 SimpleIoc.Default.Register<IGreetingsDataService, GreetingsDataService>();
             }
+            SimpleIoc.Default.Register<UserListViewModel>();
             SimpleIoc.Default.Register<SubFollowDonationViewModel>();
             SimpleIoc.Default.Register<StreamTopicSectionViewModel>();
             SimpleIoc.Default.Register<EditBoxViewModel>();
@@ -254,6 +255,14 @@ namespace UB.ViewModel
             get
             {
                 return ServiceLocator.Current.GetInstance<SubFollowDonationViewModel>();
+            }
+        }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification = "This non-static member is needed for data binding purposes.")]
+        public UserListViewModel UserList
+        {
+            get
+            {
+                return ServiceLocator.Current.GetInstance<UserListViewModel>();
             }
         }
        

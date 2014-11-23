@@ -1912,6 +1912,8 @@ namespace dotIRC
             receiveEventArgs.SetBuffer(this.receiveStream.Buffer, (int)this.receiveStream.WritePosition,
                 this.receiveStream.Buffer.Length - (int)this.receiveStream.WritePosition);
             receiveEventArgs.Completed += ReceiveCompleted;
+            if (this.socket == null)
+                return;
 
             if (!this.socket.ReceiveAsync(receiveEventArgs))
                 ((EventHandler<SocketAsyncEventArgs>)ReceiveCompleted).BeginInvoke(

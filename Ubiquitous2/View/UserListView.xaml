@@ -1,0 +1,49 @@
+﻿<UserControl x:Class="UB.View.UserListView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             mc:Ignorable="d" 
+             DataContext="{Binding Path=UserList, Source={StaticResource Locator}}"              
+             d:DesignHeight="300" d:DesignWidth="300">
+    <UserControl.Resources>
+        <BooleanToVisibilityConverter x:Key="boolToVisibilityConverter"></BooleanToVisibilityConverter>
+    </UserControl.Resources>
+    <Grid>
+        <ScrollViewer Template="{DynamicResource ScrollStyle}" CanContentScroll="True">            
+            <ItemsControl Focusable="False" ItemsSource="{Binding Chats}" ScrollViewer.VerticalScrollBarVisibility="Auto">
+                <ItemsControl.ItemTemplate> 
+                    <DataTemplate>
+                        <VirtualizingStackPanel Visibility="{Binding Chat.Config.Enabled, Converter={StaticResource boolToVisibilityConverter}}" ScrollViewer.HorizontalScrollBarVisibility="Disabled" 
+                                                ScrollViewer.VerticalScrollBarVisibility="Visible" 
+                                                Orientation="Vertical">
+                        
+                            <StackPanel Orientation="Horizontal">
+                                <Image Height="16" Source="{Binding Chat.IconURL}" ToolTip="{Binding Chat.ChatName}" Margin="0,2,0,0"/>
+                                <TextBlock Text="{Binding Chat.ChatName}"/>
+                            </StackPanel>
+                            <ItemsControl Focusable="False" ItemsSource="{Binding UserList}">
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding NickName}"/>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                                <ItemsControl.ItemsPanel>
+                                    <ItemsPanelTemplate>
+                                        <StackPanel Orientation="Vertical"></StackPanel>
+                                    </ItemsPanelTemplate>
+                                </ItemsControl.ItemsPanel>
+                            </ItemsControl>
+                        </VirtualizingStackPanel>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <StackPanel Orientation="Horizontal">
+                        </StackPanel>
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+            </ItemsControl>
+        </ScrollViewer>
+    </Grid>
+</UserControl>

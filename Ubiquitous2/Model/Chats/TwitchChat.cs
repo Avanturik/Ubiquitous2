@@ -447,6 +447,7 @@ namespace UB.Model
     public class TwitchChannel : ChatChannelBase
     {
         private IrcClient ircClient = new IrcClient();
+        private object chatUsersLock = new object();
         private Random random = new Random();
         private Timer pingTimer, disconnectTimer;
         private const int pingInterval = 30000;
@@ -455,6 +456,7 @@ namespace UB.Model
         private Dictionary<string, Action<TwitchChannel, IrcRawMessageEventArgs>>
                 packetHandlers = new Dictionary<string, Action<TwitchChannel, IrcRawMessageEventArgs>>() {
                             {"001", ConnectHandler},
+                            {"353", UserListHandler},
                             {"MODE", ModeHandler},
                             {"PRIVMSG", PrivateMessageHandler},
                             {"JOIN", JoinHandler},
@@ -519,7 +521,7 @@ namespace UB.Model
             TryIrc( () => ircClient.Initialize());
             ircClient.Disconnected += ircClient_Disconnected;
             ircClient.RawMessageReceived += ircClient_RawMessageReceived;
-
+          
             if (Regex.IsMatch(host, @"\d+\.\d+\.\d+\.\d+"))
             {
                 TryIrc( () => ircClient.Connect (host, port, false, registrationInfo ));
@@ -665,7 +667,7 @@ namespace UB.Model
                 channel.Chat.Status.IsConnected = true;
                 channel.Chat.Status.IsConnecting = false;
                 channel.TryIrc(() => channel.ircClient.Channels.Join(channel.ChannelName));
-                channel.TryIrc(() => channel.ircClient.SendRawMessage("TWITCHCLIENT 2"));
+                channel.TryIrc(() => channel.ircClient.SendRawMessage("TWITCHCLIENT 1"));
             }
             if( channel.Chat.IsAnonymous )
             {
@@ -687,9 +689,67 @@ namespace UB.Model
             if( !username.Equals( channel.Chat.NickName, StringComparison.InvariantCultureIgnoreCase))
                 channel.SetUserBadge(parameters[2], "mod");
         }
+        private static void UserListHandler(TwitchChannel channel, IrcRawMessageEventArgs args)
+        {
+            var parameters = args.Message.Parameters;
+            if (parameters.Count < 3)
+                return;
+            
+            string userGroup = "Users";
+
+            var users = parameters[3].Split(' ');
+            if (users.Count() <= 0)
+                return;
+
+            foreach( var userNickname in users)
+            {
+
+                lock (channel.chatUsersLock)
+                {
+                    UI.Dispatch(() =>
+                    {
+                        lock (channel.chatUsersLock)
+                            if (!(channel.Chat as IChatUserList).ChatUsers.Any(u => u != null && u.NickName.Equals(userNickname)))
+                                (channel.Chat as IChatUserList).ChatUsers.Add(new ChatUser()
+                                {
+                                    Channel = channel.ChannelName,
+                                    ChatName = channel.Chat.ChatName,
+                                    GroupName = userGroup,
+                                    NickName = userNickname,
+                                    Badges = null,
+                                });
+                    });
+                }
+            }
+        }
         private static void JoinHandler(TwitchChannel channel, IrcRawMessageEventArgs args)
         {
             string userNickname = args.Message.Source.Name;
+            lock (channel.chatUsersLock)
+            {
+
+                if( !(channel.Chat as IChatUserList).ChatUsers.ToList().Any(u => u.NickName.Equals(userNickname)))
+                {
+                    List<UserBadge> badges;
+                    string userGroup = "Users";
+                    channel.userBadges.TryGetValue(userNickname, out badges);
+
+                        UI.Dispatch(() =>
+                        {
+                            lock (channel.chatUsersLock)
+                                if (!(channel.Chat as IChatUserList).ChatUsers.Any(u => u != null && u.NickName.Equals(userNickname)))
+                                    (channel.Chat as IChatUserList).ChatUsers.Add(new ChatUser()
+                                    {
+                                        Channel = channel.ChannelName,
+                                        ChatName = channel.Chat.ChatName,
+                                        GroupName = userGroup,
+                                        NickName = userNickname,
+                                        Badges = badges,
+                                    });
+                        });
+
+                }
+            }
             Log.WriteInfo("Twitch user joined: {0}", userNickname);
             if (userNickname.Equals(channel.Chat.NickName, StringComparison.InvariantCultureIgnoreCase))
             {
@@ -703,11 +763,17 @@ namespace UB.Model
             }
         }
         private static void LeaveHandler(TwitchChannel channel, IrcRawMessageEventArgs args)
-        {
+        {            
+            string userNickname = args.Message.Source.Name;
+            UI.Dispatch(() => {
+                (channel.Chat as IChatUserList).ChatUsers
+                    .RemoveAll(user => user.NickName.Equals(userNickname, StringComparison.InvariantCultureIgnoreCase));            
+            });
             Log.WriteInfo("Twitch user left: {0}", args.Message.Source);
         }
         private static void NoticeHandler( TwitchChannel channel, IrcRawMessageEventArgs args )
         {
+
             Log.WriteInfo("Twitch notice: {0}", args.RawContent);
             if (args.RawContent.Contains("Login unsuccessful"))
             {

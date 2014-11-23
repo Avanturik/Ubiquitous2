@@ -146,6 +146,7 @@
                             <CheckBox IsChecked="{Binding AppConfig.MouseTransparency, Mode=TwoWay}" Content="Click-through window. Hold Ctrl to disable." FontWeight="Bold"/>
                             <CheckBox IsChecked="{Binding AppConfig.IsReplyBoxPersistent, Mode=TwoWay}" Content="Reply box is always visible" FontWeight="Bold"/>
                             <CheckBox IsChecked="{Binding AppConfig.IsShortURLEnabled, Mode=TwoWay}" Content="Shorten URLs with tinyurl" FontWeight="Bold"/>
+                            <CheckBox IsChecked="{Binding AppConfig.IsUserListVisible, Mode=TwoWay}" Content="Show user list window" FontWeight="Bold"/>
                             <GroupBox Header="Background opacity control" VerticalAlignment="Top" FontWeight="Bold" Margin="0,10,0,0">
                                 <StackPanel Margin="7,13,0,0">
                                     <StackPanel Orientation="Horizontal" Margin="0,-9,0,0">

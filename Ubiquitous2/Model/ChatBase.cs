@@ -339,6 +339,7 @@ namespace UB.Model
 
         private void JoinChannel( IChatChannel chatChannel, string channel )
         {
+            lock( channelsLock )
             if (!ChatChannels.Any(c => c.ChannelName == channel))
             {
                 Log.WriteInfo("{0} joining {1}", Config.ChatName, channel);

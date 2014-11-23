@@ -17,6 +17,7 @@ namespace UB.Utils
         public static Window StatusWindow = new StatusWindow();
         public static Window MusicTickerWindow = new MusicTickerWindow();
         public static Window DashboardWindow = new DashBoardWindow();
+        public static Window UserListWindow = new UserListWindow();
         public static object showLock = new object();
 
         public static void SetPlacement(this Window window, WindowSettings settings)
@@ -56,6 +57,11 @@ namespace UB.Utils
             MusicTickerWindow.Visibility = Visibility.Visible;
         }
 
+        public static void ShowUserList()
+        {
+            UserListWindow.Visibility = Visibility.Visible;
+        }
+
         public static void ShowStatus()
         {
             StatusWindow.Visibility = Visibility.Visible;
@@ -64,6 +70,10 @@ namespace UB.Utils
         public static void HideMusicTicker()
         {
             MusicTickerWindow.Visibility = Visibility.Hidden;
+        }
+        public static void HideUserList()
+        {
+            UserListWindow.Visibility = Visibility.Hidden;
         }
 
         public static void HideStatus()
@@ -90,7 +100,7 @@ namespace UB.Utils
 
         public static void SetGlobalStatus(WindowState state)
         {
-            var windows = new Window[] { StatusWindow, MusicTickerWindow, SettingsWindow, DashboardWindow };
+            var windows = new Window[] { StatusWindow, MusicTickerWindow, SettingsWindow, DashboardWindow, UserListWindow };
             if (state != WindowState.Maximized)
                 foreach (var win in windows)
                     win.WindowState = state;
@@ -100,14 +110,18 @@ namespace UB.Utils
         {
             Visibility statusVisibility = StatusWindow.Visibility;
             Visibility musicTickerVisibility = MusicTickerWindow.Visibility;
+            Visibility userListWindowVisibility = UserListWindow.Visibility;
 
             StatusWindow.Close();
             MusicTickerWindow.Close();
+            UserListWindow.Close();
 
             StatusWindow = new StatusWindow();
             MusicTickerWindow = new MusicTickerWindow();
+            UserListWindow = new UserListWindow();
 
             StatusWindow.Visibility = statusVisibility;
+            UserListWindow.Visibility = statusVisibility;
             MusicTickerWindow.Visibility = musicTickerVisibility;
         }
     }

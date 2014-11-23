@@ -15,6 +15,36 @@ namespace UB.Model
         }
 
         /// <summary>
+        /// The <see cref="IsUserListVisible" /> property's name.
+        /// </summary>
+        public const string IsUserListVisiblePropertyName = "IsUserListVisible";
+
+        private bool _isUserListVisible = false;
+
+        /// <summary>
+        /// Sets and gets the IsUserListVisible property.
+        /// Changes to that property's value raise the PropertyChanged event. 
+        /// </summary>
+        public bool IsUserListVisible
+        {
+            get
+            {
+                return _isUserListVisible;
+            }
+
+            set
+            {
+                if (_isUserListVisible == value)
+                {
+                    return;
+                }
+
+                _isUserListVisible = value;
+                RaisePropertyChanged(IsUserListVisiblePropertyName);
+            }
+        }
+
+        /// <summary>
         /// The <see cref="ShowChannel" /> property's name.
         /// </summary>
         public const string ShowChannelPropertyName = "ShowChannel";

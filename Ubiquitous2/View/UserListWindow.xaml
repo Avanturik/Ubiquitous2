@@ -1,0 +1,19 @@
+﻿<Window x:Class="UB.View.UserListWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+        xmlns:view="clr-namespace:UB.View"
+        xmlns:Interactivity="clr-namespace:UB.Interactivity"
+                Visibility="{Binding Source={StaticResource Locator},Path=UserList.AppConfig.IsUserListVisible, Converter={StaticResource boolToVisibilityConverter}}"
+        Title="Users" Width="300" UseLayoutRounding="True" SizeToContent="Width" Icon="/Ubiquitous2;component/Resources/ubiquitous smile.ico">
+    <i:Interaction.Behaviors>
+        <Interactivity:WindowPersistentLocationBehavior WindowName="UsersWindow"/>
+        <Interactivity:UnclosableWindow/>
+    </i:Interaction.Behaviors>
+    <Window.Resources>
+        <BooleanToVisibilityConverter x:Key="boolToVisibilityConverter"></BooleanToVisibilityConverter>
+    </Window.Resources>
+    <Grid>
+        <view:UserListView></view:UserListView>
+    </Grid>
+</Window>
