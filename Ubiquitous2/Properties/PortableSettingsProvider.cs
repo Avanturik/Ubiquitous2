@@ -28,7 +28,7 @@ namespace UB
 
         private String applicationPath = Path.GetDirectoryName(new Uri(Assembly.GetExecutingAssembly().GetName().CodeBase).LocalPath);
 
-        public readonly string DefaultDirectory = Path.GetDirectoryName(new Uri(Assembly.GetExecutingAssembly().GetName().CodeBase).LocalPath);
+        public readonly string DefaultDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + @"\Ubiquitous2"; // Path.GetDirectoryName(new Uri(Assembly.GetExecutingAssembly().GetName().CodeBase).LocalPath);
         public const string DefaultSettingsName = "Default";
         public const string DefaultFileName = DefaultSettingsName + ".settings";
 

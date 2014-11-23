@@ -24,6 +24,7 @@
       </applicationRequestMinimum>
     </security>
   </trustInfo>
+
   <compatibility xmlns="urn:schemas-microsoft-com:compatibility.v1">
     <application>
       <!-- A list of all Windows versions that this application is designed to work with. 

@@ -10,6 +10,8 @@ namespace UB.Model
     public static class NativeMethods
     {
         public delegate IntPtr LowLevelKeyboardProc(int nCode, UIntPtr wParam, IntPtr lParam);
+        [DllImport("user32.dll", SetLastError = true)]
+        internal static extern bool SetProcessDPIAware();
 
         [DllImport("user32.dll")]
         internal static extern int GetWindowLong(IntPtr hwnd, int index);

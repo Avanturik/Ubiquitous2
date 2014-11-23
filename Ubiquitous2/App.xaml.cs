@@ -26,6 +26,8 @@ namespace UB
 
         protected override void OnStartup(StartupEventArgs e)
         {
+            NativeMethods.SetProcessDPIAware();
+
             Utils.Net.DemandTCPPermission();
 
             if (RenderCapability.Tier == 0)
