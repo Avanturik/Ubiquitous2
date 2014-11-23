@@ -385,7 +385,8 @@ namespace UB.Model
         public override void Leave()
         {
             Log.WriteInfo("Cybergame leaving {0}", ChannelName);
-            webSocket.Disconnect();
+            if( webSocket != null && !webSocket.IsClosed )
+                webSocket.Disconnect();
         }
        
         public override void SendMessage(ChatMessage message)

@@ -31,7 +31,7 @@
         <Interactivity:UnclosableWindow/>
     </i:Interaction.Behaviors>
 
-    <fluent:BackstageTabControl SelectedIndex="1" Background="#FF323232" Style="{DynamicResource SettingsStyle}" ItemsPanelBackground="#FF3F3F46">
+    <fluent:BackstageTabControl SelectedIndex="0" Background="#FF323232" Style="{DynamicResource SettingsStyle}" ItemsPanelBackground="#FF3F3F46">
         <fluent:BackstageTabItem Header="Stream topic">
             <Grid>
                 <Grid.Background>

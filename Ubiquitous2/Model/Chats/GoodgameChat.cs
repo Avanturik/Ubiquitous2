@@ -651,10 +651,13 @@ namespace UB.Model
         {
             Log.WriteInfo("Goodgame.ru leaving {0}", ChannelName);
             
-            timer.Change(Timeout.Infinite, Timeout.Infinite);
-            disconnectTimer.Change(Timeout.Infinite, Timeout.Infinite);
+            if( timer != null )
+                timer.Change(Timeout.Infinite, Timeout.Infinite);
+            
+            if( disconnectTimer != null )
+                disconnectTimer.Change(Timeout.Infinite, Timeout.Infinite);
 
-            if( !webSocket.IsClosed )
+            if( webSocket != null && !webSocket.IsClosed )
                 webSocket.Disconnect();
         }
 

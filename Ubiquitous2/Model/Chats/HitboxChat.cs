@@ -694,7 +694,8 @@ namespace UB.Model
         public override void Leave()
         {
             Log.WriteInfo("Hitbox leaving {0}", ChannelName);
-            webSocket.Disconnect();
+            if( webSocket != null && !webSocket.IsClosed )
+                webSocket.Disconnect();
         }
         
         public override void SendMessage( ChatMessage message )

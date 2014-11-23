@@ -545,12 +545,20 @@ namespace UB.Model
         }
         public override void Leave()
         {
-            ircClient.Disconnected -= ircClient_Disconnected;
-            ircClient.RawMessageReceived -= ircClient_RawMessageReceived;
+            if( ircClient != null)
+            {
+                ircClient.Disconnected -= ircClient_Disconnected;
+                ircClient.RawMessageReceived -= ircClient_RawMessageReceived;
+            }
 
-            disconnectTimer.Change(Timeout.Infinite, Timeout.Infinite);
-            pingTimer.Change(Timeout.Infinite, Timeout.Infinite);
-            statsPoller.Stop();
+            if( disconnectTimer != null)
+                disconnectTimer.Change(Timeout.Infinite, Timeout.Infinite);
+            
+            if( pingTimer != null)
+                pingTimer.Change(Timeout.Infinite, Timeout.Infinite);
+            
+            if( statsPoller != null )
+                statsPoller.Stop();
 
             Log.WriteInfo("Twitch leaving {0}", ChannelName);
 

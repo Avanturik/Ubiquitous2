@@ -458,9 +458,15 @@ namespace UB.Model
         public override void Leave()
         {
             Log.WriteInfo("Gaminglive leaving {0}", ChannelName);
-            pingTimer.Change(Timeout.Infinite, Timeout.Infinite);
-            statsPoller.Stop();
-            webSocket.Disconnect();
+            
+            if( pingTimer != null )
+                pingTimer.Change(Timeout.Infinite, Timeout.Infinite);
+            
+            if( statsPoller != null )
+                statsPoller.Stop();
+            
+            if( webSocket!= null && !webSocket.IsClosed)
+                webSocket.Disconnect();
         }
 
         public override void SendMessage( ChatMessage message )

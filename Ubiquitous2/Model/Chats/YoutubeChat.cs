@@ -141,9 +141,13 @@ namespace UB.Model
         public override void Leave()
         {
             Log.WriteInfo("Youtubechannel leaving {0}", ChannelName);
-            checkTimer.Change(Timeout.Infinite, Timeout.Infinite);
-            chatPoller.Stop();
-            statsPoller.Stop();
+            
+            if( checkTimer != null)
+                checkTimer.Change(Timeout.Infinite, Timeout.Infinite);
+            if( chatPoller != null )
+                chatPoller.Stop();
+            if( statsPoller != null )
+                statsPoller.Stop();
         }
 
         public override void SendMessage(ChatMessage message)

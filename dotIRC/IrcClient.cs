@@ -1511,7 +1511,8 @@ namespace dotIRC
                 }
 
                 // Make timer fire when next message in send queue should be written.
-                this.sendTimer.Change(Math.Max(sendDelay, minimumSendWaitTime), Timeout.Infinite);
+                if( this.sendTimer != null )
+                    this.sendTimer.Change(Math.Max(sendDelay, minimumSendWaitTime), Timeout.Infinite);
             }
             catch (SocketException exSocket)
             {

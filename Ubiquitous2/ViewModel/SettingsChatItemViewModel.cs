@@ -11,12 +11,14 @@ using GalaSoft.MvvmLight.Command;
 using GalaSoft.MvvmLight.Ioc;
 using Microsoft.Practices.ServiceLocation;
 using UB.Model;
+using UB.Utils;
 
 namespace UB.ViewModel
 {
     public class SettingsChatItemViewModel : ViewModelBase, IHeightMeasurer
     {
         private ChatConfig chatConfig;
+        private IChat chat;
         private ISettingsDataService _dataService;
         private IChatDataService chatDataService;
 
@@ -50,7 +52,7 @@ namespace UB.ViewModel
             _name = config.ChatName;
             _iconURL = config.IconURL ?? _iconURL;
 
-            var chat = chatDataService.GetChat(config.ChatName);
+            chat = chatDataService.GetChat(config.ChatName);
             if( chat != null )
                 _status = chat.Status;
 
@@ -195,14 +197,14 @@ namespace UB.ViewModel
                     ?? (_restart = new RelayCommand(
                                           () =>
                                           {
-                                              Task.Factory.StartNew(() => {
-                                                  if (this.Enabled)
-                                                  {
-                                                      this.Enabled = false;
-                                                      this.Enabled = true;
-                                                  }
-                                              
-                                              });
+                                                if (Enabled)
+                                                {
+                                                    IsLoaderVisible = true;
+                                                    Status.ResetToDefault();
+                                                    chat.Stop();
+                                                    chat.Start();
+                                                    IsLoaderVisible = false;
+                                                }
                                           }));
             }
         }

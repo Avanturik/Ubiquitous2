@@ -89,7 +89,7 @@ namespace UB.Model
             readChatCallback = callback;
         }
 
-        public void SwitchChat( String chatName, bool enabled)
+        public async void SwitchChat( String chatName, bool enabled)
         {
             var chat = GetChat(chatName);
 
@@ -97,15 +97,16 @@ namespace UB.Model
                 return;
 
             chat.Enabled = enabled;
-            Task.Factory.StartNew(() => ChatStatusHandler(chat));
+
+            await Task.Run(() => ChatStatusHandler(chat));
 
             if (enabled)
             {
-                chat.Start();
+                await Task.Run(() => chat.Start());
             }
             else
             {
-                chat.Stop();
+                await Task.Run (() => chat.Stop());
             }
             Log.WriteInfo("switching {0} to {1}", chatName, enabled);
         }
