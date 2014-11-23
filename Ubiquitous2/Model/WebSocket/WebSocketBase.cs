@@ -115,7 +115,7 @@ namespace UB.Model
             }
         }
 
-        public bool IsClosed { get {return socket.State == WebSocketState.Closed;} }
+        public bool IsClosed { get {return socket == null || socket.State == WebSocketState.Closed;} }
 
         void socket_Closed(object sender, EventArgs e)
         {

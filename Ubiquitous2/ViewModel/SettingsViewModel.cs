@@ -44,7 +44,6 @@ namespace UB.ViewModel
 
             AppConfig = Ubiquitous.Default.Config.AppConfig;
         }
-
         /// <summary>
         /// The <see cref="CurrentTheme" /> property's name.
         /// </summary>

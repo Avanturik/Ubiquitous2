@@ -70,7 +70,8 @@ namespace UB.Interactivity
             storyBoard.Children.Add(mainAnimation);
             Storyboard.SetTarget(mainAnimation, AssociatedObject);
             Storyboard.SetTargetProperty(mainAnimation, new PropertyPath(ScrollViewerAttached.VerticalPositionProperty));
-            storyBoard.Completed += (obj, e) => { 
+            storyBoard.Completed += (obj, e) => {
+                InstantScrollToBottom();
                 storyBoard = null;
             };
             storyBoard.Begin();

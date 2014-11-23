@@ -251,6 +251,9 @@ namespace UB.Model
                 var emoticonsMatches = this.With(x => loginWebClient.Download(url))
                     .With(x => Regex.Matches(x, @"""(.*?)"":""(smiles/.*?)"""));
 
+                if (emoticonsMatches == null)
+                    return;
+
                 if (emoticonsMatches.Count <= 0)
                 {
                     Log.WriteError("Unable to get Cybergame.tv emoticons!");

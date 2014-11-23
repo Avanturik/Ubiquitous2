@@ -15,8 +15,8 @@
         xmlns:Properties="clr-namespace:UB.Properties"
         SnapsToDevicePixels="True"
         UseLayoutRounding="True"
-        Topmost="True"
-        Title="Ubiquitous2 Settings" Icon="..\ubiquitous smile.ico" MinWidth="400" Width="500" MinHeight="250" WindowStartupLocation="Manual" Height="413">
+        Topmost="{Binding AppConfig.IsOnTop}"
+        Title="Ubiquitous2 Settings" Icon="..\ubiquitous smile.ico" MinWidth="400" Width="500.667" MinHeight="250" WindowStartupLocation="Manual" Height="439.667">
     <i:Interaction.Behaviors>
         <Interactivity:WindowPersistentLocationBehavior WindowName="SettingsWindow"/>
         <Interactivity:UnclosableWindow/>
@@ -29,7 +29,7 @@
         <Converter:StringToIsChecked x:Key="stringToIsCheckedConverter"/>
     </Window.Resources>
     <Grid>
-        <fluent:BackstageTabControl SelectedIndex="3" Background="#FF323232" Style="{DynamicResource SettingsStyle}">
+        <fluent:BackstageTabControl SelectedIndex="0" Background="#FF323232" Style="{DynamicResource SettingsStyle}">
             <fluent:BackstageTabItem Header="Chats">
                 <Grid>
                     <ItemsControl ItemsSource="{Binding Chats}"
@@ -142,9 +142,10 @@
                                     </TextBlock>
                                 </CheckBox.ToolTip>
                             </CheckBox>
-                            <TextBlock TextWrapping="Wrap" FontSize="9" Margin="20,0,0,0" FontStyle="Italic">
-                            </TextBlock>
+                            <CheckBox IsChecked="{Binding AppConfig.IsOnTop, Mode=TwoWay}" Content="Window always on top" FontWeight="Bold"/>
                             <CheckBox IsChecked="{Binding AppConfig.MouseTransparency, Mode=TwoWay}" Content="Click-through window. Hold Ctrl to disable." FontWeight="Bold"/>
+                            <CheckBox IsChecked="{Binding AppConfig.IsReplyBoxPersistent, Mode=TwoWay}" Content="Reply box is always visible" FontWeight="Bold"/>
+                            <CheckBox IsChecked="{Binding AppConfig.IsShortURLEnabled, Mode=TwoWay}" Content="Shorten URLs with tinyurl" FontWeight="Bold"/>
                             <GroupBox Header="Background opacity control" VerticalAlignment="Top" FontWeight="Bold" Margin="0,10,0,0">
                                 <StackPanel Margin="7,13,0,0">
                                     <StackPanel Orientation="Horizontal" Margin="0,-9,0,0">
@@ -182,7 +183,7 @@
                                         </StackPanel>
 
                                     </StackPanel>
-                                    <Label FontSize="10" Margin="0,-7,0,0" FontStyle="Italic" Content="* main window opacity doesn't affect PNG background)" VerticalAlignment="Top" HorizontalAlignment="Left" FontWeight="Normal"/>
+                                    <Label FontSize="10" Margin="0,-7,0,0" FontStyle="Italic" Content="* main window opacity doesn't affect PNG/OBS plugin background)" VerticalAlignment="Top" HorizontalAlignment="Left" FontWeight="Normal"/>
                                 </StackPanel>
                             </GroupBox>
                             <GroupBox Header="Font size" VerticalAlignment="Top" FontWeight="Bold" Margin="0,10,0,0">

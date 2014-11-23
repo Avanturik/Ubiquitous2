@@ -199,6 +199,96 @@ namespace UB.Model
         }
 
         /// <summary>
+        /// The <see cref="IsReplyBoxPersistent" /> property's name.
+        /// </summary>
+        public const string IsReplyBoxPersistentPropertyName = "IsReplyBoxPersistent";
+
+        private bool _isReplyBoxPersitent = false;
+
+        /// <summary>
+        /// Sets and gets the IsReplyBoxPersistent property.
+        /// Changes to that property's value raise the PropertyChanged event. 
+        /// </summary>
+        public bool IsReplyBoxPersistent
+        {
+            get
+            {
+                return _isReplyBoxPersitent;
+            }
+
+            set
+            {
+                if (_isReplyBoxPersitent == value)
+                {
+                    return;
+                }
+
+                _isReplyBoxPersitent = value;
+                RaisePropertyChanged(IsReplyBoxPersistentPropertyName);
+            }
+        }
+        /// <summary>
+        /// The <see cref="IsShortURLEnabled" /> property's name.
+        /// </summary>
+        public const string IsShortURLEnabledPropertyName = "IsShortURLEnabled";
+
+        private bool _isShortURLEnabled = true;
+
+        /// <summary>
+        /// Sets and gets the IsShortURLEnabled property.
+        /// Changes to that property's value raise the PropertyChanged event. 
+        /// </summary>
+        [XmlAttribute]
+        public bool IsShortURLEnabled
+        {
+            get
+            {
+                return _isShortURLEnabled;
+            }
+
+            set
+            {
+                if (_isShortURLEnabled == value)
+                {
+                    return;
+                }
+
+                _isShortURLEnabled = value;
+                RaisePropertyChanged(IsShortURLEnabledPropertyName);
+            }
+        }
+
+        /// <summary>
+        /// The <see cref="IsOnTop" /> property's name.
+        /// </summary>
+        public const string IsOnTopPropertyName = "IsOnTop";
+
+        private bool _isOnTop = true;
+
+        /// <summary>
+        /// Sets and gets the IsOnTop property.
+        /// Changes to that property's value raise the PropertyChanged event. 
+        /// </summary>
+        [XmlAttribute]
+        public bool IsOnTop
+        {
+            get
+            {
+                return _isOnTop;
+            }
+
+            set
+            {
+                if (_isOnTop == value)
+                {
+                    return;
+                }
+
+                _isOnTop = value;
+                RaisePropertyChanged(IsOnTopPropertyName);
+            }
+        }
+        /// <summary>
         /// The <see cref="MouseTransparency" /> property's name.
         /// </summary>
         public const string MouseTransparencyPropertyName = "MouseTransparency";

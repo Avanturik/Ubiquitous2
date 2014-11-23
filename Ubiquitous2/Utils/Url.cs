@@ -27,7 +27,7 @@ namespace UB.Utils
             var checkUri = uri;
             if (!checkUri.IsAbsoluteUri)
             {
-                if (!Uri.TryCreate("http://loclahost/" + uri.OriginalString, UriKind.Absolute, out checkUri))
+                if (!Uri.TryCreate("http://localhost/" + uri.OriginalString, UriKind.Absolute, out checkUri))
                     return String.Empty;
             }
             var query = HttpUtility.ParseQueryString(checkUri.Query);

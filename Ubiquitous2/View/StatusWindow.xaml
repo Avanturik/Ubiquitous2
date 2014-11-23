@@ -12,7 +12,7 @@
         ResizeMode="NoResize"
         Background="{x:Null}"
         Title="Viewers counter"
-        Topmost="True"
+        Topmost="{Binding AppConfig.IsOnTop}"
         Icon="..\ubiquitous smile.ico"
         UseLayoutRounding="True"
         DataContext="{Binding Source={StaticResource Locator},Path=Status}" 

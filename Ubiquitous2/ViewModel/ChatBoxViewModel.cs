@@ -55,24 +55,24 @@ namespace UB.ViewModel
         private void Initialize()
         {
             //Test data
-            for (var i = 0; i < 3; i++)
-            {
-                _dataService.GetRandomMessage(
-                    (item, error) =>
-                    {
-                        if (error != null)
-                        {
-                            // Report error here
-                            return;
-                        }
-                        item.ChatIconURL = Icons.MainIcon;
-                        item.Text += " http://asdf.com";
-                        item.Text = MessageParser.ConvertUrlsToLinks(item.Text);
-                        //item.Text += @" " + Html.CreateImageTag(Icons.MainHeadsetIcon, 24, 18);
-                        Messages.Add(new ChatMessageViewModel(item));
+            //for (var i = 0; i < 3; i++)
+            //{
+            //    _dataService.GetRandomMessage(
+            //        (item, error) =>
+            //        {
+            //            if (error != null)
+            //            {
+            //                // Report error here
+            //                return;
+            //            }
+            //            item.ChatIconURL = Icons.MainIcon;
+            //            item.Text += " http://asdf.com";
+            //            item.Text = MessageParser.ConvertUrlsToLinks(item.Text);
+            //            //item.Text += @" " + Html.CreateImageTag(Icons.MainHeadsetIcon, 24, 18);
+            //            Messages.Add(new ChatMessageViewModel(item));
 
-                    });
-            }
+            //        });
+            //}
 
 
             if (IsInDesignMode)

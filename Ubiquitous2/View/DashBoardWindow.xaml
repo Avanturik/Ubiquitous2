@@ -13,7 +13,7 @@
         xmlns:View="clr-namespace:UB.View"
         Title="Dashboard"
         mc:Ignorable="d ignore"
-        Topmost="True"
+        Topmost="{Binding AppConfig.IsOnTop}"
         DataContext="{Binding DashBoard, Source={StaticResource Locator}}" d:DesignWidth="660" d:DesignHeight="450" Width="660" Height="450" Background="#FF1E1E1E" Icon="/Ubiquitous2;component/Resources/ubiquitous smile.ico">
 
     <Window.Resources>

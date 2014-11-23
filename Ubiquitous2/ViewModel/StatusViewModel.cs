@@ -12,6 +12,7 @@ using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Ioc;
 using GalaSoft.MvvmLight.Threading;
 using UB.Model;
+using UB.Properties;
 using UB.Utils;
 
 namespace UB.ViewModel
@@ -63,10 +64,39 @@ namespace UB.ViewModel
                         
                     });
             };
-
+            AppConfig = Ubiquitous.Default.Config.AppConfig;
 
         }
 
+        /// <summary>
+        /// The <see cref="AppConfig" /> property's name.
+        /// </summary>
+        public const string AppConfigPropertyName = "AppConfig";
+
+        private AppConfig _appConfig = null;
+
+        /// <summary>
+        /// Sets and gets the AppConfig property.
+        /// Changes to that property's value raise the PropertyChanged event. 
+        /// </summary>
+        public AppConfig AppConfig
+        {
+            get
+            {
+                return _appConfig;
+            }
+
+            set
+            {
+                if (_appConfig == value)
+                {
+                    return;
+                }
+
+                _appConfig = value;
+                RaisePropertyChanged(AppConfigPropertyName);
+            }
+        }
 
 
         public ListCollectionView ChatsView { get; set; }

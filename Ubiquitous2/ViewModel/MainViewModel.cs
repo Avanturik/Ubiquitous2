@@ -60,6 +60,13 @@ namespace UB.ViewModel
             keyboardListener.KeyDown += keyboardListener_KeyDown;
             keyboardListener.KeyUp += keyboardListener_KeyUp;
 #endif
+            if( AppConfig.IsReplyBoxPersistent )
+            {
+                IsOverlayVisible = true;
+                SendTextEditMode = true;
+            }
+
+            
             AppConfig.PropertyChanged += AppConfig_PropertyChanged;
 
             Win.ShowStatus();
@@ -110,6 +117,10 @@ namespace UB.ViewModel
             if( e.PropertyName.Equals(AppConfig.MouseTransparencyPropertyName) )
             {
                 EnableMouseTransparency = AppConfig.MouseTransparency;
+            }
+            else if( e.PropertyName.Equals(AppConfig.IsReplyBoxPersistent ))
+            {
+                SwitchOverlay();
             }
         }
 
@@ -237,7 +248,7 @@ namespace UB.ViewModel
                                               {
                                                   Properties.Ubiquitous.Default.Save();
                                                   _dataService.Stop();
-
+                                                  
                                                   Application.Current.Shutdown();
                                               }
                                               IsWindowReopen = false;
@@ -317,6 +328,9 @@ namespace UB.ViewModel
                     ?? (_hideOverlay = new RelayCommand(
                                           () =>
                                           {
+                                              if (AppConfig.IsReplyBoxPersistent)
+                                                  return;
+
                                               IsMouseOver = false;
                                               SwitchOverlay();
                                           }));
@@ -534,16 +548,18 @@ namespace UB.ViewModel
         }
         private void SwitchOverlay()
         {
-            if (IsMouseOver && IsFocused)
+            if ((IsMouseOver && IsFocused) || AppConfig.IsReplyBoxPersistent)
             {
                 IsOverlayVisible = true;
                 SendTextEditMode = true;
             }
-            else if( !IsMouseOver && !IsFocused)
+            else if( !AppConfig.IsReplyBoxPersistent && !IsMouseOver && !IsFocused)
             {
                 IsOverlayVisible = false;
                 SendTextEditMode = false;
             }
+            if( AppConfig.IsReplyBoxPersistent )
+                MessengerInstance.Send<bool>(!(IsMouseOver && IsFocused), "EnableAutoScroll");
         }
 
         private RelayCommand _enterCommand;

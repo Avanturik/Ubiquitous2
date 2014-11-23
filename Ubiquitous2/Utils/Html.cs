@@ -7,6 +7,7 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.UI;
+using System.Windows;
 using HtmlAgilityPack;
 using UB.Model;
 
@@ -35,6 +36,10 @@ namespace UB.Utils
         }
         public static string GetTinyUrl( string url )
         {
+            var appConfig = (Application.Current as App).AppConfig;
+            if (!appConfig.IsShortURLEnabled)
+                return url;
+
             Uri uri;
             if( Uri.TryCreate( url, UriKind.Absolute, out uri ))
             {

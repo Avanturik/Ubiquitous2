@@ -193,6 +193,8 @@ namespace UB.Model
 
 
                     var content = GoodgameGet(url);
+                    if (content == null)
+                        return;
 
                     MatchCollection matches = Regex.Matches(content, @"}[^\.]*\.smile-([^-|\s]*)\s*{(.*?)}", RegexOptions.IgnoreCase);
 

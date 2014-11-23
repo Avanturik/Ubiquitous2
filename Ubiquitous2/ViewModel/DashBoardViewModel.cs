@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using UB.Utils;
 using System.Threading.Tasks;
 using System;
+using System.Windows;
 
 namespace UB.ViewModel
 {
@@ -42,7 +43,7 @@ namespace UB.ViewModel
 
         private void Initialize()
         {
-
+            AppConfig = (Application.Current as App).AppConfig;
             InitializeTopicSections();
 
             TotalViewers = new ObservableCollection<StatisticsViewers>();
@@ -74,7 +75,35 @@ namespace UB.ViewModel
 
 
         }
+        /// <summary>
+        /// The <see cref="AppConfig" /> property's name.
+        /// </summary>
+        public const string AppConfigPropertyName = "AppConfig";
 
+        private AppConfig _appConfig = null;
+
+        /// <summary>
+        /// Sets and gets the AppConfig property.
+        /// Changes to that property's value raise the PropertyChanged event. 
+        /// </summary>
+        public AppConfig AppConfig
+        {
+            get
+            {
+                return _appConfig;
+            }
+
+            set
+            {
+                if (_appConfig == value)
+                {
+                    return;
+                }
+
+                _appConfig = value;
+                RaisePropertyChanged(AppConfigPropertyName);
+            }
+        }
         #region Stream topic       
         private void InitializeTopicSections()
         {

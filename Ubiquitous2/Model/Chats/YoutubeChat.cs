@@ -48,7 +48,8 @@ namespace UB.Model
 
 
                 var content = webClient.Download(url);
-
+                if (String.IsNullOrWhiteSpace(content))
+                    return;
                 MatchCollection matches = Regex.Matches(content, @"yt-emoji-icon.yt-emoji-([0-9,a-z]+)\s*{(.*?)}", RegexOptions.IgnoreCase);
 
                 if (matches.Count <= 0)
