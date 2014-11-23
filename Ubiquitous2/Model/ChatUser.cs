@@ -11,5 +11,6 @@ namespace UB.Model
         public string NickName { get; set; }
         public string Channel { get; set; }
         public string ChatName { get; set; }
+        public string GroupName { get; set; }
     }
 }

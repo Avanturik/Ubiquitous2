@@ -16,7 +16,7 @@ using System.Runtime.Serialization;
 
 namespace UB.Model
 {
-    public class TwitchChat : ChatBase, IStreamTopic, IFollowersProvider
+    public class TwitchChat : ChatBase, IStreamTopic, IFollowersProvider, IChatUserList
     {
         private object lockSearch = new object();
         private object iconParseLock = new object();
@@ -51,6 +51,7 @@ namespace UB.Model
 
             Games = new ObservableCollection<Game>();
 
+            ChatUsers = new ObservableCollection<ChatUser>();
         }
 
         public override bool Login()
@@ -435,6 +436,12 @@ namespace UB.Model
             followerPoller.Start();
         }
         #endregion
+
+        public ObservableCollection<ChatUser> ChatUsers
+        {
+            get;
+            set;
+        }
     }
 
     public class TwitchChannel : ChatChannelBase

@@ -245,6 +245,7 @@
     <Compile Include="Model\Greeting.cs" />
     <Compile Include="Model\GreetingsDataService.cs" />
     <Compile Include="Model\IChatChannel.cs" />
+    <Compile Include="Model\IChatUserList.cs" />
     <Compile Include="Model\IDatabase.cs" />
     <Compile Include="Model\IFollowersProvider.cs" />
     <Compile Include="Model\IGreetingsDataService.cs" />
