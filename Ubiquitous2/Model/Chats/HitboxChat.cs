@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Collections.Specialized;
 using System.Linq;
 using System.Net;
 using System.Text;
@@ -16,7 +17,7 @@ namespace UB.Model
     //TODO: implement user list
     // query: 5:::{"name":"message","args":[{"method":"getChannelUserList","params":{"channel":"arquel"}}]}
     // response: 5:::{"name":"message","args":["{\"method\":\"userList\",\"params\":{\"channel\":\"arquel\",\"data\":{\"Guests\":279,\"admin\":[\"seriousownsya\",\"Quiett\",\"ArQuel\",\"DrS\"],\"user\":[\"Jotosha\",\"Kloczek\",\"MeowBot\",\"Mofosky\",\"Blejdy\",\"Wodziak\"],\"anon\":[\"powerqp\",\"brusiu80\",\"Pawelf1a\",\"Moiker\",\"Grzelu\",\"Prymek\",\"Poniaczek\",\"Preaksent\",\"Tuptaczek\",\"Hazel\",\"FajnyNick123\",\"Metzager\",\"HailLelouch\",\"Avirel\",\"Adaameek\",\"Shiguu\",\"Goten\",\"poohy\",\"TiBey\",\"Kredzioo\",\"oskvs\",\"Nanq\",\"Hishiro\",\"matoprokox\",\"venuser\",\"p4key\",\"tomek113\",\"BusinessAsUsual\",\"kisskee\",\"Jambus\",\"KretaczH\",\"ziaroo\",\"Fxbezimienny\",\"willl\",\"HawKi\",\"matic640\",\"Forfiter\",\"QeFEAR\",\"Sco0Ty\",\"Cpooonek\",\"warzywko\",\"r4k\",\"SlimShady\",\"Marchiewa\",\"Boskizioms\",\"FebraakaSolution\",\"Misuh\",\"Squueze\",\"DeNasty\",\"daavcio\",\"Niewin25\",\"SteveStifler\",\"Ioweth\",\"avgrejt\",\"VladimirekOp\",\"WitGold\",\"CptRuthless\",\"LALAlp\",\"Lucyferus\",\"ArturR\",\"fbst\",\"EnEaT\",\"Charleees\",\"raptile\",\"rogal\",\"Anetaklepkotleta\",\"ExCoo\",\"beniozska\",\"CrazzY\",\"Raedon\",\"FxBraciakukier\",\"Technik\",\"Percik\",\"Ozzykindman\",\"Nejki\",\"danfoss1232\",\"Hania\",\"Kjuba\",\"adamrzepka5\",\"Fr4iD\",\"peehol\",\"CezareAve\",\"Torpick\",\"Maro40\",\"DeVaJanty\",\"AgresywnyKrzys\",\"Slumax\",\"Zkaz\",\"DoNBurrito\",\"Rivel3\",\"cybuszek\",\"RedstoneGodx\",\"Teequee\",\"DamianosDW\",\"KoneserKayle\",\"Getat\",\"gwynblaid\",\"namiandkogmal4\",\"FxPgaWpierdolv4\",\"del7\",\"CyanBear\",\"Vejxel\",\"Gibs0n\",\"PawLenka\",\"Mistrzunio\",\"Andr0\",\"3456ps\",\"paczus1\",\"KoJoST\",\"Connomy\",\"kubaspo\",\"M4nt3x\",\"Pontius\",\"Salienia\",\"Zentho\",\"Garfieldxd\",\"PouletGaming\",\"nnwnw\",\"oLOoos\",\"Gandaaav3\",\"codex\",\"IFaper\",\"GaurdsmanBob\",\"Walkorek123\",\"cieplydnb\",\"Arroo\",\"NieTyBoJa\",\"tomaszdysko1\",\"Warlikepotato\",\"Fresa\",\"alanek\",\"KrisuWariacina\",\"Glebson\",\"KappaGonnaKappav2\",\"Wudka\",\"Roten\",\"BuMu96\",\"iBoomiBoom\",\"karasiu\",\"karolkrol71\",\"paszkos1\",\"altevi\",\"arturtenhamedo\",\"kiker20\",\"alkold\",\"Demoosh\",\"Vezuvio\",\"lukasgures\",\"kathlyanne\",\"DoDox\",\"przybys\",\"Arito\",\"Ementan\",\"PapierowyTygrys\",\"michihehe\",\"Baszi\",\"Kooziak\",\"Hellioo\",\"FutureTiger\",\"Dave899\",\"Bozena\",\"Grencio\",\"arqueroz\",\"Meivis\",\"Antiosek\",\"muffincloud\",\"alanizoo\",\"elliotrodgerhere\",\"Budi4862\",\"nSkuter\",\"Bejuk\",\"Azter\",\"Riddle\",\"MCTampon\",\"AomineV2\",\"Frostbum\",\"joke2305\",\"konnopniack\",\"dawidnowok5\",\"Talitha\",\"Dangerss\",\"Rambo18\",\"samsungon\",\"sandiego011\",\"ziomkus\",\"jackjohny\",\"pyta13\",\"Lemonn\",\"Duri\",\"Gamuno\",\"GhostXP\",\"Maju\",\"Apek424\",\"Krajes\",\"VeSD\",\"Rafal1\",\"Diendris\",\"Fre0n\",\"Riper\",\"Mesmerize\",\"ultrals\",\"Shaqiri\",\"Trevo\",\"MPMJ\",\"danielok294\",\"nieblokuj\",\"inventis\",\"Komar\",\"Primo51\",\"venowsky\",\"MateusZzzz\",\"blanczi\",\"Crawcu\",\"Laysior\",\"Swane\",\"TenPizdokleszcz\",\"Koteczeg\",\"Z1pp00\",\"toffi\",\"xripp3r\",\"kubajaszi10\",\"arturek2004xmetinekpl\",\"vernes\",\"FxNieMamSmajta\",\"Shaadi\",\"Koniucho\",\"pawko\",\"neksiol\",\"kibel0\",\"Theiro\",\"Mikelordi\",\"grzesiu010401\",\"Molfus\",\"CreativeFun\",\"CooLMinT\",\"NervousPie3\",\"Kalib3r\",\"Venn\",\"Sebasti97\",\"Gor4l\",\"FeCra\",\"pojechany16\",\"Coolguypl\",\"eMteK\",\"Itzsaber\",\"The-Selfie\",\"Verandes\",\"Maurycy\",\"snorlaxinho\",\"Gudlajx\",\"Matizg\",\"Cajbyl\",\"Psychiatra\",\"nefflel\",\"xRyuuK\",\"Shaqer321\",\"KeringPL\",\"Falstaff\",\"luki2731\",\"Kumakie\",\"majcherino\",\"Izmun\",\"addzix\",\"Dizzyx10\",\"leszczuk\",\"ch1zzv\",\"BenekCwelek\",\"CaLuuu\",\"Mentossek\",\"kuboLL\",\"Paweleqqk\",\"Hirux\",\"rickyricardo\",\"DzordzWBuuch\",\"maciejekelo\",\"HandsomePatryk\",\"Bombajo\",\"Minia\",\"Satheman\",\"Trevi\",\"gimolek\",\"Shadowek666\",\"arquelisGODv2\",\"AndrzejGlowaXD\",\"Rotzscope\",\"PosterunkowyJanusz\",\"Nasrixd1\",\"jamroz\",\"Sokru\",\"Whajj\",\"Avooid\",\"Zielak\",\"Stybar\",\"l4jt00wyy\",\"Potter148\",\"Nighteagle\",\"krissek\",\"Biednyy\",\"salsido\",\"sQubany\",\"Wooooookash\",\"Jaykeedo\",\"Damianvampier\",\"Grrunt\",\"mrciupaak\",\"marek0928\",\"Xasin\",\"Gerald4kk\",\"knoff99\",\"OmekPL\",\"seba199818\",\"StarGuard\",\"fRoDAce\",\"iMmortaaLR\",\"Mikail\",\"InaxxV\",\"Hubuss\",\"snn\",\"Korvig\",\"Lorfen\",\"Kaaka\",\"kranczi9888\",\"Rabciks\",\"MokryDzejson\",\"Sulle\",\"EarlySoundZ\",\"NoreK1323\",\"TaxerStomil\",\"Orsetto\",\"FxImbunioKerunio\",\"sanninplKappa\",\"Lemonusiek\",\"s3arch\",\"kasper181\",\"jackol\",\"Sarill\",\"ThePoliticalSeer\",\"Skejcior\",\"Jachu\",\"Kouzy\",\"Rogii94\",\"Innominates\",\"Vanzi\",\"przemsza\",\"Aver\",\"Czosnkowydziad\",\"JajoPL\",\"knX\",\"rafQ\",\"MOORPHEUS\",\"aro492\",\"MammothLIVE\",\"KoKoxPJ\",\"Sutej\",\"Arioowik\",\"Eple\",\"Ptr\",\"Kubd0n\",\"Viksu\",\"Zenpaku\",\"Asokus\",\"MrGreenDick\",\"k0stek\",\"Sobczakos\",\"Krzysztofowicz\",\"hubert1231v2\",\"eds0N\",\"Invictum\",\"FUNOnlineTV\",\"Gasior\",\"xXAbendGanzXx\",\"Niklas56\",\"iHavocHD\",\"HeyPompa\",\"Zaiste1\",\"deru98\",\"Silber\",\"JosNy\",\"Lemonnationpl\",\"Raen881\",\"qboss\",\"erczkozak\",\"HotCzikaWeronica\",\"Freezyy\",\"sebastiannowak92167\",\"Kuba96\",\"Taraneks\",\"bamzrd\",\"ZibekOwner\",\"Stajlu\",\"Tetthete\",\"Swistakov\",\"SherlockHolmes\",\"marcin01\",\"ZiomekAdi\",\"Aldegar\",\"Andrzej1462\",\"FxTataGucia\",\"Chuckovsky\",\"venamos\",\"SKayto\",\"BojemSiem\",\"matiud\",\"Rolerd\",\"PeEs\",\"FakerMyGod\",\"GreatBaitMate\",\"xkajowasx\",\"Itutate\",\"depcio121\",\"rzaruwka\",\"Menago\",\"papuga245\",\"Kubraksnk\",\"Mrasna\",\"Amael\",\"abiabeesik\",\"WorstaSummoner\",\"langusta49\",\"Szmidziooo\",\"VeZoK93\",\"xGreatx\",\"SoOtnix\",\"ramos12\",\"sebjas6\",\"Pieter\",\"kielbazaur\",\"FxKochamMrasna\",\"avepasy\",\"RoNi10x\",\"SpiritWalkerr\",\"Riseadrian\",\"Fiddel\",\"jozkowy\",\"T3chnix\",\"Kapukakappy\",\"rafalczajka311\",\"tronku\",\"PerKorn\",\"Xordek90\",\"PBoobie\",\"Wladca2634\",\"d3xtero\",\"WaldekzCargo\",\"dvpsky\",\"FreskowyBGC\",\"MrBabetti\",\"maurycyproszowski\",\"SuperDragons\",\"auaau\",\"Maniu386\",\"mustt\",\"Kolsi69\",\"MafciuPL\",\"forenT\",\"MasterNukerek\",\"deadman27pl\",\"haq\",\"Piorunochron\",\"Dameremma\",\"Staruch\",\"matysstream\",\"Gillldartz\",\"Kefirro\",\"kaargol\",\"jokieezz\",\"Maksul\",\"akrstepniewski\",\"Hezuu\",\"MAden\",\"Mykac\",\"DriQuiK\",\"maciekkwiatek963\",\"mikfil\",\"Fuzzik\",\"Endorocket\",\"Emtinek\",\"KoreanskiChallenger\",\"Narkos121\",\"Fixor12\",\"matik2192\",\"Vivier\",\"ak47unlucky\",\"Rusek11\",\"TheAprol\",\"Ashgan\",\"Ogarekk\",\"KCArquelv10\",\"JezBeyv2\",\"Biercu\",\"szymon25g\",\"lele23\",\"kezc\",\"Akisaki\",\"AwsomeHempcio\",\"playbackea\",\"Bluetrizer\",\"Majster\",\"Shobi\",\"Swagetti\",\"Raaaaaaaaaampage\",\"Ruskoo\",\"choto12\",\"SoapyCola\",\"jramenda\",\"Wiluuuu\",\"dzigli14\",\"Coldek\",\"Artusiello\",\"miNIr0x\",\"Caseyy\",\"delord\",\"Huor\",\"Lajz\",\"michal9530\",\"Ageonix\",\"xAlbis\",\"exers234\",\"Almuagin\",\"PSTSekki\",\"bodownm\",\"Urszak\",\"ciureek\",\"ryszek\",\"celek070\",\"Med1um\",\"Gortad\",\"maaariusz\",\"VeQeZ\",\"M4rder\",\"PLPomazgany\",\"Vinald\",\"xyho\",\"YouC3n\",\"Marcelovsky\",\"Krawczyk\",\"resto155\",\"Diament0wyy\",\"17norbert\",\"Ganjalf123\",\"blokersag\",\"SkumbagKawa\"],\"isFollower\":[\"Quiett\",\"Jotosha\",\"Kloczek\",\"Blejdy\",\"powerqp\",\"Grzelu\",\"Prymek\",\"Poniaczek\",\"Preaksent\",\"Hazel\",\"FajnyNick123\",\"Metzager\",\"HailLelouch\",\"Adaameek\",\"Shiguu\",\"Goten\",\"TiBey\",\"Kredzioo\",\"Nanq\",\"Hishiro\",\"venuser\",\"p4key\",\"tomek113\",\"BusinessAsUsual\",\"kisskee\",\"Jambus\",\"KretaczH\",\"Cpooonek\",\"warzywko\",\"r4k\",\"SlimShady\",\"FebraakaSolution\",\"Misuh\",\"DeNasty\",\"Niewin25\",\"SteveStifler\",\"Ioweth\",\"avgrejt\",\"Lucyferus\",\"fbst\",\"EnEaT\",\"rogal\",\"Anetaklepkotleta\",\"CrazzY\",\"Raedon\",\"Technik\",\"Nejki\",\"Hania\",\"Kjuba\",\"Fr4iD\",\"peehol\",\"Torpick\",\"Maro40\",\"AgresywnyKrzys\",\"Slumax\",\"cybuszek\",\"RedstoneGodx\",\"Teequee\",\"Getat\",\"Gibs0n\",\"Andr0\",\"3456ps\",\"M4nt3x\",\"Walkorek123\",\"Warlikepotato\",\"KrisuWariacina\",\"Glebson\",\"Wudka\",\"iBoomiBoom\",\"paszkos1\",\"altevi\",\"kiker20\",\"alkold\",\"Demoosh\",\"lukasgures\",\"DoDox\",\"PapierowyTygrys\",\"Baszi\",\"Kooziak\",\"Hellioo\",\"FutureTiger\",\"arqueroz\",\"Meivis\",\"elliotrodgerhere\",\"Bejuk\",\"MCTampon\",\"AomineV2\",\"Rambo18\",\"samsungon\",\"sandiego011\",\"pyta13\",\"Duri\",\"Gamuno\",\"GhostXP\",\"Maju\",\"Apek424\",\"Krajes\",\"VeSD\",\"Rafal1\",\"Riper\",\"ultrals\",\"Trevo\",\"MPMJ\",\"danielok294\",\"Komar\",\"Primo51\",\"MateusZzzz\",\"blanczi\",\"Crawcu\",\"Swane\",\"Koteczeg\",\"xripp3r\",\"vernes\",\"neksiol\",\"Mikelordi\",\"Molfus\",\"CreativeFun\",\"CooLMinT\",\"NervousPie3\",\"Kalib3r\",\"Venn\",\"Sebasti97\",\"FeCra\",\"pojechany16\",\"eMteK\",\"Itzsaber\",\"Gudlajx\",\"Matizg\",\"xRyuuK\",\"Falstaff\",\"majcherino\",\"Izmun\",\"addzix\",\"leszczuk\",\"ch1zzv\",\"BenekCwelek\",\"Mentossek\",\"kuboLL\",\"maciejekelo\",\"Trevi\",\"gimolek\",\"Nasrixd1\",\"jamroz\",\"Avooid\",\"Zielak\",\"Stybar\",\"Nighteagle\",\"Biednyy\",\"sQubany\",\"Damianvampier\",\"marek0928\",\"Xasin\",\"seba199818\",\"fRoDAce\",\"iMmortaaLR\",\"InaxxV\",\"Hubuss\",\"Lorfen\",\"Kaaka\",\"MokryDzejson\",\"NoreK1323\",\"TaxerStomil\",\"Orsetto\",\"FxImbunioKerunio\",\"sanninplKappa\",\"s3arch\",\"Sarill\",\"Skejcior\",\"Rogii94\",\"przemsza\",\"JajoPL\",\"knX\",\"rafQ\",\"MOORPHEUS\",\"aro492\",\"Sutej\",\"Arioowik\",\"Eple\",\"Ptr\",\"Kubd0n\",\"Viksu\",\"Zenpaku\",\"Asokus\",\"MrGreenDick\",\"k0stek\",\"Sobczakos\",\"Invictum\",\"xXAbendGanzXx\",\"Zaiste1\",\"deru98\",\"JosNy\",\"Lemonnationpl\",\"Raen881\",\"HotCzikaWeronica\",\"Taraneks\",\"ZibekOwner\",\"Swistakov\",\"SherlockHolmes\",\"marcin01\",\"Aldegar\",\"FxTataGucia\",\"venamos\",\"SKayto\",\"PeEs\",\"FakerMyGod\",\"xkajowasx\",\"rzaruwka\",\"Menago\",\"Kubraksnk\",\"Mrasna\",\"abiabeesik\",\"Szmidziooo\",\"ramos12\",\"Pieter\",\"kielbazaur\",\"FxKochamMrasna\",\"SpiritWalkerr\",\"Riseadrian\",\"Fiddel\",\"jozkowy\",\"T3chnix\",\"Kapukakappy\",\"rafalczajka311\",\"PerKorn\",\"Xordek90\",\"PBoobie\",\"FreskowyBGC\",\"forenT\",\"MasterNukerek\",\"deadman27pl\",\"Piorunochron\",\"Staruch\",\"Gillldartz\",\"Kefirro\",\"kaargol\",\"jokieezz\",\"Mykac\",\"DriQuiK\",\"Endorocket\",\"Emtinek\",\"KoreanskiChallenger\",\"Narkos121\",\"matik2192\",\"TheAprol\",\"Ogarekk\",\"Biercu\",\"kezc\",\"Akisaki\",\"playbackea\",\"Bluetrizer\",\"Raaaaaaaaaampage\",\"Ruskoo\",\"choto12\",\"dzigli14\",\"Artusiello\",\"Caseyy\",\"delord\",\"Lajz\",\"michal9530\",\"Ageonix\",\"xAlbis\",\"PSTSekki\",\"Urszak\",\"ciureek\",\"ryszek\",\"celek070\",\"Med1um\",\"maaariusz\",\"M4rder\",\"PLPomazgany\",\"Vinald\",\"YouC3n\",\"Marcelovsky\",\"resto155\",\"17norbert\",\"Ganjalf123\",\"blokersag\"],\"isSubscriber\":[\"seriousownsya\",\"Quiett\",\"DrS\",\"Jotosha\",\"Kredzioo\",\"matoprokox\",\"M4nt3x\"],\"isStaff\":[\"seriousownsya\",\"Quiett\",\"DrS\"]}}}"]}
-    public class HitboxChat : ChatBase, IStreamTopic, IFollowersProvider
+    public class HitboxChat : ChatBase, IStreamTopic, IFollowersProvider, IChatUserList
     {
         private WebClientBase loginWebClient = new WebClientBase();
         private object iconParseLock = new object();
@@ -44,7 +45,7 @@ namespace UB.Model
                 HasTopic = true,
                 ChatName = Config.ChatName,
             };
-
+            ChatUsers = new ObservableCollection<ChatUser>();
             Games = new ObservableCollection<Game>();
         }
         #region IChat implementation
@@ -448,6 +449,12 @@ namespace UB.Model
         }
         #endregion
 
+
+        public ObservableCollection<ChatUser> ChatUsers
+        {
+            get;
+            set;
+        }
     }
 
     public class HitboxChannel : ChatChannelBase
@@ -456,11 +463,21 @@ namespace UB.Model
         private Random random = new Random();
         private WebPoller statsPoller;
         private object pollerLock = new object();
+        private object lockRawMessage = new object();
+        private Timer timerEveryMinute;
+        private object chatUsersLock = new object();
+        private ObservableCollection<ChatUser> currentUserList = new ObservableCollection<ChatUser>();
 
         public HitboxChannel(HitboxChat chat)
         {
             Chat = chat;
-            
+            timerEveryMinute = new Timer((obj) => { 
+                var channel = obj as HitboxChannel;
+                if( channel == null )
+                    return;
+
+                SendUserListRequest(channel.ChannelName);
+            }, this, Timeout.Infinite, Timeout.Infinite);            
         }
         private void GetRandomIP(string[] hosts, int port, Action<string> callback)
         {
@@ -549,8 +566,26 @@ namespace UB.Model
             };
             webSocket.ReceiveMessageHandler = ReadRawMessage;
             Connect();
+            SetupStatsWatcher();
         }
-
+        private void SendUserListRequest(string channel)
+        {
+            var hitboxPacket = new HitboxWebSocketPacket()
+            {
+                name = "message",
+                args = new List<HitboxArg>()
+                {
+                    new HitboxArg() {
+                        method = "getChannelUserList",
+                        @params = new {
+                            channel = channel.Replace("#",""),
+                        }
+                    }
+                }
+            };
+            var jsonString = JsonConvert.SerializeObject(hitboxPacket);
+            webSocket.Send("5:::" + jsonString);
+        }
         private void SendCredentials(string nickname, string channel, string authToken)
         {
             var loginData = new HitboxWebSocketPacket()
@@ -601,95 +636,170 @@ namespace UB.Model
         }
         private void ReadRawMessage(string rawMessage)
         {
-            const string jsonArgsRe = @".*args"":\[""(.*?)""\]}$";
-
-            if (rawMessage.Equals("1::"))
-            {
-                Chat.Status.IsConnected = true;
-            }
-            else if (rawMessage.Equals("2::"))
-            {
-                Thread.Sleep(random.Next(100, 1000));
-                webSocket.Send("2::");
+            if( String.IsNullOrWhiteSpace( rawMessage ))
                 return;
-            }
-            
-            if( rawMessage.Contains( @":""message"))
+
+            lock( lockRawMessage )
             {
-                var json = Re.GetSubString(rawMessage, jsonArgsRe);
-                if (json == null)
-                    return;
+                const string jsonArgsRe = @".*args"":\[""(.*?)""\]}$";
 
-                dynamic msg = this.With(x => JToken.Parse(json.Replace(@"\""", @"""").Replace(@"\\", @"\")))
-                    .With(x => x.Value<dynamic>("params"));
-
-                if (msg == null)
-                    return;
-
-                if (rawMessage.Contains(@":\""loginMsg"))
+                if (rawMessage.Equals("1::"))
                 {
-                    var role = (string)msg.role;
-                    switch( role.ToLower() )
-                    {
-                        case "guest":
-                            if (!Chat.IsAnonymous)
-                            {
-                                Chat.Status.IsLoggedIn = false;
-                                if( !Chat.Status.IsLoginFailed )
-                                {
-                                    Chat.Status.IsConnected = false;
-                                    Chat.Status.IsLoggedIn = false;
-                                    Chat.Status.IsLoginFailed = true;
-                                    Chat.Status.IsStarting = false;
-                                    Chat.Config.SetParameterValue("AuthToken", String.Empty);
-                                    Chat.Restart();
-                                }
-                            }
-                            else
-                            {
-                                Chat.Status.IsLoginFailed = false;
-                            }
-
-                            break;
-                        case "admin":
-                            {
-                                Chat.Status.IsLoggedIn = true;
-                                Chat.Status.IsLoginFailed = false;
-                            }
-                            break;
-                        case "anon":
-                            {
-                                Chat.Status.IsLoggedIn = true;
-                                Chat.Status.IsLoginFailed = false;
-                            }
-                            break;
-                        default:
-                           break;
-                    }
-                    var authToken = Chat.Config.GetParameterValue("AuthToken") as string;
-                    SendCredentials(Chat.NickName, ChannelName, authToken);
+                    Chat.Status.IsConnected = true;  
                 }
-                else if (!String.IsNullOrWhiteSpace(rawMessage) && rawMessage.Contains("chatMsg"))
+                else if (rawMessage.Equals("2::"))
                 {
-                    var nickName = (string)msg.name;
-                    var text = (string)msg.text;
-
-                    if (String.IsNullOrWhiteSpace(nickName) || String.IsNullOrWhiteSpace(text))
+                    Thread.Sleep(random.Next(100, 1000));
+                    webSocket.Send("2::");
+                    return;
+                }
+            
+                if( rawMessage.Contains( @":""message"))
+                {
+                    var json = Re.GetSubString(rawMessage, jsonArgsRe);
+                    if (json == null)
                         return;
 
-                    if (ReadMessage != null)
-                        ReadMessage(new ChatMessage()
-                        {
-                            Channel = ChannelName,
-                            ChatIconURL = Chat.IconURL,
-                            ChatName = Chat.ChatName,
-                            FromUserName = nickName,
-                            HighlyImportant = false,
-                            IsSentByMe = false,
-                            Text = text
-                        });
-                }
+                    dynamic msg = this.With(x => JToken.Parse(json.Replace(@"\""", @"""").Replace(@"\\", @"\")))
+                        .With(x => x.Value<dynamic>("params"));
 
+                    if (msg == null)
+                        return;
+
+                    if (rawMessage.Contains(@":\""loginMsg"))
+                    {
+                        timerEveryMinute.Change(500, 60000);
+
+                        var role = (string)msg.role;
+                        switch( role.ToLower() )
+                        {
+                            case "guest":
+                                if (!Chat.IsAnonymous)
+                                {
+                                    Chat.Status.IsLoggedIn = false;
+                                    if( !Chat.Status.IsLoginFailed )
+                                    {
+                                        Chat.Status.IsConnected = false;
+                                        Chat.Status.IsLoggedIn = false;
+                                        Chat.Status.IsLoginFailed = true;
+                                        Chat.Status.IsStarting = false;
+                                        Chat.Config.SetParameterValue("AuthToken", String.Empty);
+                                        Chat.Restart();
+                                    }
+                                }
+                                else
+                                {
+                                    Chat.Status.IsLoginFailed = false;
+                                }
+
+                                break;
+                            case "admin":
+                                {
+                                    Chat.Status.IsLoggedIn = true;
+                                    Chat.Status.IsLoginFailed = false;
+                                }
+                                break;
+                            case "anon":
+                                {
+                                    Chat.Status.IsLoggedIn = true;
+                                    Chat.Status.IsLoginFailed = false;
+                                }
+                                break;
+                            default:
+                               break;
+                        }
+                        var authToken = Chat.Config.GetParameterValue("AuthToken") as string;
+                        SendCredentials(Chat.NickName, ChannelName, authToken);
+                    }
+                    else if (rawMessage.Contains(@":\""chatMsg"))
+                    {
+                        var nickName = (string)msg.name;
+                        var text = (string)msg.text;
+
+                        if (String.IsNullOrWhiteSpace(nickName) || String.IsNullOrWhiteSpace(text))
+                            return;
+
+                        if (ReadMessage != null)
+                            ReadMessage(new ChatMessage()
+                            {
+                                Channel = ChannelName,
+                                ChatIconURL = Chat.IconURL,
+                                ChatName = Chat.ChatName,
+                                FromUserName = nickName,
+                                HighlyImportant = false,
+                                IsSentByMe = false,
+                                Text = text
+                            });
+                    }
+                    else if (rawMessage.Contains(@":\""userList"))
+                    {
+                        var data = msg.data;
+                        var guestsNumber = this.With(x => data.Guests as JArray).With(x => x.ToObject<string[]>());
+                        var admins = this.With(x => data.admin as JArray).With(x => x.ToObject<string[]>());
+                        var moderators = this.With(x => data.user as JArray).With(x => x.ToObject<string[]>());
+                        var users = this.With(x => data.anon as JArray).With(x => x.ToObject<string[]>());
+                        var followers = this.With(x => data.isFollower as JArray).With(x => x.ToObject<string[]>());
+                        var subscribers = this.With(x => data.isSubscriber as JArray).With(x => x.ToObject<string[]>());
+                        var staff = this.With(x => data.isStaff as JArray).With(x => x.ToObject<string[]>());
+
+                        currentUserList.Clear();
+                        foreach( var pair in new Dictionary<string, string[]> { 
+                            {"Staff", staff}, 
+                            {"Admins",admins}, 
+                            {"Moderators", moderators}, 
+                            {"Subscribers", subscribers}, 
+                            {"Followers", followers},
+                            {"Users", users}} )
+                        {
+                            if (pair.Value == null)
+                                continue;
+
+                            foreach( string userNickname in pair.Value )
+                            {
+                                currentUserList.Add(new ChatUser()
+                                {
+                                    Channel = ChannelName,
+                                    ChatName = Chat.ChatName,
+                                    GroupName = pair.Key,
+                                    NickName = userNickname,
+                                    Badges = null,
+                                });
+                            }
+                        }
+                        var oldUserList = (Chat as IChatUserList).ChatUsers;
+                    
+                        //Delete disconnected users
+                        UI.Dispatch(() => {
+                            oldUserList.Where(item => item.Channel.Equals(ChannelName) && item.ChatName.Equals(Chat.ChatName))
+                                .Except(currentUserList, new LambdaComparer<ChatUser>((x, y) => x.NickName.Equals(y.NickName)))                                
+                                .ToList()
+                                .ForEach(item => oldUserList.Remove(item));
+                        });
+                        var newUserList = currentUserList
+                            .Where(item => item.Channel.Equals(ChannelName) && item.ChatName.Equals(Chat.ChatName))
+                            .Except(oldUserList, new LambdaComparer<ChatUser>((x, y) => x.NickName.Equals(y.NickName)))
+                            .ToList();
+
+                        foreach( ChatUser user in newUserList )
+                        {
+                            UI.Dispatch(() =>
+                            {
+                                lock (chatUsersLock)
+                                    (Chat as IChatUserList).ChatUsers.Add(new ChatUser()
+                                    {
+                                        Channel = ChannelName,
+                                        ChatName = Chat.ChatName,
+                                        GroupName = user.GroupName,
+                                        NickName = user.NickName,
+                                        Badges = null,
+                                    });
+                            });
+                        }
+                        newUserList = null;
+
+                    }
+
+                }
             }
             
         }
@@ -699,6 +809,12 @@ namespace UB.Model
             Log.WriteInfo("Hitbox leaving {0}", ChannelName);
             if( webSocket != null && !webSocket.IsClosed )
                 webSocket.Disconnect();
+
+            if( timerEveryMinute != null)
+                timerEveryMinute.Change(Timeout.Infinite, Timeout.Infinite);
+
+            if( statsPoller != null)
+                statsPoller.Stop();
         }
         
         public override void SendMessage( ChatMessage message )
@@ -871,5 +987,12 @@ namespace UB.Model
         public List<HitboxFollower> followers { get; set; }
         public string max_results { get; set; }
     }
+
+    public class HitboxUserListParams
+    {
+        public string channel { get; set; }
+    }
+
+
     #endregion
 }

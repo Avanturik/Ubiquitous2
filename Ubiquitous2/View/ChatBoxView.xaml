@@ -9,7 +9,7 @@
              UseLayoutRounding="True"
              DataContext="{Binding Path=ChatBox, Source={StaticResource Locator}}"              
              Focusable="False"
-             Style="{DynamicResource ChatBoxStyle}"              
+             Style="{DynamicResource ChatBoxStyle}"     
              d:DesignWidth="300" d:DesignHeight="400" RenderTransformOrigin="0.5,0.5">
 
     
