@@ -350,6 +350,7 @@ namespace UB.Model
     public class GamingLiveChannel : ChatChannelBase
     {
         private Timer pingTimer;
+        private Timer disconnectTimer;
         private int pingInterval = 60000;
         private WebSocketBase webSocket;
         private WebSocketBase secondWebSocket;
@@ -370,28 +371,28 @@ namespace UB.Model
 
             webSocket = new WebSocketBase();
             webSocket.Host = "api.gaminglive.tv";
-
+            webSocket.PingInterval = 0;
             webSocket.Origin = "http://www.gaminglive.tv";
             webSocket.Path = String.Format("/chat/{0}?nick={1}&authToken={2}", 
                 ChannelName.Replace("#", ""), 
                 Chat.IsAnonymous ? "__$anonymous" : Chat.NickName, 
                 Chat.IsAnonymous ? "__$anonymous" : Chat.Config.GetParameterValue("AuthToken").ToString());
 
+            disconnectTimer = new Timer((sender) => {
+                Log.WriteInfo("Gaminglive got no ping reply. Disconnecting");
+                Leave();
+            },this,Timeout.Infinite,Timeout.Infinite);
+            
             pingTimer = new Timer((sender) =>
             {
                 lock (pingLock)
                 {
                     Log.WriteInfo("Gaminglive ping to {0}", ChannelName);
-                    secondWebSocket = new WebSocketBase();
-                    secondWebSocket.Host = webSocket.Host;
-                    secondWebSocket.Origin = webSocket.Origin;
-                    secondWebSocket.Path = String.Format("/chat/{0}?nick={1}&authToken={2}", ChannelName.Replace("#", ""), "__$anonymous", "__$anonymous");
-                    secondWebSocket.Connect();
-                    Thread.Sleep(5000);
-                    secondWebSocket.Disconnect();
+                    SendMessage(new ChatMessage() {Text = "!" });
+                    disconnectTimer.Change(5000, Timeout.Infinite);
                 }
 
-            }, this, 0, pingInterval);
+            }, this, Timeout.Infinite, Timeout.Infinite);
 
             webSocket.ConnectHandler = () =>
                 {
@@ -400,6 +401,9 @@ namespace UB.Model
                     Chat.Status.IsLoggedIn = !Chat.IsAnonymous;
                     Chat.Status.IsConnected = true;
                     Chat.Status.IsStarting = false;
+
+                    if( !Chat.IsAnonymous)
+                        pingTimer.Change(5000, pingInterval);
                 };
 
             webSocket.DisconnectHandler = () =>
@@ -414,7 +418,9 @@ namespace UB.Model
         }
         private void ReadRawMessage(string rawMessage)        
         {
+            
             Log.WriteInfo("Gaminglive raw message: {0}", rawMessage);
+            disconnectTimer.Change(Timeout.Infinite, Timeout.Infinite);
             //if (!isJoined && JoinCallback != null)
             //{
             //    JoinCallback(this);
@@ -460,7 +466,16 @@ namespace UB.Model
             Log.WriteInfo("Gaminglive leaving {0}", ChannelName);
             
             if( pingTimer != null )
+            {
                 pingTimer.Change(Timeout.Infinite, Timeout.Infinite);
+                pingTimer.Dispose();
+            }
+
+            if( disconnectTimer != null )
+            {
+                disconnectTimer.Change(Timeout.Infinite, Timeout.Infinite);
+                disconnectTimer.Dispose();
+            }
             
             if( statsPoller != null )
                 statsPoller.Stop();
