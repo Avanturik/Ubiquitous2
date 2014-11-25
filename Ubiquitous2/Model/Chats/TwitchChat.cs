@@ -392,7 +392,7 @@ namespace UB.Model
             if (followerPoller != null)
                 followerPoller.Stop();
 
-            if (!Status.IsLoggedIn)
+            if (IsAnonymous)
                 return;
 
             followerPoller.Id = "followersPoller";
@@ -419,6 +419,7 @@ namespace UB.Model
                             var newFollowers = followers.follows.Take(25).Except(currentFollowers.follows, new LambdaComparer<TwitchFollow>((x, y) => x.user.display_name.Equals(y.user.display_name)));
                             foreach (var follower in newFollowers)
                             {
+                                Log.WriteInfo("New Twitch follower: {0}", follower.user.display_name);
                                 if (AddFollower != null)
                                     AddFollower(new ChatUser()
                                     {

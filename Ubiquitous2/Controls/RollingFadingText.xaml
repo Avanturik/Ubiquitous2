@@ -3,10 +3,16 @@
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 	xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
 	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:sys="clr-namespace:System;assembly=mscorlib"
 	mc:Ignorable="d"
 	x:Class="UB.Controls.RollingFadingText"
 	x:Name="userControl"
 	d:DesignWidth="390" d:DesignHeight="370">
+
+    <!--<d:UserControl.DataContext>
+        <sys:String >Youtube.com</sys:String>
+    </d:UserControl.DataContext>-->
+
     <UserControl.Resources>
         <Storyboard x:Key="MessageStoryBoard">
             <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[1].(SkewTransform.AngleX)" Storyboard.TargetName="border">
@@ -65,9 +71,13 @@
         <Grid.ColumnDefinitions>
             <ColumnDefinition/>
         </Grid.ColumnDefinitions>
-        <!--<TextBlock x:Name="textBlock1" TextWrapping="Wrap" Text="{Binding Title, RelativeSource={RelativeSource AncestorType=UserControl}}" FontStretch="Condensed" FontSize="26.667" FontFamily="Bodoni MT Poster Compressed" TextAlignment="Center" Margin="0"/>-->
-        <!--<TextBlock x:Name="textBlock1" TextWrapping="Wrap" Text="{Binding Title, RelativeSource={RelativeSource AncestorType=UserControl}}" FontStretch="Condensed" FontSize="26.667" FontFamily="Bodoni MT Poster Compressed" TextAlignment="Center" Margin="0"/>-->
-        <TextBlock x:Name="titleTextBlock" TextWrapping="Wrap" Text="{Binding Title, RelativeSource={RelativeSource AncestorType=UserControl}}" FontStretch="Condensed" FontSize="26.667" FontFamily="Bodoni MT Poster Compressed" TextAlignment="Center" Margin="0" Foreground="#FF00A294" VerticalAlignment="Bottom"/>
+        <Viewbox VerticalAlignment="Bottom">
+            <TextBlock x:Name="titleTextBlock" TextWrapping="Wrap" Text="{Binding Title, FallbackValue=Thank you for following me, RelativeSource={RelativeSource AncestorType=UserControl}}" FontStretch="Condensed" FontFamily="Bodoni MT Poster Compressed" TextAlignment="Center" Margin="5,0" Foreground="#FF00A294" VerticalAlignment="Bottom">
+                <TextBlock.Effect>
+                    <DropShadowEffect ShadowDepth="0" Color="#FF1F1F1F"/>
+                </TextBlock.Effect>
+            </TextBlock>
+        </Viewbox>
         <Border x:Name="border" BorderThickness="1" Margin="10,0" Grid.Row="1" RenderTransformOrigin="0.5,0.5" VerticalAlignment="Top">
             <Border.BorderBrush>
                 <LinearGradientBrush EndPoint="0.5,1" MappingMode="RelativeToBoundingBox" StartPoint="0.5,0">
@@ -83,11 +93,10 @@
                     <TranslateTransform/>
                 </TransformGroup>
             </Border.RenderTransform>
-            <!--<TextBlock x:Name="textBlock" Text="{Binding Message, RelativeSource={RelativeSource AncestorType=UserControl}}" Margin="0" TextWrapping="Wrap" TextAlignment="Center" FontStretch="Condensed" FontSize="48" FontWeight="Bold" FontFamily="Rockwell Condensed"></TextBlock>-->
             <Viewbox>
-                <TextBlock x:Name="messageTextBlock" Text="{Binding Message, RelativeSource={RelativeSource AncestorType=UserControl}}" Margin="0" TextAlignment="Center" FontStretch="ExtraCondensed" FontSize="48" FontFamily="/Ubiquitous2;component/Fonts/#Rockwell Condensed" Foreground="#FFFFB516" Padding="5,0">
+                <TextBlock x:Name="messageTextBlock" Text="{Binding Message, FallbackValue=VeryLongUserName, RelativeSource={RelativeSource AncestorType=UserControl}}" Margin="0" TextAlignment="Center" FontStretch="Condensed" FontSize="48" FontFamily="/Ubiquitous2;component/Fonts/#Rockwell Condensed" Foreground="#FFFFB516" Padding="5,10" VerticalAlignment="Top">
                     <TextBlock.Effect>
-                        <DropShadowEffect ShadowDepth="0" Color="#5AFBF5BA" BlurRadius="8" Direction="284" Opacity="0.68"/>
+                        <DropShadowEffect ShadowDepth="0" Color="#5AFBF5BA" Direction="284" Opacity="0.68"/>
                     </TextBlock.Effect>
                     <TextBlock.Background>
                         <RadialGradientBrush RadiusY="0.763" RadiusX="0.877" GradientOrigin="0.499,1.341">
