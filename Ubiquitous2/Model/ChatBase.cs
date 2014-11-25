@@ -130,6 +130,8 @@ namespace UB.Model
                         message.IsParsed = true;
                     }
                 }
+                if (message.FromUserName.Equals(NickName, StringComparison.InvariantCultureIgnoreCase))
+                    message.IsSentByMe = true;
 
                 MessageReceived(this, new ChatServiceEventArgs() { Message = message });
 

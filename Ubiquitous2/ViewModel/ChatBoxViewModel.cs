@@ -229,6 +229,12 @@ namespace UB.ViewModel
                     Messages.Add(
                         newMessage
                     );
+
+                    if( msg.IsSentByMe )
+                    {
+                        UI.Dispatch(() => MessengerInstance.Send<bool>(false, "MessageSent"));
+                        UI.Dispatch(() => MessengerInstance.Send<bool>(true, "MessageSent"));
+                    }
                 }
 
                 if (MessageAdded != null)

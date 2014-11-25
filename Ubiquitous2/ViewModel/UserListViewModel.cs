@@ -32,7 +32,7 @@ namespace UB.ViewModel
         private void Initialize()
         {
             if (_dataService == null || Chats == null )
-                return; 
+                return;
 
             if (Chats.Count > 0)
                 Chats.Clear();
@@ -41,7 +41,7 @@ namespace UB.ViewModel
             {
                 if( chat is IChatUserList )
                 {
-                    Chats.Add(new ChatUserListViewModel() { 
+                    Chats.Add(new ChatUserListViewModel() {
                         Chat = chat,
                         UserList = (chat as IChatUserList).ChatUsers,
                     });

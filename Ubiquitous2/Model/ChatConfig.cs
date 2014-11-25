@@ -17,8 +17,37 @@ namespace UB.Model
         public String ChatName { get; set; }
         [XmlAttribute]
         public String IconURL { get; set; }
+        /// <summary>
+        /// The <see cref="Enabled" /> property's name.
+        /// </summary>
+        public const string EnabledPropertyName = "Enabled";
+
+        private bool _enabled = false;
+
+        /// <summary>
+        /// Sets and gets the Enabled property.
+        /// Changes to that property's value raise the PropertyChanged event. 
+        /// </summary>
         [XmlAttribute]
-        public bool Enabled { get; set; }
+        public bool Enabled
+        {
+            get
+            {
+                return _enabled;
+            }
+
+            set
+            {
+                if (_enabled == value)
+                {
+                    return;
+                }
+
+                _enabled = value;
+                RaisePropertyChanged(EnabledPropertyName);
+            }
+        }
+
         /// <summary>
         /// The <see cref="HideViewersCounter" /> property's name.
         /// </summary>
