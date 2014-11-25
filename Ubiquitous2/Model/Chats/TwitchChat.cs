@@ -827,7 +827,7 @@ namespace UB.Model
             }
             lock( chatUsersLock )
             {
-                initialUserList.ForEach(x => {
+                initialUserList.ToList().ForEach(x => {
                     if (!(Chat as IChatUserList).ChatUsers.Any(u => u != null && u.NickName.Equals(x.NickName)))
                         UI.Dispatch(() => { 
                             (Chat as IChatUserList).ChatUsers.Add(x);
