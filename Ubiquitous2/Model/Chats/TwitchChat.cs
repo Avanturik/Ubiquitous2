@@ -627,7 +627,11 @@ namespace UB.Model
                     Url = channelBadges[userType.ToLower()],
                     Title = userType
                 });
+
+            AddChatUser(userName, userType, userBadges[userName]);
             Log.WriteInfo("Special user:{0} type:{1}", userName, userType);
+
+            
         }
         private static void PrivateMessageHandler( TwitchChannel channel, IrcRawMessageEventArgs args )
         {
@@ -640,7 +644,19 @@ namespace UB.Model
                 var userBadgeParams = parameters[1].Split(' ');
                 if( userBadgeParams.Length == 3 )
                     channel.SetUserBadge(userBadgeParams[1], userBadgeParams[2]);
+            } 
+            else if (parameters[1].StartsWith( "usercolor",  StringComparison.InvariantCultureIgnoreCase))
+            {
+                var userColorParams = parameters[1].Split(' ');
+
+                List<UserBadge> userbadges = null;
+                channel.userBadges.TryGetValue(userColorParams[1], out userbadges);
+                if (userColorParams.Length == 3)
+                    channel.AddChatUser(userColorParams[1], "user", userbadges);
             }
+
+
+
 
             if (!parameters[0].Equals(channel.ChannelName, StringComparison.InvariantCultureIgnoreCase))
                 return;
@@ -661,7 +677,7 @@ namespace UB.Model
                     UserBadges = channel.userBadges.ContainsKey(args.Message.Source.Name) ? channel.userBadges[args.Message.Source.Name] : null
                 });
         }
-        private static void ConnectHandler(TwitchChannel channel, IrcRawMessageEventArgs args)
+        private async static void ConnectHandler(TwitchChannel channel, IrcRawMessageEventArgs args)
         {
             if( channel.ircClient.Channels.Count <= 0 )
             {
@@ -670,13 +686,18 @@ namespace UB.Model
                 channel.TryIrc(() => channel.ircClient.Channels.Join(channel.ChannelName));
                 channel.TryIrc(() => channel.ircClient.SendRawMessage("TWITCHCLIENT 1"));
             }
-            if( channel.Chat.IsAnonymous )
+            
+            await Task.Run(() => channel.LoadInitialUserList());
+
+            if (channel.Chat.IsAnonymous)
             {
                 channel.pingTimer.Change(pingInterval, pingInterval);
 
                 if (channel.JoinCallback != null)
                     channel.JoinCallback(channel);
+
             }
+
         }
         private static void ModeHandler(TwitchChannel channel, IrcRawMessageEventArgs args)
         {
@@ -707,19 +728,7 @@ namespace UB.Model
 
                 lock (channel.chatUsersLock)
                 {
-                    UI.Dispatch(() =>
-                    {
-                        lock (channel.chatUsersLock)
-                            if (!(channel.Chat as IChatUserList).ChatUsers.Any(u => u != null && u.NickName.Equals(userNickname)))
-                                (channel.Chat as IChatUserList).ChatUsers.Add(new ChatUser()
-                                {
-                                    Channel = channel.ChannelName,
-                                    ChatName = channel.Chat.ChatName,
-                                    GroupName = userGroup,
-                                    NickName = userNickname,
-                                    Badges = null,
-                                });
-                    });
+                    channel.AddChatUser(userNickname, userGroup, null);
                 }
             }
         }
@@ -734,21 +743,7 @@ namespace UB.Model
                     List<UserBadge> badges;
                     string userGroup = "Users";
                     channel.userBadges.TryGetValue(userNickname, out badges);
-
-                        UI.Dispatch(() =>
-                        {
-                            lock (channel.chatUsersLock)
-                                if (!(channel.Chat as IChatUserList).ChatUsers.Any(u => u != null && u.NickName.Equals(userNickname)))
-                                    (channel.Chat as IChatUserList).ChatUsers.Add(new ChatUser()
-                                    {
-                                        Channel = channel.ChannelName,
-                                        ChatName = channel.Chat.ChatName,
-                                        GroupName = userGroup,
-                                        NickName = userNickname,
-                                        Badges = badges,
-                                    });
-                        });
-
+                    channel.AddChatUser(userNickname, userGroup, badges);
                 }
             }
             Log.WriteInfo("Twitch user joined: {0}", userNickname);
@@ -762,6 +757,22 @@ namespace UB.Model
                 if (channel.JoinCallback != null)
                     channel.JoinCallback(channel);
             }
+        }
+        private void AddChatUser( string userNickname, string userGroup, List<UserBadge> badges)
+        {
+            UI.Dispatch(() =>
+            {
+                lock (chatUsersLock)
+                    if (!(Chat as IChatUserList).ChatUsers.Any(u => u != null && u.NickName.Equals(userNickname)))
+                        (Chat as IChatUserList).ChatUsers.Add(new ChatUser()
+                        {
+                            Channel = ChannelName,
+                            ChatName = Chat.ChatName,
+                            GroupName = userGroup,
+                            NickName = userNickname,
+                            Badges = badges,
+                        });
+            });
         }
         private static void LeaveHandler(TwitchChannel channel, IrcRawMessageEventArgs args)
         {            
@@ -783,7 +794,62 @@ namespace UB.Model
                 //channel.Join((ch) => { channel.JoinCallback(ch); }, channel.ChannelName);
             }
         }
+        private void LoadInitialUserList()
+        {
+            // 
+            var chatters = Json.DeserializeUrl<TwitchChattersHead>(String.Format("http://tmi.twitch.tv/group/user/{0}/chatters", ChannelName.Replace("#", "")))
+                .With( x => x.chatters );
 
+            var moderators = chatters.With(x => x.moderators);
+            var admins = chatters.With(x => x.admins);
+            var staff = chatters.With(x => x.staff);
+            var viewers = chatters.With(x => x.viewers);
+
+            List<ChatUser> initialUserList = new List<ChatUser>();
+
+            foreach( var pair in new Dictionary<string, List<string>> { 
+                            {"staff", staff}, 
+                            {"admin",admins}, 
+                            {"mod", moderators}, 
+                            {"viewer", viewers}})
+            {
+                List<UserBadge> badges;
+                userBadges.TryGetValue( pair.Key, out badges );
+
+                initialUserList.AddRange(pair.Value.Select(x => new ChatUser()
+                {
+                    Channel = ChannelName,
+                    ChatName = Chat.ChatName,
+                    GroupName = pair.Key,
+                    NickName = x,
+                    Badges = badges,
+                }));
+            }
+            lock( chatUsersLock )
+            {
+                initialUserList.ForEach(x => {
+                    if (!(Chat as IChatUserList).ChatUsers.Any(u => u != null && u.NickName.Equals(x.NickName)))
+                        UI.Dispatch(() => { 
+                            (Chat as IChatUserList).ChatUsers.Add(x);
+                        });
+                });
+            }   
+            
+            //UI.Dispatch(() =>
+            //{
+            //    lock (chatUsersLock)
+            //        if (!(Chat as IChatUserList).ChatUsers.Any(u => u != null && u.NickName.Equals(userNickname)))
+            //            (Chat as IChatUserList).ChatUsers.Add(new ChatUser()
+            //            {
+            //                Channel = ChannelName,
+            //                ChatName = Chat.ChatName,
+            //                GroupName = userGroup,
+            //                NickName = userNickname,
+            //                Badges = badges,
+            //            });
+            //});
+
+        }
         private void TryIrc( Action action )
         {
             try
@@ -990,5 +1056,22 @@ namespace UB.Model
         public string type { get; set; }
     }
 
+    #endregion
+
+    #region Twitch chatters json
+    public class TwitchChattersDetails
+    {
+        public List<string> moderators { get; set; }
+        public List<string> staff { get; set; }
+        public List<string> admins { get; set; }
+        public List<string> viewers { get; set; }
+    }
+
+    public class TwitchChattersHead
+    {
+        public object _links { get; set; }
+        public int chatter_count { get; set; }
+        public TwitchChattersDetails chatters { get; set; }
+    }
     #endregion
 }

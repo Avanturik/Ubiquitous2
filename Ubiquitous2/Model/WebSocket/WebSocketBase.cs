@@ -39,7 +39,7 @@ namespace UB.Model
             set;
         }
         public string SubProtocol { get; set; }
-
+        public WebSocketState State { get { return socket.State;  } }
         public void Disconnect()
         {
             try

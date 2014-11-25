@@ -378,7 +378,20 @@ namespace UB.Model
                 Chat.IsAnonymous ? "__$anonymous" : Chat.NickName, 
                 Chat.IsAnonymous ? "__$anonymous" : Chat.Config.GetParameterValue("AuthToken").ToString());
 
+
+            //secondWebSocket = new WebSocketBase();
+            //secondWebSocket.Host = "api.gaminglive.tv";
+            //secondWebSocket.PingInterval = 0;
+            //secondWebSocket.Origin = "http://www.gaminglive.tv";
+            //secondWebSocket.Path = String.Format("/chat/{0}?nick={1}&authToken={2}",
+            //    ChannelName.Replace("#", ""),
+            //    Chat.IsAnonymous ? "__$anonymous" : Chat.NickName,
+            //    Chat.IsAnonymous ? "__$anonymous" : Chat.Config.GetParameterValue("AuthToken").ToString());
+
+            //secondWebSocket.Connect();
+
             disconnectTimer = new Timer((sender) => {
+                Log.WriteInfo("Gaminglive socket state: {0}", webSocket.State.ToString());
                 Log.WriteInfo("Gaminglive got no ping reply. Disconnecting");
                 Leave();
             },this,Timeout.Infinite,Timeout.Infinite);
@@ -402,8 +415,10 @@ namespace UB.Model
                     Chat.Status.IsConnected = true;
                     Chat.Status.IsStarting = false;
 
-                    if( !Chat.IsAnonymous)
+                    if (!Chat.IsAnonymous)
                         pingTimer.Change(5000, pingInterval);
+                    else
+                        pingTimer.Change(300000, Timeout.Infinite);
                 };
 
             webSocket.DisconnectHandler = () =>

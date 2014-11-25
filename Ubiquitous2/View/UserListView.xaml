@@ -3,6 +3,8 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:ComponentModel="clr-namespace:System.ComponentModel;assembly=WindowsBase"
+             xmlns:Presentation="clr-namespace:System.Windows.Data;assembly=PresentationFramework"
              mc:Ignorable="d" 
              DataContext="{Binding Path=UserList, Source={StaticResource Locator}}"              
              d:DesignHeight="300" d:DesignWidth="300">
@@ -17,12 +19,18 @@
                         <VirtualizingStackPanel Visibility="{Binding Chat.Config.Enabled, Converter={StaticResource boolToVisibilityConverter}}" ScrollViewer.HorizontalScrollBarVisibility="Disabled" 
                                                 ScrollViewer.VerticalScrollBarVisibility="Visible" 
                                                 Orientation="Vertical">
-                        
+                            <VirtualizingStackPanel.Resources>
+                                <CollectionViewSource Source="{Binding  UserList}" x:Key="sortedUsers">
+                                    <CollectionViewSource.SortDescriptions>
+                                        <ComponentModel:SortDescription PropertyName="NickName"/>
+                                    </CollectionViewSource.SortDescriptions>
+                                </CollectionViewSource>
+                            </VirtualizingStackPanel.Resources>
                             <StackPanel Orientation="Horizontal">
                                 <Image Height="16" Source="{Binding Chat.IconURL}" ToolTip="{Binding Chat.ChatName}" Margin="0,2,0,0"/>
                                 <TextBlock Text="{Binding Chat.ChatName}"/>
                             </StackPanel>
-                            <ItemsControl Focusable="False" ItemsSource="{Binding UserList}">
+                            <ItemsControl Focusable="False" ItemsSource="{Binding Source={StaticResource sortedUsers}}">
                                 <ItemsControl.ItemTemplate>
                                     <DataTemplate>
                                         <TextBlock Text="{Binding NickName}"/>
@@ -30,7 +38,7 @@
                                 </ItemsControl.ItemTemplate>
                                 <ItemsControl.ItemsPanel>
                                     <ItemsPanelTemplate>
-                                        <StackPanel Orientation="Vertical"></StackPanel>
+                                        <StackPanel Margin="0,0,10,0" Orientation="Vertical"></StackPanel>
                                     </ItemsPanelTemplate>
                                 </ItemsControl.ItemsPanel>
                             </ItemsControl>

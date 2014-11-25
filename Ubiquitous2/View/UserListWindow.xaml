@@ -4,7 +4,8 @@
         xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
         xmlns:view="clr-namespace:UB.View"
         xmlns:Interactivity="clr-namespace:UB.Interactivity"
-                Visibility="{Binding Source={StaticResource Locator},Path=UserList.AppConfig.IsUserListVisible, Converter={StaticResource boolToVisibilityConverter}}"
+        Topmost="{Binding UserList.AppConfig.IsOnTop}"
+        Visibility="{Binding Source={StaticResource Locator},Path=UserList.AppConfig.IsUserListVisible, Converter={StaticResource boolToVisibilityConverter}}"
         Title="Users" Width="300" UseLayoutRounding="True" SizeToContent="Width" Icon="/Ubiquitous2;component/Resources/ubiquitous smile.ico">
     <i:Interaction.Behaviors>
         <Interactivity:WindowPersistentLocationBehavior WindowName="UsersWindow"/>
