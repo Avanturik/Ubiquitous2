@@ -12,5 +12,7 @@ namespace UB.Model
     {
         [OperationContract]
         ImageData GetImage();
+        [OperationContract]
+        ImageData GetFirstImage();
     }
 }

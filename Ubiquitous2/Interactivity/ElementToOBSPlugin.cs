@@ -88,8 +88,9 @@ namespace UB.Interactivity
                 UI.Dispatch( () => {
                     RenderTargetBitmap renderTarget = new RenderTargetBitmap((Int32)Math.Ceiling(width), 
                         (Int32)Math.Ceiling(height),
-                        horizontalDpi, 
-                        verticalDpi, 
+                        96,96,
+                        //horizontalDpi, 
+                        //verticalDpi, 
                         PixelFormats.Pbgra32);
                     
                     renderTarget.Render(visual);

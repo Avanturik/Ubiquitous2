@@ -41,6 +41,7 @@
     <Reference Include="System.Drawing" />
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.ServiceModel" />
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -54,6 +55,16 @@
     </Compile>
     <Compile Include="..\Ubiquitous2\Model\IOBSPluginService.cs">
       <Link>IOBSPluginService.cs</Link>
+    </Compile>
+    <Compile Include="..\Ubiquitous2\Model\Log.cs">
+      <Link>Log.cs</Link>
+    </Compile>
+    <Compile Include="..\Ubiquitous2\Model\WebClientBase.cs">
+      <Link>WebClientBase.cs</Link>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="..\Ubiquitous2\Utils\Re.cs">
+      <Link>Re.cs</Link>
     </Compile>
     <Compile Include="Ubiquitous2Factory.cs" />
     <Compile Include="Ubiquitous2Plugin.cs" />

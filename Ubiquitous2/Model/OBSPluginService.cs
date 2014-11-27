@@ -97,6 +97,23 @@ namespace UB.Model
                 
             //}
         }
+        public ImageData GetFirstImage()
+        {
+            isConnected = true;
+            lock (lockSave)
+            {
+                if (RenderTarget != null)
+                {
+                    WriteableBitmap wb = new WriteableBitmap(RenderTarget);
+                    currentSize.Width = wb.PixelWidth;
+                    currentSize.Height = wb.PixelHeight;
+                    imageData.Size = currentSize;
+                    imageData.Pixels = null;
+                    imageData.Pixels = wb.ConvertToByteArray();
+                }
+                return imageData;
+            }
+        }
     }
 
 
