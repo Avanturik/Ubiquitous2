@@ -37,21 +37,8 @@ namespace UB
 
             Regex.CacheSize = 0;
 
-            string dbFolder = @".\database";
-
-            try
-            {
-                dbFolder = ApplicationDeployment.CurrentDeployment.DataDirectory;
-            }
-            catch( Exception ex)
-            {
-                Log.WriteInfo( "Not ClickOnce {0}", ex.Message);
-            }
-
-            AppDomain.CurrentDomain.SetData("DBFolder", dbFolder);
-
+            AppDomain.CurrentDomain.SetData("DataDirectory", Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + @"\Ubiquitous2");
             WebRequest.DefaultWebProxy = null;
-
             //RenderOptions.ProcessRenderMode = RenderMode.SoftwareOnly; 
         }
 

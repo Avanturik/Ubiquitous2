@@ -9,7 +9,11 @@
         <ItemsControl Focusable="False" ItemsSource="{Binding}">
             <ItemsControl.ItemTemplate>
                 <DataTemplate>
-                    <Image Height="12" Source="{Binding Url}" ToolTip="{Binding Title}" Margin="1,0"></Image>
+                    <Image Height="12" Source="{Binding Url}" ToolTip="{Binding Title}" Margin="1,0">
+                        <Image.CacheMode>
+                            <BitmapCache/>
+                        </Image.CacheMode>
+                    </Image>
                 </DataTemplate>
             </ItemsControl.ItemTemplate>
             <ItemsControl.ItemsPanel>

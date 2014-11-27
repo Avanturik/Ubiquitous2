@@ -11,6 +11,7 @@ using UB.Utils;
 using System.Threading.Tasks;
 using System;
 using System.Windows;
+using System.Windows.Threading;
 
 namespace UB.ViewModel
 {
@@ -22,6 +23,7 @@ namespace UB.ViewModel
     /// </summary>
     public class DashBoardViewModel : ViewModelBase
     {
+        private DispatcherTimer updateViewersTimer;
         private IChatDataService _dataService;
         private IDatabase _databaseService;
         private IStreamPageDataService _streamDataService;
@@ -47,12 +49,17 @@ namespace UB.ViewModel
             InitializeTopicSections();
 
             TotalViewers = new ObservableCollection<StatisticsViewers>();
-            TotalViewers.Add(new StatisticsViewers() { Viewerscount = 0, DateTime = DateTime.Now });
-
             _databaseService.GetViewersCount(5, (maxViewersPerInterval) =>
             {
-                TotalViewers.Clear();
-                maxViewersPerInterval.ForEach(item => TotalViewers.Add(item));
+                if( maxViewersPerInterval != null )
+                {
+                    foreach( var item in maxViewersPerInterval)
+                    {
+                        TotalViewers.Add(item);
+                    }
+                    MaxViewersCount = TotalViewers.Max(x => x.Viewerscount);
+                }
+
             });
 
             
@@ -72,9 +79,59 @@ namespace UB.ViewModel
                     });
                 }
             });
+            UpdateViewersChart();
+            updateViewersTimer = new DispatcherTimer()
+            {
+                Interval = TimeSpan.FromMilliseconds(60000)                                
+            };
 
-
+            updateViewersTimer.Tick += (o, e) => { UpdateViewersChart(); };
+            updateViewersTimer.Start();
         }
+
+        private void UpdateViewersChart()
+        {
+            _databaseService.GetViewersCount(5, (maxViewersPerInterval) =>
+            {
+                var newItems = maxViewersPerInterval.Except(TotalViewers, new LambdaComparer<StatisticsViewers>((x, y) => x.DateTime == y.DateTime));
+                foreach( var item in newItems)
+                {
+                    TotalViewers.Add(item);
+                }
+                MaxViewersCount = TotalViewers.Max(x => x.Viewerscount);
+            });
+        }
+
+        /// <summary>
+        /// The <see cref="MaxViewersCount" /> property's name.
+        /// </summary>
+        public const string MaxViewersCountPropertyName = "MaxViewersCount";
+
+        private int _maxViewersCount = 0;
+
+        /// <summary>
+        /// Sets and gets the MaxViewersCount property.
+        /// Changes to that property's value raise the PropertyChanged event. 
+        /// </summary>
+        public int MaxViewersCount
+        {
+            get
+            {
+                return _maxViewersCount;
+            }
+
+            set
+            {
+                if (_maxViewersCount == value)
+                {
+                    return;
+                }
+
+                _maxViewersCount = value;
+                RaisePropertyChanged(MaxViewersCountPropertyName);
+            }
+        }
+
         /// <summary>
         /// The <see cref="AppConfig" /> property's name.
         /// </summary>
@@ -312,7 +369,7 @@ namespace UB.ViewModel
         /// </summary>
         public const string TotalViewersPropertyName = "TotalViewers";
 
-        private ObservableCollection<StatisticsViewers> _totalViewers = new ObservableCollection<StatisticsViewers>();
+        private ObservableCollection<StatisticsViewers> _totalViewers;
 
         /// <summary>
         /// Sets and gets the TotalViewers property.

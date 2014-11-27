@@ -269,8 +269,9 @@ namespace UB.Model
                 UI.Dispatch(() =>
                 {
                     var channels = ChatChannels.ToList();
-                    Status.ViewersCount = channels.Sum(channel => channel.ChannelStats.ViewersCount);
+                    Status.ViewersCount = channels.Sum(channel => channel.ChannelStats.ViewersCount);                    
                     Status.MessagesCount = channels.Sum(channel => channel.ChannelStats.MessagesCount);
+
                     channels.ForEach(channel =>
                     {
                         this.With(x => Status.ToolTips.ToList().FirstOrDefault(tooltip => tooltip.Header.Equals(channel.ChannelName)))

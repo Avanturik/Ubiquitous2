@@ -9,5 +9,6 @@ namespace UB.Model
     public interface IDatabase
     {
         void GetViewersCount(int intervalMinutes, Action<List<StatisticsViewers>> callback);
+        void AddViewersCount(string serviceName, int viewersCount);
     }
 }

@@ -6,6 +6,7 @@
              xmlns:ComponentModel="clr-namespace:System.ComponentModel;assembly=WindowsBase"
              xmlns:Presentation="clr-namespace:System.Windows.Data;assembly=PresentationFramework"
              mc:Ignorable="d" 
+             xmlns:UBView="clr-namespace:UB.View"
              DataContext="{Binding Path=UserList, Source={StaticResource Locator}}"              
              d:DesignHeight="300" d:DesignWidth="300">
     <UserControl.Resources>
@@ -13,7 +14,7 @@
     </UserControl.Resources>
     <Grid>
         <ScrollViewer Template="{DynamicResource ScrollStyle}" CanContentScroll="True">            
-            <ItemsControl Focusable="False" ItemsSource="{Binding Chats}" ScrollViewer.VerticalScrollBarVisibility="Auto">
+            <ItemsControl Margin="0" Focusable="False" ItemsSource="{Binding Chats}" ScrollViewer.VerticalScrollBarVisibility="Auto">
                 <ItemsControl.ItemTemplate> 
                     <DataTemplate>
                         <VirtualizingStackPanel Visibility="{Binding Chat.Config.Enabled, Converter={StaticResource boolToVisibilityConverter}}" ScrollViewer.HorizontalScrollBarVisibility="Disabled" 
@@ -26,14 +27,17 @@
                                     </CollectionViewSource.SortDescriptions>
                                 </CollectionViewSource>
                             </VirtualizingStackPanel.Resources>
-                            <StackPanel Orientation="Horizontal">
+                            <StackPanel Margin="10,0" Orientation="Horizontal">
                                 <Image Height="16" Source="{Binding Chat.IconURL}" ToolTip="{Binding Chat.ChatName}" Margin="0,2,0,0"/>
                                 <TextBlock Text="{Binding Chat.ChatName}"/>
                             </StackPanel>
-                            <ItemsControl Focusable="False" ItemsSource="{Binding Source={StaticResource sortedUsers}}">
+                            <ItemsControl Margin="10,0" Focusable="False" ItemsSource="{Binding Source={StaticResource sortedUsers}}">
                                 <ItemsControl.ItemTemplate>
                                     <DataTemplate>
-                                        <TextBlock Text="{Binding NickName}"/>
+                                        <StackPanel Orientation="Horizontal">
+                                            <!--<UBView:ImageStack DataContext="{Binding Badges}"></UBView:ImageStack>-->
+                                            <TextBlock Text="{Binding NickName}"/>
+                                        </StackPanel>
                                     </DataTemplate>
                                 </ItemsControl.ItemTemplate>
                                 <ItemsControl.ItemsPanel>

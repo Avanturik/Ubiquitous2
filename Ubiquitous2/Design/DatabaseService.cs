@@ -28,5 +28,11 @@ namespace UB.Design
             }
             callback(result);
         }
+
+
+        public void AddViewersCount(string serviceName, int viewersCount)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

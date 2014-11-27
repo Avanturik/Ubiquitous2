@@ -12,6 +12,7 @@ using System.Threading;
 using System.Collections.Specialized;
 using Newtonsoft.Json;
 using System.Runtime.Serialization;
+using System.Windows;
 
 
 namespace UB.Model
@@ -25,6 +26,7 @@ namespace UB.Model
         private TwitchFollowers currentFollowers = new TwitchFollowers();
         private WebPoller followerPoller = new WebPoller();
         private Random random = new Random();
+        public object chatUsersLock = new object();
 
         public TwitchChat(ChatConfig config)
             : base(config)
@@ -51,11 +53,13 @@ namespace UB.Model
 
             Games = new ObservableCollection<Game>();
 
-            ChatUsers = new ObservableCollection<ChatUser>();
+            ChatUsers = new SmartCollection<ChatUser>();
         }
 
         public override bool Login()
         {
+            lock (chatUsersLock)
+                UI.Dispatch (() => ChatUsers.Clear());
             try
             {
                 if (!LoginWithToken())
@@ -197,7 +201,7 @@ namespace UB.Model
 
         public override bool SendMessage(ChatMessage message)
         {        
-            message.UserBadges = new List<UserBadge>() {
+            message.UserBadges = new ObservableCollection<UserBadge>() {
                 new UserBadge() { Title = "broadcaster", Url = "http://chat-badges.s3.amazonaws.com/broadcaster.png"}
             };
 
@@ -438,7 +442,7 @@ namespace UB.Model
         }
         #endregion
 
-        public ObservableCollection<ChatUser> ChatUsers
+        public SmartCollection<ChatUser> ChatUsers
         {
             get;
             set;
@@ -448,11 +452,10 @@ namespace UB.Model
     public class TwitchChannel : ChatChannelBase
     {
         private IrcClient ircClient = new IrcClient();
-        private object chatUsersLock = new object();
         private Random random = new Random();
         private Timer pingTimer, disconnectTimer;
         private const int pingInterval = 30000;
-        private Dictionary<string, List<UserBadge>> userBadges = new Dictionary<string, List<UserBadge>>();
+        private Dictionary<string, ObservableCollection<UserBadge>> userBadges = new Dictionary<string, ObservableCollection<UserBadge>>();
         private NameValueCollection channelBadges = new NameValueCollection();
         private Dictionary<string, Action<TwitchChannel, IrcRawMessageEventArgs>>
                 packetHandlers = new Dictionary<string, Action<TwitchChannel, IrcRawMessageEventArgs>>() {
@@ -518,27 +521,34 @@ namespace UB.Model
             int port = 6667;
 
             int.TryParse(portText, out port);
-            
-            TryIrc( () => ircClient.Initialize());
-            ircClient.Disconnected += ircClient_Disconnected;
-            ircClient.RawMessageReceived += ircClient_RawMessageReceived;
-          
-            if (Regex.IsMatch(host, @"\d+\.\d+\.\d+\.\d+"))
-            {
-                TryIrc( () => ircClient.Connect (host, port, false, registrationInfo ));
-            }
-            else
-            {
-                Utils.Net.TestTCPPort(host, port, (hostList, error) =>
+
+            if (TryIrc(() => {
+                ircClient.Initialize();
+                ircClient.Disconnected += ircClient_Disconnected;
+                ircClient.RawMessageReceived += ircClient_RawMessageReceived;
+
+                if (Regex.IsMatch(host, @"\d+\.\d+\.\d+\.\d+"))
                 {
-                    if (hostList == null || hostList.AddressList.Count() <= 0)
+                    ircClient.Connect(host, port, false, registrationInfo);
+                }
+                else
+                {
+                    Utils.Net.TestTCPPort(host, port, (hostList, error) =>
                     {
-                        Log.WriteError("All servers are down. Domain:" + host);
-                        return;
-                    }
-                    TryIrc( () => ircClient.Connect(hostList.AddressList[random.Next(0, hostList.AddressList.Count())], port, false, registrationInfo));
-                });
+                        if (hostList == null || hostList.AddressList.Count() <= 0)
+                        {
+                            Log.WriteError("All servers are down. Domain:" + host);
+                            return;
+                        }
+                        ircClient.Connect(hostList.AddressList[random.Next(0, hostList.AddressList.Count())], port, false, registrationInfo);
+                    });
+                }
+
+            }) != null )
+            {
+                Leave();
             }
+
         }
 
         void ircClient_RawMessageReceived(object sender, IrcRawMessageEventArgs e)
@@ -555,10 +565,12 @@ namespace UB.Model
         }
         public override void Leave()
         {
-            if( ircClient != null)
+            if( ircClient != null )
             {
-                ircClient.Disconnected -= ircClient_Disconnected;
-                ircClient.RawMessageReceived -= ircClient_RawMessageReceived;
+                TryIrc(() => {
+                    ircClient.Disconnected -= ircClient_Disconnected;
+                    ircClient.RawMessageReceived -= ircClient_RawMessageReceived;                
+                });
             }
 
             if( disconnectTimer != null)
@@ -617,16 +629,19 @@ namespace UB.Model
         private void SetUserBadge(string userName, string userType)
         {
             if (!userBadges.ContainsKey(userName))
-                userBadges.Add(userName, new List<UserBadge>());
+                userBadges.Add(userName, new ObservableCollection<UserBadge>());
             
             if (userBadges[userName].Any(x => x.Title.Equals(userType)))
                 return;
 
-            userBadges[userName].Add( 
-                new UserBadge() {
-                    Url = channelBadges[userType.ToLower()],
-                    Title = userType
-                });
+            UI.Dispatch(() => {
+                userBadges[userName].Add(
+                    new UserBadge()
+                    {
+                        Url = channelBadges[userType.ToLower()],
+                        Title = userType
+                    });
+            });
 
             AddChatUser(userName, userType, userBadges[userName]);
             Log.WriteInfo("Special user:{0} type:{1}", userName, userType);
@@ -649,14 +664,11 @@ namespace UB.Model
             {
                 var userColorParams = parameters[1].Split(' ');
 
-                List<UserBadge> userbadges = null;
-                channel.userBadges.TryGetValue(userColorParams[1], out userbadges);
-                if (userColorParams.Length == 3)
-                    channel.AddChatUser(userColorParams[1], "user", userbadges);
+                //ObservableCollection<UserBadge> userbadges = null;
+                //channel.userBadges.TryGetValue(userColorParams[1], out userbadges);
+                //if (userColorParams.Length == 3)
+                //    channel.AddChatUser(userColorParams[1], "user", userbadges);
             }
-
-
-
 
             if (!parameters[0].Equals(channel.ChannelName, StringComparison.InvariantCultureIgnoreCase))
                 return;
@@ -677,7 +689,7 @@ namespace UB.Model
                     UserBadges = channel.userBadges.ContainsKey(args.Message.Source.Name) ? channel.userBadges[args.Message.Source.Name] : null
                 });
         }
-        private async static void ConnectHandler(TwitchChannel channel, IrcRawMessageEventArgs args)
+        private static void ConnectHandler(TwitchChannel channel, IrcRawMessageEventArgs args)
         {
             if( channel.ircClient.Channels.Count <= 0 )
             {
@@ -685,10 +697,11 @@ namespace UB.Model
                 channel.Chat.Status.IsConnecting = false;
                 channel.TryIrc(() => channel.ircClient.Channels.Join(channel.ChannelName));
                 channel.TryIrc(() => channel.ircClient.SendRawMessage("TWITCHCLIENT 1"));
+                
+                if( (Application.Current as App).AppConfig.IsUserListVisible )
+                    Task.Run(() => channel.LoadInitialUserList());                    
             }
             
-            await Task.Run(() => channel.LoadInitialUserList());
-
             if (channel.Chat.IsAnonymous)
             {
                 channel.pingTimer.Change(pingInterval, pingInterval);
@@ -725,8 +738,7 @@ namespace UB.Model
 
             foreach( var userNickname in users)
             {
-
-                lock (channel.chatUsersLock)
+                lock ((channel.Chat as TwitchChat).chatUsersLock)
                 {
                     channel.AddChatUser(userNickname, userGroup, null);
                 }
@@ -735,12 +747,11 @@ namespace UB.Model
         private static void JoinHandler(TwitchChannel channel, IrcRawMessageEventArgs args)
         {
             string userNickname = args.Message.Source.Name;
-            lock (channel.chatUsersLock)
+            lock ((channel.Chat as TwitchChat).chatUsersLock)
             {
-
-                if( !(channel.Chat as IChatUserList).ChatUsers.ToList().Any(u => u.NickName.Equals(userNickname)))
+                if( !(channel.Chat as IChatUserList).ChatUsers.Any(u => u.NickName.Equals(userNickname)))
                 {
-                    List<UserBadge> badges;
+                    ObservableCollection<UserBadge> badges;
                     string userGroup = "Users";
                     channel.userBadges.TryGetValue(userNickname, out badges);
                     channel.AddChatUser(userNickname, userGroup, badges);
@@ -758,28 +769,30 @@ namespace UB.Model
                     channel.JoinCallback(channel);
             }
         }
-        private void AddChatUser( string userNickname, string userGroup, List<UserBadge> badges)
+        private void AddChatUser( string userNickname, string userGroup, ObservableCollection<UserBadge> badges)
         {
-            UI.Dispatch(() =>
-            {
-                lock (chatUsersLock)
-                    if (!(Chat as IChatUserList).ChatUsers.Any(u => u != null && u.NickName.Equals(userNickname)))
-                        (Chat as IChatUserList).ChatUsers.Add(new ChatUser()
-                        {
-                            Channel = ChannelName,
-                            ChatName = Chat.ChatName,
-                            GroupName = userGroup,
-                            NickName = userNickname,
-                            Badges = badges,
-                        });
-            });
+            lock ((Chat as TwitchChat).chatUsersLock)
+                if (!(Chat as IChatUserList).ChatUsers.Any(u => u != null && u.NickName.Equals(userNickname)))
+                {
+                    UI.Dispatch(() => {
+                        lock((Chat as TwitchChat).chatUsersLock)
+                            (Chat as IChatUserList).ChatUsers.Add(new ChatUser()
+                            {
+                                Channel = ChannelName,
+                                ChatName = Chat.ChatName,
+                                GroupName = userGroup,
+                                NickName = userNickname,
+                                Badges = badges,
+                            });                    
+                    });
+                }
         }
         private static void LeaveHandler(TwitchChannel channel, IrcRawMessageEventArgs args)
         {            
             string userNickname = args.Message.Source.Name;
             UI.Dispatch(() => {
                 (channel.Chat as IChatUserList).ChatUsers
-                    .RemoveAll(user => user.NickName.Equals(userNickname, StringComparison.InvariantCultureIgnoreCase));            
+                    .RemoveAll(user => user.NickName.Equals(userNickname, StringComparison.InvariantCultureIgnoreCase));
             });
             Log.WriteInfo("Twitch user left: {0}", args.Message.Source);
         }
@@ -791,77 +804,73 @@ namespace UB.Model
             {
                 Thread.Sleep(2000);
                 channel.Leave();
-                //channel.Join((ch) => { channel.JoinCallback(ch); }, channel.ChannelName);
             }
         }
         private void LoadInitialUserList()
         {
-            // 
-            var chatters = Json.DeserializeUrl<TwitchChattersHead>(String.Format("http://tmi.twitch.tv/group/user/{0}/chatters", ChannelName.Replace("#", "")))
-                .With( x => x.chatters );
+            Log.WriteInfo("Twitch initial user list loading for {0}...", ChannelName);
+            lock ((Chat as TwitchChat).chatUsersLock)
+            {
+                var chatters = Json.DeserializeUrl<TwitchChattersHead>(String.Format("http://tmi.twitch.tv/group/user/{0}/chatters", ChannelName.Replace("#", "")))
+                    .With(x => x.chatters);
 
-            var moderators = chatters.With(x => x.moderators);
-            var admins = chatters.With(x => x.admins);
-            var staff = chatters.With(x => x.staff);
-            var viewers = chatters.With(x => x.viewers);
+                if (chatters == null)
+                    return;
 
-            List<ChatUser> initialUserList = new List<ChatUser>();
+                var currentChannelUsers = new HashSet<string>();
+                currentChannelUsers = new HashSet<string>((Chat as IChatUserList).ChatUsers
+                    .Where(chatUser => chatUser != null && chatUser.NickName != null && chatUser.Channel.Equals(ChannelName))
+                    .Select(chatUser => chatUser.NickName));
+                
+                var moderators = chatters.With(x => x.moderators);
+                var admins = chatters.With(x => x.admins);
+                var staff = chatters.With(x => x.staff);
+                var viewers = chatters.With(x => x.viewers);
 
-            foreach( var pair in new Dictionary<string, List<string>> { 
+                List<ChatUser> initialUserList = new List<ChatUser>();
+                foreach (var pair in new Dictionary<string, List<string>> { 
                             {"staff", staff}, 
                             {"admin",admins}, 
                             {"mod", moderators}, 
                             {"viewer", viewers}})
-            {
-                List<UserBadge> badges;
-                userBadges.TryGetValue( pair.Key, out badges );
-
-                initialUserList.AddRange(pair.Value.Select(x => new ChatUser()
                 {
-                    Channel = ChannelName,
-                    ChatName = Chat.ChatName,
-                    GroupName = pair.Key,
-                    NickName = x,
-                    Badges = badges,
-                }));
-            }
-            lock( chatUsersLock )
-            {
-                initialUserList.ToList().ForEach(x => {
-                    if (!(Chat as IChatUserList).ChatUsers.Any(u => u != null && u.NickName.Equals(x.NickName)))
-                        UI.Dispatch(() => { 
-                            (Chat as IChatUserList).ChatUsers.Add(x);
-                        });
-                });
-            }   
-            
-            //UI.Dispatch(() =>
-            //{
-            //    lock (chatUsersLock)
-            //        if (!(Chat as IChatUserList).ChatUsers.Any(u => u != null && u.NickName.Equals(userNickname)))
-            //            (Chat as IChatUserList).ChatUsers.Add(new ChatUser()
-            //            {
-            //                Channel = ChannelName,
-            //                ChatName = Chat.ChatName,
-            //                GroupName = userGroup,
-            //                NickName = userNickname,
-            //                Badges = badges,
-            //            });
-            //});
+                    if ( pair.Key == null || pair.Value == null)
+                        continue;
 
+                    ObservableCollection<UserBadge> badges;
+                    userBadges.TryGetValue( pair.Key, out badges );
+
+                    initialUserList.AddRange(pair.Value.Select(x => new ChatUser()
+                    {
+                        Channel = ChannelName,
+                        ChatName = Chat.ChatName,
+                        GroupName = pair.Key,
+                        NickName = x,
+                        Badges = badges,
+                    }));
+                }
+
+                lock ((Chat as TwitchChat).chatUsersLock)
+                    (Chat as IChatUserList).ChatUsers.AddRange(
+                        initialUserList.Where( x => !currentChannelUsers.Any(u => u.Equals(x.NickName)))
+                        );
+                Log.WriteInfo("Twitch initial user list loaded for {0}!", ChannelName);
+            }   
         }
-        private void TryIrc( Action action )
+        private string TryIrc( Action action )
         {
+            string error = null;
             try
             {
-
                 if (action != null)
                     action();
             }
             catch( Exception e )
             {
-                Log.WriteError("Twitch IRC exception {0}", e.Message);
+                Log.WriteError("Twitch IRC exception {0}", e.Message + Environment.NewLine + e.StackTrace);
+                error = e.Message + Environment.NewLine + e.StackTrace;
             }
+            return error;
         }
     }
 

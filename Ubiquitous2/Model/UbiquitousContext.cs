@@ -18,7 +18,7 @@ namespace UB.Model
         private string workDbPath = String.Empty;
         public UbiquitousContext()
         {
-            workDbPath = AppDomain.CurrentDomain.GetData("DBFolder").ToString() + @"\ubiquitous.sqlite";
+            workDbPath = AppDomain.CurrentDomain.GetData("DataDirectory").ToString() + @"\ubiquitous.sqlite";
             Database.SetInitializer<UbiquitousContext>(null);
             MigrateDatabase();
         }
@@ -32,7 +32,7 @@ namespace UB.Model
                 if (!File.Exists(workDbPath))
                 {
                     File.Copy(defaultDbPath, workDbPath);
-                    AddTestData();
+                    //AddTestData();
                 }
             }
             catch(Exception e)

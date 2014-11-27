@@ -20,6 +20,7 @@ namespace UB.Model
         private WebClientBase loginWebClient = new WebClientBase();
         private object iconParseLock = new object();
         private object lockSearch = new object();
+        private object chatUsersLock = new object();
         private WebPoller followerPoller = new WebPoller();
         private HitboxFollowers currentFollowers = new HitboxFollowers();
 
@@ -43,13 +44,16 @@ namespace UB.Model
                 HasTopic = true,
                 ChatName = Config.ChatName,
             };
-            ChatUsers = new ObservableCollection<ChatUser>();
+            ChatUsers = new SmartCollection<ChatUser>();
             Games = new ObservableCollection<Game>();
         }
         #region IChat implementation
 
         public override bool Login()
         {
+            lock (chatUsersLock)
+                UI.Dispatch(() => ChatUsers.Clear());
+
             try
             {
                 if (!LoginWithToken())
@@ -448,7 +452,7 @@ namespace UB.Model
         #endregion
 
 
-        public ObservableCollection<ChatUser> ChatUsers
+        public SmartCollection<ChatUser> ChatUsers
         {
             get;
             set;
@@ -464,7 +468,7 @@ namespace UB.Model
         private object lockRawMessage = new object();
         private Timer timerEveryMinute;
         private object chatUsersLock = new object();
-        private ObservableCollection<ChatUser> currentUserList = new ObservableCollection<ChatUser>();
+        private SmartCollection<ChatUser> currentUserList = new SmartCollection<ChatUser>();
 
         public HitboxChannel(HitboxChat chat)
         {
@@ -768,8 +772,8 @@ namespace UB.Model
                     
                         //Delete disconnected users
                         UI.Dispatch(() => {
-                            oldUserList.Where(item => item.Channel.Equals(ChannelName) && item.ChatName.Equals(Chat.ChatName))
-                                .Except(currentUserList, new LambdaComparer<ChatUser>((x, y) => x.NickName.Equals(y.NickName)))                                
+                            oldUserList.ToList().Where(item => item.Channel.Equals(ChannelName) && item.ChatName.Equals(Chat.ChatName))
+                                .Except(currentUserList, new LambdaComparer<ChatUser>((x, y) => x.NickName.Equals(y.NickName)))   
                                 .ToList()
                                 .ForEach(item => oldUserList.Remove(item));
                         });
@@ -778,21 +782,24 @@ namespace UB.Model
                             .Except(oldUserList, new LambdaComparer<ChatUser>((x, y) => x.NickName.Equals(y.NickName)))
                             .ToList();
 
-                        foreach( ChatUser user in newUserList )
-                        {
-                            UI.Dispatch(() =>
-                            {
-                                lock (chatUsersLock)
-                                    (Chat as IChatUserList).ChatUsers.Add(new ChatUser()
-                                    {
-                                        Channel = ChannelName,
-                                        ChatName = Chat.ChatName,
-                                        GroupName = user.GroupName,
-                                        NickName = user.NickName,
-                                        Badges = null,
-                                    });
-                            });
-                        }
+                        lock (chatUsersLock)
+                            (Chat as IChatUserList).ChatUsers.AddRange(newUserList);
+
+                        //foreach( ChatUser user in newUserList )
+                        //{
+                        //    UI.Dispatch(() =>
+                        //    {
+                        //        lock (chatUsersLock)
+                        //            (Chat as IChatUserList).ChatUsers.Add(new ChatUser()
+                        //            {
+                        //                Channel = ChannelName,
+                        //                ChatName = Chat.ChatName,
+                        //                GroupName = user.GroupName,
+                        //                NickName = user.NickName,
+                        //                Badges = null,
+                        //            });
+                        //    });
+                        //}
                         newUserList = null;
 
                     }

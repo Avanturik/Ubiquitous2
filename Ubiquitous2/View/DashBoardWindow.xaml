@@ -103,19 +103,20 @@
                                 <RowDefinition Height="*"/>
                                 <RowDefinition Height="20"/>
                             </Grid.RowDefinitions>
-                            <sparrow:SparrowChart RenderingMode="WritableBitmap" Margin="0" ContainerBorderStyle="{StaticResource containerStyle}" Foreground="#FFDADADA" FontSize="16" Padding="15" Grid.Row="0">
+                            <sparrow:SparrowChart RenderingMode="WritableBitmap" Margin="0" ContainerBorderStyle="{StaticResource containerStyle}" Foreground="#FFDADADA" FontSize="17" Padding="15" Grid.Row="0">
                                 <sparrow:SparrowChart.Effect>
                                     <DropShadowEffect ShadowDepth="0" BlurRadius="9" Color="#FFA8A8A8"/>
                                 </sparrow:SparrowChart.Effect>
                                 <sparrow:SparrowChart.XAxis>
-                                    <sparrow:DateTimeXAxis Visibility="Collapsed" ZoomCoefficient="0.05" ZoomOffset="{Binding Value, Source={x:Reference Name=zoomOffsetSlider}}" Interval="0:30:0" StringFormat="MMM dd HH:mm"/>
+                                    <!--<sparrow:DateTimeXAxis Visibility="Collapsed" ZoomCoefficient="0.05" ZoomOffset="{Binding Value, Source={x:Reference Name=zoomOffsetSlider}}" Interval="0:30:0" StringFormat="MMM dd HH:mm"/>-->
+                                    <sparrow:DateTimeXAxis ZoomCoefficient="0.05" ZoomOffset="{Binding Value, Source={x:Reference Name=zoomOffsetSlider}}" Interval="0:30:0" StringFormat="MMM, dd HH:mm"/>
                                 </sparrow:SparrowChart.XAxis>
                                 <sparrow:SparrowChart.YAxis>
-                                    <sparrow:LinearYAxis MinValue="0" MaxValue="50" CrossLineStyle="{StaticResource crossLineStyle}"/>
+                                    <sparrow:LinearYAxis MinValue="0" MaxValue="{Binding MaxViewersCount}" CrossLineStyle="{StaticResource crossLineStyle}" StringFormat="F0"/>
                                 </sparrow:SparrowChart.YAxis>
-                                <sparrow:AreaSeries XPath="DateTime" StrokeThickness="2" YPath="Viewerscount" PointsSource="{Binding TotalViewers}" Fill="#C374AFD8" Stroke="#FF468CBD"/>
+                                <sparrow:AreaSeries IsRefresh="True" XPath="DateTime" StrokeThickness="2" YPath="Viewerscount" PointsSource="{Binding TotalViewers}" Fill="#C374AFD8" Stroke="#FF468CBD"/>
                             </sparrow:SparrowChart>
-                            <Slider Name="zoomOffsetSlider" Minimum="0" Maximum="1" Grid.Row="1" Margin="44,0,0,0" LargeChange="0.1" SmallChange="0.001"></Slider>
+                            <Slider Name="zoomOffsetSlider" Value="1" Minimum="0" Maximum="1" Grid.Row="1" Margin="44,0,0,0" LargeChange="0.1" SmallChange="0.001"></Slider>
                         </Grid>
                     </Border>
                 </StackPanel>

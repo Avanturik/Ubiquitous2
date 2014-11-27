@@ -20,12 +20,14 @@ namespace UB.Model
         private object messageQueueLock = new object();
         private ISettingsDataService settingsDataService;
         private IGeneralDataService _dataService;
+        private IDatabase _databaseService;
         private ChatToFileService historyService;
         private Random random;
         private Func<ChatMessage[], Exception,bool> readChatCallback;
         private List<ChatConfig> chatConfigs;
         private List<IChat> chats;
         private SteamChat steamChat;
+        private Timer timerUpdateDatabase;
         private HashSet<string> ignoreList = new HashSet<string>();
         //Disposable
         private DispatcherTimer receiveTimer = new DispatcherTimer();
@@ -34,8 +36,10 @@ namespace UB.Model
         {
             settingsDataService = ServiceLocator.Current.GetInstance<ISettingsDataService>();
             _dataService = ServiceLocator.Current.GetInstance<IGeneralDataService>();
+            _databaseService = ServiceLocator.Current.GetInstance<IDatabase>();
+
             historyService = _dataService.Services.FirstOrDefault(service => service.Config.ServiceName == SettingsRegistry.ServiceTitleChatToFile) as ChatToFileService;
-            random = new Random();
+            random = new Random();            
             Start();
         }
 
@@ -137,6 +141,11 @@ namespace UB.Model
             }
             Task.WaitAll(stopTasks, 1000);
         }
+        private void UpdateDatabase()
+        {
+            foreach (var chat in Chats.Where(chat => chat != null && chat.Config.Enabled && chat.Status != null))
+                _databaseService.AddViewersCount( chat.ChatName, chat.Status.ViewersCount);
+        }
         public void StartAllChats()
         {
             steamChat = (SteamChat)GetChat(SettingsRegistry.ChatTitleSteam);
@@ -147,6 +156,8 @@ namespace UB.Model
             receiveTimer.Interval = TimeSpan.FromMilliseconds(1500);
             receiveTimer.Tick += receiveTimer_Tick;
             receiveTimer.Start();
+
+            timerUpdateDatabase = new Timer((o) => { UpdateDatabase(); }, this, 0, 60000);
 
             int waitChatStatus = 5000;
             Chats.ForEach(chat =>
@@ -192,6 +203,8 @@ namespace UB.Model
                     });
                 }
             });
+
+
         }
 
         void receiveTimer_Tick(object sender, EventArgs e)
@@ -303,6 +316,7 @@ namespace UB.Model
             ChatChannels.Clear();
             Chats.Clear();
             Chats = null;
+            timerUpdateDatabase.Change(Timeout.Infinite, Timeout.Infinite);
         }
 
 

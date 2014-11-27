@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.Windows;
 using System.Windows.Controls;
@@ -84,7 +85,7 @@ namespace UB.Model
         public long UnixTimeStamp { get; set; }
         public bool IsNew { get; set; }
         public Style Style { get; set; }
-        public List<UserBadge> UserBadges { get; set; }
+        public ObservableCollection<UserBadge> UserBadges { get; set; }
 
         private double _height;
 

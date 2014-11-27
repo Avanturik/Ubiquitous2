@@ -353,7 +353,7 @@ namespace UB.Model
         private Timer disconnectTimer;
         private int pingInterval = 60000;
         private WebSocketBase webSocket;
-        private WebSocketBase secondWebSocket;
+        //private WebSocketBase secondWebSocket;
         private object pollerLock = new object();
         private object pingLock = new object();
         private WebPoller statsPoller;
