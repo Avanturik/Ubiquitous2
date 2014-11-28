@@ -22,10 +22,17 @@ namespace UB.Utils
 
         public static void SetPlacement(this Window window, WindowSettings settings)
         {
-            window.Top = settings.Top;
-            window.Left = settings.Left;
-            window.Width = settings.Width;
-            window.Height = settings.Height == 0 || settings.Height == double.NaN ? window.Height : settings.Height;
+            if( settings.Top != double.NaN && settings.Top > 0 )
+                window.Top = settings.Top;
+            
+            if( settings.Left != double.NaN && settings.Left > 0 )
+                window.Left = settings.Left;
+
+            if( settings.Width != double.NaN && settings.Width > 0)
+                window.Width = settings.Width;
+            
+            if( settings.Height != double.NaN && settings.Height > 0 )
+                window.Height = settings.Height;
         }
 
         public static WindowSettings GetPlacement(this Window window)

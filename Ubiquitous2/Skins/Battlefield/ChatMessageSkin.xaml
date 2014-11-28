@@ -23,7 +23,7 @@
 		<Setter Property="Template">
 			<Setter.Value>
 				<ControlTemplate TargetType="{x:Type UserControl}">
-					<ControlTemplate.Resources>
+                    <ControlTemplate.Resources>
                         <Style x:Key="{x:Type Hyperlink}" TargetType="{x:Type Hyperlink}">
                             <Setter Property="TextDecorations" Value="None"/>
                             <Style.Triggers>
@@ -38,37 +38,27 @@
                             </Style.Triggers>
                         </Style>
                         <Style TargetType="{x:Type TextBlock}" x:Key="NickStyle">
-							<Setter Property="Foreground" Value="#FFf3f5fD" />
-							<Setter Property="Effect">
-								<Setter.Value>
-									<DropShadowEffect Color="#FFC4FF00" BlurRadius="11" ShadowDepth="2"/>
-								</Setter.Value>
-							</Setter>
-						</Style>
+                            <Setter Property="Foreground" Value="#FFf3f5fD" />
+                            <Setter Property="Effect">
+                                <Setter.Value>
+                                    <DropShadowEffect Color="#FFC4FF00" BlurRadius="11" ShadowDepth="2"/>
+                                </Setter.Value>
+                            </Setter>
+                        </Style>
                         <Style TargetType="{x:Type Image}">
                             <Setter Property="RenderOptions.BitmapScalingMode" Value="HighQuality"/>
                             <Setter Property="UseLayoutRounding" Value="True"/>
                             <Setter Property="Stretch" Value="Fill"/>
                         </Style>
                         <Storyboard x:Key="MessageAnimation">
-                        	<DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Effect).(BlurEffect.Radius)" Storyboard.TargetName="mainGrid">
-                        		<EasingDoubleKeyFrame KeyTime="0:0:0" Value="26"/>
-                        		<EasingDoubleKeyFrame KeyTime="0:0:0.5" Value="0"/>
-                        	</DoubleAnimationUsingKeyFrames>
+                            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Effect).(BlurEffect.Radius)" Storyboard.TargetName="mainGrid">
+                                <EasingDoubleKeyFrame KeyTime="0:0:0" Value="26"/>
+                                <EasingDoubleKeyFrame KeyTime="0:0:0.5" Value="0"/>
+                            </DoubleAnimationUsingKeyFrames>
                         </Storyboard>
 
                     </ControlTemplate.Resources>
-					<!--<ControlTemplate.Triggers>
-						<DataTrigger Binding="{Binding Message.IsNew}" Value="True">
-							<DataTrigger.EnterActions>
-								<BeginStoryboard Storyboard="{StaticResource MessageAnimation}"/>								
-							</DataTrigger.EnterActions>
-						</DataTrigger>						
-					</ControlTemplate.Triggers>-->
                     <Grid x:Name="mainGrid">
-                    	<!--<Grid.Effect>
-                    		<BlurEffect Radius="0"/>
-                    	</Grid.Effect>-->
                         <Grid Visibility="Hidden">
 							<TextBlock x:Name="prefixBlock" HorizontalAlignment="Left" Margin="0,0,5,0" Foreground="#FFE4FFFF" FontFamily="/Ubiquitous2;component/Fonts/#Purista" TextWrapping="Wrap">
                                 <ub:ServiceLogo Width="12" DataContext="{Binding Message.ChatName}" HorizontalAlignment="Left" VerticalAlignment="Center"/>
@@ -96,8 +86,7 @@
 						<TextBlock Foreground="White" TextWrapping="Wrap" Focusable="False" HorizontalAlignment="Left"
                             Interactivity:TextBlockAttached.InlineListPrefix="{Binding Converter={StaticResource textConverter}, ElementName=prefixBlock}"
 							Interactivity:TextBlockAttached.InlineList="{Binding Message, Converter={StaticResource textConverter}}"
-							 FontFamily="/Ubiquitous2;component/Fonts/#Purista Light" FontSize="{Binding AppConfig.FontSizeMessage}" FontWeight="Thin"
-                                   >
+							 FontFamily="/Ubiquitous2;component/Fonts/#Purista Light" FontSize="{Binding AppConfig.FontSizeMessage}" FontWeight="Thin">
 							<TextBlock.Effect>
                                 <DropShadowEffect Color="#FF69879F" BlurRadius="7" ShadowDepth="0"/>
 							</TextBlock.Effect>                            

@@ -749,7 +749,7 @@ namespace UB.Model
             string userNickname = args.Message.Source.Name;
             lock ((channel.Chat as TwitchChat).chatUsersLock)
             {
-                if( !(channel.Chat as IChatUserList).ChatUsers.Any(u => u.NickName.Equals(userNickname)))
+                if( !(channel.Chat as IChatUserList).ChatUsers.ToList().Any(u => u.NickName.Equals(userNickname)))
                 {
                     ObservableCollection<UserBadge> badges;
                     string userGroup = "Users";
@@ -772,7 +772,7 @@ namespace UB.Model
         private void AddChatUser( string userNickname, string userGroup, ObservableCollection<UserBadge> badges)
         {
             lock ((Chat as TwitchChat).chatUsersLock)
-                if (!(Chat as IChatUserList).ChatUsers.Any(u => u != null && u.NickName.Equals(userNickname)))
+                if (!(Chat as IChatUserList).ChatUsers.ToList().Any(u => u != null && u.NickName.Equals(userNickname)))
                 {
                     UI.Dispatch(() => {
                         lock((Chat as TwitchChat).chatUsersLock)

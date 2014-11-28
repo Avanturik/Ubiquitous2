@@ -23,6 +23,8 @@ namespace UB.Model
         private string ownChannel;
         private string ownChannelId;
         private object iconParseLock = new object();
+        private string currentSearchQuery = null;
+        private object lockSearch = new object();
         private WebClientBase webClient = new WebClientBase();
 
         #region IChat
@@ -335,20 +337,23 @@ namespace UB.Model
 
         public void QueryGameList(string gameName, Action callback)
         {
-            Games.Clear();
+            lock( lockSearch )
+            {
+                Games.Clear();
 
-            webClient.ContentType = ContentType.UrlEncodedUTF8;
-            webClient.Headers["X-Requested-With"] = "XMLHttpRequest";
+                webClient.ContentType = ContentType.UrlEncodedUTF8;
+                webClient.Headers["X-Requested-With"] = "XMLHttpRequest";
 
-            this.With(x => GoodgameGet(String.Format("http://goodgame.ru/ajax/games/?q={0}&limit=10", HttpUtility.UrlEncode(gameName))))
-                .With(x => String.IsNullOrWhiteSpace(x) ? null : x)
-                .With(x => JArray.Parse(x))
-                .With(x => x.Select(game => new Game() { Id = game[2].ToString(), Name = game[0].ToString() }))
-                .ToList()
-                .ForEach(g => Games.Add(g));
+                this.With(x => GoodgameGet(String.Format("http://goodgame.ru/ajax/games/all/?q={0}&limit=10", HttpUtility.UrlEncode(gameName))))
+                    .With(x => String.IsNullOrWhiteSpace(x) ? null : x)
+                    .With(x => JArray.Parse(x))
+                    .With(x => x.Select(game => new Game() { Id = game[2].ToString(), Name = game[0].ToString() }))
+                    .ToList()
+                    .ForEach(g => Games.Add(g));
 
-            if (callback != null)
-                UI.Dispatch(() => callback());
+                if (callback != null)
+                    UI.Dispatch(() => callback());
+            }
         }
 
         public void GetTopic()

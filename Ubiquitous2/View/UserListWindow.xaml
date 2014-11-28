@@ -6,7 +6,7 @@
         xmlns:Interactivity="clr-namespace:UB.Interactivity"
         Topmost="{Binding Source={StaticResource Locator}, Path=UserList.AppConfig.IsOnTop}"
         Visibility="{Binding Source={StaticResource Locator},Path=UserList.AppConfig.IsUserListVisible, Converter={StaticResource boolToVisibilityConverter}}"
-        Title="Users" Width="300" UseLayoutRounding="True" SizeToContent="Width" Icon="/Ubiquitous2;component/Resources/ubiquitous smile.ico">
+        Title="Users" Width="400" UseLayoutRounding="True" Icon="/Ubiquitous2;component/Resources/ubiquitous smile.ico" SizeToContent="Width">
     <i:Interaction.Behaviors>
         <Interactivity:WindowPersistentLocationBehavior WindowName="UsersWindow"/>
         <Interactivity:UnclosableWindow/>
