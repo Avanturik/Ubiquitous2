@@ -17,7 +17,7 @@ namespace UB.ViewModel
         private readonly IChatDataService _dataService;
         private double estimatedHeight;
         private double estimatedWidth;
-        private ObjectPool<ChatMessageView> messagePool = new ObjectPool<ChatMessageView>(() => new ChatMessageView());
+        private static ObjectPool<ChatMessageView> messagePool = new ObjectPool<ChatMessageView>(() => new ChatMessageView());
 
         public ChatMessageViewModel()
         {

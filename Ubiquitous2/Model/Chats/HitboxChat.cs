@@ -109,7 +109,7 @@ namespace UB.Model
 
             
             Config.SetParameterValue("AuthToken", String.Empty);
-
+            Config.SetParameterValue("AuthTokenCredentials", String.Empty);
             return false;
         }
         public bool LoginWithUsername()
@@ -137,6 +137,7 @@ namespace UB.Model
             {
                 Log.WriteError("Login to hitbox.tv failed. Joining anonymously");
                 IsAnonymous = true;
+                Config.SetParameterValue("AuthTokenCredentials", String.Empty);
                 return false;
             }
             else
@@ -337,6 +338,20 @@ namespace UB.Model
 
             if (livestream == null)
                 return;
+
+            if( String.IsNullOrEmpty( livestream["media_recording"].ToObject<string>() ) )
+            {
+                Config.SetParameterValue("AuthTokenCredentials", String.Empty);
+                Config.SetParameterValue("AuthToken", String.Empty);
+                LoginWithUsername();
+                currentInfo = GetLiveStreamInfo();
+                livestream = this.With(x => currentInfo)
+                .With(x => x["livestream"])
+                .With(x => x[0]);
+
+                if (livestream == null)
+                    return;
+            }
 
             currentInfo["livestream"][0]["media_status"] = Info.Topic;
             

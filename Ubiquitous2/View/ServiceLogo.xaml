@@ -7,10 +7,15 @@
              mc:Ignorable="d"       
              d:DesignHeight="64" d:DesignWidth="64">
 
+    
     <d:UserControl.DataContext>
         <sys:String>Youtube.com</sys:String>
     </d:UserControl.DataContext>
 
+    <UserControl.CacheMode>
+        <BitmapCache RenderAtScale="1" SnapsToDevicePixels="True"  />
+    </UserControl.CacheMode>
+    
     <UserControl.Resources>
         <SolidColorBrush x:Key="FillColor" Color="White"></SolidColorBrush>
         <SolidColorBrush x:Key="FillColorCyberTop" Color="White"></SolidColorBrush>
