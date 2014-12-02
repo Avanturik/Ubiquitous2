@@ -17,6 +17,7 @@ namespace UB.ViewModel
         private readonly IChatDataService _dataService;
         private double estimatedHeight;
         private double estimatedWidth;
+        private ObjectPool<ChatMessageView> messagePool = new ObjectPool<ChatMessageView>(() => new ChatMessageView());
 
         public ChatMessageViewModel()
         {
@@ -98,11 +99,12 @@ namespace UB.ViewModel
             var width = (Application.Current as App).ChatBoxWidth;
             if (Message.Height <= 0 && width > 0 )
             {
-                var testMessage = new ChatMessageView();
+                var testMessage = messagePool.GetObject();
                 testMessage.DataContext = this;
                 testMessage.Style = (Style)testMessage.TryFindResource("ChatMessageTemplate");
                 testMessage.Measure(new Size(width, double.PositiveInfinity));
                 Message.Height = testMessage.DesiredSize.Height;
+                messagePool.PutObject(testMessage);
             }
 
         }

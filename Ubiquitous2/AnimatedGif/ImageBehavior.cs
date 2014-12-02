@@ -175,6 +175,9 @@ namespace WpfAnimatedGif
 
                 var image = obj as Image;
 
+                if (!image.IsVisible)
+                    return;
+
                 image.Source = null;
                 if( e.NewValue == null)
                     return;

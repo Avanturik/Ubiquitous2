@@ -271,6 +271,7 @@
     <Compile Include="Utils\Crypt.cs" />
     <Compile Include="Utils\Css.cs" />
     <Compile Include="Utils\DeviceHelper.cs" />
+    <Compile Include="Utils\ObjectPool.cs" />
     <Compile Include="Utils\Random.cs" />
     <Compile Include="Utils\Text.cs" />
     <Compile Include="Utils\Url.cs" />
