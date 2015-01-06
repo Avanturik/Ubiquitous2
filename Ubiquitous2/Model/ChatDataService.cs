@@ -66,7 +66,10 @@ namespace UB.Model
                     {
                         chatConfigs = configs;
                     });
-                    chats = chatConfigs.Select(config => SettingsRegistry.ChatFactory[config.ChatName](config)).ToList();
+                    var hasFactory = chatConfigs.Where( config => SettingsRegistry.ChatFactory.ContainsKey( config.ChatName));
+                    chats = hasFactory
+                        .Select(config => SettingsRegistry.ChatFactory[config.ChatName](config))
+                        .ToList();
                 }
                 return chats;
             }
@@ -119,7 +122,11 @@ namespace UB.Model
             if (chatName == null)
                 return null;
 
-            return Chats.FirstOrDefault(chat => chat != null && chat.ChatName.Equals(chatName, StringComparison.InvariantCultureIgnoreCase));
+            return Chats.FirstOrDefault(
+                    chat => chat != null && 
+                    !String.IsNullOrWhiteSpace(chat.ChatName) && 
+                    chat.ChatName.Equals(chatName, StringComparison.InvariantCultureIgnoreCase)
+                );
         }
         public void StopAllChats()
         {
@@ -316,7 +323,8 @@ namespace UB.Model
             ChatChannels.Clear();
             Chats.Clear();
             Chats = null;
-            timerUpdateDatabase.Change(Timeout.Infinite, Timeout.Infinite);
+            if( timerUpdateDatabase != null )
+                timerUpdateDatabase.Change(Timeout.Infinite, Timeout.Infinite);
         }
 
 

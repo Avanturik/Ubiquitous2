@@ -39,7 +39,7 @@
     <CreateWebPageOnPublish>true</CreateWebPageOnPublish>
     <WebPage>publish.htm</WebPage>
     <OpenBrowserOnPublish>false</OpenBrowserOnPublish>
-    <ApplicationRevision>4</ApplicationRevision>
+    <ApplicationRevision>5</ApplicationRevision>
     <ApplicationVersion>2.2.1.%2a</ApplicationVersion>
     <UseApplicationTrust>true</UseApplicationTrust>
     <CreateDesktopShortcut>true</CreateDesktopShortcut>
@@ -101,6 +101,9 @@
     <ApplicationManifest>app.manifest</ApplicationManifest>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="CSScriptLibrary">
+      <HintPath>..\packages\CS-Script.3.8.10.0\lib\net45\CSScriptLibrary.dll</HintPath>
+    </Reference>
     <Reference Include="EntityFramework">
       <HintPath>..\packages\EntityFramework.6.1.1\lib\net45\EntityFramework.dll</HintPath>
     </Reference>
@@ -129,6 +132,9 @@
     <Reference Include="Microsoft.Expression.Interactions, Version=4.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
     <Reference Include="Microsoft.Practices.ServiceLocation">
       <HintPath>..\packages\CommonServiceLocator.1.3\lib\portable-net4+sl5+netcore45+wpa81+wp8\Microsoft.Practices.ServiceLocation.dll</HintPath>
+    </Reference>
+    <Reference Include="Mono.CSharp">
+      <HintPath>..\packages\CS-Script.3.8.10.0\lib\net45\Mono.CSharp.dll</HintPath>
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -233,6 +239,7 @@
     <Compile Include="Interactivity\BehaviorBase.cs" />
     <Compile Include="Interactivity\ElementToOBSPlugin.cs" />
     <Compile Include="Interactivity\UnclosableWindow.cs" />
+    <Compile Include="Model\IScript.cs" />
     <Compile Include="Model\ChatChannelBase.cs" />
     <Compile Include="Model\ChannelStats.cs" />
     <Compile Include="Model\Chats\CybergameChat.cs" />
@@ -256,6 +263,7 @@
     <Compile Include="Model\NativeMethods.cs" />
     <Compile Include="Model\OBSPluginService.cs" />
     <Compile Include="Model\OBSRemoteService.cs" />
+    <Compile Include="Model\ScriptManager.cs" />
     <Compile Include="Model\StreamInfo.cs" />
     <Compile Include="Model\StreamInfoPreset.cs" />
     <Compile Include="Model\StreamPageDataService.cs" />
@@ -266,6 +274,9 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Content Include="Scripts\Example\Sc2Tv.cs">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Compile Include="Utils\Bitmap.cs" />
     <Compile Include="Utils\Clone.cs" />
     <Compile Include="Utils\Crypt.cs" />
@@ -864,6 +875,12 @@
     <Resource Include="Resources\log.gif">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Resource>
+    <Content Include="Scripts\Example\Sc2Tv.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Scripts\Put your scripts here.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="web\css\battlefield.css">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
@@ -1360,6 +1377,7 @@
       <FileType>Satellite</FileType>
     </PublishFile>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>cmd /c cd "$(TargetDir)"&gt;nul &amp; for /d %25%25d in (??,??-????) do if exist %25%25d rmdir /s /q %25%25d&gt;nul &amp; echo 0

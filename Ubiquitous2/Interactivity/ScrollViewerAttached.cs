@@ -56,8 +56,8 @@ namespace UB.Interactivity
                     return;
 
                 double newOffset = (double)e.NewValue;
-
-                scrollViewer.ScrollToVerticalOffset(newOffset);
+                if( newOffset >= scrollViewer.VerticalOffset )
+                    scrollViewer.ScrollToVerticalOffset(newOffset);
             }));
 
     }

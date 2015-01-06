@@ -39,6 +39,10 @@ namespace UB
 
             AppDomain.CurrentDomain.SetData("DataDirectory", Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + @"\Ubiquitous2");
             WebRequest.DefaultWebProxy = null;
+
+            var scriptManager = new ScriptManager();
+            scriptManager.LoadScripts();
+
             //RenderOptions.ProcessRenderMode = RenderMode.SoftwareOnly; 
         }
 

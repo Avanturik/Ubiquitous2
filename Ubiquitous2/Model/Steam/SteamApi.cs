@@ -318,7 +318,7 @@ namespace UB.SteamApi
 
                     // SteamGuard
                     if (steamGuard  )
-                    {
+                    {                        
                         OnSteamGuard(new SteamEvent());
                         while( String.IsNullOrWhiteSpace(SteamGuardKey))
                         {

@@ -16,6 +16,7 @@ namespace UB.Interactivity
         private Storyboard storyBoard;
         private ScrollViewer scrollViewer;
         private bool isInvoked = false;
+        private object scrollLock = new object();
         protected override void OnAttached()
         {
             scrollViewer = Target;
@@ -53,28 +54,31 @@ namespace UB.Interactivity
 
             if (scrollViewer.ViewportHeight >= scrollViewer.ExtentHeight)
                 return;
-            
-            if (storyBoard != null )
+
+            lock( scrollLock )
             {
-                var progress = storyBoard.GetCurrentProgress();
-                if( progress < 1 && progress > 0 )
-                    return;
+                if (storyBoard != null )
+                {
+                    var progress = storyBoard.GetCurrentProgress();
+                    if( progress < 1 && progress > 0 )
+                        return;
 
-                storyBoard.Stop();
-                storyBoard = null;
+                    storyBoard.Stop();
+                    storyBoard = null;
+                }
+
+                scrollViewer.SetValue(ScrollViewerAttached.VerticalPositionProperty, scrollViewer.VerticalOffset);
+                storyBoard = new Storyboard();            
+                DoubleAnimation mainAnimation = new DoubleAnimation(scrollViewer.ExtentHeight - scrollViewer.ViewportHeight, TimeSpan.FromMilliseconds(Duration));
+                storyBoard.Children.Add(mainAnimation);
+                Storyboard.SetTarget(mainAnimation, AssociatedObject);
+                Storyboard.SetTargetProperty(mainAnimation, new PropertyPath(ScrollViewerAttached.VerticalPositionProperty));
+                storyBoard.Completed += (obj, e) => {
+                    InstantScrollToBottom();
+                    storyBoard = null;
+                };
+                storyBoard.Begin();
             }
-
-            storyBoard = new Storyboard();            
-
-            DoubleAnimation mainAnimation = new DoubleAnimation(scrollViewer.ExtentHeight - scrollViewer.ViewportHeight, TimeSpan.FromMilliseconds(Duration));
-            storyBoard.Children.Add(mainAnimation);
-            Storyboard.SetTarget(mainAnimation, AssociatedObject);
-            Storyboard.SetTargetProperty(mainAnimation, new PropertyPath(ScrollViewerAttached.VerticalPositionProperty));
-            storyBoard.Completed += (obj, e) => {
-                InstantScrollToBottom();
-                storyBoard = null;
-            };
-            storyBoard.Begin();
         }
 
         protected void InstantScrollToBottom()

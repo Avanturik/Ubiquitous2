@@ -315,7 +315,7 @@ namespace UB.Model
 
         JToken GetLiveStreamInfo()
         {
-            var getUrl = @"https://www.hitbox.tv/api/media/live/{0}/list?authToken={1}&filter=recent&hiddenOnly=false&limit=10&nocache=true&publicOnly=false&search=&showHidden=true&yt=false&_" + Time.UnixTimestamp().ToString(); ;
+            var getUrl = @"https://www.hitbox.tv/api/media/live/{0}?authToken={1}&liveonly=false&showHidden=true&_" + Time.UnixTimestamp().ToString(); ;
             var userName = Config.GetParameterValue("Username") as string;
             var authToken = Config.GetParameterValue("AuthToken") as string;
 
@@ -375,7 +375,7 @@ namespace UB.Model
             
             
             Json.SerializeToStream<JToken>(currentInfo, (stream) => {
-                var putUrl = @"https://www.hitbox.tv/api/media/live/{0}/list?authToken={1}&filter=recent&hiddenOnly=false&limit=10&nocache=true&publicOnly=false&search=&showHidden=true&yt=false";
+                var putUrl = @"https://www.hitbox.tv/api/media/live/{0}?authToken={1}";
                 var userName = Config.GetParameterValue("Username") as string;
                 var authToken = Config.GetParameterValue("AuthToken") as string;
 

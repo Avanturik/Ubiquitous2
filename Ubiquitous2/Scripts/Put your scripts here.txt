@@ -1,0 +1,2 @@
+﻿Put your scripts here or in subfolder.
+Example folder won't be loaded. 

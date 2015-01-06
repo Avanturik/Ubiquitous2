@@ -15,9 +15,14 @@ namespace UB.ViewModel
 
         private RelayCommand<Window> _cancelCommand;
         private SteamChat steamChat;
+        private IChatDataService dataService;
         public SteamGuardViewModel( IChatDataService dataService)
         {
-            steamChat = (SteamChat)dataService.Chats.FirstOrDefault(chat => chat.ChatName.Equals(SettingsRegistry.ChatTitleSteam));
+            this.dataService = dataService;
+        }
+        private SteamChat GetSteamChat()
+        {
+            return (SteamChat)dataService.Chats.FirstOrDefault(chat => chat.ChatName.Equals(SettingsRegistry.ChatTitleSteam));
         }
         /// <summary>
         /// Gets the CancelCommand.
@@ -29,6 +34,7 @@ namespace UB.ViewModel
                 return _cancelCommand
                     ?? (_cancelCommand = new RelayCommand<Window>((window) => {
 
+                        steamChat = GetSteamChat();
                         if (steamChat != null)
                             steamChat.SteamGuardKey = "Cancel";
 
@@ -53,6 +59,7 @@ namespace UB.ViewModel
                     {
                         if (!String.IsNullOrWhiteSpace(Code))
                         {
+                            steamChat = GetSteamChat();
                             if (steamChat != null)
                                 steamChat.SteamGuardKey = Code;
 

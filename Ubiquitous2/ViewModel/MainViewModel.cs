@@ -101,8 +101,7 @@ namespace UB.ViewModel
                     if (what.Equals("SteamGuardCode", StringComparison.InvariantCultureIgnoreCase))
                     {
                         UI.Dispatch( () =>
-                        {
-                                var steamGuardWindow = new SteamGuardWindow();
+                        {                                
                                 steamGuardWindow.Show();
                         });
                     }

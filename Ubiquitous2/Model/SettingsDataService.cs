@@ -104,9 +104,16 @@ namespace UB.Model
             }
             else
             {
+                var configList = Ubiquitous.Default.Config.ChatConfigs.ToList();
+                foreach( ChatConfig config in configList )
+                    if (!SettingsRegistry.ChatFactory.ContainsKey(config.ChatName))
+                        Ubiquitous.Default.Config.ChatConfigs.Remove(config);
+
                 foreach (ChatConfig chatConfig in SettingsRegistry.DefaultChatSettings)
                 {
-                    var savedConfig = Ubiquitous.Default.Config.ChatConfigs.Where(config => config.ChatName == chatConfig.ChatName).FirstOrDefault();
+                    var savedConfig = Ubiquitous.Default.Config.ChatConfigs
+                        .Where(config => config.ChatName == chatConfig.ChatName).FirstOrDefault();
+
                     //Chat config is missing
                     if (savedConfig == null)
                     {

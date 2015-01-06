@@ -5,12 +5,17 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using UB.Model;
 
 namespace UB.Utils
 {
     public class Json
     {
+        public static JArray ParseArray( string obj )
+        {
+            return JArray.Parse(obj);
+        }
         public static void SerializeToStream<T>( T obj, Action<Stream> callback ) where T: class
         {
             JsonSerializer serializer = new JsonSerializer();

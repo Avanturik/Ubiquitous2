@@ -200,13 +200,13 @@ namespace UB.ViewModel
                                               await Task.Run(() => {
                                                   if (Enabled)
                                                   {
-                                                      IsLoaderVisible = true;
-                                                      Status.ResetToDefault();
-                                                      Status.IsConnected = false;
-                                                      Status.IsLoggedIn = false;
-                                                      chat.Stop();
-                                                      chat.Start();
-                                                      IsLoaderVisible = false;
+                                                    IsLoaderVisible = true;
+                                                    Status.ResetToDefault();
+                                                    Status.IsConnected = false;
+                                                    Status.IsLoggedIn = false;
+                                                    chat.Stop();
+                                                    chat.Start();
+                                                    IsLoaderVisible = false;
                                                   }
                                               });
                                           }));
